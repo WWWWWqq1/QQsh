@@ -39,6 +39,10 @@ select:focus,input:focus{outline:2px solid #628fd5;outline-offset:1px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 button{font:inherit;font-weight:700;border:1px solid #526e9f;border-radius:10px;padding:10px 13px;background:#284574;color:white;cursor:pointer}
 button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
+.smallhint{font-size:13px;color:var(--muted);margin:0 0 12px}
+.target-results{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.target-result{background:#0b1324;border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.target-result strong{font-variant-numeric:tabular-nums;text-align:right}
 button:active{transform:translateY(1px)}
 .summaryline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
 .summaryline:last-child{border-bottom:0}
@@ -73,7 +77,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:4px 0 16px}
     <div class="actions">
       <button class="secondary" id="all70">六条属性全部设为70级</button>
       <button class="secondary" id="all1">全部重置为1级</button>
-      <button class="secondary" id="copy">复制汇总结果</button>
+      <button class="secondary" id="copy">分享 / 复制当前方案</button>
     </div>
   </section>
 
@@ -81,6 +85,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:4px 0 16px}
     <h2>分别设置六条属性等级</h2>
     <p class="sub" style="margin-top:-5px;margin-bottom:13px">选择每条属性的当前等级（1–70级），结果会立即更新。每条属性使用同一份升级材料表。</p>
     <div class="attr-list" id="attributes"></div>
+  </section>
+
+  <section class="panel">
+    <h2>材料目标计算</h2>
+    <p class="smallhint">输入你手上已有的天机要诀数量，计算从各属性当前等级出发，最多能升到几级。这里按六条属性分别计算，不会自动分配同一份材料。</p>
+    <label for="availableMaterials">现有天机要诀数量</label>
+    <input id="availableMaterials" type="number" min="0" step="1" inputmode="numeric" placeholder="例如：50000" value="0">
+    <div class="target-results" id="targetResults"></div>
   </section>
 
   <section class="panel">
@@ -117,7 +129,14 @@ const levels = [
 const attrs=["生机","惊雷","天目","利刃","龙虎","磐石"];
 const MAX=274035;
 const fmt=n=>Number(n).toLocaleString("zh-CN");
-const selected=Object.fromEntries(attrs.map(a=>[a,1]));
+const STORAGE_KEY="tianjige-calculator-levels-v1";
+function loadSavedLevels(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+  return Object.fromEntries(attrs.map(a=>[a,Number.isInteger(saved[a])&&saved[a]>=1&&saved[a]<=70?saved[a]:1]));
+ }catch(e){return Object.fromEntries(attrs.map(a=>[a,1]));}
+}
+const selected=loadSavedLevels();
 const $=id=>document.getElementById(id);
 function rowFor(level){return levels[level-1];}
 function renderAttributeCards(){
@@ -133,7 +152,13 @@ function renderAttributeCards(){
   </div>
   <div class="progress"><div id="bar-${i}" style="width:0%"></div></div>
  </article>`).join("");
- attrs.forEach((a,i)=>$("level-"+i).addEventListener("change",e=>{selected[a]=Number(e.target.value);update();}));
+ attrs.forEach((a,i)=>{
+  $("level-"+i).value=String(selected[a]);
+  $("level-"+i).addEventListener("change",e=>{selected[a]=Number(e.target.value);update();saveLevels();});
+ });
+}
+function saveLevels(){
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(selected));}catch(e){}
 }
 function update(){
  let totalUsed=0,totalLeft=0;
@@ -149,17 +174,37 @@ function update(){
  const pct=totalUsed/(MAX*attrs.length)*100;
  $("totalUsed").textContent=fmt(totalUsed);$("totalLeft").textContent=fmt(totalLeft);$("overallPct").textContent=pct.toFixed(1)+"%";$("overallBar").style.width=pct+"%";
  $("summaryRows").innerHTML=rows.join("");$("sumUsed").textContent=fmt(totalUsed);$("sumLeft").textContent=fmt(totalLeft);$("sumPct").textContent=pct.toFixed(1)+"%";
+ updateTargetResults();
 }
-function setAll(lvl){attrs.forEach((a,i)=>{selected[a]=lvl;$("level-"+i).value=String(lvl);});update();}
+function updateTargetResults(){
+ const raw=Number($("availableMaterials").value);
+ const available=Number.isFinite(raw)?Math.max(0,Math.floor(raw)):0;
+ $("targetResults").innerHTML=attrs.map(a=>{
+  const current=selected[a],currentCum=rowFor(current)[2];
+  let target=current;
+  while(target<70 && rowFor(target+1)[2]-currentCum<=available) target++;
+  const need=rowFor(target)[2]-currentCum;
+  const nextNeed=target<70?rowFor(target+1)[2]-currentCum:0;
+  const detail=target===70?"已达到满级":`升到${target}级需 ${fmt(need)}；再升1级还需 ${fmt(nextNeed)}`;
+  return `<div class="target-result"><span><strong>${a}</strong><br><span class="smallhint" style="margin:0">当前 ${current}级 · ${detail}</span></span><strong>最多 ${target}级</strong></div>`;
+ }).join("");
+}
+function setAll(lvl){attrs.forEach((a,i)=>{selected[a]=lvl;$("level-"+i).value=String(lvl);});update();saveLevels();}
 $("all70").addEventListener("click",()=>setAll(70));
 $("all1").addEventListener("click",()=>setAll(1));
 $("copy").addEventListener("click",async()=>{
- const lines=["天机阁升级材料汇总","属性 | 当前等级 | 已消耗要诀 | 升满还需要诀",...attrs.map(a=>{const lvl=selected[a],used=rowFor(lvl)[2];return `${a} | ${lvl}级 | ${fmt(used)} | ${fmt(MAX-used)}`;})];
- lines.push(`合计 | 已消耗 ${fmt(attrs.reduce((s,a)=>s+rowFor(selected[a])[2],0))} | 升满还需 ${fmt(attrs.reduce((s,a)=>s+MAX-rowFor(selected[a])[2],0))}`);
+ const usedTotal=attrs.reduce((sum,a)=>sum+rowFor(selected[a])[2],0);
+ const leftTotal=attrs.reduce((sum,a)=>sum+MAX-rowFor(selected[a])[2],0);
+ const lines=["天机阁升级材料计算器 · 当前方案","属性 | 当前等级 | 已消耗要诀 | 升满还需要诀",...attrs.map(a=>{const lvl=selected[a],used=rowFor(lvl)[2];return `${a} | ${lvl}级 | ${fmt(used)} | ${fmt(MAX-used)}`;})];
+ lines.push(`合计 | 已消耗 ${fmt(usedTotal)} | 升满还需 ${fmt(leftTotal)}`);
  const text=lines.join("\n");
- try{await navigator.clipboard.writeText(text);alert("已复制汇总结果");}
- catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();alert(ok?"已复制汇总结果":"复制失败，请尝试在浏览器菜单中复制");}
+ if(navigator.share){
+  try{await navigator.share({title:"天机阁升级材料计算器",text});return;}catch(e){if(e&&e.name==="AbortError")return;}
+ }
+ try{await navigator.clipboard.writeText(text);alert("已复制当前方案，可以粘贴发送到 QQ 群或好友");}
+ catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();alert(ok?"已复制当前方案，可以粘贴分享":"复制失败，请尝试长按文本复制");}
 });
+$("availableMaterials").addEventListener("input",updateTargetResults);
 $("dataRows").innerHTML=levels.map(([lvl,cost,cum])=>`<tr><td>${lvl}</td><td>${fmt(cost)}</td><td>${fmt(cum)}</td><td>${fmt(MAX-cum)}</td></tr>`).join("");
 renderAttributeCards();update();
 </script>
