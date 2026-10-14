@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.5.8</title>
+<title>天机阁升级材料计算器 v2.5.9</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
@@ -196,12 +196,30 @@ main>.panel:nth-of-type(5)::before{left:auto;right:24px;top:16px;color:#d58b8b;o
 body.light-theme .panel::before{opacity:.075}body.light-theme .panel::after{opacity:.095}
 @media(max-width:700px){.panel::before{font-size:22px;left:12px;top:12px;opacity:.035}.panel::after{font-size:27px;right:12px;bottom:10px;opacity:.055}body.light-theme .panel::before{opacity:.05}body.light-theme .panel::after{opacity:.075}}
 
+
+/* 升级数据表采用可展开/收起卡片 */
+.data-panel{padding:0;overflow:hidden}
+#upgradeDataDetails>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;user-select:none;font-size:18px;font-weight:750}
+#upgradeDataDetails>summary::-webkit-details-marker{display:none}
+#upgradeDataDetails>summary::marker{content:""}
+#upgradeDataDetails>summary:hover{background:rgba(138,180,255,.06)}
+.collapse-hint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap}
+.chevron{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border:1px solid var(--line);border-radius:50%;font-size:18px;line-height:1;transition:transform .2s}
+#upgradeDataDetails[open] .chevron{transform:rotate(180deg)}
+.data-content{padding:0 16px 16px}
+/* 固定数据卡片高度，表格在卡片内部独立滚动 */
+#upgradeDataDetails[open] .data-content{display:flex;flex-direction:column;min-height:0}
+#upgradeDataDetails .tablewrap{max-height: min(56vh, 520px);min-height:260px;overflow:auto;border:1px solid var(--line);border-radius:12px;overscroll-behavior:contain;scrollbar-gutter:stable}
+#upgradeDataTable{min-width:760px}
+#upgradeDataTable thead th{position:sticky;top:0;z-index:2;background:var(--panel2);box-shadow:0 1px 0 var(--line)}
+@media(max-width:700px){#upgradeDataDetails .tablewrap{max-height:52vh;min-height:240px}#upgradeDataDetails>summary{padding:14px;font-size:16px}.data-content{padding:0 12px 12px}}
+
 </style>
 </head>
 <body>
 <header>
   <h1>✨ 天机阁升级材料计算器</h1>
-  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.5.6</div>
+  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.6.0</div>
 </header>
 <main>
   <section class="panel">
@@ -257,14 +275,18 @@ body.light-theme .panel::before{opacity:.075}body.light-theme .panel::after{opac
   </section>
 
 
-  <section class="panel">
-    <h2>升级数据表</h2>
-    <p class="smallhint">展示 1–70 级各等级的升级消耗与累计消耗；选择重点属性后仅显示该属性列；点击「全部显示」可恢复全部七项属性。</p>
-    <div class="focus-control"><label for="focusStat">重点查看属性</label><select id="focusStat"><option value="生机">生机</option><option value="惊雷">惊雷</option><option value="天目">天目</option><option value="利刃">利刃</option><option value="龙虎">龙虎</option><option value="磐石">磐石</option></select><button type="button" class="secondary" id="showAllStats">全部显示</button></div>
-    <div class="tablewrap"><table id="upgradeDataTable">
-      <thead><tr><th>等级</th><th data-stat="生命">生命</th><th data-stat="攻击">攻击</th><th data-stat="防御">防御</th><th data-stat="速度">速度</th><th data-stat="穿护">穿护</th><th data-stat="命中">命中</th><th data-stat="暴击">暴击</th><th>升到该级所需</th><th>累计消耗</th><th>升满还需</th></tr></thead>
-      <tbody id="dataRows"></tbody>
-    </table></div>
+  <section class="panel data-panel">
+    <details id="upgradeDataDetails" open>
+      <summary><span>升级数据表</span><span class="collapse-hint">点击展开 / 收起 <span class="chevron" aria-hidden="true">⌄</span></span></summary>
+      <div class="data-content">
+        <p class="smallhint">展示 1–70 级各等级的升级消耗与累计消耗；选择重点属性后仅显示该属性列；点击「全部显示」可恢复全部七项属性。</p>
+        <div class="focus-control"><label for="focusStat">重点查看属性</label><select id="focusStat"><option value="生机">生机</option><option value="惊雷">惊雷</option><option value="天目">天目</option><option value="利刃">利刃</option><option value="龙虎">龙虎</option><option value="磐石">磐石</option></select><button type="button" class="secondary" id="showAllStats">全部显示</button></div>
+        <div class="tablewrap"><table id="upgradeDataTable">
+          <thead><tr><th>等级</th><th data-stat="生命">生命</th><th data-stat="攻击">攻击</th><th data-stat="防御">防御</th><th data-stat="速度">速度</th><th data-stat="穿护">穿护</th><th data-stat="命中">命中</th><th data-stat="暴击">暴击</th><th>升到该级所需</th><th>累计消耗</th><th>升满还需</th></tr></thead>
+          <tbody id="dataRows"></tbody>
+        </table></div>
+      </div>
+    </details>
   </section>
 
   <footer>天机阁 · 升级材料计算器 · 页面在本地计算，不会上传选择的等级</footer>
