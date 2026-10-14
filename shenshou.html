@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>神兽升级计算器 v1.1.12</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
+body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
+body.theme-fly{--primary:#d64545;--primary-soft:#fff0f0}
+body.theme-turtle{--primary:#93653e;--primary-soft:#f5eee7}
+body.theme-tiger{--primary:#7952bd;--primary-soft:#f2edfb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 48px}
+header{padding:26px 24px;border-radius:20px;background:linear-gradient(125deg,color-mix(in srgb,var(--primary) 88%,#182033),var(--primary));color:white;box-shadow:0 12px 32px #252a4a22}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.78}
+h1{margin:5px 0 8px;font-size:clamp(25px,4vw,36px)}
+header p{margin:0;color:#e6e5ff}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-top:20px}
+/* 桌面端模块统一纵向排列；模块内部表单/指标根据空间适度并列 */
+.card{width:100%}
+.fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stock-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+.table-wrap{max-width:100%}
+.card{background:var(--card);border:1px solid color-mix(in srgb,var(--primary) 24%,var(--line));border-top:3px solid var(--primary);border-radius:16px;padding:20px;box-shadow:0 5px 18px #24304a08;min-width:0}
+.card h2{font-size:18px;margin:0 0 15px;color:var(--primary)}
+.heading-note{font-size:12px;font-weight:400;color:var(--muted);margin-left:8px}
+.card h3{font-size:15px;margin:18px 0 10px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.level-picker{display:flex;flex-direction:column;gap:7px;min-width:0}.manual-level-input{display:none}.manual-level-input.visible{display:block}
+.exp-panel{margin-top:14px;padding:14px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--primary-soft) 45%,white)}
+.exp-panel h3{margin:0 0 12px;color:var(--primary)}.compact-exp{padding:11px;margin-top:13px}.compact-exp .exp-bar{margin-top:8px}.compact-exp .exp-caption{margin-top:5px}.exp-halves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.exp-half{min-width:0}.exp-half+ .exp-half{border-left:1px solid var(--line);padding-left:14px}.exp-half h3{font-size:14px}.exp-half .field label{margin-bottom:5px}@media(max-width:420px){.exp-halves{grid-template-columns:1fr}.exp-half+ .exp-half{border-left:0;border-top:1px solid var(--line);padding:12px 0 0}}
+.exp-denom{min-height:42px;display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:white}
+.exp-denom strong{font-size:18px;font-variant-numeric:tabular-nums;color:var(--primary)}.exp-denom span{font-size:12px;color:var(--muted)}
+.exp-bar{height:10px;margin-top:14px;border-radius:99px;background:var(--line);overflow:hidden}.exp-bar div{height:100%;width:0;background:var(--primary);transition:width .15s}
+.exp-caption{display:flex;justify-content:space-between;margin-top:5px;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}.exp-result{margin-top:10px;padding:10px;border-radius:9px;background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:600}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+select,input{width:100%;min-width:0;border:1px solid #cfd6e3;border-radius:9px;padding:10px 11px;background:#fff;color:var(--ink);font:inherit}
+input[type=number]{font-variant-numeric:tabular-nums}
+.beasts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.beast{border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;background:#fff;color:var(--ink);font:inherit;transition:.15s}
+.beast strong{display:block;font-size:14px}
+.beast span{font-size:11px;color:var(--muted)}
+.beast.active{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}
+.stock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stock{background:var(--primary-soft);border:1px solid color-mix(in srgb,var(--primary) 24%,var(--line));padding:11px;border-radius:12px}
+.stock label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.stock input{padding:8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button.action{border:0;border-radius:9px;padding:9px 13px;font:inherit;cursor:pointer}
+.secondary{background:#f0f2f8;color:#39445a}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.metric{border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-top:2px solid var(--primary);border-radius:12px;padding:13px;background:var(--primary-soft);min-width:0}
+.metric .name{font-size:12px;color:var(--muted)}
+.metric strong{display:block;font-size:clamp(19px,3vw,25px);margin:4px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.metric small{font-size:11px;color:var(--muted)}
+.result-table{width:100%;border-collapse:collapse;font-size:13px}
+.result-table th,.result-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+.result-table th:first-child,.result-table td:first-child{text-align:left}
+.result-table th{color:var(--primary);font-weight:600;background:var(--primary-soft)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.pack-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.pack-row:last-child{border-bottom:0}
+.plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.plan-option{display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);font:inherit;cursor:pointer}.plan-option strong{font-size:14px}.plan-option span,.plan-option small{font-size:12px;color:var(--muted)}.plan-option.active{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}@media(max-width:650px){.plan-options{grid-template-columns:1fr}}
+.pack-row span{color:var(--muted);font-size:14px}
+.pack-row strong{font-size:21px;font-variant-numeric:tabular-nums;text-align:right}
+.pack-columns{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+.pack-detail{min-width:0;border:1px solid var(--line);border-radius:13px;padding:14px;background:#fff}
+.pack-detail h3{margin:0 0 10px;font-size:19px;color:var(--primary)}
+.allocation-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.allocation-item{display:flex;flex-direction:column;gap:7px;min-width:0;padding:15px 12px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:12px;background:var(--primary-soft)}
+.allocation-name{font-size:17px;font-weight:750;color:var(--primary)}
+.allocation-item strong{font-size:clamp(21px,2.1vw,28px);line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.allocation-desc{font-size:14px;color:var(--muted)}
+.purchase-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;position:relative;padding-left:22px}.purchase-grid:before{content:"";position:absolute;left:8px;top:16px;bottom:16px;width:2px;border-radius:2px;background:color-mix(in srgb,var(--primary) 32%,var(--line))}
+.purchase-card{display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-width:0;min-height:92px;padding:13px;position:relative;border:1px solid color-mix(in srgb,var(--primary) 25%,var(--line));border-radius:12px;background:linear-gradient(145deg,var(--primary-soft),#fff)}
+.purchase-card:before{content:"";position:absolute;left:-15px;top:23px;width:14px;height:2px;background:color-mix(in srgb,var(--primary) 32%,var(--line))}.purchase-card:after{content:"";position:absolute;left:-19px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}.purchase-card .purchase-label{font-size:15px;font-weight:700;color:var(--ink)}
+.purchase-card .purchase-desc{font-size:12px;color:var(--muted);line-height:1.45;order:3;margin-top:auto}.purchase-card .purchase-label{order:1}.purchase-card .purchase-value{order:2}
+.purchase-card .purchase-value{font-size:clamp(20px,2vw,26px);font-weight:800;line-height:1.2;color:var(--primary);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media(max-width:420px){.purchase-grid{grid-template-columns:minmax(0,1fr);padding-left:20px}.purchase-card{padding:11px;min-height:108px}.purchase-card .purchase-label{font-size:14px}.purchase-card .purchase-desc{font-size:11px}}
+@media(max-width:760px){.pack-columns{grid-template-columns:1fr}.allocation-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.allocation-item{padding:12px 8px}.allocation-name{font-size:15px}.allocation-desc{font-size:12px}.pack-detail h3{font-size:17px}}
+@media(max-width:420px){.allocation-grid{grid-template-columns:1fr}.allocation-item{display:grid;grid-template-columns:1fr auto;align-items:center}.allocation-desc{grid-column:1/-1}}
+.note{font-size:12px;color:var(--muted);margin:12px 0 0}
+.section{margin-top:16px}
+details summary{cursor:pointer;font-weight:650;padding:4px 0 12px}
+.level-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
+.level-table th,.level-table td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
+.level-table th:first-child,.level-table td:first-child{text-align:center}
+.level-table thead th{position:sticky;top:0;background:var(--primary-soft);color:var(--primary);z-index:1}
+.level-table tbody tr:nth-child(even){background:#fafbfe}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 0 0}
+@media(max-width:760px){.wrap{padding:14px 10px 32px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.card{padding:15px}.beasts{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{gap:7px}.metric{padding:10px}.fields{gap:9px}.exp-panel{padding:11px}}
+@media(max-width:380px){.stock-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.metric strong{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">GAME TOOL · PREVIEW</div>
+  <h1>神兽升级计算器</h1>
+  <p>神兽升级材料、属性成长、自选包与礼包需求一站式计算</p>
+</header>
+<div class="layout">
+  <section class="card">
+    <h2>神兽及等级选择 <small class="heading-note">不查看属性可不选择神兽</small></h2>
+    <div class="beasts" id="beasts">
+      <button class="beast active" data-beast="火暴龙"><strong>火暴龙</strong><span>生命 · 武攻 · 法攻</span></button>
+      <button class="beast" data-beast="飞羽凤"><strong>飞羽凤</strong><span>生命 · 速度</span></button>
+      <button class="beast" data-beast="玄武龟"><strong>玄武龟</strong><span>生命 · 武防 · 法防</span></button>
+      <button class="beast" data-beast="幽冥虎"><strong>幽冥虎</strong><span>生命 · 穿透 · 护甲 · 速度</span></button>
+    </div>
+    <div class="fields level-fields">
+      <div class="field level-picker"><label for="fromLevel">当前等级</label><select id="fromLevel"></select><input class="manual-level-input" id="fromLevelManual" type="number" min="1" max="80" step="1" value="1" aria-label="手动输入当前等级" placeholder="输入当前等级（1–80）"></div>
+      <div class="field level-picker"><label for="toLevel">目标等级</label><select id="toLevel"></select><input class="manual-level-input" id="toLevelManual" type="number" min="1" max="80" step="1" value="20" aria-label="手动输入目标等级" placeholder="输入目标等级（1–80）"></div>
+    </div>
+    <h3>神兽属性变化</h3>
+    <div class="table-wrap"><table class="result-table">
+      <thead><tr><th>属性</th><th>当前等级</th><th>目标等级</th><th>增加</th></tr></thead>
+      <tbody id="attributes"></tbody>
+    </table></div>
+    <h3>已有材料库存</h3>
+    <div class="stock-grid">
+      <div class="stock"><label for="herbStock">灵草</label><input id="herbStock" type="number" min="0" step="1" value="0"></div>
+      <div class="stock"><label for="woodStock">灵木</label><input id="woodStock" type="number" min="0" step="1" value="0"></div>
+      <div class="stock"><label for="pillStock">灵丹</label><input id="pillStock" type="number" min="0" step="1" value="0"></div>
+    </div>
+    <div class="exp-panel compact-exp">
+      <div class="exp-halves">
+        <div class="exp-half"><h3>当前已有经验</h3><div class="field"><label for="currentExp">手动填写经验值</label><input id="currentExp" type="number" min="0" step="1" value="0"></div></div>
+        <div class="exp-half"><h3>该等级经验条</h3><div class="exp-caption"><span id="expFraction">0 / 0</span><span id="expPercent">0%</span></div><div class="exp-bar"><div id="expBarFill"></div></div><div class="exp-caption"><span>经验上限</span><span id="expDenominator">0 经验</span></div></div>
+      </div>
+    </div>
+    <div class="actions"><button class="action secondary" id="clearStock">库存归零</button><button class="action secondary" id="reset">恢复默认等级</button></div>
+  </section>
+  <section class="card">
+    <h2>升级材料需求</h2>
+    <div class="summary">
+      <div class="metric"><div class="name">灵草缺口</div><strong id="herbNeed">0</strong><small>扣除库存后</small></div>
+      <div class="metric"><div class="name">灵木缺口</div><strong id="woodNeed">0</strong><small>扣除库存后</small></div>
+      <div class="metric"><div class="name">灵丹缺口</div><strong id="pillNeed">0</strong><small>扣除库存后</small></div>
+    </div>
+    <h3>材料消耗明细</h3>
+    <div class="table-wrap"><table class="result-table">
+      <thead><tr><th>材料</th><th>区间消耗</th><th>已有库存</th><th>仍需材料</th></tr></thead>
+      <tbody>
+        <tr><td>灵草</td><td id="herbCost">0</td><td id="herbHave">0</td><td id="herbGap">0</td></tr>
+        <tr><td>灵木</td><td id="woodCost">0</td><td id="woodHave">0</td><td id="woodGap">0</td></tr>
+        <tr><td>灵丹</td><td id="pillCost">0</td><td id="pillHave">0</td><td id="pillGap">0</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+<section class="card section">
+  <h2><span style="color:#dc2626;font-weight:700">不吃返利 自选包与礼包方案</span></h2>
+  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 800 个小包。选择购买方案后，按该方案的礼包容量与价格估算购买数量。</p>
+  <div class="plan-options" role="group" aria-label="选择礼包方案">
+    <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span>213中包/大包 × 80大包，共17,040中包</span></button>
+    <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span>208中包/大包 × 80大包，共16,640中包</span></button>
+    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 800小包</span></button>
+  </div>
+  <div class="summary">
+    <div class="metric"><div class="name">小包需求</div><strong id="totalPacks">0</strong></div>
+    <div class="metric" id="middleMetric"><div class="name">中包需求</div><strong id="middlePacks">0</strong></div>
+    <div class="metric"><div class="name">大包需求</div><strong id="bigPacks">0</strong></div>
+    <div class="metric"><div class="name">所选方案预计费用</div><strong id="bundleCost">¥0.00</strong></div>
+  </div>
+  <div class="pack-columns" style="margin-top:14px">
+    <div class="pack-detail allocation-detail">
+      <h3>自选包分配</h3>
+      <div class="allocation-grid">
+        <div class="allocation-item herb-item"><span class="allocation-name">灵草包</span><strong id="herbPacks">0 个</strong><span class="allocation-desc">每包获得 91 灵草</span></div>
+        <div class="allocation-item wood-item"><span class="allocation-name">灵木包</span><strong id="woodPacks">0 个</strong><span class="allocation-desc">每包获得 39 灵木</span></div>
+        <div class="allocation-item pill-item"><span class="allocation-name">灵丹包</span><strong id="pillPacks">0 个</strong><span class="allocation-desc">每包获得 21 灵丹</span></div>
+      </div>
+    </div>
+    <div class="pack-detail purchase-detail">
+      <h3>所选方案购买估算</h3>
+      <div class="purchase-grid">
+        <div class="purchase-card"><span class="purchase-label">预计购买份数</span><span class="purchase-desc" id="purchaseDescription">按每份礼包容量向上取整</span><strong class="purchase-value" id="bundleCount">0 份</strong></div>
+        <div class="purchase-card" id="purchasedMiddleCard"><span class="purchase-label">可开出中包</span><span class="purchase-desc">每个中包可开出 80 小包</span><strong class="purchase-value" id="purchasedMiddle">0 个</strong></div>
+        <div class="purchase-card"><span class="purchase-label">可开出小包</span><strong class="purchase-value" id="purchasedSmall">0 个</strong></div>
+        <div class="purchase-card"><span class="purchase-label">剩余小包</span><strong class="purchase-value" id="leftover">0 个</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="card section rebate-placeholder">
+  <h2><span style="color:#16a34a;font-weight:700">全吃返利 自选包与礼包方案</span></h2>
+  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 800 个小包。按不吃返利所需材料的三分之二估算。</p>
+  <div class="plan-options" role="group" aria-label="选择全吃返利礼包方案">
+    <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span>213中包/大包 × 80大包，共17,040中包</span></button>
+    <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span>208中包/大包 × 80大包，共16,640中包</span></button>
+    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 800小包</span></button>
+  </div>
+  <div class="summary">
+    <div class="metric"><div class="name">小包需求</div><strong id="rebateTotalPacks">0</strong></div>
+    <div class="metric" id="rebateMiddleMetric"><div class="name">中包需求</div><strong id="rebateMiddlePacks">0</strong></div>
+    <div class="metric"><div class="name">大包需求</div><strong id="rebateBigPacks">0</strong></div>
+    <div class="metric"><div class="name">所选方案预计费用</div><strong id="rebateBundleCost">¥0.00</strong></div>
+  </div>
+  <div class="pack-columns" style="margin-top:14px">
+    <div class="pack-detail allocation-detail">
+      <h3>自选包分配</h3>
+      <div class="allocation-grid">
+        <div class="allocation-item herb-item"><span class="allocation-name">灵草包</span><strong id="rebateHerbPacks">0 个</strong><span class="allocation-desc">每包获得 91 灵草</span></div>
+        <div class="allocation-item wood-item"><span class="allocation-name">灵木包</span><strong id="rebateWoodPacks">0 个</strong><span class="allocation-desc">每包获得 39 灵木</span></div>
+        <div class="allocation-item pill-item"><span class="allocation-name">灵丹包</span><strong id="rebatePillPacks">0 个</strong><span class="allocation-desc">每包获得 21 灵丹</span></div>
+      </div>
+    </div>
+    <div class="pack-detail purchase-detail">
+      <h3>所选方案购买估算</h3>
+      <div class="purchase-grid">
+        <div class="purchase-card"><span class="purchase-label">预计购买份数</span><span class="purchase-desc" id="rebatePurchaseDescription">按每份礼包容量向上取整</span><strong class="purchase-value" id="rebateBundleCount">0 份</strong></div>
+        <div class="purchase-card" id="rebatePurchasedMiddleCard"><span class="purchase-label">可开出中包</span><span class="purchase-desc">每个中包可开出 80 小包</span><strong class="purchase-value" id="rebatePurchasedMiddle">0 个</strong></div>
+        <div class="purchase-card"><span class="purchase-label">可开出小包</span><strong class="purchase-value" id="rebatePurchasedSmall">0 个</strong></div>
+        <div class="purchase-card"><span class="purchase-label">剩余小包</span><strong class="purchase-value" id="rebateLeftover">0 个</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="card section">
+  <h2>等级数据查询</h2>
+  <p class="note" style="margin-top:-5px;margin-bottom:12px">展开查看 1–80 级材料与属性数据，便于核对。</p>
+  <details><summary>展开 / 收起 1–80 级完整数据表</summary>
+    <div class="table-wrap" style="max-height:520px;overflow:auto">
+      <table class="level-table"><thead><tr><th>等级</th><th>灵草</th><th>灵木</th><th>灵丹</th><th>生命</th><th>武攻/法攻</th><th>武防/法防</th><th>穿透/护甲</th><th>速度</th></tr></thead><tbody id="levelRows"></tbody></table>
+    </div>
+  </details>
+</section>
+<footer>shenshou-upgrade-calculator v1.1.25 · 独立模块原型，后续可由 index.html 与天机阁计算器并列链接</footer>
+</div>
+<script>
+const raw = [
+[0,0,0,35,35,35,14,14],[8,0,0,45,45,45,18,18],[36,0,0,60,60,60,23,23],[96,0,0,75,75,75,30,30],[200,0,0,95,95,95,38,38],[360,0,0,120,120,120,48,48],[546,234,0,150,150,150,60,60],[816,408,0,185,185,185,74,74],[1170,650,0,225,225,225,90,90],[1640,820,0,270,270,270,108,108],[2200,1400,0,320,320,320,128,128],[2640,1760,0,375,375,375,150,150],[3380,2340,1040,435,435,435,174,174],[4256,3040,1520,500,500,500,200,200],[5250,3850,2100,570,570,570,228,228],[6400,4800,2800,645,645,645,258,258],[7106,5434,3344,725,725,725,290,290],[8460,6580,4230,810,810,810,324,324],[9994,7890,5260,900,900,900,360,360],[11720,9376,6446,1000,1000,1000,400,400],[13566,10982,7752,1110,1110,1110,444,444],[14520,11880,8580,1230,1230,1230,492,492],[16606,13718,10108,1360,1360,1360,544,544],[18912,15760,11820,1500,1500,1500,600,600],[21450,18018,13728,1650,1650,1650,660,660],[24128,20416,15776,1810,1810,1810,725,725],[25272,21528,16848,1980,1980,1980,795,795],[28224,24192,19152,2160,2160,2160,870,870],[31436,27100,21680,2350,2350,2350,950,950],[34800,30160,24360,2550,2550,2550,1035,1035],[38440,33480,27280,2765,2765,2765,1125,1125],[39680,34720,28520,2995,2995,2995,1220,1220],[43560,38280,31680,3240,3240,3240,1320,1320],[47668,42060,35050,3500,3500,3500,1430,1430],[52080,46128,38688,3775,3775,3775,1550,1550],[56664,50368,42498,4065,4065,4065,1680,1680],[58016,51744,43904,4370,4370,4370,1820,1820],[62852,56236,47966,4690,4690,4690,1970,1970],[68016,61040,52320,5025,5025,5025,2130,2130],[73360,66024,56854,5380,5380,5380,2310,2310],[79333,71778,62333,5680,5680,5680,2430,2430],[98353,89412,78235,5980,5980,5980,2550,2550],[107333,98000,86333,6280,6280,6280,2670,2670],[122667,112444,99667,6580,6580,6580,2790,2790],[131579,121053,107895,6880,6880,6880,2910,2910],[147789,136421,122211,7180,7180,7180,3030,3030],[164842,152632,137368,7480,7480,7480,3150,3150],[182737,169684,153368,7780,7780,7780,3270,3270],[191400,178200,161700,8080,8080,8080,3390,3390],[210000,196000,178500,8380,8380,8380,3540,3540],[229400,214600,196100,8680,8680,8680,3690,3690],[249600,234000,214500,8980,8980,8980,3840,3840],[257714,242095,222571,9280,9280,9280,3990,3990],[278476,262095,241619,9580,9580,9580,4140,4140],[300000,282857,261429,9880,9880,9880,4290,4290],[322286,304381,282000,10180,10180,10180,4440,4440],[329636,311818,289545,10480,10480,10480,4590,4590],[352364,333818,310636,10780,10780,10780,4740,4740],[375818,356545,332455,11080,11080,11080,4890,4890],[400000,380000,355000,11380,11380,11380,5040,5040],[424924,404196,378226,11580,11580,11580,5090,5090],[430920,410400,384750,11780,11780,11780,5140,5140],[456114,434288,408408,11980,11980,11980,5190,5190],[462000,441000,414750,12180,12180,12180,5240,5240],[487400,465776,438696,12380,12380,12380,5290,5290],[493120,471680,444880,12580,12580,12580,5340,5340],[518880,496800,469200,12780,12780,12780,5390,5390],[524352,502504,475194,12980,12980,12980,5440,5440],[550368,527904,499824,13180,13180,13180,5490,5490],[555600,533376,505596,13480,13480,13480,5590,5590],[581808,558992,530472,13780,13780,13780,5790,5790],[588068,564200,535990,14080,14080,14080,5990,5990],[613316,590172,561242,14380,14380,14380,6090,6090],[618192,595296,566676,14680,14680,14680,6290,6290],[644820,621372,592062,14980,14980,14980,6390,6390],[649600,626400,597400,15280,15280,15280,6590,6590],[676476,652740,623070,15580,15580,15580,6690,6690],[680920,657440,628090,15880,15880,15880,6890,6890],[708000,684000,654000,16180,16180,16180,6990,6990],[712560,688808,659118,16480,16480,16480,7190,7190]
+];
+const expData = {
+ growth: [0,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,13,13,13,13,13,14,14,14,14,14,15,15,15,15,15,16,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,24,24,25,25,26,26,27,27,28,28,29,29,30,30,31,31,32],
+ bar: [0,20,60,120,200,300,420,560,720,900,1100,1320,1560,1820,2100,2400,2720,3060,3420,3800,4200,4620,5060,5520,6000,6500,7020,7560,8120,8700,9300,9920,10560,11220,11900,12600,13320,14060,14820,15000,17000,19000,21000,23000,25000,27000,29000,31000,33000,35000,37000,39000,41000,43000,45000,47000,49000,51000,53000,55000,57000,59000,61000,63000,65000,67000,69000,71000,73000,75000,77000,79000,81000,83000,85000,87000,89000,91000,93000,95000],
+ herb: [0,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220,224,228,232,236,240],
+ wood: [0,0,0,0,0,0,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,76,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220,224,228,232],
+ pill: [0,0,0,0,0,0,0,0,0,0,0,0,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,66,70,74,78,82,86,90,94,98,102,106,110,114,118,122,126,130,134,138,142,146,150,154,158,162,166,170,174,178,182,186,190,194,198,202,206,210,214,218,222]
+};
+const fmt=n=>Number(n).toLocaleString('en-US');
+const $=id=>document.getElementById(id);
+// 统一读取数值输入；旧版缺少此函数，render() 首次运行便抛出 ReferenceError，导致材料结果始终不更新。
+const nval=id=>{const el=$(id);const n=Number(el && el.value);return Number.isFinite(n)?n:0;};
+const giftPlans={
+ monthly:{name:'月初礼包',middlePerBig:213,bigCount:80,middleCount:17040,smallPerBig:213*80,price:99},
+ vip10:{name:'VIP10礼包',middlePerBig:208,bigCount:80,middleCount:16640,smallPerBig:208*80,price:139.8},
+ event:{name:'活动大厅限时礼包',middlePerBig:1,bigCount:1,middleCount:1,smallPerBig:800,price:11.8}
+};
+let selectedPlan='monthly';
+let selectedBeast='火暴龙';
+const beastThemes={'火暴龙':'theme-fire','飞羽凤':'theme-fly','玄武龟':'theme-turtle','幽冥虎':'theme-tiger'};
+function applyBeastTheme(){document.body.classList.remove('theme-fire','theme-fly','theme-turtle','theme-tiger');document.body.classList.add(beastThemes[selectedBeast]||'theme-fire')}
+const beastAttrs={
+ '火暴龙':[{idx:3,name:'生命'},{idx:4,name:'武攻'},{idx:4,name:'法攻'}],
+ '飞羽凤':[{idx:3,name:'生命'},{idx:7,name:'速度'}],
+ '玄武龟':[{idx:3,name:'生命'},{idx:5,name:'武防'},{idx:5,name:'法防'}],
+ '幽冥虎':[{idx:3,name:'生命'},{idx:6,name:'穿透'},{idx:6,name:'护甲'},{idx:7,name:'速度'}]
+};
+function initSelects(){for(const id of ['fromLevel','toLevel']){const el=$(id);const manual=document.createElement('option');manual.value='manual';manual.textContent='手动输入…';el.appendChild(manual);for(let i=1;i<=80;i++){const o=document.createElement('option');o.value=i;o.textContent=`${i} 级`;el.appendChild(o)}}$('fromLevel').value='40';$('toLevel').value='60';$('fromLevel').dataset.lastValue='40';$('toLevel').dataset.lastValue='60';}
+function syncLevel(source){const isManual=source==='fromLevelManual'||source==='toLevelManual';const selectId=source.startsWith('fromLevel')?'fromLevel':'toLevel';const inputId=selectId+'Manual';const select=$(selectId),input=$(inputId);if(!isManual&&select.value==='manual'){input.classList.add('visible');input.focus();input.value=String(selectId==='fromLevel'?$('fromLevel').dataset.lastValue||1:$('toLevel').dataset.lastValue||20);return;}const v=Math.max(1,Math.min(80,Math.floor(Number($(source).value)||1)));$(selectId).value=String(v);$(inputId).value=String(v);select.dataset.lastValue=String(v);input.classList.remove('visible');render();}
+function getLevel(id, fallback){
+ const el=$(id);
+ // 下拉框处于“手动输入…”状态时，使用上次有效等级，避免 NaN 导致页面渲染崩溃。
+ const saved=Number(el.dataset.lastValue);
+ const value=el.value==='manual' ? (saved||fallback) : Number(el.value);
+ return Math.max(1,Math.min(80,Math.floor(Number.isFinite(value)?value:fallback)));
+}
+function renderExp(){
+ const level=getLevel('fromLevel',1);
+ const rawNum=Math.max(0,Math.floor(Number($('currentExp').value)||0));
+ const idx=Math.min(level,79);
+ const den=Number(expData.bar[idx])||0;
+ const num=Math.min(rawNum,den);
+ const gain=Number(expData.growth[idx])||0;
+ const percent=den?Math.min(100,num/den*100):0;
+ $('expDenominator').textContent=fmt(den)+' 经验';
+ $('expFraction').textContent=fmt(num)+' / '+fmt(den);
+ $('expPercent').textContent=percent.toFixed(1)+'%';
+ $('expBarFill').style.width=percent+'%';
+ return {level,rawNum,num,den,gain};
+}
+function render(){
+ let a=getLevel('fromLevel',1),b=getLevel('toLevel',20);
+ if(b<a){b=a;$('toLevel').value=String(b);$('toLevelManual').value=String(b);}
+ $('fromLevelManual').value=String(a);$('toLevelManual').value=String(b);
+ $('fromLevel').dataset.lastValue=String(a);$('toLevel').dataset.lastValue=String(b);
+ const start=raw[a-1]||raw[0],end=raw[b-1]||raw[0];
+ // 每行前三列代表“上一级升到本行等级”的材料；第二行是1升2。
+ // 因此从 a 级升到 b 级，累加 raw[a] 到 raw[b-1]（数组下标从0开始），即第 a+1 行到第 b 行。
+ const costs=[0,1,2].map(i=>{let sum=0;for(let level=a;level<b;level++){sum+=Number(raw[level]?.[i])||0;}return sum;});
+ const expState=renderExp();
+ // 当前经验对应已完成的点击数；只抵扣当前等级内已消耗的材料，并限制抵扣量不超过区间总消耗。
+ const consumedClicks=expState.gain>0?Math.floor(Math.min(expState.rawNum,expState.den)/expState.gain):0;
+ const materialIndex=Math.min(a,79);
+ const expMaterials=[Number(expData.herb[materialIndex])||0,Number(expData.wood[materialIndex])||0,Number(expData.pill[materialIndex])||0];
+ const adjustedCosts=costs.map((v,i)=>Math.max(0,v-Math.min(v,consumedClicks*expMaterials[i])));
+ const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
+ const gaps=adjustedCosts.map((v,i)=>Math.max(0,v-stocks[i]));
+ const ids=['herb','wood','pill'];
+ ids.forEach((id,i)=>{$(id+'Need').textContent=fmt(gaps[i]);$(id+'Cost').textContent=fmt(adjustedCosts[i]);$(id+'Have').textContent=fmt(stocks[i]);$(id+'Gap').textContent=fmt(gaps[i])});
+ const herbPackCount=Math.ceil(gaps[0]/91);
+ const woodPackCount=Math.ceil(gaps[1]/39);
+ const pillPackCount=Math.ceil(gaps[2]/21);
+ const packs=[herbPackCount,woodPackCount,pillPackCount];
+ // 自选包总需求 = 灵草包数 + 灵木包数 + 灵丹包数（每类分别向上取整后再相加）。
+ const total=herbPackCount+woodPackCount+pillPackCount;
+ const plan=giftPlans[selectedPlan],middle=selectedPlan==='event'?Math.ceil(total/800):Math.ceil(total/80),big=selectedPlan==='event'?middle:Math.ceil(middle/plan.middlePerBig),bundles=middle===0?0:middle/plan.middlePerBig,boughtMiddle=selectedPlan==='event'?big:Math.ceil(bundles)*plan.middlePerBig,boughtSmall=selectedPlan==='event'?boughtMiddle*800:boughtMiddle*80;
+ $('herbPacks').textContent=fmt(packs[0])+' 个';$('woodPacks').textContent=fmt(packs[1])+' 个';$('pillPacks').textContent=fmt(packs[2])+' 个';
+ // 全吃返利：按原始材料缺口的 2/3 计算，分别向上取整到各类自选小包。
+ const rebateGaps=gaps.map(v=>v*2/3);
+ const rebatePacks=rebateGaps.map((v,i)=>Math.ceil(v/[91,39,21][i]));
+ const rebateTotal=rebatePacks.reduce((sum,v)=>sum+v,0);
+ const rebateMiddle=selectedPlan==='event'?Math.ceil(rebateTotal/800):Math.ceil(rebateTotal/80);
+ const rebateBig=selectedPlan==='event'?rebateMiddle:Math.ceil(rebateMiddle/plan.middlePerBig);
+ const rebateBoughtMiddle=selectedPlan==='event'?rebateBig:rebateBig*plan.middlePerBig;
+ const rebateBoughtSmall=selectedPlan==='event'?rebateBoughtMiddle*800:rebateBoughtMiddle*80;
+ $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
+ $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig);$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 800 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
+ $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big);$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 800 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
+ $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');
+}
+function renderTable(){$('levelRows').innerHTML=raw.map((r,i)=>`<tr><td>${i+1}</td>${r.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}
+document.querySelectorAll('.plan-option').forEach(btn=>btn.addEventListener('click',()=>{selectedPlan=btn.dataset.plan;document.querySelectorAll('.plan-option').forEach(b=>b.classList.toggle('active',b.dataset.plan===selectedPlan));render()}));
+document.querySelectorAll('.beast').forEach(btn=>btn.addEventListener('click',()=>{selectedBeast=btn.dataset.beast;applyBeastTheme();document.querySelectorAll('.beast').forEach(b=>b.classList.toggle('active',b===btn));render()}));
+['fromLevel','toLevel'].forEach(id=>$(id).addEventListener('change',()=>{
+ const select=$(id), input=$(id+'Manual');
+ if(select.value==='manual'){
+   input.classList.add('visible');
+   input.value=String(select.dataset.lastValue || (id==='fromLevel'?'1':'20'));
+   render();
+   return;
+ }
+ const level=Math.max(1,Math.min(80,Math.floor(Number(select.value)||1)));
+ select.dataset.lastValue=String(level); input.value=String(level); input.classList.remove('visible');
+ render();
+}));
+['fromLevelManual','toLevelManual'].forEach(id=>$(id).addEventListener('input',()=>{
+ const input=$(id), select=$(id.replace('Manual',''));
+ const n=Number(input.value);
+ if(input.value!=='' && Number.isFinite(n)){
+   const level=Math.max(1,Math.min(80,Math.floor(n)));
+   select.dataset.lastValue=String(level);
+   render();
+ }
+}));
+['fromLevelManual','toLevelManual'].forEach(id=>$(id).addEventListener('change',()=>{
+ const input=$(id), select=$(id.replace('Manual',''));
+ const level=Math.max(1,Math.min(80,Math.floor(Number(input.value)||1)));
+ input.value=String(level); select.dataset.lastValue=String(level); select.value=String(level); input.classList.remove('visible'); render();
+}));
+$('currentExp').addEventListener('input',render);
+['herbStock','woodStock','pillStock'].forEach(id=>$(id).addEventListener('input',render));
+$('clearStock').addEventListener('click',()=>{['herbStock','woodStock','pillStock'].forEach(id=>$(id).value=0);render()});
+$('reset').addEventListener('click',()=>{$('fromLevel').value='40';$('toLevel').value='60';$('fromLevel').dataset.lastValue='40';$('toLevel').dataset.lastValue='60';$('fromLevelManual').value='40';$('toLevelManual').value='60';$('fromLevelManual').classList.remove('visible');$('toLevelManual').classList.remove('visible');$('currentExp').value='0';render()});
+initSelects();renderTable();applyBeastTheme();render();
+</script>
+</body>
+</html>
