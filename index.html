@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>天机阁升级材料计算器</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1b2d50 0,#0b1020 430px);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+header,main{max-width:900px;margin:auto}
+header{padding:25px 16px 18px}
+h1{font-size:25px;line-height:1.25;margin:0 0 8px}
+.sub{font-size:13px;color:var(--muted)}
+main{padding:0 12px 34px}
+.panel{background:rgba(21,30,50,.96);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:14px;box-shadow:0 12px 30px #0002}
+h2{font-size:18px;margin:0 0 12px}
+.hero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 10px;min-width:0}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:4px}
+.stat-value{font-size:clamp(18px,4.5vw,25px);font-weight:800;line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.stat-value.gold{color:var(--gold)}
+.attr-list{display:grid;grid-template-columns:1fr;gap:10px}
+.attr{border:1px solid var(--line);border-radius:13px;padding:12px;background:#10192b}
+.attr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.attr-name{font-size:16px;font-weight:750}
+.level-tag{font-size:12px;color:#c6d8ff;background:#243657;border:1px solid #3b527c;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+select,input{width:100%;min-width:0;border:1px solid #3a4b6d;border-radius:10px;background:#0b1324;color:var(--text);font:inherit;padding:10px 11px}
+select:focus,input:focus{outline:2px solid #628fd5;outline-offset:1px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0b1324;border-radius:10px;padding:9px 10px}
+.metric-label{font-size:11px;color:var(--muted)}
+.metric-value{font-size:17px;font-weight:750;font-variant-numeric:tabular-nums}
+.progress{height:6px;background:#27334c;border-radius:99px;overflow:hidden;margin-top:10px}
+.progress>div{height:100%;background:linear-gradient(90deg,#729dff,#83e0b2);border-radius:99px;transition:width .15s}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{font:inherit;font-weight:700;border:1px solid #526e9f;border-radius:10px;padding:10px 13px;background:#284574;color:white;cursor:pointer}
+button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
+button:active{transform:translateY(1px)}
+.summaryline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.summaryline:last-child{border-bottom:0}
+.summaryline span:first-child{color:var(--muted)}
+.summaryline strong{font-variant-numeric:tabular-nums;text-align:right}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:13px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{color:var(--muted);font-weight:600}
+th:first-child,td:first-child{text-align:left}
+tr:last-child td{border-bottom:0}
+.note{padding:11px 12px;border-radius:11px;background:#182945;border:1px solid #2c456d;color:#cbdcff;font-size:13px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:4px 0 16px}
+@media(min-width:650px){.attr-list{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:20px}.attr{padding:14px}}
+@media(max-width:380px){header{padding-top:20px}h1{font-size:22px}.panel{padding:12px}.stat{padding:10px 8px}.stat-label{font-size:11px}.metric-value{font-size:15px}.attr{padding:10px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>✨ 天机阁升级材料计算器</h1>
+  <div class="sub">六条属性独立设置等级 · 自动计算已消耗与升满所需天机要诀</div>
+</header>
+<main>
+  <section class="panel">
+    <h2>全部属性总览</h2>
+    <div class="hero">
+      <div class="stat"><div class="stat-label">已消耗要诀</div><div class="stat-value" id="totalUsed">0</div></div>
+      <div class="stat"><div class="stat-label">升满还需要诀</div><div class="stat-value gold" id="totalLeft">1,644,210</div></div>
+      <div class="stat"><div class="stat-label">整体完成度</div><div class="stat-value" id="overallPct">0%</div></div>
+    </div>
+    <div class="progress" aria-label="全部属性升级完成度"><div id="overallBar" style="width:0%"></div></div>
+    <div class="actions">
+      <button class="secondary" id="all70">六条属性全部设为70级</button>
+      <button class="secondary" id="all1">全部重置为1级</button>
+      <button class="secondary" id="copy">复制汇总结果</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>分别设置六条属性等级</h2>
+    <p class="sub" style="margin-top:-5px;margin-bottom:13px">选择每条属性的当前等级（1–70级），结果会立即更新。每条属性使用同一份升级材料表。</p>
+    <div class="attr-list" id="attributes"></div>
+  </section>
+
+  <section class="panel">
+    <h2>六条属性汇总</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>属性</th><th>当前等级</th><th>已消耗</th><th>升满还需</th><th>完成度</th></tr></thead>
+        <tbody id="summaryRows"></tbody>
+        <tfoot><tr><th>合计</th><th>—</th><th id="sumUsed">0</th><th id="sumLeft">1,644,210</th><th id="sumPct">0%</th></tr></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>升级数据说明</h2>
+    <div class="note">单条属性从1级升到70级共需 <strong>274,035</strong> 个天机要诀。表内“已消耗”按你提供的“累计”列计算，“升满还需”按 274,035 − 当前等级累计消耗计算。六条属性的需求独立相加。</div>
+    <details style="margin-top:13px">
+      <summary style="cursor:pointer;font-weight:700;padding:4px 0 10px">查看完整升级材料表</summary>
+      <div class="tablewrap"><table><thead><tr><th>等级</th><th>升到该级所需</th><th>累计消耗</th><th>升满还需</th></tr></thead><tbody id="dataRows"></tbody></table></div>
+    </details>
+  </section>
+  <footer>天机阁 · 升级材料计算器 · 页面在本地计算，不会上传选择的等级</footer>
+</main>
+<script>
+const levels = [
+[1,0,0],[2,177,177],[3,237,414],[4,296,710],[5,355,1065],[6,414,1479],[7,473,1952],[8,532,2484],[9,591,3075],[10,674,3749],
+[11,757,4506],[12,840,5346],[13,923,6269],[14,1005,7274],[15,1088,8362],[16,1171,9533],[17,1254,10787],[18,1336,12123],[19,1419,13542],[20,1526,15068],
+[21,1632,16700],[22,1739,18439],[23,1845,20284],[24,1951,22235],[25,2058,24293],[26,2164,26457],[27,2271,28728],[28,2377,31105],[29,2484,33589],[30,2614,36203],
+[31,2744,38947],[32,2874,41821],[33,3004,44825],[34,3134,47959],[35,3264,51223],[36,3394,54617],[37,3525,58142],[38,3655,61797],[39,3808,65605],[40,3962,69567],
+[41,4116,73683],[42,4270,77953],[43,4423,82376],[44,4577,86953],[45,4755,91708],[46,4932,96640],[47,5109,101749],[48,5285,107034],[49,5464,112498],[50,5682,118180],
+[51,5842,124022],[52,6031,130053],[53,6220,136273],[54,6409,142682],[55,6598,149280],[56,6799,156079],[57,7000,163079],[58,7201,170280],[59,7402,177682],[60,7603,185285],
+[61,7828,193113],[62,8053,201166],[63,8278,209444],[64,8503,217947],[65,8728,226675],[66,8976,235651],[67,9224,244875],[68,9472,254347],[69,9720,264067],[70,9968,274035]
+];
+const attrs=["生机","惊雷","天目","利刃","龙虎","磐石"];
+const MAX=274035;
+const fmt=n=>Number(n).toLocaleString("zh-CN");
+const selected=Object.fromEntries(attrs.map(a=>[a,1]));
+const $=id=>document.getElementById(id);
+function rowFor(level){return levels[level-1];}
+function renderAttributeCards(){
+ $("attributes").innerHTML=attrs.map((a,i)=>`<article class="attr">
+  <div class="attr-head"><div class="attr-name">${a}</div><div class="level-tag" id="tag-${i}">1 / 70级</div></div>
+  <div class="controls">
+   <div><label for="level-${i}">当前等级</label><select id="level-${i}" data-attr="${a}">${levels.map(r=>`<option value="${r[0]}" ${r[0]===1?"selected":""}>${r[0]} 级</option>`).join("")}</select></div>
+   <div><label>本级累计进度</label><input id="pct-${i}" value="0%" readonly aria-label="${a}升级完成度"></div>
+  </div>
+  <div class="metrics">
+   <div class="metric"><div class="metric-label">已消耗要诀</div><div class="metric-value" id="used-${i}">0</div></div>
+   <div class="metric"><div class="metric-label">升满还需要诀</div><div class="metric-value" id="left-${i}">${fmt(MAX)}</div></div>
+  </div>
+  <div class="progress"><div id="bar-${i}" style="width:0%"></div></div>
+ </article>`).join("");
+ attrs.forEach((a,i)=>$("level-"+i).addEventListener("change",e=>{selected[a]=Number(e.target.value);update();}));
+}
+function update(){
+ let totalUsed=0,totalLeft=0;
+ const rows=attrs.map((a,i)=>{
+   const lvl=selected[a],used=rowFor(lvl)[2],left=MAX-used,pct=used/MAX*100;
+   totalUsed+=used;totalLeft+=left;
+   $("tag-"+i).textContent=lvl+" / 70级";
+   $("pct-"+i).value=pct.toFixed(1)+"%";
+   $("used-"+i).textContent=fmt(used);$("left-"+i).textContent=fmt(left);
+   $("bar-"+i).style.width=pct+"%";
+   return `<tr><td>${a}</td><td>${lvl}级</td><td>${fmt(used)}</td><td>${fmt(left)}</td><td>${pct.toFixed(1)}%</td></tr>`;
+ });
+ const pct=totalUsed/(MAX*attrs.length)*100;
+ $("totalUsed").textContent=fmt(totalUsed);$("totalLeft").textContent=fmt(totalLeft);$("overallPct").textContent=pct.toFixed(1)+"%";$("overallBar").style.width=pct+"%";
+ $("summaryRows").innerHTML=rows.join("");$("sumUsed").textContent=fmt(totalUsed);$("sumLeft").textContent=fmt(totalLeft);$("sumPct").textContent=pct.toFixed(1)+"%";
+}
+function setAll(lvl){attrs.forEach((a,i)=>{selected[a]=lvl;$("level-"+i).value=String(lvl);});update();}
+$("all70").addEventListener("click",()=>setAll(70));
+$("all1").addEventListener("click",()=>setAll(1));
+$("copy").addEventListener("click",async()=>{
+ const lines=["天机阁升级材料汇总","属性 | 当前等级 | 已消耗要诀 | 升满还需要诀",...attrs.map(a=>{const lvl=selected[a],used=rowFor(lvl)[2];return `${a} | ${lvl}级 | ${fmt(used)} | ${fmt(MAX-used)}`;})];
+ lines.push(`合计 | 已消耗 ${fmt(attrs.reduce((s,a)=>s+rowFor(selected[a])[2],0))} | 升满还需 ${fmt(attrs.reduce((s,a)=>s+MAX-rowFor(selected[a])[2],0))}`);
+ const text=lines.join("\n");
+ try{await navigator.clipboard.writeText(text);alert("已复制汇总结果");}
+ catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();alert(ok?"已复制汇总结果":"复制失败，请尝试在浏览器菜单中复制");}
+});
+$("dataRows").innerHTML=levels.map(([lvl,cost,cum])=>`<tr><td>${lvl}</td><td>${fmt(cost)}</td><td>${fmt(cum)}</td><td>${fmt(MAX-cum)}</td></tr>`).join("");
+renderAttributeCards();update();
+</script>
+</body>
+</html>
