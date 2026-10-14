@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.5.6</title>
+<title>天机阁升级材料计算器 v2.5.8</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
@@ -50,8 +50,9 @@ select:focus,input:focus{outline:2px solid #628fd5;outline-offset:1px}
 button{font:inherit;font-weight:700;border:1px solid #526e9f;border-radius:10px;padding:10px 13px;background:#284574;color:white;cursor:pointer}
 button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
 .smallhint{font-size:13px;color:var(--muted);margin:0 0 12px}
-.material-entry{display:flex;align-items:end;gap:10px;flex-wrap:wrap}.material-input-wrap{width:min(100%,320px);flex:0 1 320px}.material-input-wrap label{margin-bottom:5px}.material-input-wrap input{width:100%}.material-quick-actions{display:flex;gap:8px;flex-wrap:wrap}.material-quick-actions button{white-space:nowrap;padding:10px 14px}.material-quick-actions .reset-materials{background:var(--panel2);color:var(--text);border-color:var(--line)}.material-added-note{align-self:center;color:var(--muted);font-size:12px;white-space:nowrap}
-@media(max-width:520px){.material-entry{align-items:stretch;gap:8px}.material-input-wrap{width:100%;flex-basis:100%}.material-quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}.material-quick-actions button{padding:9px 6px;font-size:13px}}
+.material-entry{display:flex;align-items:end;gap:8px;flex-wrap:nowrap;min-width:0}.material-input-wrap{width:min(32%,230px);flex:0 1 230px;min-width:88px}.material-input-wrap label{margin-bottom:5px;white-space:nowrap;font-size:13px}.material-input-wrap input{width:100%;min-width:0;padding:10px 8px}.material-quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex:1;min-width:0}.material-quick-actions button{white-space:nowrap;padding:10px 8px;min-width:0}.material-quick-actions .reset-materials{background:var(--panel2);color:var(--text);border-color:var(--line)}.material-added-note{color:var(--muted);font-size:12px;margin-top:6px;white-space:nowrap}
+@media(max-width:520px){.material-entry{align-items:end;gap:6px}.material-input-wrap{width:29%;flex:0 0 29%;min-width:0}.material-input-wrap label{font-size:11px;letter-spacing:-.3px}.material-input-wrap input{font-size:14px;padding:9px 5px}.material-quick-actions{gap:4px;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,1.25fr)}.material-quick-actions button{padding:9px 2px;font-size:12px;letter-spacing:-.4px}}
+@media(max-width:360px){.material-input-wrap{width:27%;flex-basis:27%}.material-input-wrap label{font-size:10px}.material-quick-actions button{font-size:11px}}
 .target-results{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
 .target-result{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--attr-color,var(--line));border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;gap:16px;align-items:center;min-height:70px}
 .target-result .target-name{font-size:16px;font-weight:750;color:var(--attr-dark,var(--text))}
@@ -238,9 +239,9 @@ body.light-theme .panel::before{opacity:.075}body.light-theme .panel::after{opac
         <button type="button" id="add5000">+5000</button>
         <button type="button" id="add10000">+10000</button>
         <button type="button" class="reset-materials" id="resetMaterials">重置增加量</button>
-        <div class="material-added-note" id="addedMaterialsNote" aria-live="polite">快捷增加：0</div>
       </div>
     </div>
+    <div class="material-added-note" id="addedMaterialsNote" aria-live="polite">快捷增加：0</div>
     <div class="target-results" id="targetResults"></div>
   </section>
 
@@ -436,19 +437,27 @@ function update(){
 }
 let addedMaterials=0;
 function adjustAvailableMaterials(delta){
- addedMaterials=Math.max(0,addedMaterials+delta);
+ const input=$("availableMaterials");
+ const current=Math.max(0,Math.floor(Number(input.value)||0));
+ input.value=String(current+delta);
+ addedMaterials+=delta;
  updateTargetResults();
 }
 $("add5000").addEventListener("click",()=>adjustAvailableMaterials(5000));
 $("add10000").addEventListener("click",()=>adjustAvailableMaterials(10000));
-$("resetMaterials").addEventListener("click",()=>{ addedMaterials=0; updateTargetResults(); });
+$("resetMaterials").addEventListener("click",()=>{
+ const input=$("availableMaterials");
+ const current=Math.max(0,Math.floor(Number(input.value)||0));
+ input.value=String(Math.max(0,current-addedMaterials));
+ addedMaterials=0;
+ updateTargetResults();
+});
 
 function updateTargetResults(){
  const raw=Number($("availableMaterials").value);
- const manualMaterials=Number.isFinite(raw)?Math.max(0,Math.floor(raw)):0;
- const available=manualMaterials+addedMaterials;
+ const available=Number.isFinite(raw)?Math.max(0,Math.floor(raw)):0;
  const note=$("addedMaterialsNote");
- if(note) note.textContent="快捷增加："+fmt(addedMaterials)+"（手动输入不变）";
+ if(note) note.textContent="快捷增加："+fmt(addedMaterials);
  $("targetResults").innerHTML=attrs.map((a,i)=>{
   const current=selected[a],currentCum=rowFor(current)[2];
   let target=current;
@@ -477,7 +486,7 @@ $("copy").addEventListener("click",async()=>{
  try{await navigator.clipboard.writeText(text);alert("已复制当前方案，可以粘贴发送到 QQ 群或好友");}
  catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();alert(ok?"已复制当前方案，可以粘贴分享":"复制失败，请尝试长按文本复制");}
 });
-$("availableMaterials").addEventListener("input",updateTargetResults);
+$("availableMaterials").addEventListener("input",()=>{addedMaterials=0;updateTargetResults();});
 $("dataRows").innerHTML=levels.map(([lvl,cost,cum])=>{const sv=statData[lvl-1];return `<tr><td>${lvl}</td><td data-stat="生命">${fmt(sv[0])}</td><td data-stat="攻击">${fmt(sv[5])}</td><td data-stat="防御">${fmt(sv[6])}</td><td data-stat="速度">${fmt(sv[1])}</td><td data-stat="穿护">${fmt(sv[4])}</td><td data-stat="命中">${fmt(sv[2])}</td><td data-stat="暴击">${fmt(sv[3])}</td><td>${fmt(cost)}</td><td>${fmt(cum)}</td><td>${fmt(MAX-cum)}</td></tr>`;}).join("");
 let showAllStatColumns=false;
 const focusStatMap={"生机":["生命"],"惊雷":["速度"],"天目":["命中","暴击"],"利刃":["穿护"],"龙虎":["攻击"],"磐石":["防御"]};
