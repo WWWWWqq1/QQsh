@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.5.2</title>
+<title>天机阁升级材料计算器 v2.5.3</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
@@ -50,6 +50,8 @@ select:focus,input:focus{outline:2px solid #628fd5;outline-offset:1px}
 button{font:inherit;font-weight:700;border:1px solid #526e9f;border-radius:10px;padding:10px 13px;background:#284574;color:white;cursor:pointer}
 button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
 .smallhint{font-size:13px;color:var(--muted);margin:0 0 12px}
+.material-entry{display:flex;align-items:end;gap:10px;flex-wrap:wrap}.material-input-wrap{width:min(100%,320px);flex:0 1 320px}.material-input-wrap label{margin-bottom:5px}.material-input-wrap input{width:100%}.material-quick-actions{display:flex;gap:8px;flex-wrap:wrap}.material-quick-actions button{white-space:nowrap;padding:10px 14px}.material-quick-actions .reset-materials{background:var(--panel2);color:var(--text);border-color:var(--line)}.material-added-note{align-self:center;color:var(--muted);font-size:12px;white-space:nowrap}
+@media(max-width:520px){.material-entry{align-items:stretch;gap:8px}.material-input-wrap{width:100%;flex-basis:100%}.material-quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}.material-quick-actions button{padding:9px 6px;font-size:13px}}
 .target-results{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
 .target-result{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--attr-color,var(--line));border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;gap:16px;align-items:center;min-height:70px}
 .target-result .target-name{font-size:16px;font-weight:750;color:var(--attr-dark,var(--text))}
@@ -145,12 +147,31 @@ body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% a
 body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg)}
 body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{color:#586b8b;opacity:.10}
 @media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}}
+
+/* v2.5.3 PC 适配：宽屏下顶部四个操作按钮同排，防止沿用移动端两列布局 */
+@media (min-width: 1100px) {
+  .actions {
+    grid-template-columns: repeat(4, max-content);
+    align-items: start;
+    column-gap: 10px;
+    row-gap: 8px;
+  }
+  .actions button { white-space: nowrap; }
+}
+/* 中等宽度桌面/平板保持两列，避免按钮挤压 */
+@media (min-width: 650px) and (max-width: 1099px) {
+  .actions { grid-template-columns: repeat(2, minmax(0, max-content)); }
+}
+/* 防止宽屏容器和数据表造成页面整体横向溢出 */
+html, body { max-width: 100%; }
+main { width: 100%; }
+
 </style>
 </head>
 <body>
 <header>
   <h1>✨ 天机阁升级材料计算器</h1>
-  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.5.2</div>
+  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.5.3</div>
 </header>
 <main>
   <section class="panel">
@@ -179,8 +200,18 @@ body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{colo
   <section class="panel">
     <h2>材料目标计算</h2>
     <p class="smallhint">输入你手上已有的天机要诀数量，计算从各属性当前等级出发，最多能升到几级。这里按六条属性分别计算，不会自动分配同一份材料。</p>
-    <label for="availableMaterials">现有天机要诀数量</label>
-    <input id="availableMaterials" type="number" min="0" step="1" inputmode="numeric" placeholder="例如：50000" value="0">
+    <div class="material-entry">
+      <div class="material-input-wrap">
+        <label for="availableMaterials">现有天机要诀数量</label>
+        <input id="availableMaterials" type="number" min="0" step="1" inputmode="numeric" placeholder="例如：50000" value="0">
+      </div>
+      <div class="material-quick-actions" aria-label="快速调整材料数量">
+        <button type="button" id="add5000">+5000</button>
+        <button type="button" id="add10000">+10000</button>
+        <button type="button" class="reset-materials" id="resetMaterials">重置增加量</button>
+        <div class="material-added-note" id="addedMaterialsNote" aria-live="polite">快捷增加：0</div>
+      </div>
+    </div>
     <div class="target-results" id="targetResults"></div>
   </section>
 
@@ -374,9 +405,21 @@ function update(){
  $("summaryRows").innerHTML=rows.join("");$("sumUsed").textContent=fmt(totalUsed);$("sumLeft").textContent=fmt(totalLeft);$("sumDays").textContent=Math.ceil(totalLeft/DAILY)+"天";$("sumPct").textContent=pct.toFixed(1)+"%";
  updateTargetResults();
 }
+let addedMaterials=0;
+function adjustAvailableMaterials(delta){
+ addedMaterials=Math.max(0,addedMaterials+delta);
+ updateTargetResults();
+}
+$("add5000").addEventListener("click",()=>adjustAvailableMaterials(5000));
+$("add10000").addEventListener("click",()=>adjustAvailableMaterials(10000));
+$("resetMaterials").addEventListener("click",()=>{ addedMaterials=0; updateTargetResults(); });
+
 function updateTargetResults(){
  const raw=Number($("availableMaterials").value);
- const available=Number.isFinite(raw)?Math.max(0,Math.floor(raw)):0;
+ const manualMaterials=Number.isFinite(raw)?Math.max(0,Math.floor(raw)):0;
+ const available=manualMaterials+addedMaterials;
+ const note=$("addedMaterialsNote");
+ if(note) note.textContent="快捷增加："+fmt(addedMaterials)+"（手动输入不变）";
  $("targetResults").innerHTML=attrs.map((a,i)=>{
   const current=selected[a],currentCum=rowFor(current)[2];
   let target=current;
