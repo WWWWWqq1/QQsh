@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v1.4.0</title>
+<title>天机阁升级材料计算器 v2.4.2</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at top,#1b2d50 0,#0b1020 430px);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-header,main{max-width:900px;margin:auto}
+header,main{max-width:1350px;margin:auto}
 header{padding:25px 16px 18px}
 h1{font-size:25px;line-height:1.25;margin:0 0 8px}
 .sub{font-size:13px;color:var(--muted)}
@@ -51,13 +51,40 @@ button{font:inherit;font-weight:700;border:1px solid #526e9f;border-radius:10px;
 button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
 .smallhint{font-size:13px;color:var(--muted);margin:0 0 12px}
 .target-results{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
-.target-result{background:#0b1324;border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
-.target-result strong{font-variant-numeric:tabular-nums;text-align:right}
+.target-result{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--attr-color,var(--line));border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;gap:16px;align-items:center;min-height:70px}
+.target-result .target-name{font-size:16px;font-weight:750;color:var(--attr-dark,var(--text))}
+.target-result .target-detail{font-size:13px;color:var(--muted);margin:5px 0 0;line-height:1.65}.target-result .target-detail-line{display:block}.target-result .target-stat{font-weight:650;color:var(--text)}.target-result .target-level{align-self:center;min-width:92px;text-align:right}
+.target-result .target-level{font-size:15px;font-weight:750;color:var(--attr-dark,var(--text));white-space:nowrap;font-variant-numeric:tabular-nums}
+.target-result[data-attr="生机"]{--attr-color:#2fa66a;--attr-dark:#155d38}
+.target-result[data-attr="天目"]{--attr-color:#3986e8;--attr-dark:#174f9b}
+.target-result[data-attr="惊雷"]{--attr-color:#9560d8;--attr-dark:#60349a}
+.target-result[data-attr="龙虎"]{--attr-color:#d7a51c;--attr-dark:#795900}
+.target-result[data-attr="利刃"]{--attr-color:#e05252;--attr-dark:#a52525}
+.target-result[data-attr="磐石"]{--attr-color:#b9a27b;--attr-dark:#6f5a37}
+body:not(.light-theme) .target-result .target-name,body:not(.light-theme) .target-result .target-level{color:var(--attr-color)}
+body:not(.light-theme) .target-result{background:var(--panel2)}
 button:active{transform:translateY(1px)}
 .summaryline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
 .summaryline:last-child{border-bottom:0}
 .summaryline span:first-child{color:var(--muted)}
 .summaryline strong{font-variant-numeric:tabular-nums;text-align:right}
+/* 六条属性汇总：沿用属性卡片的颜色、字体粗细和清晰的层级 */
+#summaryRows tr{border-left:3px solid var(--line)}
+#summaryRows tr[data-attr="生机"]{border-left-color:#2fa66a}
+#summaryRows tr[data-attr="天目"]{border-left-color:#3986e8}
+#summaryRows tr[data-attr="惊雷"]{border-left-color:#9560d8}
+#summaryRows tr[data-attr="龙虎"]{border-left-color:#d7a51c}
+#summaryRows tr[data-attr="利刃"]{border-left-color:#e05252}
+#summaryRows tr[data-attr="磐石"]{border-left-color:#b9a27b}
+#summaryRows td:first-child{font-weight:750}
+#summaryRows tr[data-attr="生机"] td:first-child{color:#2fa66a}
+#summaryRows tr[data-attr="天目"] td:first-child{color:#3986e8}
+#summaryRows tr[data-attr="惊雷"] td:first-child{color:#9560d8}
+#summaryRows tr[data-attr="龙虎"] td:first-child{color:#b18408}
+#summaryRows tr[data-attr="利刃"] td:first-child{color:#e05252}
+#summaryRows tr[data-attr="磐石"] td:first-child{color:#9a8259}
+body:not(.light-theme) #summaryRows tr[data-attr] td:first-child{filter:brightness(1.25)}
+#summaryRows td{font-size:14px}
 .tablewrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:13px}
 th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
@@ -76,20 +103,44 @@ body.light-theme .attr{background:#f8faff}
 body.light-theme .attr-name{color:var(--attr-dark)}
 body.light-theme .level-tag{color:var(--attr-dark);background:var(--attr-soft);border-color:color-mix(in srgb,var(--attr-color) 42%,white)}
 body.light-theme .level-tag{color:#294a7a;background:#e7eefb;border-color:#c5d4f0}
+body.light-theme .attr .level-tag{color:var(--attr-dark);background:var(--attr-soft);border-color:color-mix(in srgb,var(--attr-color) 42%,white)}
 body.light-theme select,body.light-theme input{background:#fff;color:#172033;border-color:#c5cede}
 body.light-theme .metric{background:#f0f3f8}
 body.light-theme .progress{background:#e0e5ef}
 body.light-theme button{background:#315fa8;border-color:#315fa8;color:#fff}
 body.light-theme button.secondary{background:#edf2fa;border-color:#cbd5e5;color:#243754}
 body.light-theme .note{background:#edf4ff;border-color:#c9dcfb;color:#29466e}
-@media(min-width:650px){.attr-list{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:20px}.attr{padding:14px}}
+@media(min-width:650px){header{padding-left:24px;padding-right:24px}.attr-list{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:20px}.attr{padding:14px}}
+@media(min-width:1100px){main{padding-left:20px;padding-right:20px}.hero{grid-template-columns:repeat(4,minmax(0,1fr))}.target-results{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:24px}}
 @media(max-width:380px){header{padding-top:20px}h1{font-size:22px}.panel{padding:12px}.stat{padding:10px 8px}.stat-label{font-size:11px}.metric-value{font-size:15px}.attr{padding:10px}}
+
+.focus-control{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 14px}
+.focus-control label{font-weight:700;color:var(--muted,#64748b);margin:0}
+.focus-control select{width:132px;min-width:132px;max-width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);font:inherit;font-weight:750}
+.focus-control select option{font-weight:700;background:var(--panel);color:var(--text)}
+.focus-control #showAllStats{padding:8px 12px}
+#upgradeDataTable th[data-stat],#upgradeDataTable td[data-stat]{transition:background .15s ease,color .15s ease,font-size .15s ease}
+#upgradeDataTable [data-stat="生命"]{--stat-color:#2fa66a;--stat-soft:rgba(47,166,106,.12)}
+#upgradeDataTable [data-stat="攻击"]{--stat-color:#d7a51c;--stat-soft:rgba(215,165,28,.14)}
+#upgradeDataTable [data-stat="防御"]{--stat-color:#b9a27b;--stat-soft:rgba(185,162,123,.16)}
+#upgradeDataTable [data-stat="速度"]{--stat-color:#9560d8;--stat-soft:rgba(149,96,216,.12)}
+#upgradeDataTable [data-stat="穿护"]{--stat-color:#e05252;--stat-soft:rgba(224,82,82,.12)}
+#upgradeDataTable [data-stat="命中"],#upgradeDataTable [data-stat="暴击"]{--stat-color:#3986e8;--stat-soft:rgba(57,134,232,.12)}
+#upgradeDataTable th[data-stat],#upgradeDataTable td[data-stat]{color:var(--stat-color);font-weight:650}
+#upgradeDataTable th.stat-focus,#upgradeDataTable td.stat-focus{font-size:15px;font-weight:850;background:var(--stat-soft);color:var(--stat-color);box-shadow:none}
+#upgradeDataTable [data-stat].stat-hidden{display:none}
+.focus-control select option[value="生机"]{color:#2fa66a}.focus-control select option[value="惊雷"]{color:#9560d8}.focus-control select option[value="天目"]{color:#3986e8}.focus-control select option[value="利刃"]{color:#e05252}.focus-control select option[value="龙虎"]{color:#b18400}.focus-control select option[value="磐石"]{color:#8b7654}
+@media(max-width:700px){.focus-control{gap:6px}.focus-control select{width:118px;min-width:118px}#upgradeDataTable th.stat-focus,#upgradeDataTable td.stat-focus{font-size:13px}}
+/* 极淡数字水印：固定在视口背景层，不影响点击和表格阅读 */
+body::after{content:"98888";position:fixed;right:18px;bottom:12px;z-index:9999;pointer-events:none;user-select:none;font-size:clamp(24px,4vw,42px);font-weight:800;letter-spacing:3px;line-height:1;color:#8a96aa;opacity:.075;transform:rotate(-12deg)}
+body.light-theme::after{color:#63728a;opacity:.07}
+@media(max-width:700px){body::after{right:9px;bottom:8px;font-size:25px;opacity:.06}}
 </style>
 </head>
 <body>
 <header>
   <h1>✨ 天机阁升级材料计算器</h1>
-  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v1.4.0</div>
+  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.4.2</div>
 </header>
 <main>
   <section class="panel">
@@ -133,14 +184,17 @@ body.light-theme .note{background:#edf4ff;border-color:#c9dcfb;color:#29466e}
     </div>
   </section>
 
+
   <section class="panel">
-    <h2>升级数据说明</h2>
-    <div class="note">单条属性从1级升到70级共需 <strong>274,035</strong> 个天机要诀。表内“已消耗”按你提供的“累计”列计算，“升满还需”按 274,035 − 当前等级累计消耗计算。六条属性的需求独立相加。剩余天数按每日固定获得735.5个天机要诀估算，并向上取整；实际天数会受每日获取量变化影响。</div>
-    <details style="margin-top:13px">
-      <summary style="cursor:pointer;font-weight:700;padding:4px 0 10px">查看完整升级材料表</summary>
-      <div class="tablewrap"><table><thead><tr><th>等级</th><th>升到该级所需</th><th>累计消耗</th><th>升满还需</th><th>剩余天数</th></tr></thead><tbody id="dataRows"></tbody></table></div>
-    </details>
+    <h2>升级数据表</h2>
+    <p class="smallhint">展示 1–70 级各等级的升级消耗与累计消耗；选择重点属性后仅显示该属性列；点击「全部显示」可恢复全部七项属性。</p>
+    <div class="focus-control"><label for="focusStat">重点查看属性</label><select id="focusStat"><option value="生机">生机</option><option value="惊雷">惊雷</option><option value="天目">天目</option><option value="利刃">利刃</option><option value="龙虎">龙虎</option><option value="磐石">磐石</option></select><button type="button" class="secondary" id="showAllStats">全部显示</button></div>
+    <div class="tablewrap"><table id="upgradeDataTable">
+      <thead><tr><th>等级</th><th data-stat="生命">生命</th><th data-stat="攻击">攻击</th><th data-stat="防御">防御</th><th data-stat="速度">速度</th><th data-stat="穿护">穿护</th><th data-stat="命中">命中</th><th data-stat="暴击">暴击</th><th>升到该级所需</th><th>累计消耗</th><th>升满还需</th></tr></thead>
+      <tbody id="dataRows"></tbody>
+    </table></div>
   </section>
+
   <footer>天机阁 · 升级材料计算器 · 页面在本地计算，不会上传选择的等级</footer>
 </main>
 <script>
@@ -230,8 +284,17 @@ const statData = [
 [47476,10322,4800,2420,9626,47476,47476]
 ];
 const statLabels = [
-["生命"],["速度"],["命中","暴击"],["穿护"],["攻击"],["物防","法防"]
+["生命"],["速度"],["命中","暴击"],["穿透","护甲"],["武攻","法攻"],["物防","法防"]
 ];
+// 显示用属性数值映射：武攻/法攻沿用原攻击数值，穿透/护甲沿用原穿护数值。
+function valuesForAttribute(i, sv){
+ if(i===0) return [sv[0]];
+ if(i===1) return [sv[1]];
+ if(i===2) return [sv[2],sv[3]];
+ if(i===3) return [sv[4],sv[4]];
+ if(i===4) return [sv[5],sv[5]];
+ return [sv[6],sv[6]];
+}
 const fmt=n=>Number(n).toLocaleString("zh-CN");
 const STORAGE_KEY="tianjige-calculator-levels-v1";
 function loadSavedLevels(){
@@ -284,9 +347,9 @@ function update(){
    totalUsed+=used;totalLeft+=left;
    $("tag-"+i).textContent=lvl+" / 70级";
    $("pct-"+i).value=pct.toFixed(1)+"%";
-   $("used-"+i).textContent=fmt(used);$("left-"+i).textContent=fmt(left);$("days-"+i).textContent=days+"天";$("stats-"+i).textContent=statLabels[i].map((label,j)=>label+"："+fmt(i===0?sv[0]:i===1?sv[1]:i===2?sv[j===0?2:3]:i===3?sv[4]:i===4?sv[5]:sv[6])).join(" / ");
+   $("used-"+i).textContent=fmt(used);$("left-"+i).textContent=fmt(left);$("days-"+i).textContent=days+"天";$("stats-"+i).textContent=statLabels[i].map((label,j)=>label+"："+fmt(valuesForAttribute(i,sv)[j])).join(" / ");
    $("bar-"+i).style.width=pct+"%";
-   return `<tr><td>${a}</td><td>${lvl}级</td><td>${fmt(used)}</td><td>${fmt(left)}</td><td>${Math.ceil(left/DAILY)}天</td><td>${pct.toFixed(1)}%</td></tr>`;
+   return `<tr data-attr="${a}"><td>${a}</td><td>${lvl}级</td><td>${fmt(used)}</td><td>${fmt(left)}</td><td>${Math.ceil(left/DAILY)}天</td><td>${pct.toFixed(1)}%</td></tr>`;
  });
  const pct=totalUsed/(MAX*attrs.length)*100;
  $("totalUsed").textContent=fmt(totalUsed);$("totalLeft").textContent=fmt(totalLeft);$("totalDays").textContent=Math.ceil(totalLeft/DAILY)+"天";$("overallPct").textContent=pct.toFixed(1)+"%";$("overallBar").style.width=pct+"%";
@@ -296,14 +359,16 @@ function update(){
 function updateTargetResults(){
  const raw=Number($("availableMaterials").value);
  const available=Number.isFinite(raw)?Math.max(0,Math.floor(raw)):0;
- $("targetResults").innerHTML=attrs.map(a=>{
+ $("targetResults").innerHTML=attrs.map((a,i)=>{
   const current=selected[a],currentCum=rowFor(current)[2];
   let target=current;
   while(target<70 && rowFor(target+1)[2]-currentCum<=available) target++;
   const need=rowFor(target)[2]-currentCum;
   const nextNeed=target<70?rowFor(target+1)[2]-currentCum:0;
-  const detail=target===70?"已达到满级":`升到${target}级需 ${fmt(need)}；再升1级还需 ${fmt(nextNeed)}`;
-  return `<div class="target-result"><span><strong>${a}</strong><br><span class="smallhint" style="margin:0">当前 ${current}级 · ${detail}</span></span><strong>最多 ${target}级</strong></div>`;
+  const currentStats=statLabels[i].map((label,j)=>label+"："+fmt(valuesForAttribute(i,statData[current-1])[j])).join(" / ");
+  const targetStats=statLabels[i].map((label,j)=>label+"："+fmt(valuesForAttribute(i,statData[target-1])[j])).join(" / ");
+  const detail=`<span class="target-detail-line">当前 ${current}级 <span class="target-stat">（${currentStats}）</span></span><span class="target-detail-line">升至 ${target}级 <span class="target-stat">（${targetStats}）</span></span><span class="target-detail-line">升级需 ${fmt(need)} 要诀；${target<70?`再升1级还需 ${fmt(nextNeed)}`:"已达到满级"}</span>`;
+  return `<div class="target-result" data-attr="${a}"><span><div class="target-name">${a}</div><div class="target-detail">${detail}</div></span><div class="target-level">最多 ${target}级</div></div>`;
  }).join("");
 }
 function setAll(lvl){attrs.forEach((a,i)=>{selected[a]=lvl;$("level-"+i).value=String(lvl);});update();saveLevels();}
@@ -312,7 +377,7 @@ $("all1").addEventListener("click",()=>setAll(1));
 $("copy").addEventListener("click",async()=>{
  const usedTotal=attrs.reduce((sum,a)=>sum+rowFor(selected[a])[2],0);
  const leftTotal=attrs.reduce((sum,a)=>sum+MAX-rowFor(selected[a])[2],0);
- const lines=["天机阁升级材料计算器 · 当前方案","属性 | 当前等级 | 对应属性数值 | 已消耗 | 升满还需 | 剩余天数",...attrs.map((a,i)=>{const lvl=selected[a],used=rowFor(lvl)[2],sv=statData[lvl-1];return `${a} | ${lvl}级 | ${statLabels[i].map((label,j)=>label+":"+(i===0?sv[0]:i===1?sv[1]:i===2?sv[j===0?2:3]:i===3?sv[4]:sv[5])).join("/") } | ${fmt(used)} | ${fmt(MAX-used)} | ${Math.ceil((MAX-used)/DAILY)}天`;})];
+ const lines=["天机阁升级材料计算器 · 当前方案","属性 | 当前等级 | 对应属性数值 | 已消耗 | 升满还需 | 剩余天数",...attrs.map((a,i)=>{const lvl=selected[a],used=rowFor(lvl)[2],sv=statData[lvl-1];return `${a} | ${lvl}级 | ${statLabels[i].map((label,j)=>label+":"+valuesForAttribute(i,sv)[j]).join("/") } | ${fmt(used)} | ${fmt(MAX-used)} | ${Math.ceil((MAX-used)/DAILY)}天`;})];
  lines.push(`合计 | 已消耗 ${fmt(usedTotal)} | 升满还需 ${fmt(leftTotal)} | ${Math.ceil(leftTotal/DAILY)}天（按每日${DAILY}）`);
  const text=lines.join("\n");
  if(navigator.share){
@@ -322,7 +387,14 @@ $("copy").addEventListener("click",async()=>{
  catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();alert(ok?"已复制当前方案，可以粘贴分享":"复制失败，请尝试长按文本复制");}
 });
 $("availableMaterials").addEventListener("input",updateTargetResults);
-$("dataRows").innerHTML=levels.map(([lvl,cost,cum])=>`<tr><td>${lvl}</td><td>${fmt(cost)}</td><td>${fmt(cum)}</td><td>${fmt(MAX-cum)}</td><td>${Math.ceil((MAX-cum)/DAILY)}天</td></tr>`).join("");
+$("dataRows").innerHTML=levels.map(([lvl,cost,cum])=>{const sv=statData[lvl-1];return `<tr><td>${lvl}</td><td data-stat="生命">${fmt(sv[0])}</td><td data-stat="攻击">${fmt(sv[5])}</td><td data-stat="防御">${fmt(sv[6])}</td><td data-stat="速度">${fmt(sv[1])}</td><td data-stat="穿护">${fmt(sv[4])}</td><td data-stat="命中">${fmt(sv[2])}</td><td data-stat="暴击">${fmt(sv[3])}</td><td>${fmt(cost)}</td><td>${fmt(cum)}</td><td>${fmt(MAX-cum)}</td></tr>`;}).join("");
+let showAllStatColumns=false;
+const focusStatMap={"生机":["生命"],"惊雷":["速度"],"天目":["命中","暴击"],"利刃":["穿护"],"龙虎":["攻击"],"磐石":["防御"]};
+const focusStatColors={"生机":"#2fa66a","惊雷":"#9560d8","天目":"#3986e8","利刃":"#e05252","龙虎":"#d7a51c","磐石":"#b9a27b"};
+function applyFocusedStat(){const focus=$("focusStat").value;const activeStats=focusStatMap[focus]||[];document.querySelectorAll("#upgradeDataTable [data-stat]").forEach(el=>{const active=activeStats.includes(el.dataset.stat);el.classList.toggle("stat-focus",active);el.classList.toggle("stat-hidden",!showAllStatColumns&&!active);});$("focusStat").style.color=focusStatColors[focus]||"var(--text)";$("focusStat").style.borderColor=focusStatColors[focus]||"var(--line)";$("showAllStats").textContent=showAllStatColumns?"仅显示重点属性":"全部显示";}
+$("focusStat").addEventListener("change",()=>{showAllStatColumns=false;applyFocusedStat();});
+$("showAllStats").addEventListener("click",()=>{showAllStatColumns=!showAllStatColumns;applyFocusedStat();});
+applyFocusedStat();
 renderAttributeCards();update();
 </script>
 </body>
