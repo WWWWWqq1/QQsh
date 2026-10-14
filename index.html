@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.5.3</title>
+<title>天机阁升级材料计算器 v2.5.6</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
@@ -148,6 +148,22 @@ body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer
 body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{color:#586b8b;opacity:.10}
 @media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}}
 
+
+/* v2.5.6 水印扩展：在各模块的空白区域增加淡色 98888，内容层始终位于水印上方 */
+.panel{position:relative;isolation:isolate;overflow:hidden}
+.panel>*{position:relative;z-index:1}
+.panel::after{content:"98888";position:absolute;right:18px;bottom:12px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(24px,3vw,38px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.075;transform:rotate(-10deg)}
+.panel:nth-of-type(2)::after{right:22px;top:16px;bottom:auto;color:#75a9a0;opacity:.065;transform:rotate(8deg)}
+.panel:nth-of-type(3)::after{right:20px;bottom:14px;color:#b39ad6;opacity:.075}
+.panel:nth-of-type(4)::after{right:18px;top:14px;bottom:auto;color:#d3b46f;opacity:.065;transform:rotate(-8deg)}
+.panel:nth-of-type(5)::after{right:24px;bottom:14px;color:#d58b8b;opacity:.07}
+body.light-theme .panel::after{opacity:.095}
+body.light-theme .panel:nth-of-type(2)::after{opacity:.085}
+body.light-theme .panel:nth-of-type(3)::after{opacity:.095}
+body.light-theme .panel:nth-of-type(4)::after{opacity:.085}
+body.light-theme .panel:nth-of-type(5)::after{opacity:.09}
+@media(max-width:700px){.panel::after{font-size:27px;right:12px;bottom:10px;opacity:.06}body.light-theme .panel::after{opacity:.075}}
+
 /* v2.5.3 PC 适配：宽屏下顶部四个操作按钮同排，防止沿用移动端两列布局 */
 @media (min-width: 1100px) {
   .actions {
@@ -166,12 +182,25 @@ body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{colo
 html, body { max-width: 100%; }
 main { width: 100%; }
 
+
+/* v2.5.7 水印布局增强：优先放在主框架各模块的空白角落，不覆盖文字与交互控件 */
+.panel::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#8a9bb8;opacity:.045;transform:rotate(-9deg)}
+.panel::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.07;transform:rotate(-10deg)}
+/* 不同模块交错放置，优先利用边角和内容之间的留白 */
+main>.panel:nth-of-type(1)::before{left:auto;right:24px;top:14px;color:#8c9fbd;opacity:.065;transform:rotate(8deg)}
+main>.panel:nth-of-type(2)::before{left:22px;top:auto;bottom:18px;color:#75a9a0;opacity:.06;transform:rotate(-8deg)}
+main>.panel:nth-of-type(3)::before{left:auto;right:26px;top:18px;color:#b39ad6;opacity:.065;transform:rotate(9deg)}
+main>.panel:nth-of-type(4)::before{left:24px;top:auto;bottom:16px;color:#d3b46f;opacity:.06;transform:rotate(-7deg)}
+main>.panel:nth-of-type(5)::before{left:auto;right:24px;top:16px;color:#d58b8b;opacity:.065;transform:rotate(8deg)}
+body.light-theme .panel::before{opacity:.075}body.light-theme .panel::after{opacity:.095}
+@media(max-width:700px){.panel::before{font-size:22px;left:12px;top:12px;opacity:.035}.panel::after{font-size:27px;right:12px;bottom:10px;opacity:.055}body.light-theme .panel::before{opacity:.05}body.light-theme .panel::after{opacity:.075}}
+
 </style>
 </head>
 <body>
 <header>
   <h1>✨ 天机阁升级材料计算器</h1>
-  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.5.3</div>
+  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.5.6</div>
 </header>
 <main>
   <section class="panel">
