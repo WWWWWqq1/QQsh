@@ -1,42 +1,78 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#20150f">
-  <title>水泊梁山 · 江湖入口</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; }
-    body { overflow: hidden; background: #17120e; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
-    .scene {
-      position: fixed; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; object-position: center center;
-      user-select: none; -webkit-user-drag: none;
-    }
-    /* 按钮外观已在背景图中；这里覆盖透明点击区域，确保外观与参考图完全一致。 */
-    .hotspot {
-      position: fixed; display: block; z-index: 2;
-      top: 50.2%; height: 13.8%;
-      border-radius: 28px; outline-offset: 4px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .hotspot-tianji { left: 17.4%; width: 31.5%; }
-    .hotspot-shenshou { left: 52.7%; width: 31.3%; }
-    .hotspot:focus-visible { outline: 3px solid #fff0b5; }
-    .hotspot:hover { background: rgba(255,255,255,.035); }
-    @media (max-aspect-ratio: 4/3) {
-      /* 窄屏下背景仍以 cover 显示，点击区域跟随画面中心的按钮区域。 */
-      .scene { object-position: center center; }
-      .hotspot { top: 50.2%; height: 13.8%; }
-      .hotspot-tianji { left: 17.4%; width: 31.5%; }
-      .hotspot-shenshou { left: 52.7%; width: 31.3%; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172332">
+<title>水泊梁山</title>
+<style>
+:root { color-scheme: dark; --ease: cubic-bezier(.22,.75,.24,1); }
+* { box-sizing: border-box; }
+html, body { margin:0; width:100%; min-height:100%; }
+body {
+  min-height:100svh; overflow:hidden; background:#172332;
+  font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+}
+.stage {
+  position:relative; width:100%; height:100svh; min-height:420px;
+  overflow:hidden; isolation:isolate; background:#172332;
+}
+.backdrop {
+  position:absolute; inset:0; z-index:-2;
+  background-image:url("liangshan-background.png");
+  background-position:center center; background-repeat:no-repeat;
+  background-size:cover;
+  transform:scale(1.015);
+  transition: background-size .65s var(--ease), background-position .65s var(--ease), transform .65s var(--ease);
+}
+.stage::after {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,15,24,.04) 0%,transparent 45%,rgba(8,15,24,.12) 100%);
+}
+.menu {
+  position:absolute; left:50%; top:57%;
+  width:min(68vw,1040px); display:flex; align-items:center; justify-content:space-between;
+  gap:clamp(12px,2vw,34px); transform:translate(-50%,-50%);
+  transition:top .55s var(--ease), width .55s var(--ease), gap .55s var(--ease), transform .55s var(--ease);
+}
+.menu-link {
+  display:block; flex:1 1 0; min-width:0; border:0; padding:0; margin:0;
+  background:transparent; cursor:pointer; line-height:0; -webkit-tap-highlight-color:transparent;
+  transition:transform .25s var(--ease), filter .25s var(--ease);
+}
+.menu-link img { display:block; width:100%; height:auto; object-fit:contain; user-select:none; -webkit-user-drag:none; }
+.menu-link:hover { transform:translateY(-4px) scale(1.015); filter:brightness(1.08) drop-shadow(0 8px 12px rgba(0,0,0,.24)); }
+.menu-link:active { transform:translateY(1px) scale(.985); filter:brightness(.96); }
+.menu-link:focus-visible { outline:2px solid #ffe4a0; outline-offset:4px; border-radius:20px; }
+@media (max-width:700px) {
+  .backdrop { background-size:auto 100%; background-position:center center; transform:scale(1.01); }
+  .menu {
+    top:59%; width:min(92vw,430px); flex-direction:column; gap:clamp(8px,2.1vh,18px);
+    align-items:center;
+  }
+  .menu-link { flex:none; width:min(100%,400px); }
+  .menu-link:hover { transform:scale(1.015); }
+}
+@media (max-height:520px) and (orientation:landscape) {
+  .menu { width:min(62vw,780px); top:59%; }
+  .menu-link { flex:1 1 0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { transition:none !important; scroll-behavior:auto !important; }
+}
+</style>
 </head>
 <body>
-  <img class="scene" src="liangshan-background.png" alt="水泊梁山山寨与水乡风景">
-  <a class="hotspot hotspot-tianji" href="tianjige.html" aria-label="进入天机阁" title="天机阁"></a>
-  <a class="hotspot hotspot-shenshou" href="shenshou.html" aria-label="进入神兽" title="神兽"></a>
+<main class="stage" aria-label="水泊梁山主菜单">
+  <div class="backdrop" aria-hidden="true"></div>
+  <nav class="menu" aria-label="功能入口">
+    <a class="menu-link" href="tianjige.html" aria-label="进入天机阁">
+      <img src="button-tianjige.png" alt="天机阁">
+    </a>
+    <a class="menu-link" href="shenshou.html" aria-label="进入神兽">
+      <img src="button-shenshou.png" alt="神兽">
+    </a>
+  </nav>
+</main>
 </body>
 </html>
