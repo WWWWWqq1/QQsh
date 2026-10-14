@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.4.2</title>
+<title>天机阁升级材料计算器 v2.5.2</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at top,#1b2d50 0,#0b1020 430px);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-header,main{max-width:1350px;margin:auto}
+header,main{max-width:1350px;margin:auto;position:relative;z-index:1}
 header{padding:25px 16px 18px}
 h1{font-size:25px;line-height:1.25;margin:0 0 8px}
 .sub{font-size:13px;color:var(--muted)}
@@ -46,7 +46,7 @@ select:focus,input:focus{outline:2px solid #628fd5;outline-offset:1px}
 .metric-value{font-size:17px;font-weight:750;font-variant-numeric:tabular-nums}
 .progress{height:6px;background:#27334c;border-radius:99px;overflow:hidden;margin-top:10px}
 .progress>div{height:100%;background:linear-gradient(90deg,#729dff,#83e0b2);border-radius:99px;transition:width .15s}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,max-content));gap:8px;justify-content:start;margin-top:12px}
 button{font:inherit;font-weight:700;border:1px solid #526e9f;border-radius:10px;padding:10px 13px;background:#284574;color:white;cursor:pointer}
 button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
 .smallhint{font-size:13px;color:var(--muted);margin:0 0 12px}
@@ -112,7 +112,7 @@ body.light-theme button.secondary{background:#edf2fa;border-color:#cbd5e5;color:
 body.light-theme .note{background:#edf4ff;border-color:#c9dcfb;color:#29466e}
 @media(min-width:650px){header{padding-left:24px;padding-right:24px}.attr-list{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:20px}.attr{padding:14px}}
 @media(min-width:1100px){main{padding-left:20px;padding-right:20px}.hero{grid-template-columns:repeat(4,minmax(0,1fr))}.target-results{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:24px}}
-@media(max-width:380px){header{padding-top:20px}h1{font-size:22px}.panel{padding:12px}.stat{padding:10px 8px}.stat-label{font-size:11px}.metric-value{font-size:15px}.attr{padding:10px}}
+@media(max-width:380px){.actions{grid-template-columns:repeat(2,minmax(0,1fr))}.actions button{padding:9px 8px;font-size:13px}header{padding-top:20px}h1{font-size:22px}.panel{padding:12px}.stat{padding:10px 8px}.stat-label{font-size:11px}.metric-value{font-size:15px}.attr{padding:10px}}
 
 .focus-control{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 14px}
 .focus-control label{font-weight:700;color:var(--muted,#64748b);margin:0}
@@ -131,16 +131,26 @@ body.light-theme .note{background:#edf4ff;border-color:#c9dcfb;color:#29466e}
 #upgradeDataTable [data-stat].stat-hidden{display:none}
 .focus-control select option[value="生机"]{color:#2fa66a}.focus-control select option[value="惊雷"]{color:#9560d8}.focus-control select option[value="天目"]{color:#3986e8}.focus-control select option[value="利刃"]{color:#e05252}.focus-control select option[value="龙虎"]{color:#b18400}.focus-control select option[value="磐石"]{color:#8b7654}
 @media(max-width:700px){.focus-control{gap:6px}.focus-control select{width:118px;min-width:118px}#upgradeDataTable th.stat-focus,#upgradeDataTable td.stat-focus{font-size:13px}}
-/* 极淡数字水印：固定在视口背景层，不影响点击和表格阅读 */
-body::after{content:"98888";position:fixed;right:18px;bottom:12px;z-index:9999;pointer-events:none;user-select:none;font-size:clamp(24px,4vw,42px);font-weight:800;letter-spacing:3px;line-height:1;color:#8a96aa;opacity:.075;transform:rotate(-12deg)}
-body.light-theme::after{color:#63728a;opacity:.07}
-@media(max-width:700px){body::after{right:9px;bottom:8px;font-size:25px;opacity:.06}}
+/* 主题覆盖：确保手机浏览器中的卡片、输入框、表格和按钮整体同步切换 */
+body:not(.light-theme) .panel{background:rgba(21,30,50,.97);color:var(--text)}
+body:not(.light-theme) .stat,body:not(.light-theme) .metric{background:#0b1324;color:var(--text)}
+body:not(.light-theme) .attr{background:#10192b;color:var(--text)}
+body:not(.light-theme) select,body:not(.light-theme) input{background:#0b1324;color:var(--text);border-color:#3a4b6d;color-scheme:dark}
+body:not(.light-theme) .tablewrap table{background:transparent;color:var(--text)}
+body:not(.light-theme) button.secondary{background:#1b2943;border-color:#354766;color:#e4edff}
+body.light-theme .tablewrap table{background:transparent;color:var(--text)}
+body.light-theme .metric-value,body.light-theme .stat-value{color:var(--text)}
+/* 数字水印：多处随机色系、低透明度分布，固定在背景层，不影响点击 */
+body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px}
+body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg)}
+body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{color:#586b8b;opacity:.10}
+@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}}
 </style>
 </head>
 <body>
 <header>
   <h1>✨ 天机阁升级材料计算器</h1>
-  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.4.2</div>
+  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.5.2</div>
 </header>
 <main>
   <section class="panel">
@@ -153,7 +163,8 @@ body.light-theme::after{color:#63728a;opacity:.07}
     </div>
     <div class="progress" aria-label="全部属性升级完成度"><div id="overallBar" style="width:0%"></div></div>
     <div class="actions">
-      <button class="secondary" id="all70">六条属性全部设为70级</button>
+      <button class="secondary" id="all35">全部设为35级</button>
+      <button class="secondary" id="all70">全部设为70级</button>
       <button class="secondary" id="all1">全部重置为1级</button>
       <button class="secondary" id="copy">分享 / 复制当前方案</button>
     </div>
@@ -321,7 +332,7 @@ function renderAttributeCards(){
  $("attributes").innerHTML=attrs.map((a,i)=>`<article class="attr" data-attr="${a}">
   <div class="attr-head"><div class="attr-name">${a}</div><div class="level-tag" id="tag-${i}">1 / 70级</div></div>
   <div class="controls">
-   <div><label for="level-${i}">当前等级</label><select id="level-${i}" data-attr="${a}">${levels.map(r=>`<option value="${r[0]}" ${r[0]===1?"selected":""}>${r[0]} 级</option>`).join("")}</select></div>
+   <div><label for="level-${i}">当前等级</label><select id="level-${i}" data-attr="${a}"><option value="manual">手动输入…</option>${levels.map(r=>`<option value="${r[0]}" ${r[0]===1?"selected":""}>${r[0]} 级</option>`).join("")}</select></div>
    <div><label>本级累计进度</label><input id="pct-${i}" value="0%" readonly aria-label="${a}升级完成度"></div>
   </div>
   <div class="metrics">
@@ -334,7 +345,14 @@ function renderAttributeCards(){
  </article>`).join("");
  attrs.forEach((a,i)=>{
   $("level-"+i).value=String(selected[a]);
-  $("level-"+i).addEventListener("change",e=>{selected[a]=Number(e.target.value);update();saveLevels();});
+  $("level-"+i).addEventListener("change",e=>{
+   if(e.target.value==="manual"){
+    const raw=prompt(`请输入${a}等级（1–70）`,String(selected[a]));
+    if(raw!==null){const n=Number(raw);if(Number.isInteger(n)&&n>=1&&n<=70){selected[a]=n;}else{alert("请输入 1 到 70 的整数等级");}}
+    e.target.value=String(selected[a]);
+   }else{selected[a]=Number(e.target.value);}
+   update();saveLevels();
+  });
  });
 }
 function saveLevels(){
@@ -372,6 +390,7 @@ function updateTargetResults(){
  }).join("");
 }
 function setAll(lvl){attrs.forEach((a,i)=>{selected[a]=lvl;$("level-"+i).value=String(lvl);});update();saveLevels();}
+$("all35").addEventListener("click",()=>setAll(35));
 $("all70").addEventListener("click",()=>setAll(70));
 $("all1").addEventListener("click",()=>setAll(1));
 $("copy").addEventListener("click",async()=>{
