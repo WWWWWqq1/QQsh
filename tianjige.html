@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.5.9</title>
+<title>天机阁升级材料计算器 v2.6.3</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
@@ -37,8 +37,11 @@ h2{font-size:18px;margin:0 0 12px}
 .attr-name{font-size:16px;font-weight:750}
 .level-tag{font-size:12px;color:#c6d8ff;background:#243657;border:1px solid #3b527c;padding:3px 8px;border-radius:999px;white-space:nowrap}
 .controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.level-picker{display:flex;flex-direction:column;gap:5px;min-width:0}.level-slider-row{display:flex;align-items:center;gap:8px}.level-slider{flex:1;min-width:0;width:100%;height:26px;padding:0;accent-color:var(--attr-color,var(--accent));cursor:pointer;touch-action:pan-y}.level-value{flex:0 0 auto;min-width:60px;text-align:center;padding:5px 8px;border:1px solid color-mix(in srgb,var(--attr-color,var(--accent)) 38%,var(--line));border-radius:9px;background:color-mix(in srgb,var(--attr-color,var(--accent)) 12%,var(--panel2));color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}.level-range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:-2px;padding:0 2px}
+.level-slider:focus-visible{outline:2px solid var(--attr-color,var(--accent));outline-offset:3px}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
 select,input{width:100%;min-width:0;border:1px solid #3a4b6d;border-radius:10px;background:#0b1324;color:var(--text);font:inherit;padding:10px 11px}
+input.level-slider{border:0;border-radius:0;background:transparent;padding:0}
 select:focus,input:focus{outline:2px solid #628fd5;outline-offset:1px}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .metric{background:#0b1324;border-radius:10px;padding:9px 10px}
@@ -214,12 +217,28 @@ body.light-theme .panel::before{opacity:.075}body.light-theme .panel::after{opac
 #upgradeDataTable thead th{position:sticky;top:0;z-index:2;background:var(--panel2);box-shadow:0 1px 0 var(--line)}
 @media(max-width:700px){#upgradeDataDetails .tablewrap{max-height:52vh;min-height:240px}#upgradeDataDetails>summary{padding:14px;font-size:16px}.data-content{padding:0 12px 12px}}
 
+
+/* 固定返回首页按钮：与神兽页面保持一致 */
+.home-return{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--accent);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;text-decoration:none;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease}
+.home-return:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}
+.home-return:active{transform:scale(.97)}
+.home-return:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.home-return svg{width:18px;height:18px;flex:none}
+@media(max-width:480px){.home-return{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));padding:11px 14px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.home-return{transition:none}}
+
 </style>
 </head>
 <body>
+<a class="home-return" href="index.html" aria-label="返回首页" title="返回首页">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span>返回首页</span>
+</a>
+
+
 <header>
   <h1>✨ 天机阁升级材料计算器</h1>
-  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.6.0</div>
+  <div class="sub">六条属性独立设置等级 · 属性颜色区分 · 实时查看属性数值、材料需求与按每日735.5要诀估算的剩余天数 · v2.6.3</div>
 </header>
 <main>
   <section class="panel">
@@ -289,7 +308,7 @@ body.light-theme .panel::before{opacity:.075}body.light-theme .panel::after{opac
     </details>
   </section>
 
-  <footer>天机阁 · 升级材料计算器 · 页面在本地计算，不会上传选择的等级</footer>
+  <footer>@WWWWWqq1</footer>
 </main>
 <script>
 const levels = [
@@ -415,7 +434,7 @@ function renderAttributeCards(){
  $("attributes").innerHTML=attrs.map((a,i)=>`<article class="attr" data-attr="${a}">
   <div class="attr-head"><div class="attr-name">${a}</div><div class="level-tag" id="tag-${i}">1 / 70级</div></div>
   <div class="controls">
-   <div><label for="level-${i}">当前等级</label><select id="level-${i}" data-attr="${a}"><option value="manual">手动输入…</option>${levels.map(r=>`<option value="${r[0]}" ${r[0]===1?"selected":""}>${r[0]} 级</option>`).join("")}</select></div>
+   <div class="level-picker"><label for="level-${i}">当前等级</label><div class="level-slider-row"><input class="level-slider" id="level-${i}" type="range" min="1" max="70" step="1" value="${selected[a]}" data-attr="${a}" aria-label="${a}当前等级"><output class="level-value" id="level-value-${i}" for="level-${i}">${selected[a]} 级</output></div><div class="level-range-labels"><span>1 级</span><span>70 级</span></div></div>
    <div><label>本级累计进度</label><input id="pct-${i}" value="0%" readonly aria-label="${a}升级完成度"></div>
   </div>
   <div class="metrics">
@@ -428,12 +447,9 @@ function renderAttributeCards(){
  </article>`).join("");
  attrs.forEach((a,i)=>{
   $("level-"+i).value=String(selected[a]);
-  $("level-"+i).addEventListener("change",e=>{
-   if(e.target.value==="manual"){
-    const raw=prompt(`请输入${a}等级（1–70）`,String(selected[a]));
-    if(raw!==null){const n=Number(raw);if(Number.isInteger(n)&&n>=1&&n<=70){selected[a]=n;}else{alert("请输入 1 到 70 的整数等级");}}
-    e.target.value=String(selected[a]);
-   }else{selected[a]=Number(e.target.value);}
+  $("level-"+i).addEventListener("input",e=>{
+   selected[a]=Number(e.target.value);
+   $("level-value-"+i).textContent=selected[a]+" 级";
    update();saveLevels();
   });
  });
@@ -447,6 +463,7 @@ function update(){
    const lvl=selected[a],used=rowFor(lvl)[2],left=MAX-used,pct=used/MAX*100,days=Math.ceil(left/DAILY),sv=statData[lvl-1];
    totalUsed+=used;totalLeft+=left;
    $("tag-"+i).textContent=lvl+" / 70级";
+   $("level-"+i).value=String(lvl);$("level-value-"+i).textContent=lvl+" 级";
    $("pct-"+i).value=pct.toFixed(1)+"%";
    $("used-"+i).textContent=fmt(used);$("left-"+i).textContent=fmt(left);$("days-"+i).textContent=days+"天";$("stats-"+i).textContent=statLabels[i].map((label,j)=>label+"："+fmt(valuesForAttribute(i,sv)[j])).join(" / ");
    $("bar-"+i).style.width=pct+"%";
