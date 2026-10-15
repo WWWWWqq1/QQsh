@@ -127,6 +127,18 @@ body.light-theme header p{color:#f0f2ff}
 @media(max-width:480px){.home-return{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));padding:11px 14px;font-size:13px}}
 @media(prefers-reduced-motion:reduce){.home-return{transition:none}}
 
+
+/* 水印样式与天机阁同步：页面背景及各模块边角使用低透明度 98888，不遮挡文字和操作 */
+body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px}
+body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg)}
+body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{color:#586b8b;opacity:.10}
+.wrap{position:relative;isolation:isolate}.wrap>*{position:relative;z-index:1}
+.card{position:relative;isolation:isolate;overflow:hidden}.card>*{position:relative;z-index:1}
+.card::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#8a9bb8;opacity:.045;transform:rotate(-9deg)}
+.card::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.07;transform:rotate(-10deg)}
+body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacity:.095}
+@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}.card::before{font-size:22px;left:12px;top:12px;opacity:.035}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06}body.light-theme .card::before{opacity:.05}body.light-theme .card::after{opacity:.075}}
+
 </style>
 </head>
 <body>
