@@ -3,13 +3,13 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.8</title>
+<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.9</title>
 <style>
 :root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002}
 *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s}
 body.light-theme{--bg:#f2f5fa;--card:#fff;--panel:#f7f9fd;--ink:#172033;--muted:#68758b;--line:#d5ddeb;--primary:#9a6a13;--soft:#fff5df;--shadow:0 10px 28px #26365010}
 body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.045;transform:rotate(-14deg);white-space:pre-wrap}
-.wrap{position:relative;z-index:1;width:min(1100px,100%);margin:auto;padding:24px 18px 100px}header{padding:14px 4px 24px}header .eyebrow{font-size:12px;letter-spacing:2px;color:var(--primary);font-weight:800}h1{margin:8px 0;font-size:clamp(26px,4vw,36px)}header p{margin:0;color:var(--muted);line-height:1.7}.card{position:relative;isolation:isolate;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,28px);margin:0 0 20px;box-shadow:var(--shadow)}.card>*{position:relative;z-index:1}.card:after{content:"98888";position:absolute;right:18px;bottom:12px;z-index:0;pointer-events:none;font-size:clamp(24px,3vw,40px);font-weight:900;letter-spacing:4px;color:var(--primary);opacity:.07;transform:rotate(-10deg)}h2{font-size:clamp(19px,2.8vw,24px);margin:0 0 16px}h3{font-size:17px;margin:22px 0 12px}.hint{font-size:13px;line-height:1.7;color:var(--muted);margin:-6px 0 16px}
+.wrap{position:relative;z-index:1;width:min(1480px,100%);margin:auto;padding:24px clamp(18px,2.2vw,34px) 100px}header{padding:14px 4px 24px}header .eyebrow{font-size:12px;letter-spacing:2px;color:var(--primary);font-weight:800}h1{margin:8px 0;font-size:clamp(26px,4vw,36px)}header p{margin:0;color:var(--muted);line-height:1.7}.card{position:relative;isolation:isolate;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,28px);margin:0 0 20px;box-shadow:var(--shadow)}.card>*{position:relative;z-index:1}.card:after{content:"98888";position:absolute;right:18px;bottom:12px;z-index:0;pointer-events:none;font-size:clamp(24px,3vw,40px);font-weight:900;letter-spacing:4px;color:var(--primary);opacity:.07;transform:rotate(-10deg)}h2{font-size:clamp(19px,2.8vw,24px);margin:0 0 16px}h3{font-size:17px;margin:22px 0 12px}.hint{font-size:13px;line-height:1.7;color:var(--muted);margin:-6px 0 16px}
 .gears{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.gear{min-height:160px;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:inherit;transition:.18s}.gear .gear-art{display:block;width:100%;max-width:180px;height:112px;object-fit:contain;border-radius:10px;background:#211708;box-shadow:inset 0 0 0 1px #d9a44155}.gear .icon{font-size:28px;line-height:1}.gear strong{font-size:16px}.gear small{font-size:12px;color:var(--muted)}.gear.active{border:2px solid var(--primary);background:var(--soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 10%,transparent)}
 .levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.field{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.field label{display:block;color:var(--muted);font-size:14px;margin-bottom:12px}.slider-row{display:flex;align-items:center;gap:12px}.slider-row input{width:100%;min-width:0;accent-color:var(--primary)}output{white-space:nowrap;min-width:72px;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:17px;font-weight:800}.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:8px}
 .summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--panel);min-width:0}.metric span{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}.metric strong{font-size:clamp(18px,2.6vw,25px);overflow-wrap:anywhere}.metric.gold strong{color:var(--primary)}.progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:18px}.progress div{height:100%;width:0;background:var(--primary);transition:width .2s}
@@ -55,7 +55,7 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 .levels .field{padding:clamp(8px,1.8vw,16px)}
 .slider-row{gap:6px}
 .slider-row output{min-width:58px;padding:8px 5px;font-size:15px}
-.summary{grid-template-columns:repeat(7,minmax(0,1fr))}
+.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 @media(max-width:700px){.gears{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gear{min-height:0;padding:10px 8px}.gear .gear-art{width:min(100%,180px)}.levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.levels .field{padding:8px}.slider-row{gap:4px}.slider-row input{min-width:0}.slider-row output{min-width:48px;font-size:13px;padding:7px 3px}.levels .field label{font-size:13px;margin-bottom:8px}.ends{font-size:10px}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.page-heading{padding:17px}}
 @media(max-width:360px){.levels .field{padding:6px}.slider-row output{min-width:42px;font-size:12px}}
 
@@ -94,6 +94,11 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 .rebate-param{min-width:0;padding:10px 8px;text-align:center;border-radius:10px;background:var(--card);color:var(--ink);border:1px solid var(--line)}
 .rebate-param span{display:block;font-size:12px;line-height:1.35;color:var(--muted);opacity:1;margin-bottom:5px;min-height:2.7em;display:flex;align-items:center;justify-content:center;text-align:center}
 .rebate-param strong{font-size:clamp(15px,2vw,20px);font-weight:800;overflow-wrap:anywhere}
+/* v2.12：价格沿用普通参数卡片配色，人民币符号显示在原数值框内部 */
+.rebate-param.price-param{background:var(--card);border-color:var(--line)}
+.rebate-param.price-param>span{color:var(--muted);font-weight:400}
+.rebate-param.price-param output{display:inline-flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;min-width:4.5em;padding:7px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);white-space:nowrap;overflow-wrap:normal}
+.rebate-param.price-param output::before{content:"¥";display:inline-block;color:inherit;font:inherit}
 .rebate-cap-table output{display:inline-block;min-width:2ch}
 .rebate-cap-table .rebate-input{border:0;background:transparent;box-shadow:none;color:inherit;text-align:center;padding:0;pointer-events:none}
 @media(max-width:620px){.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px}.rebate-param{padding:8px 4px}.rebate-param strong{font-size:15px}}
@@ -133,6 +138,9 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 .rebate-param{background:var(--card)!important;color:var(--ink);border-color:var(--line)}
 .rebate-param span{color:var(--muted)!important;opacity:1}
 .rebate-param strong{color:var(--ink)}
+/* v2.9：宽屏布局修复：扩大页面内容宽度，材料需求四项均分整行，避免数值断行 */
+@media(min-width:1200px){.wrap{width:min(1480px,100%)}.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.metric{padding:18px 20px}.metric strong{font-size:clamp(22px,1.8vw,30px);overflow-wrap:normal;word-break:normal}.metric span{font-size:14px}}
+@media(min-width:701px) and (max-width:1000px){.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{padding:12px}.metric strong{font-size:clamp(17px,2.4vw,23px)}}
 </style></head>
 <body><a class="home-return" href="index.html" aria-label="返回首页" title="返回首页">
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -152,7 +160,7 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 <button type="button" class="rebate-plan-option" data-rebate-plan="event">活动大厅限时礼包</button>
 </div>
 <div class="rebate-params" aria-label="礼包基础参数">
-<div class="rebate-param"><span>价格</span><strong>¥<output id="rcPrice">99</output></strong></div>
+<div class="rebate-param price-param"><span>价格</span><strong><output id="rcPrice">99</output></strong></div>
 <div class="rebate-param"><span>大包数量</span><strong><output id="rcBig">213</output></strong></div>
 <div class="rebate-param"><span>中包数量</span><strong><output id="rcMiddle">100</output></strong></div>
 <div class="rebate-param"><span>小包数量</span><strong><output id="rcSmall">21,300</output></strong></div>
@@ -174,7 +182,6 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 <div class="rebate-cap-stat"><span>吃满所需元子</span><strong><output id="rcTotalCost">¥8,947.2</output></strong></div>
 <div class="rebate-cap-stat"><span>节省金额</span><strong><output id="rcSaved">¥2,982.4</output></strong></div>
 </div>
-<div class="rebate-formulas"><strong>计算关系（展示公式与关联结果）</strong><ul><li>小包数量 = 大包数量 × 中包数量</li><li>折算黑曜石 = 小包数量 × 云母/乌金兑换黑曜石比例 + 附加黑曜石（活动大厅限时礼包为 2,300 × 1.25 + 230 = 3,105）</li><li>每包材料数量：云母石 = 小包数量 × 10，乌金石 = 小包数量 × 5，金刚石 = 小包数量 × 2.5，黑曜石 = 折算黑曜石</li><li>实际消耗数量 = 兑换上限 × 返利消耗比例</li><li>吃满所需限时包 = 实际消耗数量 ÷（每包材料数量 × 消耗所得积分 ÷ 兑换所需积分）</li><li>合计限时包 = 各材料所需限时包之和向上取整</li><li>吃满所需元子 = 合计限时包 × 礼包价格；节省金额 = 吃满所需元子 ÷ 3</li></ul><p class="hint">注：Excel 文件内的单元格是数值而非公式，以上公式是依据表内数字重建的联动关系。此表为只读展示；如需调整参数，请修改源代码中的对应初始值及关联公式。</p></div>
 </section>
 <section class="card"><h2>升级数据查询</h2><p class="hint">共用升级表字段：等级、云母石、乌金石、金刚石、黑曜石、增长、经验条、各材料次需、换算黑曜石。</p><div class="table-wrap"><table><thead><tr><th>等级</th><th>云母石</th><th>乌金石</th><th>金刚石</th><th>黑曜石</th><th>增长</th><th>经验条</th><th>云母石次需</th><th>乌金石次需</th><th>金刚石次需</th><th>黑曜石次需</th><th>换算黑曜石</th></tr></thead><tbody id="dataRows"></tbody></table></div></section>
 <footer>@WWWWWqq1</footer></div>
@@ -294,7 +301,7 @@ document.querySelectorAll('.gear').forEach(btn=>btn.addEventListener('click',()=
   const points=vals('rc-points'),costpoints=vals('rc-costpoints'),caps=vals('rc-cap'),perc=vals('rc-percent');
   const actual=caps.map((v,i)=>v*perc[i]);actual.forEach((v,i)=>{const el=id('Actual'+i);if(el)el.textContent=fmt(v)});
   const packs=actual.map((v,i)=>{const per=mat[i]*(points[i]||0)/(costpoints[i]||Infinity);return per>0?v/per:0});
-  packs.forEach((v,i)=>{const el=id('Packs'+i);if(el)el.textContent=fmt(v)});
+  packs.forEach((v,i)=>{const el=id('Packs'+i);if(el)el.textContent=Number.isFinite(v)?v.toLocaleString('zh-CN',{minimumFractionDigits:1,maximumFractionDigits:1}):'—'});
   const raw=packs.reduce((a,b)=>a+b,0),total=Math.ceil(raw-1e-10),cost=total*price;
   if(id('TotalPacks'))id('TotalPacks').textContent=fmt(total)+' 份';
   if(id('TotalCost'))id('TotalCost').textContent=money(cost);
@@ -308,3 +315,12 @@ document.querySelectorAll('.gear').forEach(btn=>btn.addEventListener('click',()=
  calc();
 })();
 </script></body></html>
+<style>
+/* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
+.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 4px;align-items:stretch}
+.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:10px;min-width:0;min-height:98px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--card) 88%,var(--panel));box-shadow:inset 3px 0 0 color-mix(in srgb,var(--primary) 68%,transparent)}
+.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);font-weight:600}
+.rebate-cap-stat strong{display:block;min-width:0;font-size:clamp(22px,2vw,28px);line-height:1.2;color:var(--primary);font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.rebate-cap-stat strong output{display:inline;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;white-space:normal}
+@media(max-width:620px){.rebate-cap-summary{grid-template-columns:1fr;gap:9px}.rebate-cap-stat{min-height:0;padding:13px 15px;gap:6px}.rebate-cap-stat strong{font-size:22px}}
+</style>
