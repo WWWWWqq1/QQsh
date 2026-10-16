@@ -19,11 +19,11 @@ body {
 }
 .backdrop {
   position:absolute; inset:0; z-index:-2;
-  background-image:url("liangshan-background.webp");
+  background-image:url("liangshan-background.png");
   background-position:center center; background-repeat:no-repeat;
   background-size:cover;
-  transform:none;
-  transition:none;
+  transform:scale(1.015);
+  transition: background-size .65s var(--ease), background-position .65s var(--ease), transform .65s var(--ease);
 }
 .stage::after {
   content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
@@ -31,9 +31,9 @@ body {
 }
 .menu {
   position:absolute; left:50%; top:57%;
-  width:min(68vw,1040px); display:flex; align-items:center; justify-content:space-between;
-  gap:clamp(12px,2vw,34px); transform:translate(-50%,-50%);
-  transition:none;
+  width:min(82vw,1260px); display:flex; align-items:center; justify-content:space-between;
+  gap:clamp(10px,1.5vw,24px); transform:translate(-50%,-50%);
+  transition:top .55s var(--ease), width .55s var(--ease), gap .55s var(--ease), transform .55s var(--ease);
 }
 .menu-link {
   display:block; flex:1 1 0; min-width:0; aspect-ratio:510 / 175; height:auto;
@@ -42,13 +42,13 @@ body {
   transition:transform .25s var(--ease), filter .25s var(--ease);
 }
 .menu-link img { display:block; width:100%; height:100%; aspect-ratio:510 / 175; object-fit:fill; user-select:none; -webkit-user-drag:none; }
-/* 三个入口统一使用相同的 510:175 显示框，避免神装图标被布局挤压 */
+/* 所有入口统一使用 510:175 显示框，避免图标变形 */
 .menu-link[href="shenzhuang.html"] img { width:100%; height:100%; object-fit:fill; }
 .menu-link:hover { transform:translateY(-4px) scale(1.015); filter:brightness(1.08) drop-shadow(0 8px 12px rgba(0,0,0,.24)); }
 .menu-link:active { transform:translateY(1px) scale(.985); filter:brightness(.96); }
 .menu-link:focus-visible { outline:2px solid #ffe4a0; outline-offset:4px; border-radius:20px; }
 @media (max-width:700px) {
-  .backdrop { background-size:auto 100%; background-position:center center; transform:none; }
+  .backdrop { background-size:auto 100%; background-position:center center; transform:scale(1.01); }
   .menu {
     top:59%; width:min(92vw,430px); flex-direction:column; gap:clamp(8px,2.1vh,18px);
     align-items:center;
@@ -64,7 +64,7 @@ body {
   *,*::before,*::after { transition:none !important; scroll-behavior:auto !important; }
 }
 
-.contact-author{position:absolute;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));z-index:5;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border:1px solid rgba(255,225,160,.72);border-radius:999px;background:linear-gradient(135deg,rgba(35,54,76,.92),rgba(12,24,40,.94));color:#ffe7ad;text-decoration:none;font:700 15px/1.2 "Microsoft YaHei",system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 6px 22px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.14);transition:transform .2s var(--ease),filter .2s var(--ease)}
+.contact-author{position:absolute;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));z-index:5;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border:1px solid rgba(255,225,160,.72);border-radius:999px;background:linear-gradient(135deg,rgba(35,54,76,.92),rgba(12,24,40,.94));color:#ffe7ad;text-decoration:none;font:700 15px/1.2 "Microsoft YaHei",system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 6px 22px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .2s var(--ease),filter .2s var(--ease)}
 .contact-author:hover{transform:translateY(-2px);filter:brightness(1.12)}.contact-author:active{transform:scale(.97)}.contact-author:focus-visible{outline:2px solid #ffe4a0;outline-offset:4px}
 .contact-author svg{width:19px;height:19px;flex:none}
 @media(max-width:700px){.contact-author{right:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(50%);white-space:nowrap;padding:12px 18px;font-size:14px}.contact-author:hover{transform:translateX(50%) translateY(-2px)}.contact-author:active{transform:translateX(50%) scale(.97)}}
@@ -83,6 +83,9 @@ body {
     </a>
     <a class="menu-link" href="shenzhuang.html" aria-label="进入神装">
       <img src="button-shenzhuang.png" alt="神装">
+    </a>
+    <a class="menu-link" href="junshi.html" aria-label="进入军师升级材料计算器">
+      <img src="button-junshi.png" alt="军师">
     </a>
   </nav>
   <a class="contact-author" href="mqqapi://card/show_pslcard?src_type=internal&amp;version=1&amp;uin=1979025807&amp;card_type=person&amp;source=sharecard" target="_blank" rel="noopener noreferrer" aria-label="联系作者，添加 QQ 好友 1979025807" title="添加 QQ 好友：1979025807">
