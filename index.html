@@ -31,12 +31,15 @@ body {
 }
 .menu {
   position:absolute; left:50%; top:57%;
-  width:min(82vw,1260px); display:flex; align-items:center; justify-content:space-between;
-  gap:clamp(10px,1.5vw,24px); transform:translate(-50%,-50%);
-  transition:top .55s var(--ease), width .55s var(--ease), gap .55s var(--ease), transform .55s var(--ease);
+  width:min(86vw,1260px);
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  align-items:center; justify-items:stretch;
+  column-gap:clamp(12px,1.5vw,24px);
+  transform:translate(-50%,-50%);
+  transition:top .55s var(--ease), width .55s var(--ease), column-gap .55s var(--ease), transform .55s var(--ease);
 }
 .menu-link {
-  display:block; flex:1 1 0; min-width:0; aspect-ratio:510 / 175; height:auto;
+  display:block; width:100%; min-width:0; aspect-ratio:510 / 175; height:auto;
   border:0; padding:0; margin:0; overflow:visible;
   background:transparent; cursor:pointer; line-height:0; -webkit-tap-highlight-color:transparent;
   transition:transform .25s var(--ease), filter .25s var(--ease);
