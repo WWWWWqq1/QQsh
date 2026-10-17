@@ -175,7 +175,7 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
 
 <section class="panel gift-panel" id="giftPlan">
   <div class="gift-heading"><h2>礼包购买方案</h2><label class="rebate-toggle rebate-chip" for="rebateToggle"><input id="rebateToggle" type="checkbox" aria-label="开启返利"><span class="rebate-chip-label" data-off-text="返利未开启" data-on-text="返利已开启">返利未开启</span></label></div>
-  <p class="muted">每个小包可获得阳炎符 ×35、长生符 ×15、圣人符 ×7。根据当前计算的三种材料缺口，自动估算所需小包数量与礼包费用。返利比例按 1/4 计入返利方案。</p>
+  <p class="muted">每个小包只能三选一：阳炎符 ×35、长生符 ×15、圣人符 ×7。分别计算三种材料所需小包数后相加，再估算礼包份数与费用；返利方案按材料需求的 3/4 计算。</p>
   <div class="gift-grid">
     <button type="button" class="gift-card selected" data-gift="monthly">
       <div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div>
@@ -309,7 +309,7 @@ function renderAllGiftPreview(){
   const modeStats=(p,rebate)=>{
     const purchaseNeeds=need.map(n=>rebate?Math.ceil(n*3/4):n);
     const open=purchaseNeeds.map((n,i)=>Math.ceil(n/per[i]));
-    const smallNeed=Math.max(0,...open);
+    const smallNeed=open.reduce((sum,n)=>sum+Math.max(0,n),0);
     const qty=Math.ceil(smallNeed/Math.max(1,p.small));
     const packs=qty*p.small;
     const remaining=Math.max(0,packs-smallNeed);
@@ -337,10 +337,11 @@ function renderGiftPlan(){
 
  const need=getCurrentMaterialNeeds(), per=[35,15,7];
  const purchaseNeeds=need.map(n=>rebateEnabled?Math.ceil(n*3/4):n);
- const smallNeed=Math.max(0,...purchaseNeeds.map((n,i)=>Math.ceil(n/per[i])));
+ const materialPackNeeds=purchaseNeeds.map((n,i)=>Math.ceil(Math.max(0,n)/per[i]));
+ const smallNeed=materialPackNeeds.reduce((sum,n)=>sum+n,0);
  const p=giftPlans[selectedGift], qty=Math.ceil(smallNeed/p.small), purchasedSmall=qty*p.small, effectivePrice=rebateEnabled?p.price/4:p.price;
  const openYang=Math.ceil(purchaseNeeds[0]/35), openChang=Math.ceil(purchaseNeeds[1]/15), openSheng=Math.ceil(purchaseNeeds[2]/7);
- const usedSmall=Math.max(openYang,openChang,openSheng);
+ const usedSmall=openYang+openChang+openSheng;
  const remainingSmall=Math.max(0,purchasedSmall-usedSmall);
  $('giftAmount').textContent=money(qty*p.price);
  $('giftPurchaseCount').textContent=fmt(qty)+' 份';
@@ -352,7 +353,7 @@ function renderGiftPlan(){
   const savingsMetric=document.getElementById('giftSavingsMetric');
   if(savingsMetric){
     if(rebateEnabled){
-      const normalSmallNeed=Math.max(0,...need.map((n,i)=>Math.ceil(n/per[i])));
+      const normalSmallNeed=need.reduce((sum,n,i)=>sum+Math.ceil(Math.max(0,n)/per[i]),0);
       const normalQty=Math.ceil(normalSmallNeed/Math.max(1,p.small));
       const normalCost=normalQty*p.price;
       const rebateCost=qty*p.price;
@@ -363,7 +364,7 @@ function renderGiftPlan(){
     }
   }
 
- $('giftExplain').textContent=`当前选择：${p.label}。${rebateEnabled?'已开启返利，按三种材料需求的 3/4 计算所需小包数，再按礼包原价计算费用。':'未开启返利，按完整材料需求计算所需小包数，再按礼包原价计算费用。'}购买 ${fmt(qty)} 份礼包，共获得 ${fmt(purchasedSmall)} 个小包。`;
+ $('giftExplain').textContent=`当前选择：${p.label}。${rebateEnabled?'已开启返利，按三种材料需求的 3/4 计算。':'未开启返利，按完整材料需求计算。'}每个小包只能选择一种材料，三种材料分别向上取整后相加；共需 ${fmt(smallNeed)} 个小包。购买 ${fmt(qty)} 份礼包，共获得 ${fmt(purchasedSmall)} 个小包。`;
  // 礼包切换后同步更新已展开的全部方案预览选中边框。
  if(document.getElementById('allGiftToggle')?.getAttribute('aria-expanded')==='true') renderAllGiftPreview();
 }

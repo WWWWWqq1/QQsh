@@ -19,7 +19,7 @@ body {
 }
 .backdrop {
   position:absolute; inset:0; z-index:-2;
-  background-image:url("liangshan-background.png");
+  background-image:none;
   background-position:center center; background-repeat:no-repeat;
   background-size:cover;
   transform:scale(1.015);
@@ -76,19 +76,19 @@ body {
 </head>
 <body>
 <main class="stage" aria-label="水泊梁山主菜单">
-  <div class="backdrop" aria-hidden="true"></div>
+  <div class="backdrop" data-bg="liangshan-background.webp" aria-hidden="true"></div>
   <nav class="menu" aria-label="功能入口">
     <a class="menu-link" href="tianjige.html" aria-label="进入天机阁">
-      <img src="button-tianjige.png" alt="天机阁">
+      <img src="button-tianjige.png" alt="天机阁" loading="eager" fetchpriority="high" decoding="async" width="510" height="175">
     </a>
     <a class="menu-link" href="shenshou.html" aria-label="进入神兽">
-      <img src="button-shenshou.png" alt="神兽">
+      <img src="button-shenshou.png" alt="神兽" loading="eager" fetchpriority="high" decoding="async" width="510" height="175">
     </a>
     <a class="menu-link" href="shenzhuang.html" aria-label="进入神装">
-      <img src="button-shenzhuang.png" alt="神装">
+      <img src="button-shenzhuang.png" alt="神装" loading="eager" fetchpriority="high" decoding="async" width="510" height="175">
     </a>
     <a class="menu-link" href="junshi.html" aria-label="进入军师升级材料计算器">
-      <img src="button-junshi.png" alt="军师">
+      <img src="button-junshi.png" alt="军师" loading="eager" fetchpriority="high" decoding="async" width="510" height="175">
     </a>
   </nav>
   <a class="contact-author" href="mqqapi://card/show_pslcard?src_type=internal&amp;version=1&amp;uin=1979025807&amp;card_type=person&amp;source=sharecard" target="_blank" rel="noopener noreferrer" aria-label="联系作者，添加 QQ 好友 1979025807" title="添加 QQ 好友：1979025807">
@@ -96,5 +96,10 @@ body {
     <span>联系作者</span>
   </a>
 </main>
+
+<script>
+// 首屏优先加载四个导航按钮；背景图在页面完成首屏渲染后再异步加载。
+(()=>{const el=document.querySelector('.backdrop');if(!el)return;const loadBg=()=>{const src=el.dataset.bg;if(!src)return;const img=new Image();img.decoding='async';img.onload=()=>{el.style.backgroundImage=`url("${src}")`;el.removeAttribute('data-bg')};img.src=src};const schedule=()=>('requestIdleCallback'in window?requestIdleCallback(loadBg,{timeout:1800}):setTimeout(loadBg,350));if(document.readyState==='complete')schedule();else window.addEventListener('load',schedule,{once:true});})();
+</script>
 </body>
 </html>
