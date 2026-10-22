@@ -2,7 +2,7 @@
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10131b"><script>(function(){try{var h=new Date().getHours(),m=h*60+new Date().getMinutes();document.documentElement.dataset.theme=(m>=360&&m<1080)?'light':'dark';document.querySelector('meta[name="theme-color"]').content=(m>=360&&m<1080)?'#f1f3f7':'#10131b';}catch(e){document.documentElement.dataset.theme='dark';}})();</script><title>祭坛升级计算器</title>
+<meta name="theme-color" content="#10131b"><script>(function(){try{var h=new Date().getHours(),m=h*60+new Date().getMinutes();document.documentElement.dataset.theme=(m>=360&&m<1080)?'light':'dark';document.querySelector('meta[name="theme-color"]').content=(m>=360&&m<1080)?'#f1f3f7':'#10131b';}catch(e){document.documentElement.dataset.theme='dark';}})();</script><title>祭坛升级计算器 v1.2.59</title>
 <style>
 :root{color-scheme:dark;--bg:#10131b;--panel:#191e29;--panel2:#202737;--text:#f0f3fa;--muted:#9da8bc;--line:#30394b;--accent:#d6b46c;--accent2:#f0d89b;--good:#7ed6b0;--danger:#ff9a9a;--shadow:0 14px 36px #0003}
 [data-theme="light"]{color-scheme:light;--bg:#f1f3f7;--panel:#fff;--panel2:#f7f8fb;--text:#202737;--muted:#69758a;--line:#e1e5ed;--accent:#a67d2e;--accent2:#d2aa55;--good:#16835d;--danger:#bd4141;--shadow:0 12px 30px #27334a12}
@@ -278,6 +278,13 @@ body[data-altar="5"]{--altar-tone:#7052a0}
 .exp-slider-reset-row #resetExp,
 .stock-section-head #resetStockInventory { font-weight: 400 !important; }
 
+
+/* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
+.wrap{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
+@media(max-width:760px){.wrap{width:calc(100% - 20px)!important;max-width:1200px!important;padding-left:10px!important;padding-right:10px!important;}}
+
+/* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
+.panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
 </style>
 <meta name="qqsh-version" content="jitan-v1.2.63">
 </head><body><main class="wrap">
@@ -289,8 +296,8 @@ body[data-altar="5"]{--altar-tone:#7052a0}
 <div class="rebate-heading"><div><h3>礼包购买方案</h3><p>返利比例为 1/4：返还需求的 1/4，实际消耗为需求的 3/4。返利计算临界点为 390,000 个需求，超过部分不再返利；对应实际返利上限为 97,500 个。</p></div><button type="button" class="rebate-toggle off" id="rebateToggle" aria-pressed="false">返利未开启 · 点击开启</button></div>
 <div class="rebate-packages" id="rebatePackages">
 <button type="button" class="rebate-package selected" data-package="0" aria-pressed="true"><span class="rebate-package-top"><span class="rebate-package-name">月初礼包</span><span class="rebate-price">¥99</span></span><span class="rebate-details"><span>大包 <b>213</b></span><span>小包 <b>21,300</b></span></span></button>
-<button type="button" class="rebate-package" data-package="1" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">VIP9礼包</span><span class="rebate-price">¥30</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>8,888</b></span></span></button>
-<button type="button" class="rebate-package" data-package="2" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">活动大厅限时礼包</span><span class="rebate-price">¥21</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>2,530</b></span></span></button>
+<button type="button" class="rebate-package" data-package="1" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">VIP10礼包</span><span class="rebate-price">¥27.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>8,888</b></span></span></button>
+<button type="button" class="rebate-package" data-package="2" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">活动大厅限时礼包</span><span class="rebate-price">¥10.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>1,150</b></span></span></button>
 </div>
 <div class="rebate-summary" id="rebateSummary">当前选择：月初礼包。按返利后的净需求计算购买数量。</div>
 <div class="rebate-stats">
@@ -375,7 +382,7 @@ function initDataFilters(){
  $('toggleDataTable').addEventListener('click',()=>{dataExpanded=!dataExpanded;$('upgradeDataWrap').classList.toggle('expanded',dataExpanded);$('upgradeDataWrap').classList.toggle('collapsed',!dataExpanded);$('toggleDataTable').textContent=dataExpanded?'收起':'展开';$('toggleDataTable').setAttribute('aria-expanded',String(dataExpanded));requestAnimationFrame(positionDataAtLevel60)});
  renderDataTable();requestAnimationFrame(positionDataAtLevel60);
 }
-const ALTAR_PACKAGES=[{name:'月初礼包',price:99,big:213,small:21300},{name:'VIP9礼包',price:30,big:1,small:8888},{name:'活动大厅限时礼包',price:21,big:1,small:2530}];
+const ALTAR_PACKAGES=[{name:'月初礼包',price:99,big:213,small:21300},{name:'VIP10礼包',price:27.8,big:1,small:8888},{name:'活动大厅限时礼包',price:10.8,big:1,small:1150}];
 let selectedRebatePackage=0,rebateEnabled=false;
 function updateRebate(actual){
  const eligible=Math.min(Math.max(0,actual),390000);

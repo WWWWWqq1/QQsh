@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v1.0.55</title>
+<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v1.0.56</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -223,6 +223,13 @@ body.rebate-on .gift-total>div.gift-metric-cost strong,body.rebate-on .gift-tota
 .inventory-overview-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;margin-bottom:14px}
 .inventory-overview-heading .inventory-overview-title{margin:0!important}
 @media(max-width:480px){.inventory-overview-heading{gap:8px}.inventory-overview-heading .reset-stock-btn{padding:7px 10px;font-size:13px}}
+
+/* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
+main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
+@media(max-width:760px){main{width:calc(100% - 20px)!important;max-width:1200px!important;padding-left:10px!important;padding-right:10px!important;}}
+
+/* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
+.panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
 </style></head><body><main>
 <header class="hero"><h1>军师升级材料计算器</h1><p>选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p><p class="muted" style="margin-top:8px">生命 · 武攻 · 法攻 · 武防 · 法防 · 速度</p></header>
 <section class="panel"><h2>计算属性数量</h2><div class="segment"><button id="oneBtn" class="active" type="button">计算一条属性</button><button id="twoBtn" type="button">计算两条属性</button></div></section>
@@ -258,8 +265,8 @@ body.rebate-on .gift-total>div.gift-metric-cost strong,body.rebate-on .gift-tota
       <div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div>
       <div class="gift-facts"><span>大包 <b>208</b></span><span>中包 <b>80</b></span><span>小包 <b>16,640</b></span></div></button>
     <button type="button" class="gift-card" data-gift="event">
-      <div class="gift-top"><strong>活动大厅限时礼包</strong><span class="gift-price">¥22.8</span></div>
-      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1,900</b></span><span>小包 <b>1,900</b></span></div></button>
+      <div class="gift-top"><strong>活动大厅限时礼包</strong><span class="gift-price">¥13.8</span></div>
+      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1,200</b></span></div></button>
   </div>
   <div class="gift-explain" id="giftExplain">选择礼包方案，查看当前材料缺口对应的购买估算。</div>
   <div class="gift-total">
@@ -355,7 +362,7 @@ $('tableBody').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?v:fmt(v)}<
 function applyTheme(){const h=new Date().getHours();document.body.classList.toggle('dark',h>=18||h<6);document.querySelector('meta[name="theme-color"]').content=(h>=18||h<6)?'#11151d':'#f4f6fa'}const giftPlans={
  monthly:{label:'月初礼包',price:99,small:17040,big:213,middle:80},
  vip10:{label:'VIP10礼包',price:139.8,small:16640,big:208,middle:80},
- event:{label:'活动大厅限时礼包',price:22.8,small:1900,big:1,middle:1900}
+ event:{label:'活动大厅限时礼包',price:13.8,small:1200,big:1,middle:1}
 };
 let selectedGift='monthly';
 let rebateEnabled=false;
@@ -386,7 +393,7 @@ function renderAllGiftPreview(){
   const plans=[
     {id:'monthly',label:'月初礼包',price:99,big:213,mid:80,small:17040},
     {id:'vip10',label:'VIP10礼包',price:139.8,big:208,mid:80,small:16640},
-    {id:'event',label:'活动大厅限时礼包',price:22.8,big:1,mid:1900,small:1900}
+    {id:'event',label:'活动大厅限时礼包',price:13.8,big:1,mid:1,small:1200}
   ];
   const fmtAll=n=>Number(n).toLocaleString('en-US');
   const moneyAll=n=>'¥'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
@@ -459,7 +466,7 @@ function renderGiftPlan(){
 const rebateGiftConfigs={
  monthly:{label:'月初礼包',price:99,big:213,middle:80,small:17040},
  vip10:{label:'VIP10礼包',price:139.8,big:208,middle:80,small:16640},
- event:{label:'活动大厅限时礼包',price:22.8,big:1,middle:1900,small:1900}
+ event:{label:'活动大厅限时礼包',price:13.8,big:1,middle:1,small:1200}
 };
 function setRebateGift(id){
  const p=rebateGiftConfigs[id]||rebateGiftConfigs.monthly;

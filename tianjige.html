@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" id="themeColorMeta">
-<title>天机阁升级材料计算器 v2.6.4</title>
+<title>天机阁升级材料计算器 v2.6.5</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151e32;--panel2:#0e1628;--line:#2c3a58;--text:#edf3ff;--muted:#9caccb;--accent:#8ab4ff;--green:#82e0b0;--gold:#ffd27d}
 *{box-sizing:border-box}
@@ -233,6 +233,13 @@ html:has(body.light-theme){color-scheme:light;background:#f4f6fa}
 body.light-theme{background:#f4f6fa !important;background-image:radial-gradient(ellipse at top,#ffffff 0,#f1f4f9 430px) !important;color:#172033 !important;color-scheme:light !important}
 body.light-theme header,body.light-theme main{color:#172033}
 @media(max-width:700px){body.light-theme{background-color:#f4f6fa !important}}
+
+/* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
+main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
+@media(max-width:760px){main{width:calc(100% - 20px)!important;max-width:1200px!important;padding-left:10px!important;padding-right:10px!important;}}
+
+/* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
+.panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
 </style>
 </head>
 <body>

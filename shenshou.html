@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v1.1.33</title>
+<title>神兽升级计算器 v1.1.38</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -12,7 +12,7 @@ body.theme-turtle{--primary:#93653e;--primary-soft:#f5eee7}
 body.theme-tiger{--primary:#7952bd;--primary-soft:#f2edfb}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.5}
-.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 48px}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 20px 48px}
 header{padding:26px 24px;border-radius:20px;background:linear-gradient(125deg,color-mix(in srgb,var(--primary) 88%,#182033),var(--primary));color:white;box-shadow:0 12px 32px #252a4a22}
 .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.78}
 h1{margin:5px 0 8px;font-size:clamp(25px,4vw,36px)}
@@ -139,6 +139,23 @@ body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{colo
 body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacity:.095}
 @media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}.card::before{font-size:22px;left:12px;top:12px;opacity:.035}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06}body.light-theme .card::before{opacity:.05}body.light-theme .card::after{opacity:.075}}
 
+
+.inventory-panel {
+  margin: 0 0 18px;
+  padding: 12px;
+  border: 1px solid rgba(190, 150, 80, .28);
+  border-radius: 12px;
+  background: rgba(20, 28, 42, .24);
+}
+.inventory-panel > h3 { margin-top: 0; }
+.inventory-actions { justify-content: flex-end; margin-top: 10px; }
+
+/* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
+.wrap{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
+@media(max-width:760px){.wrap{width:calc(100% - 20px)!important;max-width:1200px!important;padding-left:10px!important;padding-right:10px!important;}}
+
+/* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
+.panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
 </style>
 </head>
 <body>
@@ -166,27 +183,25 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
       <div class="field level-picker"><label for="fromLevel">当前等级</label><div class="level-slider-row"><input class="level-slider" id="fromLevel" type="range" min="1" max="80" step="1" value="40" aria-label="当前等级"><output class="level-value" id="fromLevelValue" for="fromLevel">40 级</output></div><div class="level-range-labels"><span>1 级</span><span>80 级</span></div></div>
       <div class="field level-picker"><label for="toLevel">目标等级</label><div class="level-slider-row"><input class="level-slider" id="toLevel" type="range" min="1" max="80" step="1" value="60" aria-label="目标等级"><output class="level-value" id="toLevelValue" for="toLevel">60 级</output></div><div class="level-range-labels"><span>1 级</span><span>80 级</span></div></div>
     </div>
-    <h3>神兽属性变化</h3>
-    <div class="table-wrap"><table class="result-table">
-      <thead><tr><th>属性</th><th>当前等级</th><th>目标等级</th><th>增加</th></tr></thead>
-      <tbody id="attributes"></tbody>
-    </table></div>
-    <h3>已有材料库存</h3>
-    <div class="stock-grid">
-      <div class="stock"><label for="herbStock">灵草</label><input id="herbStock" type="number" min="0" step="1" value="0"></div>
-      <div class="stock"><label for="woodStock">灵木</label><input id="woodStock" type="number" min="0" step="1" value="0"></div>
-      <div class="stock"><label for="pillStock">灵丹</label><input id="pillStock" type="number" min="0" step="1" value="0"></div>
-    </div>
     <div class="exp-panel compact-exp">
       <div class="exp-halves">
         <div class="exp-half"><h3>当前已有经验</h3><div class="field"><label for="currentExp">手动填写经验值</label><input id="currentExp" type="number" min="0" step="1" value="0"></div></div>
         <div class="exp-half"><h3>该等级经验条</h3><div class="exp-caption"><span id="expFraction">0 / 0</span><span id="expPercent">0%</span></div><div class="exp-bar"><div id="expBarFill"></div></div><div class="exp-caption"><span>经验上限</span><span id="expDenominator">0 经验</span></div></div>
       </div>
     </div>
-    <div class="actions"><button class="action secondary" id="clearStock">库存归零</button><button class="action secondary" id="reset">恢复默认等级</button></div>
+    <div class="actions"><button class="action secondary" id="reset">恢复默认等级</button></div>
   </section>
   <section class="card">
     <h2>升级材料需求</h2>
+    <div class="inventory-panel">
+    <h3>已有材料库存</h3>
+    <div class="stock-grid">
+      <div class="stock"><label for="herbStock">灵草</label><input id="herbStock" type="number" min="0" step="1" value="0"></div>
+      <div class="stock"><label for="woodStock">灵木</label><input id="woodStock" type="number" min="0" step="1" value="0"></div>
+      <div class="stock"><label for="pillStock">灵丹</label><input id="pillStock" type="number" min="0" step="1" value="0"></div>
+    </div>
+      <div class="actions inventory-actions"><button class="action secondary" id="clearStock">重置库存</button></div>
+    </div>
     <div class="summary">
       <div class="metric"><div class="name">灵草缺口</div><strong id="herbNeed">0</strong><small>扣除库存后</small></div>
       <div class="metric"><div class="name">灵木缺口</div><strong id="woodNeed">0</strong><small>扣除库存后</small></div>
@@ -204,12 +219,19 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
   </section>
 </div>
 <section class="card section">
+  <h2>升级属性变化</h2>
+  <div class="table-wrap"><table class="result-table">
+    <thead><tr><th>属性</th><th>当前等级</th><th>目标等级</th><th>增加</th></tr></thead>
+    <tbody id="attributes"></tbody>
+  </table></div>
+</section>
+<section class="card section">
   <h2><span style="color:#dc2626;font-weight:700">不吃返利 自选包与礼包方案</span></h2>
-  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 800 个小包。选择购买方案后，按该方案的礼包容量与价格估算购买数量。</p>
+  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 1,200 个小包。选择购买方案后，按该方案的礼包容量与价格估算购买数量。</p>
   <div class="plan-options" role="group" aria-label="选择礼包方案">
     <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span>213中包/大包 × 80大包，共17,040中包</span></button>
     <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span>208中包/大包 × 80大包，共16,640中包</span></button>
-    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 800小包</span></button>
+    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 1,200小包</span></button>
   </div>
   <div class="summary">
     <div class="metric"><div class="name">小包需求</div><strong id="totalPacks">0</strong></div>
@@ -239,11 +261,11 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 </section>
 <section class="card section rebate-placeholder">
   <h2><span style="color:#16a34a;font-weight:700">全吃返利 自选包与礼包方案</span></h2>
-  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 800 个小包。按不吃返利所需材料的三分之二估算。</p>
+  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 1,200 个小包。按不吃返利所需材料的三分之二估算。</p>
   <div class="plan-options" role="group" aria-label="选择全吃返利礼包方案">
     <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span>213中包/大包 × 80大包，共17,040中包</span></button>
     <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span>208中包/大包 × 80大包，共16,640中包</span></button>
-    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 800小包</span></button>
+    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 1,200小包</span></button>
   </div>
   <div class="summary">
     <div class="metric"><div class="name">小包需求</div><strong id="rebateTotalPacks">0</strong></div>
@@ -300,7 +322,7 @@ const nval=id=>{const el=$(id);const n=Number(el && el.value);return Number.isFi
 const giftPlans={
  monthly:{name:'月初礼包',middlePerBig:213,bigCount:80,middleCount:17040,smallPerBig:213*80,price:99},
  vip10:{name:'VIP10礼包',middlePerBig:208,bigCount:80,middleCount:16640,smallPerBig:208*80,price:139.8},
- event:{name:'活动大厅限时礼包',middlePerBig:1,bigCount:1,middleCount:1,smallPerBig:800,price:11.8}
+ event:{name:'活动大厅限时礼包',middlePerBig:1,bigCount:1,middleCount:1,smallPerBig:1200,price:13.8}
 };
 let selectedPlan='monthly';
 let selectedBeast='火暴龙';
@@ -367,19 +389,19 @@ function render(){
  const packs=[herbPackCount,woodPackCount,pillPackCount];
  // 自选包总需求 = 灵草包数 + 灵木包数 + 灵丹包数（每类分别向上取整后再相加）。
  const total=herbPackCount+woodPackCount+pillPackCount;
- const plan=giftPlans[selectedPlan],middle=selectedPlan==='event'?Math.ceil(total/800):Math.ceil(total/80),big=selectedPlan==='event'?middle:Math.ceil(middle/plan.middlePerBig),bundles=middle===0?0:middle/plan.middlePerBig,boughtMiddle=selectedPlan==='event'?big:Math.ceil(bundles)*plan.middlePerBig,boughtSmall=selectedPlan==='event'?boughtMiddle*800:boughtMiddle*80;
+ const plan=giftPlans[selectedPlan],middle=selectedPlan==='event'?Math.ceil(total/1200):Math.ceil(total/80),big=selectedPlan==='event'?middle:Math.ceil(middle/plan.middlePerBig),bundles=middle===0?0:middle/plan.middlePerBig,boughtMiddle=selectedPlan==='event'?big:Math.ceil(bundles)*plan.middlePerBig,boughtSmall=selectedPlan==='event'?boughtMiddle*1200:boughtMiddle*80;
  $('herbPacks').textContent=fmt(packs[0])+' 个';$('woodPacks').textContent=fmt(packs[1])+' 个';$('pillPacks').textContent=fmt(packs[2])+' 个';
  // 全吃返利：按原始材料缺口的 2/3 计算，分别向上取整到各类自选小包。
  const rebateGaps=gaps.map(v=>v*2/3);
  const rebatePacks=rebateGaps.map((v,i)=>Math.ceil(v/[91,39,21][i]));
  const rebateTotal=rebatePacks.reduce((sum,v)=>sum+v,0);
- const rebateMiddle=selectedPlan==='event'?Math.ceil(rebateTotal/800):Math.ceil(rebateTotal/80);
+ const rebateMiddle=selectedPlan==='event'?Math.ceil(rebateTotal/1200):Math.ceil(rebateTotal/80);
  const rebateBig=selectedPlan==='event'?rebateMiddle:Math.ceil(rebateMiddle/plan.middlePerBig);
  const rebateBoughtMiddle=selectedPlan==='event'?rebateBig:rebateBig*plan.middlePerBig;
- const rebateBoughtSmall=selectedPlan==='event'?rebateBoughtMiddle*800:rebateBoughtMiddle*80;
+ const rebateBoughtSmall=selectedPlan==='event'?rebateBoughtMiddle*1200:rebateBoughtMiddle*80;
  $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
- $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig);$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 800 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
- $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big);$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 800 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
+ $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig);$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
+ $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big);$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
  $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');
 }
 function renderTable(){$('levelRows').innerHTML=raw.map((r,i)=>`<tr><td>${i+1}</td>${r.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}
