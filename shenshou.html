@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v1.1.38</title>
+<title>神兽升级计算器 v1.1.88</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -90,8 +90,8 @@ button.action{border:0;border-radius:9px;padding:9px 13px;font:inherit;cursor:po
 .note{font-size:12px;color:var(--muted);margin:12px 0 0}
 .section{margin-top:16px}
 details summary{cursor:pointer;font-weight:650;padding:4px 0 12px}
-.level-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
-.level-table th,.level-table td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
+.level-table{width:100%;table-layout:fixed;border-collapse:collapse;white-space:normal;font-size:12px}
+.level-table th,.level-table td{padding:8px 5px;border-bottom:1px solid var(--line);text-align:center;overflow-wrap:anywhere}
 .level-table th:first-child,.level-table td:first-child{text-align:center}
 .level-table thead th{position:sticky;top:0;background:var(--primary-soft);color:var(--primary);z-index:1}
 .level-table tbody tr:nth-child(even){background:#fafbfe}
@@ -99,56 +99,41 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 0 0}
 @media(max-width:760px){.wrap{padding:14px 10px 32px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.card{padding:15px}.beasts{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.beast{min-height:100px;padding:12px 7px}.beast .beast-icon{font-size:31px}.beast strong{font-size:17px}.beast span{font-size:12px}.summary{gap:7px}.metric{padding:10px}.fields{gap:7px}.exp-panel{padding:11px}.level-slider-row{gap:6px}.level-value{min-width:54px;padding:5px 6px;font-size:13px}.level-picker:first-child{padding-right:2px}.level-picker:nth-child(2){padding-left:2px}.result-table{font-size:12px}.result-table th,.result-table td{padding:6px 3px}}
 @media(max-width:380px){.stock-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.metric strong{font-size:22px}}
 
-/* 昼夜主题规则与天机阁保持一致：06:00-17:59 浅色，18:00-05:59 深色 */
-body{transition:background-color .25s ease,color .25s ease;color-scheme:dark}
-body.light-theme{--bg:#f4f6fa;--card:#fff;--ink:#172033;--muted:#68758b;--line:#d8deea;--primary-soft:#edf3fc;background:radial-gradient(ellipse at top,#fff 0,#f1f4f9 430px);color:var(--ink);color-scheme:light}
-body.light-theme .card{background:rgba(255,255,255,.97);box-shadow:0 8px 24px #1b2a4510}
-body.light-theme .exp-panel{background:color-mix(in srgb,var(--primary-soft) 65%,white)}
-body.light-theme .exp-denom,body.light-theme .beast,body.light-theme .plan-option,body.light-theme .pack-detail{background:#fff;color:var(--ink)}
-body.light-theme select,body.light-theme input{background:#fff;color:#172033;border-color:#c5cede;color-scheme:light}
-body.light-theme .stock{background:var(--primary-soft)}
-body.light-theme .metric{background:#f0f3f8}
-body.light-theme .allocation-item{background:var(--primary-soft)}
-body.light-theme .purchase-card{background:linear-gradient(145deg,var(--primary-soft),#fff)}
-body.light-theme .table-wrap{background:#fff}
-body.light-theme .result-table th{background:var(--primary-soft)}
-body.light-theme .secondary{background:#edf2fa;color:#243754}
-body.light-theme .exp-result{background:var(--primary-soft)}
-body.light-theme header p{color:#f0f2ff}
-@media(prefers-reduced-motion:reduce){body{transition:none}}
-
-
 /* 固定返回首页按钮 */
-.home-return{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;text-decoration:none;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease}
+.floating-actions{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:8px}
+.home-return{position:static;display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;text-decoration:none;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease}
 .home-return:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}
 .home-return:active{transform:scale(.97)}
 .home-return:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
 .home-return svg{width:18px;height:18px;flex:none}
-@media(max-width:480px){.home-return{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));padding:11px 14px;font-size:13px}}
+@media(max-width:480px){.floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:6px}.home-return{padding:11px 12px;font-size:13px;gap:6px}}
 @media(prefers-reduced-motion:reduce){.home-return{transition:none}}
 
 
 /* 水印样式与天机阁同步：页面背景及各模块边角使用低透明度 98888，不遮挡文字和操作 */
 body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px}
 body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg)}
-body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{color:#586b8b;opacity:.10}
 .wrap{position:relative;isolation:isolate}.wrap>*{position:relative;z-index:1}
 .card{position:relative;isolation:isolate;overflow:hidden}.card>*{position:relative;z-index:1}
 .card::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#8a9bb8;opacity:.045;transform:rotate(-9deg)}
 .card::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.07;transform:rotate(-10deg)}
-body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacity:.095}
-@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}.card::before{font-size:22px;left:12px;top:12px;opacity:.035}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06}body.light-theme .card::before{opacity:.05}body.light-theme .card::after{opacity:.075}}
+@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}.card::before{font-size:22px;left:12px;top:12px;opacity:.035}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06}}
 
 
+/* 已有材料库存：移除内层卡片边框、底色和额外内边距 */
 .inventory-panel {
   margin: 0 0 18px;
-  padding: 12px;
-  border: 1px solid rgba(190, 150, 80, .28);
-  border-radius: 12px;
-  background: rgba(20, 28, 42, .24);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .inventory-panel > h3 { margin-top: 0; }
-.inventory-actions { justify-content: flex-end; margin-top: 10px; }
+.inventory-actions { display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:12px; }
+/* 与「神兽及等级选择」标题保持一致：字号、字重及动态主题色统一 */
+.card h3.stock-overview-title { margin:0; font-family:inherit; font-size:18px !important; font-weight:700; color:var(--primary); line-height:1.35; }
+.level-actions{justify-content:flex-end;align-items:center}.exp-input-slider{display:block;margin-top:7px;width:100%;height:24px;padding:0;accent-color:var(--primary);cursor:pointer;touch-action:pan-y}.level-actions .action{white-space:nowrap}
+@media(max-width:420px){.level-actions{display:grid;grid-template-columns:1fr 1fr}.level-actions .action{width:100%;padding-left:8px;padding-right:8px}}
 
 /* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
 .wrap{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
@@ -156,13 +141,493 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
 
 /* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
 .panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
+
+/* v1.1.45: center and evenly distribute the upgrade attribute table; refine numeric typography */
+.result-table th,
+.result-table td {
+  text-align: center !important;
+  padding: 8px 6px;
+  font-size: 13px;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+.result-table th:first-child,
+.result-table td:first-child,
+.result-table th:not(:first-child),
+.result-table td:not(:first-child) {
+  width: 25%;
+  text-align: center !important;
+}
+.result-table td { font-size: 14px; font-weight: 500; }
+.result-table th { font-size: 12px; font-weight: 650; }
+@media (max-width: 600px) {
+  .result-table th, .result-table td { padding: 7px 3px; }
+  .result-table td { font-size: 13px; }
+  .result-table th { font-size: 11px; }
+}
+
+
+/* v1.1.50：神兽礼包/返利卡片套用军师礼包购买方案的卡片式 UI；仅调整呈现，不改计算逻辑 */
+.card.section:has(.plan-options){padding:18px;border-radius:18px;box-shadow:0 10px 24px #26365012}
+.card.section:has(.plan-options)>h2{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:20px;color:var(--ink)}
+.card.section:has(.plan-options)>.note{font-size:13px;color:var(--muted);line-height:1.55;margin:0 0 14px!important}
+.plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
+.plan-option{display:block;min-width:0;padding:12px 13px;border:1px solid var(--line);border-radius:13px;background:#f5f7fb;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .16s,background .16s,box-shadow .16s}
+.plan-option strong{display:block;font-size:15px;line-height:1.35;font-weight:750;margin-bottom:9px}
+.plan-option span{display:block;padding:8px 6px;border-radius:8px;background:#fff;color:var(--muted);font-size:12px;line-height:1.5;text-align:center}
+.plan-option.active{border:1.5px solid #b77912;background:#fff;box-shadow:inset 0 0 0 1px #b77912}
+.plan-option.active span{background:#f5f7fb}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.summary .metric{border:1px solid transparent;border-top:0;border-radius:11px;padding:12px 10px;background:#f0f2f5;min-width:0;text-align:center}
+.summary .metric .name{font-size:12px;line-height:1.4;color:#4b5563}
+.summary .metric strong{display:block;font-size:18px;line-height:1.35;margin:7px 0 0;font-weight:800;overflow-wrap:anywhere}
+.summary .metric small{display:none}
+.summary .metric:first-child{background:#fbe0e0;border-color:#f7d5d5}
+.summary .metric:first-child .name,.summary .metric:first-child strong{color:#c92121}
+.card.section.rebate-placeholder .summary .metric:first-child{background:#e0f6e9;border-color:#c6ecd5}
+.card.section.rebate-placeholder .summary .metric:first-child .name,.card.section.rebate-placeholder .summary .metric:first-child strong{color:#16834b}
+.pack-columns{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px!important}
+.pack-detail{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}
+.pack-detail h3{margin:0 0 10px;font-size:15px;color:var(--ink)}
+.allocation-grid{gap:7px}
+.allocation-item{padding:10px 7px;border-radius:9px;text-align:center;align-items:center;background:var(--primary-soft)}
+.allocation-name{font-size:13px}
+.allocation-item strong{font-size:18px}
+.allocation-desc{font-size:11px;text-align:center}
+.purchase-grid{padding-left:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.purchase-grid:before,.purchase-card:before,.purchase-card:after{display:none}
+.purchase-card{min-height:78px;gap:5px;padding:10px;border-radius:9px;background:#f5f7fb;border-color:var(--line)}
+.purchase-label{font-size:12px;color:var(--muted)}
+.purchase-desc{font-size:11px;color:var(--muted)}
+.purchase-value{font-size:17px!important;line-height:1.3;color:var(--ink)}
+@media(max-width:760px){
+ .plan-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pack-columns{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:420px){
+ .card.section:has(.plan-options){padding:13px}
+ .plan-options{gap:7px}
+ .plan-option{padding:10px}
+ .plan-option strong{font-size:14px}
+ .plan-option span{font-size:11px}
+ .summary .metric{padding:10px 7px}
+ .summary .metric strong{font-size:16px}
+}
+
+
+/* v1.1.88：合并吃/不吃返利方案，用开关切换两套独立计算结果 */
+.rebate-toggle{display:inline-flex;align-items:center;cursor:pointer;user-select:none;flex:0 0 auto}
+.rebate-toggle input{position:absolute;opacity:0;width:1px;height:1px}
+.rebate-chip-label{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:1.5px solid #ff4d4f;border-radius:999px;background:#fff2f0;color:#ff4d4f;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;transition:background .18s,border-color .18s,color .18s}
+.rebate-toggle input:checked+.rebate-chip-label{background:#e8f8ef;border-color:#20a464;color:#16834f}
+#rebateOffPanel[hidden],#rebateOnPanel[hidden]{display:none!important}
+#rebateOffPanel>h2,#rebateOnPanel>h2{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rebate-section-title{ margin:0; font-family:inherit; font-size:18px !important; font-weight:700; color:var(--primary); line-height:1.35; }
+@media(max-width:520px){.rebate-chip-label{font-size:11px;padding:7px 10px}.rebate-section-title{font-size:18px color:var(--primary);}}
+
+
+/* v1.1.88：修复材料需求总览首张卡片误用红色强调，改为中性卡片样式 */
+.summary .metric:first-child{background:#f0f2f5!important;border-color:transparent!important}
+.summary .metric:first-child .name,
+.summary .metric:first-child strong{color:var(--ink)!important}
+
+
+/* v1.1.88：隐藏两种返利状态中的「自选包分配」卡片，保留其计算节点供原有逻辑使用 */
+#rebateOffPanel .allocation-detail,
+#rebateOnPanel .allocation-detail{display:none!important}
+
+
+/* v1.1.88：礼包选项卡片统一为参考图样式 */
+.plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
+.plan-option{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;align-items:start;column-gap:8px;row-gap:12px;min-width:0;min-height:130px;padding:16px 14px 13px;border:1.5px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .16s,background .16s,box-shadow .16s}
+.plan-option strong{grid-column:1;grid-row:1;display:block;margin:0;font-size:16px;line-height:1.35;font-weight:750}
+.plan-option .plan-price{grid-column:2;grid-row:1;display:block;margin:0;color:#b77912;font-size:16px;line-height:1.35;font-weight:800;text-align:right;white-space:nowrap}
+.plan-option .plan-pack-stats{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-self:stretch}
+.plan-option .plan-pack-stats span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:5px 2px;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.4;text-align:center}
+.plan-option .plan-pack-stats b{display:block;color:var(--ink);font-size:14px;font-weight:750;overflow-wrap:anywhere}
+.plan-option.active{border:2px solid #b77912;background:#fff;box-shadow:none}
+.plan-option.active .plan-pack-stats span{background:transparent}
+@media(max-width:760px){.plan-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){
+ .plan-options{grid-template-columns:minmax(0,1fr);gap:8px}
+ .plan-option{min-height:120px;padding:13px 12px}
+ .plan-option strong,.plan-option .plan-price{font-size:15px}
+ .plan-option .plan-pack-stats b{font-size:14px}
+}
+
+
+/* v1.1.88：返利开关移至两种方案面板之外，切换时不会随面板一起隐藏 */
+.rebate-control-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px;padding:0 2px}
+.rebate-section-title{font-size:20px;font-weight:750;color:var(--primary);line-height:1.35}
+#rebateOffPanel,#rebateOnPanel{margin-top:0}
+
+
+/* v1.1.88：礼包购买方案选中动效；同步预览卡片高亮 */
+@keyframes planSelectedPulse {
+  0% { transform:scale(1); }
+  45% { transform:scale(1.018); }
+  100% { transform:scale(1); }
+}
+.plan-option {
+  transition: transform .2s ease, border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.plan-option.active {
+  animation:planSelectedPulse .28s ease-out;
+  border-color:var(--primary)!important;
+  box-shadow:inset 0 0 0 1px var(--primary), 0 0 0 2px color-mix(in srgb, var(--primary) 18%, transparent), 0 5px 14px #00000012!important;
+}
+.all-gift-option {
+  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.all-gift-option.selected {
+  animation:planSelectedPulse .28s ease-out;
+  box-shadow:inset 0 0 0 1px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent), 0 6px 16px #00000012!important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plan-option, .all-gift-option { transition:none!important; }
+  .plan-option.active, .all-gift-option.selected { animation:none!important; }
+}
+
+/* v1.1.88：标题与返利开关收回礼包购买方案卡片内部 */
+.rebate-control-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px;padding:0}
+#rebateOffPanel>.rebate-control-row{margin:0 0 10px}
+
+
+/* v1.1.88：恢复各主卡片之间的垂直间距，避免边框贴合 */
+.card.section + .card.section{margin-top:16px}
+#rebateOffPanel.card.section,#rebateOnPanel.card.section{margin-top:16px}
+
+
+/* v1.1.88：隐藏购买估算卡片，但保留计算脚本依赖的 DOM 节点 */
+.pack-detail.purchase-detail{display:none!important}
+
+
+/* v1.1.88：礼包方案摘要调整为费用、购买数量及三类自选包与剩余小包 */
+.package-summary{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media(max-width:900px){.package-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:520px){.package-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* v1.1.88：返利状态摘要配色与手机窄屏礼包卡片布局 */
+.status-metric.status-red{background:#fbe0e0!important;border-color:#f5caca!important;color:#c62828}
+.status-metric.status-red .name,.status-metric.status-red strong{color:#c62828}
+.status-metric.status-green{background:#dff4e7!important;border-color:#b6e3c8!important;color:#16834a}
+.status-metric.status-green .name,.status-metric.status-green strong{color:#16834a}
+.plan-options{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.plan-option{min-width:0}
+@media(max-width:520px){
+  .plan-options{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .plan-option{padding:10px 7px!important}
+  .plan-option strong{font-size:12px!important;overflow-wrap:anywhere}
+  .plan-option .plan-price{font-size:12px!important}
+  .plan-option .plan-pack-stats{gap:3px!important}
+  .plan-option .plan-pack-stats span{font-size:10px!important}
+  .plan-option .plan-pack-stats b{font-size:11px!important}
+}
+
+
+/* v1.1.88：明确强化预计费用卡片的状态色，避免通用样式覆盖 */
+.package-summary .fee-metric.status-red,
+.package-summary .fee-metric.status-red .name,
+.package-summary .fee-metric.status-red strong{
+  background-color:#fbe0e0!important;
+  border-color:#f5caca!important;
+  color:#c62828!important;
+}
+.package-summary .fee-metric.status-green,
+.package-summary .fee-metric.status-green .name,
+.package-summary .fee-metric.status-green strong{
+  background-color:#dff4e7!important;
+  border-color:#b6e3c8!important;
+  color:#16834a!important;
+}
+
+
+/* v1.1.88：材料配色统一；需求缺口三等分占满整行并放大数字 */
+.summary:has(#herbNeed){
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  width:100%;
+  gap:10px!important;
+}
+.summary:has(#herbNeed) .metric{min-width:0;padding:14px 10px!important}
+.summary:has(#herbNeed) .metric strong{display:block;font-size:clamp(22px,2.4vw,30px)!important;line-height:1.25;margin-top:5px}
+.summary:has(#herbNeed) .metric:nth-child(1){background:#fde6e6!important;border-color:#f3bcbc!important;border-top-color:#d93636!important}
+.summary:has(#herbNeed) .metric:nth-child(1) .name,
+.summary:has(#herbNeed) .metric:nth-child(1) strong,
+.summary:has(#herbNeed) .metric:nth-child(1) small{color:#c62828!important}
+.summary:has(#herbNeed) .metric:nth-child(2){background:#f2e5d6!important;border-color:#d8b99a!important;border-top-color:#8b5e3c!important}
+.summary:has(#herbNeed) .metric:nth-child(2) .name,
+.summary:has(#herbNeed) .metric:nth-child(2) strong,
+.summary:has(#herbNeed) .metric:nth-child(2) small{color:#79502f!important}
+.summary:has(#herbNeed) .metric:nth-child(3){background:#d9f3ef!important;border-color:#9dd8cf!important;border-top-color:#00a99a!important}
+.summary:has(#herbNeed) .metric:nth-child(3) .name,
+.summary:has(#herbNeed) .metric:nth-child(3) strong,
+.summary:has(#herbNeed) .metric:nth-child(3) small{color:#087f75!important}
+
+/* 库存输入区域：去除材料卡片背景色，保留边框与材料文字颜色 */
+.stock:has(#herbStock){border-color:#f3bcbc!important;background:transparent!important}
+.stock:has(#herbStock) label{color:#c62828!important}
+.stock:has(#woodStock){border-color:#d8b99a!important;background:transparent!important}
+.stock:has(#woodStock) label{color:#79502f!important}
+.stock:has(#pillStock){border-color:#9dd8cf!important;background:transparent!important}
+.stock:has(#pillStock) label{color:#087f75!important}
+
+/* 礼包中的三类材料统计沿用同一套颜色 */
+#summaryHerbPacks,#summaryRebateHerbPacks{color:#c62828!important}
+#summaryWoodPacks,#summaryRebateWoodPacks{color:#79502f!important}
+#summaryPillPacks,#summaryRebatePillPacks{color:#087f75!important}
+
+@media(max-width:520px){
+  .summary:has(#herbNeed){grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .summary:has(#herbNeed) .metric{padding:11px 4px!important}
+  .summary:has(#herbNeed) .metric .name{font-size:11px!important}
+  .summary:has(#herbNeed) .metric strong{font-size:clamp(18px,5vw,24px)!important;overflow-wrap:anywhere}
+  .summary:has(#herbNeed) .metric small{font-size:10px!important}
+}
+
+
+/* v1.1.88：库存标题与下方材料卡片增加少量间距 */
+.inventory-actions .stock-overview-title{margin-bottom:8px!important}
+
+
+/* v1.1.88：库存滑动条、透明库存背景、材料缺口文字加大 */
+.stock.stock-herb,.stock.stock-wood,.stock.stock-pill{
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+.stock.stock-herb label,.summary:has(#herbNeed) .metric:nth-child(1) .name,
+.summary:has(#herbNeed) .metric:nth-child(1) strong{color:#c62828!important}
+.stock.stock-wood label,.summary:has(#herbNeed) .metric:nth-child(2) .name,
+.summary:has(#herbNeed) .metric:nth-child(2) strong{color:#79502f!important}
+.stock.stock-pill label,.summary:has(#herbNeed) .metric:nth-child(3) .name,
+.summary:has(#herbNeed) .metric:nth-child(3) strong{color:#087f75!important}
+.stock-slider{display:block;width:100%;height:22px;margin:7px 0 0;padding:0;background:transparent;cursor:pointer;touch-action:pan-y}
+.stock-herb .stock-slider{accent-color:#d93636}
+.stock-wood .stock-slider{accent-color:#8b5e3c}
+.stock-pill .stock-slider{accent-color:#00a99a}
+.summary:has(#herbNeed) .metric .name{font-size:14px!important;font-weight:600}
+.summary:has(#herbNeed) .metric strong{font-size:clamp(26px,3vw,34px)!important;font-weight:800!important}
+@media(max-width:520px){
+ .summary:has(#herbNeed) .metric .name{font-size:12px!important}
+ .summary:has(#herbNeed) .metric strong{font-size:clamp(20px,5.4vw,27px)!important}
+}
+
+
+/* v1.1.88：已有材料库存标题与下方卡片增加间距 */
+.inventory-actions .stock-overview-title{margin-bottom:12px!important}
+
+
+/* v1.1.88：明确修复库存标题间距、库存卡片透明背景和缺口字号 */
+.inventory-panel > .stock-overview-title{
+  display:block!important;
+  margin:0 0 12px!important;
+  padding:0!important;
+}
+.inventory-panel > .stock-grid{
+  margin-top:12px!important;
+}
+.inventory-panel .stock-grid > .stock,
+.inventory-panel .stock-grid > .stock.stock-herb,
+.inventory-panel .stock-grid > .stock.stock-wood,
+.inventory-panel .stock-grid > .stock.stock-pill,
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.inventory-panel .stock-grid > .stock label{font-weight:600!important}
+.inventory-panel .stock-herb label,
+.inventory-panel #herbStock{color:#c62828!important}
+.inventory-panel .stock-wood label,
+.inventory-panel #woodStock{color:#79502f!important}
+.inventory-panel .stock-pill label,
+.inventory-panel #pillStock{color:#087f75!important}
+.inventory-panel .stock-slider{
+  display:block!important;
+  width:100%!important;
+  margin:8px 0 0!important;
+  padding:0!important;
+  height:22px!important;
+  background:transparent!important;
+}
+.inventory-panel #herbStockSlider{accent-color:#d93636!important}
+.inventory-panel #woodStockSlider{accent-color:#8b5e3c!important}
+.inventory-panel #pillStockSlider{accent-color:#00a99a!important}
+.summary:has(#herbNeed) .metric .name{
+  font-size:16px!important;
+  font-weight:700!important;
+}
+.summary:has(#herbNeed) .metric strong{
+  font-size:clamp(28px,3.2vw,36px)!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+}
+@media(max-width:520px){
+  .inventory-panel > .stock-overview-title{margin-bottom:14px!important}
+  .inventory-panel > .stock-grid{margin-top:14px!important}
+  .summary:has(#herbNeed) .metric .name{font-size:13px!important}
+  .summary:has(#herbNeed) .metric strong{font-size:clamp(21px,5.6vw,28px)!important}
+}
+
+
+/* v1.1.88：库存模块彻底透明，仅保留材料文字与数字的颜色 */
+.inventory-panel,
+.inventory-panel .stock-grid,
+.inventory-panel .stock-grid > .stock,
+.inventory-panel .stock-grid > .stock.stock-herb,
+.inventory-panel .stock-grid > .stock.stock-wood,
+.inventory-panel .stock-grid > .stock.stock-pill,
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+.inventory-panel .stock-herb label,
+.inventory-panel #herbStock{color:#c62828!important}
+.inventory-panel .stock-wood label,
+.inventory-panel #woodStock{color:#79502f!important}
+.inventory-panel .stock-pill label,
+.inventory-panel #pillStock{color:#087f75!important}
+
+
+/* v1.1.88：强制清除库存三张材料卡片的彩色底色，仅保留文字颜色 */
+section.card .inventory-panel .stock-grid > .stock,
+section.card .inventory-panel .stock-grid > .stock.stock-herb,
+section.card .inventory-panel .stock-grid > .stock.stock-wood,
+section.card .inventory-panel .stock-grid > .stock.stock-pill,
+section.card .inventory-panel .stock-grid > .stock:has(#herbStock),
+section.card .inventory-panel .stock-grid > .stock:has(#woodStock),
+section.card .inventory-panel .stock-grid > .stock:has(#pillStock),
+  background: none !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+section.card .inventory-panel .stock-grid > .stock.stock-herb label,
+section.card .inventory-panel .stock-grid > .stock.stock-herb #herbStock { color:#c62828 !important; }
+section.card .inventory-panel .stock-grid > .stock.stock-wood label,
+section.card .inventory-panel .stock-grid > .stock.stock-wood #woodStock { color:#79502f !important; }
+section.card .inventory-panel .stock-grid > .stock.stock-pill label,
+section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color:#087f75 !important; }
+
+
+/* v1.1.88：材料需求总览去除卡片背景，仅保留三类材料的文字配色 */
+.summary:has(#herbNeed),
+.summary:has(#herbNeed) .metric,
+.summary:has(#herbNeed) .metric:nth-child(1),
+.summary:has(#herbNeed) .metric:nth-child(2),
+.summary:has(#herbNeed) .metric:nth-child(3){
+  background:transparent!important;
+  background-color:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+.summary:has(#herbNeed) .metric:nth-child(1) .name,
+.summary:has(#herbNeed) .metric:nth-child(1) strong,
+.summary:has(#herbNeed) .metric:nth-child(1) small{color:#c62828!important}
+.summary:has(#herbNeed) .metric:nth-child(2) .name,
+.summary:has(#herbNeed) .metric:nth-child(2) strong,
+.summary:has(#herbNeed) .metric:nth-child(2) small{color:#79502f!important}
+.summary:has(#herbNeed) .metric:nth-child(3) .name,
+.summary:has(#herbNeed) .metric:nth-child(3) strong,
+.summary:has(#herbNeed) .metric:nth-child(3) small{color:#087f75!important}
+
+
+/* 以下预览样式直接取自军师页面，未重新设计 */
+.all-gifts-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px 2px}
+.all-gifts-heading{display:block;min-width:0}
+.all-gifts-heading strong{display:block;font-size:18px;font-weight:800;color:var(--primary)}
+.all-gifts-heading small{display:block;color:var(--muted);font-size:13px;font-weight:400;margin-top:6px;line-height:1.5}
+.all-gifts-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);padding:8px 12px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;white-space:nowrap}
+.all-gifts-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+.all-gifts-content{margin-top:16px;max-height:200px;overflow:hidden}
+.all-gifts-content.is-expanded{max-height:none;overflow:visible}
+.all-gifts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.all-gift-option{border:1px solid var(--border);border-top:3px solid var(--muted);border-radius:14px;padding:14px;background:var(--panel);min-width:0}
+.all-gift-option.selected{border-color:var(--accent);border-top-color:var(--accent);box-shadow:0 4px 14px #0000000d}
+.all-gift-option h3{font-size:15px;margin:0;line-height:1.4}
+.all-gift-option .all-gift-price{font-size:19px;font-weight:800;white-space:nowrap}
+.all-gift-option .all-gift-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.all-gift-option .all-gift-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.all-gift-option .all-gift-stat{background:var(--soft);border-radius:8px;padding:9px;min-width:0}
+.all-gift-option .all-gift-stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+.all-gift-option .all-gift-stat b{display:block;font-size:15px;overflow-wrap:anywhere}
+.all-gift-option .all-gift-foot{margin-top:12px;padding:10px;border-radius:9px;background:var(--soft);font-size:13px;line-height:1.7}
+.all-gift-option .all-gift-foot b{font-size:19px}
+@media(max-width:760px){.all-gifts-grid{grid-template-columns:1fr}.all-gift-option .all-gift-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* 全部方案预览：礼包信息、购买汇总、返利对比使用分层卡片与醒目配色 */
+.all-gifts-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.all-gift-option{padding:14px;border:1px solid var(--line);border-top:4px solid #64748b;border-radius:16px;background:var(--panel2)}
+.all-gift-option.selected{border-color:var(--accent);border-top-color:var(--accent)}
+.all-gift-info-card,.all-gift-purchase-card,.all-gift-compare-card{border-radius:12px;padding:13px;margin-top:11px;min-width:0}
+.all-gift-info-card{background:var(--panel);border:1px solid var(--line)}
+.all-gift-info-card .all-gift-top{border:0;padding:0 0 10px;margin:0}
+.all-gift-pack-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.all-gift-pack-info>div{border-radius:9px;padding:9px 7px;background:var(--panel2);text-align:center}
+.all-gift-pack-info span,.all-gift-stat span{display:block;color:var(--muted);font-size:12px;line-height:1.4}
+.all-gift-pack-info b{display:block;font-size:16px;margin-top:4px;color:var(--text);overflow-wrap:anywhere}
+.all-gift-purchase-card{background:color-mix(in srgb,#d49a26 10%,var(--panel));border:1px solid color-mix(in srgb,#d49a26 40%,var(--line))}
+.all-gift-purchase-card h4,.all-gift-compare-card h4{margin:0 0 9px;font-size:14px}
+.all-gift-purchase-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.all-gift-purchase-metrics>div{border-radius:9px;padding:10px;background:var(--panel)}
+.all-gift-purchase-metrics span{display:block;color:var(--muted);font-size:12px}
+.all-gift-purchase-metrics b{display:block;margin-top:3px;font-size:20px;color:var(--text);overflow-wrap:anywhere}
+.all-gift-purchase-metrics>div:first-child b{color:#b77912}
+.all-gift-compare-card{background:var(--panel);border:1px solid var(--line)}
+.all-gift-compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.all-gift-mode{border-radius:11px;padding:11px;min-width:0}
+.all-gift-mode.normal{background:rgba(220,69,69,.08);border:1px solid rgba(220,69,69,.38)}
+.all-gift-mode.rebate{background:rgba(22,167,101,.09);border:1px solid rgba(22,167,101,.42)}
+.all-gift-mode-title{font-size:13px;font-weight:800;margin-bottom:8px}
+.all-gift-mode.normal .all-gift-mode-title,.all-gift-mode.normal .mode-cost,.all-gift-mode.normal .all-gift-stat b{color:#dc4545}
+.all-gift-mode.rebate .all-gift-mode-title,.all-gift-mode.rebate .mode-cost,.all-gift-mode.rebate .all-gift-stat b{color:#16a765}
+.all-gift-mode .mode-cost{font-size:21px;font-weight:850;line-height:1.3;margin-bottom:8px;overflow-wrap:anywhere}
+.all-gift-mode .all-gift-stat{padding:7px 0;border-top:1px solid var(--line);background:transparent;border-radius:0}
+.all-gift-mode .all-gift-stat b{font-size:18px;line-height:1.35}
+.all-gift-mode .all-gift-stat span{font-size:13px;line-height:1.45}
+@media(max-width:1000px){.all-gifts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.all-gifts-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.all-gift-pack-info{gap:5px}.all-gift-pack-info>div{padding:8px 4px}.all-gift-pack-info b{font-size:14px}.all-gift-compare-grid{gap:7px}.all-gift-mode{padding:9px}.all-gift-mode .mode-cost{font-size:18px}}
+
+
+
+
+.level-data-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.level-data-heading h2{margin:0}
+.level-data-toggle{flex:0 0 auto;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);font:inherit;font-weight:700;padding:7px 12px;cursor:pointer}
+.level-data-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+
+/* 昼夜主题：默认白天 06:00–17:59，夜间 18:00–05:59 */
+body{transition:background-color .22s,color .22s;}
+body.dark-theme{--bg:#0d1422;--card:#151f30;--ink:#e8eef8;--muted:#a0aec3;--line:#334258;--primary-soft:#1c2b43;background:var(--bg);color:var(--ink);color-scheme:dark}
+body.dark-theme .card{background:var(--card);border-color:color-mix(in srgb,var(--primary) 28%,var(--line))}
+body.dark-theme .exp-panel,body.dark-theme .stock,body.dark-theme .metric,body.dark-theme .allocation-item{background:color-mix(in srgb,var(--primary-soft) 88%,var(--card));}
+body.dark-theme select,body.dark-theme input,body.dark-theme .beast,body.dark-theme .plan-option,body.dark-theme .pack-detail,body.dark-theme .pack-detail h3,body.dark-theme .exp-denom,body.dark-theme .plan-option span{background:#1b2739;color:var(--ink);border-color:var(--line)}
+body.dark-theme .secondary{background:#273449;color:var(--ink)}
+body.dark-theme .level-table tbody tr:nth-child(even){background:#182437}
+body.dark-theme .purchase-card{background:linear-gradient(145deg,#1c2b43,#172234)}
+body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 35%,var(--line))}
+.theme-toggle{position:static;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;cursor:pointer;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease}
+.theme-toggle:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}.theme-toggle:active{transform:scale(.97)}.theme-toggle:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+.theme-toggle svg{width:18px;height:18px;flex:none}
+@media(max-width:480px){.theme-toggle{padding:11px 12px;font-size:13px;gap:6px}}
+@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
 </style>
 </head>
 <body>
+<div class="floating-actions">
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜主题" title="切换昼夜主题"><svg id="themeToggleIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="themeToggleText">切换夜间</span></button>
 <a class="home-return" href="index.html" aria-label="返回首页" title="返回首页">
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <span>返回首页</span>
-</a>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>返回首页</span>
+  </a>
+</div>
 
 <div class="wrap">
 <header>
@@ -185,37 +650,28 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
     </div>
     <div class="exp-panel compact-exp">
       <div class="exp-halves">
-        <div class="exp-half"><h3>当前已有经验</h3><div class="field"><label for="currentExp">手动填写经验值</label><input id="currentExp" type="number" min="0" step="1" value="0"></div></div>
+        <div class="exp-half"><h3>当前已有经验</h3><div class="field"><input id="currentExp" type="number" min="0" step="1" value="0"><input id="currentExpSlider" class="level-slider exp-input-slider" type="range" min="0" max="0" step="1" value="0" aria-label="滑动调整当前经验值"><div class="level-range-labels"><span>0</span><span id="currentExpMaxLabel">0 经验</span></div></div></div>
         <div class="exp-half"><h3>该等级经验条</h3><div class="exp-caption"><span id="expFraction">0 / 0</span><span id="expPercent">0%</span></div><div class="exp-bar"><div id="expBarFill"></div></div><div class="exp-caption"><span>经验上限</span><span id="expDenominator">0 经验</span></div></div>
       </div>
     </div>
-    <div class="actions"><button class="action secondary" id="reset">恢复默认等级</button></div>
+    <div class="actions level-actions"><button class="action secondary" id="resetExp">重置经验条</button><button class="action secondary" id="reset">重置等级</button></div>
   </section>
   <section class="card">
-    <h2>升级材料需求</h2>
+    
     <div class="inventory-panel">
-    <h3>已有材料库存</h3>
+    <h3 class="stock-overview-title">已有材料库存</h3>
     <div class="stock-grid">
-      <div class="stock"><label for="herbStock">灵草</label><input id="herbStock" type="number" min="0" step="1" value="0"></div>
-      <div class="stock"><label for="woodStock">灵木</label><input id="woodStock" type="number" min="0" step="1" value="0"></div>
-      <div class="stock"><label for="pillStock">灵丹</label><input id="pillStock" type="number" min="0" step="1" value="0"></div>
+      <div class="stock stock-herb"><label for="herbStock">灵草</label><input id="herbStock" type="number" min="0" step="1" value="0"><input class="stock-slider" id="herbStockSlider" type="range" min="0" max="1000000" step="1" value="0" aria-label="灵草库存滑动条"></div>
+      <div class="stock stock-wood"><label for="woodStock">灵木</label><input id="woodStock" type="number" min="0" step="1" value="0"><input class="stock-slider" id="woodStockSlider" type="range" min="0" max="1000000" step="1" value="0" aria-label="灵木库存滑动条"></div>
+      <div class="stock stock-pill"><label for="pillStock">灵丹</label><input id="pillStock" type="number" min="0" step="1" value="0"><input class="stock-slider" id="pillStockSlider" type="range" min="0" max="1000000" step="1" value="0" aria-label="灵丹库存滑动条"></div>
     </div>
-      <div class="actions inventory-actions"><button class="action secondary" id="clearStock">重置库存</button></div>
+      <div class="actions inventory-actions"><h3 class="stock-overview-title">材料需求总览</h3><button class="action secondary" id="clearStock">重置库存</button></div>
     </div>
     <div class="summary">
       <div class="metric"><div class="name">灵草缺口</div><strong id="herbNeed">0</strong><small>扣除库存后</small></div>
       <div class="metric"><div class="name">灵木缺口</div><strong id="woodNeed">0</strong><small>扣除库存后</small></div>
       <div class="metric"><div class="name">灵丹缺口</div><strong id="pillNeed">0</strong><small>扣除库存后</small></div>
     </div>
-    <h3>材料消耗明细</h3>
-    <div class="table-wrap"><table class="result-table">
-      <thead><tr><th>材料</th><th>区间消耗</th><th>已有库存</th><th>仍需材料</th></tr></thead>
-      <tbody>
-        <tr><td>灵草</td><td id="herbCost">0</td><td id="herbHave">0</td><td id="herbGap">0</td></tr>
-        <tr><td>灵木</td><td id="woodCost">0</td><td id="woodHave">0</td><td id="woodGap">0</td></tr>
-        <tr><td>灵丹</td><td id="pillCost">0</td><td id="pillHave">0</td><td id="pillGap">0</td></tr>
-      </tbody>
-    </table></div>
   </section>
 </div>
 <section class="card section">
@@ -225,19 +681,28 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
     <tbody id="attributes"></tbody>
   </table></div>
 </section>
-<section class="card section">
-  <h2><span style="color:#dc2626;font-weight:700">不吃返利 自选包与礼包方案</span></h2>
-  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 1,200 个小包。选择购买方案后，按该方案的礼包容量与价格估算购买数量。</p>
+<section class="card section" id="rebateOffPanel">
+<div class="rebate-control-row">
+  <span class="rebate-section-title">礼包购买方案</span>
+  <label class="rebate-toggle rebate-toggle-control" for="rebateToggleOff">
+      <input id="rebateToggleOff" type="checkbox" aria-label="开启返利">
+      <span class="rebate-chip-label" data-off-text="返利未开启 · 点击开启" data-on-text="返利已开启 · 点击关闭">返利未开启 · 点击开启</span>
+    </label>
+</div>
+
+<p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；限时礼包每个大包可开 1,200 个小包。</p>
   <div class="plan-options" role="group" aria-label="选择礼包方案">
-    <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span>213中包/大包 × 80大包，共17,040中包</span></button>
-    <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span>208中包/大包 × 80大包，共16,640中包</span></button>
-    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 1,200小包</span></button>
+    <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span class="plan-price">¥99</span><span class="plan-pack-stats"><span>大包<b>213</b></span><span>中包<b>80</b></span><span>小包<b>17,040</b></span></span></button>
+    <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span class="plan-price">¥139.8</span><span class="plan-pack-stats"><span>大包<b>208</b></span><span>中包<b>80</b></span><span>小包<b>16,640</b></span></span></button>
+    <button type="button" class="plan-option" data-plan="event"><strong>限时礼包</strong><span class="plan-price">¥13.8</span><span class="plan-pack-stats"><span>大包<b>1</b></span><span>中包<b>1</b></span><span>小包<b>1,200</b></span></span></button>
   </div>
-  <div class="summary">
-    <div class="metric"><div class="name">小包需求</div><strong id="totalPacks">0</strong></div>
-    <div class="metric" id="middleMetric"><div class="name">中包需求</div><strong id="middlePacks">0</strong></div>
-    <div class="metric"><div class="name">大包需求</div><strong id="bigPacks">0</strong></div>
-    <div class="metric"><div class="name">所选方案预计费用</div><strong id="bundleCost">¥0.00</strong></div>
+  <div class="summary package-summary">
+    <div class="metric status-metric status-red fee-metric"><div class="name">预计费用</div><strong id="bundleCost">¥0.00</strong></div>
+    <div class="metric status-metric status-red"><div class="name">购买礼包数量</div><strong id="bigPacks">0</strong></div>
+    <div class="metric"><div class="name">灵草包</div><strong id="summaryHerbPacks">0 个</strong></div>
+    <div class="metric"><div class="name">灵木包</div><strong id="summaryWoodPacks">0 个</strong></div>
+    <div class="metric"><div class="name">灵丹包</div><strong id="summaryPillPacks">0 个</strong></div>
+    <div class="metric status-metric status-red"><div class="name">剩余小包数量</div><strong id="summaryLeftover">0 个</strong></div>
   </div>
   <div class="pack-columns" style="margin-top:14px">
     <div class="pack-detail allocation-detail">
@@ -259,19 +724,28 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
     </div>
   </div>
 </section>
-<section class="card section rebate-placeholder">
-  <h2><span style="color:#16a34a;font-weight:700">全吃返利 自选包与礼包方案</span></h2>
-  <p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；活动大厅限时礼包每个大包可开 1,200 个小包。按不吃返利所需材料的三分之二估算。</p>
+<section class="card section rebate-placeholder" id="rebateOnPanel" hidden>
+<div class="rebate-control-row">
+  <span class="rebate-section-title">礼包购买方案</span>
+  <label class="rebate-toggle rebate-toggle-control" for="rebateToggleOn">
+      <input id="rebateToggleOn" type="checkbox" aria-label="开启返利">
+      <span class="rebate-chip-label" data-off-text="返利未开启 · 点击开启" data-on-text="返利已开启 · 点击关闭">返利未开启 · 点击开启</span>
+    </label>
+</div>
+<p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；限时礼包每个大包可开 1,200 个小包。按不吃返利所需材料的三分之二估算。</p>
   <div class="plan-options" role="group" aria-label="选择全吃返利礼包方案">
-    <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span>213中包/大包 × 80大包，共17,040中包</span></button>
-    <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span>208中包/大包 × 80大包，共16,640中包</span></button>
-    <button type="button" class="plan-option" data-plan="event"><strong>活动大厅限时礼包</strong><span>1大包 × 1中包 × 1,200小包</span></button>
+    <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span class="plan-price">¥99</span><span class="plan-pack-stats"><span>大包<b>213</b></span><span>中包<b>80</b></span><span>小包<b>17,040</b></span></span></button>
+    <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span class="plan-price">¥139.8</span><span class="plan-pack-stats"><span>大包<b>208</b></span><span>中包<b>80</b></span><span>小包<b>16,640</b></span></span></button>
+    <button type="button" class="plan-option" data-plan="event"><strong>限时礼包</strong><span class="plan-price">¥13.8</span><span class="plan-pack-stats"><span>大包<b>1</b></span><span>中包<b>1</b></span><span>小包<b>1,200</b></span></span></button>
   </div>
-  <div class="summary">
-    <div class="metric"><div class="name">小包需求</div><strong id="rebateTotalPacks">0</strong></div>
-    <div class="metric" id="rebateMiddleMetric"><div class="name">中包需求</div><strong id="rebateMiddlePacks">0</strong></div>
-    <div class="metric"><div class="name">大包需求</div><strong id="rebateBigPacks">0</strong></div>
-    <div class="metric"><div class="name">所选方案预计费用</div><strong id="rebateBundleCost">¥0.00</strong></div>
+  <div class="summary package-summary">
+    <div class="metric status-metric status-green fee-metric"><div class="name">预计费用</div><strong id="rebateBundleCost">¥0.00</strong></div>
+    <div class="metric status-metric status-green"><div class="name">购买礼包数量</div><strong id="rebateBigPacks">0</strong></div>
+    <div class="metric"><div class="name">灵草包</div><strong id="summaryRebateHerbPacks">0 个</strong></div>
+    <div class="metric"><div class="name">灵木包</div><strong id="summaryRebateWoodPacks">0 个</strong></div>
+    <div class="metric"><div class="name">灵丹包</div><strong id="summaryRebatePillPacks">0 个</strong></div>
+    <div class="metric status-metric status-green"><div class="name">剩余小包数量</div><strong id="summaryRebateLeftover">0 个</strong></div>
+    <div class="metric status-metric status-green"><div class="name">节省金额</div><strong id="rebateSavings">¥0.00</strong></div>
   </div>
   <div class="pack-columns" style="margin-top:14px">
     <div class="pack-detail allocation-detail">
@@ -293,17 +767,39 @@ body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacit
     </div>
   </div>
 </section>
+
+<section class="card section all-gifts-panel" id="allGiftPreview">
+  <div class="all-gifts-header">
+    <span class="all-gifts-heading"><strong>全部方案同屏预览</strong><small>同时对比三种礼包方案的购买数量、所需包数、剩余小包与预计费用</small></span>
+    <button type="button" class="all-gifts-toggle" id="allGiftToggle" aria-expanded="false" aria-controls="allGiftContent"><span class="all-gifts-state" id="allGiftState">展开全部</span></button>
+  </div>
+  <div id="allGiftContent" class="all-gifts-content">
+    <div class="all-gifts-grid" id="allGiftGrid"></div>
+  </div>
+</section>
+
 <section class="card section">
-  <h2>等级数据查询</h2>
-  <p class="note" style="margin-top:-5px;margin-bottom:12px">展开查看 1–80 级材料与属性数据，便于核对。</p>
-  <details><summary>展开 / 收起 1–80 级完整数据表</summary>
-    <div class="table-wrap" style="max-height:520px;overflow:auto">
+  <div class="level-data-heading"><h2>等级数据查询</h2><button type="button" id="levelDataToggle" class="level-data-toggle" aria-expanded="false" aria-controls="levelDataContent">展开全部</button></div>
+  <p class="note" style="margin-top:-5px;margin-bottom:12px">默认显示 40–80 级；各列均匀分布并居中显示。</p>
+  <div id="levelDataContent">
+    <div class="table-wrap" id="levelDataTableWrap" style="max-height:200px;overflow:auto">
       <table class="level-table"><thead><tr><th>等级</th><th>灵草</th><th>灵木</th><th>灵丹</th><th>生命</th><th>武攻/法攻</th><th>武防/法防</th><th>穿透/护甲</th><th>速度</th></tr></thead><tbody id="levelRows"></tbody></table>
     </div>
-  </details>
+  </div>
 </section>
 <footer>@WWWWWqq1</footer>
 </div>
+<!-- 兼容现有 render() 的隐藏数据节点：摘要 UI 已调整，但计算脚本仍更新这些旧字段 -->
+<div hidden aria-hidden="true" id="legacySummaryCompat">
+  <span id="totalPacks"></span>
+  <span id="middlePacks"></span>
+  <span id="rebateTotalPacks"></span>
+  <span id="rebateMiddlePacks"></span>
+  <span id="middleMetric"></span>
+  <span id="rebateMiddleMetric"></span>
+</div>
+
+
 <script>
 const raw = [
 [0,0,0,35,35,35,14,14],[8,0,0,45,45,45,18,18],[36,0,0,60,60,60,23,23],[96,0,0,75,75,75,30,30],[200,0,0,95,95,95,38,38],[360,0,0,120,120,120,48,48],[546,234,0,150,150,150,60,60],[816,408,0,185,185,185,74,74],[1170,650,0,225,225,225,90,90],[1640,820,0,270,270,270,108,108],[2200,1400,0,320,320,320,128,128],[2640,1760,0,375,375,375,150,150],[3380,2340,1040,435,435,435,174,174],[4256,3040,1520,500,500,500,200,200],[5250,3850,2100,570,570,570,228,228],[6400,4800,2800,645,645,645,258,258],[7106,5434,3344,725,725,725,290,290],[8460,6580,4230,810,810,810,324,324],[9994,7890,5260,900,900,900,360,360],[11720,9376,6446,1000,1000,1000,400,400],[13566,10982,7752,1110,1110,1110,444,444],[14520,11880,8580,1230,1230,1230,492,492],[16606,13718,10108,1360,1360,1360,544,544],[18912,15760,11820,1500,1500,1500,600,600],[21450,18018,13728,1650,1650,1650,660,660],[24128,20416,15776,1810,1810,1810,725,725],[25272,21528,16848,1980,1980,1980,795,795],[28224,24192,19152,2160,2160,2160,870,870],[31436,27100,21680,2350,2350,2350,950,950],[34800,30160,24360,2550,2550,2550,1035,1035],[38440,33480,27280,2765,2765,2765,1125,1125],[39680,34720,28520,2995,2995,2995,1220,1220],[43560,38280,31680,3240,3240,3240,1320,1320],[47668,42060,35050,3500,3500,3500,1430,1430],[52080,46128,38688,3775,3775,3775,1550,1550],[56664,50368,42498,4065,4065,4065,1680,1680],[58016,51744,43904,4370,4370,4370,1820,1820],[62852,56236,47966,4690,4690,4690,1970,1970],[68016,61040,52320,5025,5025,5025,2130,2130],[73360,66024,56854,5380,5380,5380,2310,2310],[79333,71778,62333,5680,5680,5680,2430,2430],[98353,89412,78235,5980,5980,5980,2550,2550],[107333,98000,86333,6280,6280,6280,2670,2670],[122667,112444,99667,6580,6580,6580,2790,2790],[131579,121053,107895,6880,6880,6880,2910,2910],[147789,136421,122211,7180,7180,7180,3030,3030],[164842,152632,137368,7480,7480,7480,3150,3150],[182737,169684,153368,7780,7780,7780,3270,3270],[191400,178200,161700,8080,8080,8080,3390,3390],[210000,196000,178500,8380,8380,8380,3540,3540],[229400,214600,196100,8680,8680,8680,3690,3690],[249600,234000,214500,8980,8980,8980,3840,3840],[257714,242095,222571,9280,9280,9280,3990,3990],[278476,262095,241619,9580,9580,9580,4140,4140],[300000,282857,261429,9880,9880,9880,4290,4290],[322286,304381,282000,10180,10180,10180,4440,4440],[329636,311818,289545,10480,10480,10480,4590,4590],[352364,333818,310636,10780,10780,10780,4740,4740],[375818,356545,332455,11080,11080,11080,4890,4890],[400000,380000,355000,11380,11380,11380,5040,5040],[424924,404196,378226,11580,11580,11580,5090,5090],[430920,410400,384750,11780,11780,11780,5140,5140],[456114,434288,408408,11980,11980,11980,5190,5190],[462000,441000,414750,12180,12180,12180,5240,5240],[487400,465776,438696,12380,12380,12380,5290,5290],[493120,471680,444880,12580,12580,12580,5340,5340],[518880,496800,469200,12780,12780,12780,5390,5390],[524352,502504,475194,12980,12980,12980,5440,5440],[550368,527904,499824,13180,13180,13180,5490,5490],[555600,533376,505596,13480,13480,13480,5590,5590],[581808,558992,530472,13780,13780,13780,5790,5790],[588068,564200,535990,14080,14080,14080,5990,5990],[613316,590172,561242,14380,14380,14380,6090,6090],[618192,595296,566676,14680,14680,14680,6290,6290],[644820,621372,592062,14980,14980,14980,6390,6390],[649600,626400,597400,15280,15280,15280,6590,6590],[676476,652740,623070,15580,15580,15580,6690,6690],[680920,657440,628090,15880,15880,15880,6890,6890],[708000,684000,654000,16180,16180,16180,6990,6990],[712560,688808,659118,16480,16480,16480,7190,7190]
@@ -322,10 +818,35 @@ const nval=id=>{const el=$(id);const n=Number(el && el.value);return Number.isFi
 const giftPlans={
  monthly:{name:'月初礼包',middlePerBig:213,bigCount:80,middleCount:17040,smallPerBig:213*80,price:99},
  vip10:{name:'VIP10礼包',middlePerBig:208,bigCount:80,middleCount:16640,smallPerBig:208*80,price:139.8},
- event:{name:'活动大厅限时礼包',middlePerBig:1,bigCount:1,middleCount:1,smallPerBig:1200,price:13.8}
+ event:{name:'限时礼包',middlePerBig:1,bigCount:1,middleCount:1,smallPerBig:1200,price:13.8}
 };
 let selectedPlan='monthly';
+function chooseGiftPlan(planId){
+ if(!Object.prototype.hasOwnProperty.call(giftPlans,planId))return;
+ selectedPlan=planId;
+ document.querySelectorAll('.plan-option').forEach(btn=>btn.classList.toggle('active',btn.dataset.plan===planId));
+ render(true);
+}
 let selectedBeast='火暴龙';
+// 默认主题按本地时间：06:00–17:59 白天，18:00–05:59 黑夜；手动切换后本次页面会话优先。
+let manualThemeChoice=false;
+function setPageTheme(isLight){
+  document.body.classList.toggle('dark-theme',!isLight);
+  const btn=document.getElementById('themeToggle');
+  const label=document.getElementById('themeToggleText');
+  const icon=document.getElementById('themeToggleIcon');
+  if(label) label.textContent=isLight?'切换夜间':'切换白天';
+  if(btn){btn.setAttribute('aria-label',isLight?'切换到夜间模式':'切换到白天模式');btn.title=isLight?'切换到夜间模式':'切换到白天模式';}
+  if(icon) icon.innerHTML=isLight
+    ? '<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+    : '<path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+}
+function applyTimeTheme(){if(manualThemeChoice)return;const h=new Date().getHours();setPageTheme(h>=6&&h<18);}
+const themeToggleButton=document.getElementById('themeToggle');
+if(themeToggleButton)themeToggleButton.addEventListener('click',()=>{manualThemeChoice=true;setPageTheme(document.body.classList.contains('dark-theme'));});
+applyTimeTheme();
+setInterval(applyTimeTheme,60000);
+
 const beastThemes={'火暴龙':'theme-fire','飞羽凤':'theme-fly','玄武龟':'theme-turtle','幽冥虎':'theme-tiger'};
 function applyBeastTheme(){document.body.classList.remove('theme-fire','theme-fly','theme-turtle','theme-tiger');document.body.classList.add(beastThemes[selectedBeast]||'theme-fire')}
 const beastAttrs={
@@ -358,15 +879,18 @@ function renderExp(){
  const num=Math.min(rawNum,den);
  const gain=Number(expData.growth[idx])||0;
  const percent=den?Math.min(100,num/den*100):0;
+ $('currentExpSlider').max=String(den);
+ $('currentExpSlider').value=String(Math.min(rawNum,den));
+ $('currentExpMaxLabel').textContent=fmt(den)+' 经验';
  $('expDenominator').textContent=fmt(den)+' 经验';
  $('expFraction').textContent=fmt(num)+' / '+fmt(den);
  $('expPercent').textContent=percent.toFixed(1)+'%';
  $('expBarFill').style.width=percent+'%';
  return {level,rawNum,num,den,gain};
 }
-function render(){
+function render(skipAllGiftPreview=false){
  let a=getLevel('fromLevel',1),b=getLevel('toLevel',20);
- if(b<a){b=a;$('toLevel').value=String(b);$('toLevelManual').value=String(b);}
+ if(b<a){b=a;$('toLevel').value=String(b);const manualLevel=$('toLevelManual');if(manualLevel)manualLevel.value=String(b);}
  $('fromLevel').value=String(a);$('toLevel').value=String(b);
  updateLevelLabels();
  const start=raw[a-1]||raw[0],end=raw[b-1]||raw[0];
@@ -382,7 +906,7 @@ function render(){
  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
  const gaps=adjustedCosts.map((v,i)=>Math.max(0,v-stocks[i]));
  const ids=['herb','wood','pill'];
- ids.forEach((id,i)=>{$(id+'Need').textContent=fmt(gaps[i]);$(id+'Cost').textContent=fmt(adjustedCosts[i]);$(id+'Have').textContent=fmt(stocks[i]);$(id+'Gap').textContent=fmt(gaps[i])});
+ ids.forEach((id,i)=>{const need=$(id+'Need');if(need)need.textContent=fmt(gaps[i]);const cost=$(id+'Cost');if(cost)cost.textContent=fmt(adjustedCosts[i]);const have=$(id+'Have');if(have)have.textContent=fmt(stocks[i]);const gap=$(id+'Gap');if(gap)gap.textContent=fmt(gaps[i]);});
  const herbPackCount=Math.ceil(gaps[0]/91);
  const woodPackCount=Math.ceil(gaps[1]/39);
  const pillPackCount=Math.ceil(gaps[2]/21);
@@ -390,7 +914,7 @@ function render(){
  // 自选包总需求 = 灵草包数 + 灵木包数 + 灵丹包数（每类分别向上取整后再相加）。
  const total=herbPackCount+woodPackCount+pillPackCount;
  const plan=giftPlans[selectedPlan],middle=selectedPlan==='event'?Math.ceil(total/1200):Math.ceil(total/80),big=selectedPlan==='event'?middle:Math.ceil(middle/plan.middlePerBig),bundles=middle===0?0:middle/plan.middlePerBig,boughtMiddle=selectedPlan==='event'?big:Math.ceil(bundles)*plan.middlePerBig,boughtSmall=selectedPlan==='event'?boughtMiddle*1200:boughtMiddle*80;
- $('herbPacks').textContent=fmt(packs[0])+' 个';$('woodPacks').textContent=fmt(packs[1])+' 个';$('pillPacks').textContent=fmt(packs[2])+' 个';
+ $('herbPacks').textContent=fmt(packs[0])+' 个';$('woodPacks').textContent=fmt(packs[1])+' 个';$('pillPacks').textContent=fmt(packs[2])+' 个';$('summaryHerbPacks').textContent=fmt(packs[0])+' 个';$('summaryWoodPacks').textContent=fmt(packs[1])+' 个';$('summaryPillPacks').textContent=fmt(packs[2])+' 个';
  // 全吃返利：按原始材料缺口的 2/3 计算，分别向上取整到各类自选小包。
  const rebateGaps=gaps.map(v=>v*2/3);
  const rebatePacks=rebateGaps.map((v,i)=>Math.ceil(v/[91,39,21][i]));
@@ -399,13 +923,100 @@ function render(){
  const rebateBig=selectedPlan==='event'?rebateMiddle:Math.ceil(rebateMiddle/plan.middlePerBig);
  const rebateBoughtMiddle=selectedPlan==='event'?rebateBig:rebateBig*plan.middlePerBig;
  const rebateBoughtSmall=selectedPlan==='event'?rebateBoughtMiddle*1200:rebateBoughtMiddle*80;
- $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
- $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig);$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
- $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big);$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
- $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');
+ $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';$('summaryRebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('summaryRebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('summaryRebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
+ $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);const noRebateCost=middle/plan.middlePerBig*plan.price;const rebateCost=rebateMiddle/plan.middlePerBig*plan.price;$('rebateSavings').textContent='¥'+Math.max(0,noRebateCost-rebateCost).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
+ $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big)+' 大包';$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
+ $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');  if(!skipAllGiftPreview&&document.getElementById('allGiftToggle')?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
 }
-function renderTable(){$('levelRows').innerHTML=raw.map((r,i)=>`<tr><td>${i+1}</td>${r.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}
-document.querySelectorAll('.plan-option').forEach(btn=>btn.addEventListener('click',()=>{selectedPlan=btn.dataset.plan;document.querySelectorAll('.plan-option').forEach(b=>b.classList.toggle('active',b.dataset.plan===selectedPlan));render()}));
+
+function getShenshouMaterialNeeds(){
+  return [
+    Number(($('herbNeed')?.textContent||'0').replace(/,/g,''))||0,
+    Number(($('woodNeed')?.textContent||'0').replace(/,/g,''))||0,
+    Number(($('pillNeed')?.textContent||'0').replace(/,/g,''))||0
+  ];
+}
+
+let previewSelectedPlan='monthly';
+const allGiftToggle=document.getElementById('allGiftToggle');
+const allGiftContent=document.getElementById('allGiftContent');
+const allGiftState=document.getElementById('allGiftState');
+if(allGiftToggle&&allGiftContent){
+  const syncAllGiftState=(expanded)=>{
+    allGiftToggle.setAttribute('aria-expanded',String(expanded));
+    allGiftContent.hidden=false;
+    allGiftContent.classList.toggle('is-expanded',expanded);
+    allGiftToggle.classList.toggle('is-expanded',expanded);
+    if(allGiftState)allGiftState.textContent=expanded?'收起全部':'展开全部';
+  };
+  syncAllGiftState(false);
+  renderAllGiftPreview();
+  allGiftToggle.addEventListener('click',()=>{
+    const expanded=allGiftToggle.getAttribute('aria-expanded')==='true';
+    syncAllGiftState(!expanded);
+    if(!expanded)renderAllGiftPreview();
+  });
+}
+function renderAllGiftPreview(){
+  const host=document.getElementById('allGiftGrid');
+  if(!host)return;
+  const need=getShenshouMaterialNeeds(), per=[91,39,21];
+  const plans=[
+    {id:'monthly',label:'月初礼包',price:99,big:213,mid:80,small:17040},
+    {id:'vip10',label:'VIP10礼包',price:139.8,big:208,mid:80,small:16640},
+    {id:'event',label:'限时礼包',price:13.8,big:1,mid:1,small:1200}
+  ];
+  const fmtAll=n=>Number(n).toLocaleString('en-US');
+  const moneyAll=n=>'¥'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+  const modeStats=(p,rebate)=>{
+    const purchaseNeeds=need.map(n=>rebate?Math.ceil(n*3/4):n);
+    const open=purchaseNeeds.map((n,i)=>Math.ceil(n/per[i]));
+    const smallNeed=open.reduce((sum,n)=>sum+Math.max(0,n),0);
+    const qty=Math.ceil(smallNeed/Math.max(1,p.small));
+    const packs=qty*p.small;
+    const remaining=Math.max(0,packs-smallNeed);
+    return {qty,cost:qty*p.price,open,remaining,packs};
+  };
+  host.innerHTML=plans.map(p=>{
+    const normal=modeStats(p,false), rebate=modeStats(p,true);
+    const chosen=previewSelectedPlan===p.id;
+    const stat=(label,value)=>`<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
+    const mode=(label,stats,isRebate)=>`<div class="all-gift-mode ${isRebate?'rebate':'normal'}"><div class="all-gift-mode-title">${label}</div><div class="mode-cost">${moneyAll(stats.cost)}</div>${stat('购买礼包数量',fmtAll(stats.qty))}${stat('灵草包数',fmtAll(stats.open[0])+' 包')}${stat('灵木包数',fmtAll(stats.open[1])+' 包')}${stat('灵丹包数',fmtAll(stats.open[2])+' 包')}${stat('剩余小包数量',fmtAll(stats.remaining)+' 个')}</div>`;
+    return `<article class="all-gift-option ${chosen?'selected':''}" data-plan="${p.id}" role="button" tabindex="0" aria-pressed="${chosen}" aria-label="选择${p.label}">
+      <section class="all-gift-info-card"><div class="all-gift-top"><h3>${p.label}</h3><span class="all-gift-price">${moneyAll(p.price)}</span></div>
+        <div class="all-gift-pack-info"><div><span>大包</span><b>${fmtAll(p.big)}</b></div><div><span>中包</span><b>${fmtAll(p.mid)}</b></div><div><span>小包</span><b>${fmtAll(p.small)}</b></div></div>
+      </section>
+      <section class="all-gift-compare-card"><h4>不返利 / 返利对比</h4><div class="all-gift-compare-grid">${mode('不返利',normal,false)}${mode('返利',rebate,true)}</div></section>
+    </article>`;
+  }).join('');
+}
+
+// 同屏预览中的卡片只维护自身的选中动效，不联动上方礼包购买方案或计算结果。
+const allGiftGrid=document.getElementById('allGiftGrid');
+function selectPreviewCard(card){
+ if(!card)return;
+ previewSelectedPlan=card.dataset.plan;
+ allGiftGrid.querySelectorAll('.all-gift-option[data-plan]').forEach(item=>{
+   const active=item===card;
+   item.classList.toggle('selected',active);
+   item.setAttribute('aria-pressed',String(active));
+ });
+}
+if(allGiftGrid){
+ allGiftGrid.addEventListener('click',event=>{
+   const card=event.target.closest('.all-gift-option[data-plan]');
+   if(card)selectPreviewCard(card);
+ });
+ allGiftGrid.addEventListener('keydown',event=>{
+   const card=event.target.closest('.all-gift-option[data-plan]');
+   if(card&&(event.key==='Enter'||event.key===' ')){
+     event.preventDefault();
+     selectPreviewCard(card);
+   }
+ });
+}
+function renderTable(){$('levelRows').innerHTML=raw.slice(39).map((r,i)=>`<tr><td>${i+40}</td>${r.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}
+document.querySelectorAll('.plan-option').forEach(btn=>btn.addEventListener('click',()=>chooseGiftPlan(btn.dataset.plan)));
 document.querySelectorAll('.beast').forEach(btn=>btn.addEventListener('click',()=>{selectedBeast=btn.dataset.beast;applyBeastTheme();document.querySelectorAll('.beast').forEach(b=>b.classList.toggle('active',b===btn));render()}));
 ['fromLevel','toLevel'].forEach(id=>$(id).addEventListener('input',()=>{
  let level=Math.max(1,Math.min(80,Math.floor(Number($(id).value)||1)));
@@ -415,26 +1026,150 @@ document.querySelectorAll('.beast').forEach(btn=>btn.addEventListener('click',()
  updateLevelLabels();
  render();
 }));
-$('currentExp').addEventListener('input',render);
-['herbStock','woodStock','pillStock'].forEach(id=>$(id).addEventListener('input',render));
-$('clearStock').addEventListener('click',()=>{['herbStock','woodStock','pillStock'].forEach(id=>$(id).value=0);render()});
-$('reset').addEventListener('click',()=>{$('fromLevel').value='40';$('toLevel').value='60';$('currentExp').value='0';updateLevelLabels();render()});
+$('currentExp').addEventListener('input',()=>{render()});
+$('currentExpSlider').addEventListener('input',()=>{$('currentExp').value=$('currentExpSlider').value;render()});
+['herbStock','woodStock','pillStock'].forEach(id=>{
+ const slider=$(id+'Slider'),input=$(id);
+ input.addEventListener('input',()=>{const n=Math.max(0,Number(input.value)||0);slider.value=String(Math.min(Number(slider.max),n));render()});
+ slider.addEventListener('input',()=>{input.value=slider.value;render()});
+});
+$('clearStock').addEventListener('click',()=>{['herbStock','woodStock','pillStock'].forEach(id=>{$(id).value=0;$(id+'Slider').value=0});render()});
+$('reset').addEventListener('click',()=>{$('fromLevel').value='40';$('toLevel').value='60';updateLevelLabels();render()});
+$('resetExp').addEventListener('click',()=>{$('currentExp').value='0';$('currentExpSlider').value='0';render()});
+
+const rebateToggles=[...document.querySelectorAll('.rebate-toggle-control input')];
+const rebateOffPanel=$('rebateOffPanel');
+const rebateOnPanel=$('rebateOnPanel');
+function updateRebateView(enabled=rebateToggles.some(toggle=>toggle.checked)){
+ rebateToggles.forEach(toggle=>{toggle.checked=enabled;});
+ rebateOffPanel.hidden=enabled;
+ rebateOnPanel.hidden=!enabled;
+ rebateToggles.forEach(toggle=>{
+  const label=toggle.nextElementSibling;
+  label.textContent=enabled?label.dataset.onText:label.dataset.offText;
+  label.title=enabled?'点击关闭返利':'点击开启返利';
+ });
+}
+// 切换返利只更新上方返利视图；跳过同屏预览重绘，避免礼包卡片选中动效被重新触发。
+rebateToggles.forEach(toggle=>toggle.addEventListener('change',()=>{updateRebateView(toggle.checked);render(true);}));
+document.querySelectorAll('#rebateOffPanel .plan-option,#rebateOnPanel .plan-option').forEach(btn=>btn.addEventListener('click',()=>chooseGiftPlan(btn.dataset.plan)));
+updateRebateView();
+
 initSelects();renderTable();applyBeastTheme();render();
 </script>
 <script>
 
-// 与天机阁一致：按设备本地时间自动切换昼夜主题（06:00-17:59 浅色，18:00-05:59 深色）
-function applyTimeTheme(){
- const hour=new Date().getHours();
- const light=hour>=6 && hour<18;
- document.body.classList.toggle('light-theme',light);
- let meta=document.querySelector('meta[name="theme-color"]');
- if(!meta){meta=document.createElement('meta');meta.name='theme-color';document.head.appendChild(meta);}
- meta.content=light?'#ffffff':'#0b1020';
+const levelDataToggle=document.getElementById('levelDataToggle');
+const levelDataContent=document.getElementById('levelDataContent');
+const levelDataTableWrap=document.getElementById('levelDataTableWrap');
+if(levelDataToggle&&levelDataContent&&levelDataTableWrap){
+  levelDataToggle.addEventListener('click',()=>{
+    const expanded=levelDataToggle.getAttribute('aria-expanded')==='true';
+    levelDataToggle.setAttribute('aria-expanded',String(!expanded));
+    levelDataTableWrap.style.maxHeight=expanded?'200px':'500px';
+    levelDataToggle.textContent=expanded?'展开全部':'收起全部';
+  });
 }
-applyTimeTheme();
-setInterval(applyTimeTheme,60000);
-
 </script>
+
 </body>
 </html>
+<style>
+/* v1.1.89：预览卡片仅保留独立选中动效，不联动上方方案 */
+.all-gift-option[data-plan]{cursor:pointer;outline:none;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.all-gift-option[data-plan]:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.all-gift-option[data-plan].selected{border:2px solid var(--primary)!important;border-top:4px solid var(--primary)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 20%,transparent),0 7px 18px #00000016!important;animation:planSelectedPulse .28s ease-out}
+</style>
+
+<style>
+/* v1.1.96：全部方案同屏预览文字颜色跟随当前神兽主题 */
+#allGiftPreview .all-gifts-toggle strong,
+#allGiftPreview .all-gift-option h3,
+#allGiftPreview .all-gift-option .all-gift-price,
+#allGiftPreview .all-gift-option .all-gift-pack-info b,
+#allGiftPreview .all-gift-option .all-gift-purchase-metrics b,
+#allGiftPreview .all-gift-option .all-gift-compare-card h4,
+#allGiftPreview .all-gift-option .all-gift-stat b { color: var(--primary); }
+#allGiftPreview .all-gifts-toggle small { color: color-mix(in srgb, var(--primary) 68%, var(--muted)); }
+@media(max-width:520px){.all-gifts-header{align-items:flex-start;gap:10px}.all-gifts-heading small{max-width:100%}.all-gifts-toggle{padding:7px 9px}}
+</style>
+
+
+<style>
+/* v1.1.107：修复深色主题下材料库存与礼包统计仍使用浅色背景的问题 */
+body.dark-theme .stock:has(#herbStock),
+body.dark-theme .stock:has(#woodStock),
+body.dark-theme .stock:has(#pillStock),
+body.dark-theme section.card .inventory-panel .stock-grid > .stock,
+body.dark-theme section.card .inventory-panel .stock-grid > .stock.stock-herb,
+body.dark-theme section.card .inventory-panel .stock-grid > .stock.stock-wood,
+body.dark-theme section.card .inventory-panel .stock-grid > .stock.stock-pill {
+  background: #1b2739 !important;
+  background-color: #1b2739 !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+body.dark-theme .stock:has(#herbStock) label,
+body.dark-theme .inventory-panel .stock-herb label,
+body.dark-theme .inventory-panel #herbStock,
+body.dark-theme #summaryHerbPacks,
+body.dark-theme #summaryRebateHerbPacks { color: #ff7777 !important; }
+body.dark-theme .stock:has(#woodStock) label,
+body.dark-theme .inventory-panel .stock-wood label,
+body.dark-theme .inventory-panel #woodStock,
+body.dark-theme #summaryWoodPacks,
+body.dark-theme #summaryRebateWoodPacks { color: #e0a878 !important; }
+body.dark-theme .stock:has(#pillStock) label,
+body.dark-theme .inventory-panel .stock-pill label,
+body.dark-theme .inventory-panel #pillStock,
+body.dark-theme #summaryPillPacks,
+body.dark-theme #summaryRebatePillPacks { color: #45d6c6 !important; }
+body.dark-theme .inventory-panel input[type="number"],
+body.dark-theme .inventory-panel input[type="text"] {
+  background: #101a2a !important; color: var(--ink) !important; border-color: var(--line) !important;
+}
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1),
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2),
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) {
+  background: #1b2739 !important; border-color: var(--line) !important;
+}
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1) .name,
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1) strong { color: #ff7777 !important; }
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2) .name,
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2) strong { color: #e0a878 !important; }
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) .name,
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) strong { color: #45d6c6 !important; }
+body.dark-theme .package-summary .status-metric.status-red,
+body.dark-theme .package-summary .fee-metric.status-red,
+body.dark-theme .package-summary .status-metric.status-green,
+body.dark-theme .package-summary .fee-metric.status-green {
+  background: #1b2739 !important; background-color: #1b2739 !important; border-color: var(--line) !important;
+}
+body.dark-theme .package-summary .status-metric.status-red .name,
+body.dark-theme .package-summary .status-metric.status-red strong,
+body.dark-theme .package-summary .fee-metric.status-red .name,
+body.dark-theme .package-summary .fee-metric.status-red strong { color: #ff7777 !important; background: transparent !important; }
+body.dark-theme .package-summary .status-metric.status-green .name,
+body.dark-theme .package-summary .status-metric.status-green strong,
+body.dark-theme .package-summary .fee-metric.status-green .name,
+body.dark-theme .package-summary .fee-metric.status-green strong { color: #45d6a0 !important; background: transparent !important; }
+body.dark-theme .summary .metric { background: #1b2739 !important; border-color: var(--line) !important; }
+body.dark-theme .summary .metric .name { color: var(--muted) !important; }
+body.dark-theme .summary .metric strong { color: var(--ink) !important; }
+body.dark-theme .plan-option.active { background: #1b2739 !important; border-color: var(--primary) !important; box-shadow: inset 0 0 0 1px var(--primary) !important; }
+body.dark-theme .plan-option.active span,
+body.dark-theme .plan-option span { background: #101a2a !important; color: var(--muted) !important; }
+
+
+/* v1.1.110：深色主题下返利开关改用深色底，避免残留浅粉/浅绿背景 */
+body.dark-theme .rebate-chip-label {
+  background: #2b2028 !important;
+  border-color: #a94350 !important;
+  color: #ff858d !important;
+}
+body.dark-theme .rebate-toggle input:checked + .rebate-chip-label {
+  background: #173329 !important;
+  border-color: #278b62 !important;
+  color: #69d6a0 !important;
+}
+</style>
