@@ -12,6 +12,7 @@
 <link rel="preload" as="image" href="button-jitan.png" fetchpriority="high">
 <link rel="preload" as="image" href="button-shengxiao.png" fetchpriority="high">
 <link rel="preload" as="image" href="button-xingzuo.png" fetchpriority="high">
+<link rel="preload" as="image" href="button-ningcui.png" fetchpriority="high">
 <title>水泊梁山</title>
 <style>
 :root {
@@ -68,7 +69,7 @@ body {
   width: min(94vw, var(--menu-max-width));
   max-height: calc(100% - 96px);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
   justify-items: center;
   padding: 4px;
@@ -105,9 +106,7 @@ body {
 }
 .menu-link:active { transform: translateY(1px) scale(.985); filter: brightness(.96); }
 .menu-link:focus-visible { outline: 2px solid #ffe4a0; outline-offset: 4px; border-radius: 20px; }
-/* 桌面端最后一行不足三项时居中 */
-.menu-link:last-child:nth-child(3n+1),
-.menu-link:last-child:nth-child(3n+2) { grid-column: 2; }
+/* 八个入口自然按四列排列，凝萃固定为最后一个入口 */
 
 .contact-author {
   position: absolute;
@@ -146,7 +145,7 @@ body {
     padding: 4px;
     gap: clamp(5px, 1.1vh, 12px) 8px;
   }
-  .menu-link:last-child:nth-child(odd) { grid-column: 1 / -1; width: 50%; }
+  .menu-link:last-child:nth-child(odd) { grid-column: auto; width: 100%; }
   .menu-link:hover { transform: scale(1.015); }
   .contact-author {
     right: 50%;
@@ -180,20 +179,20 @@ body {
 }
 .background-ready .backdrop { background-image: url("liangshan-background.webp"); }
 </style>
-  <!-- Homepage update v1.0.4: add 凝萃 entry -->
+  <!-- Homepage update v1.0.5: restore requested order; desktop 4 columns, mobile 2 columns -->
 </head>
 <body>
 <main class="stage" aria-label="水泊梁山主菜单">
   <div class="backdrop" aria-hidden="true"></div>
   <nav class="menu" aria-label="功能入口">
-    <a class="menu-link" href="tianjige.html" aria-label="进入天机阁"><img src="button-tianjige.png" width="810" height="215" alt="天机阁" loading="eager" decoding="async" fetchpriority="high"></a>
-    <a class="menu-link" href="ningcui.html" aria-label="进入凝萃"><img src="button-ningcui.png" width="810" height="215" alt="凝萃" loading="eager" decoding="async"></a>
     <a class="menu-link" href="shenshou.html" aria-label="进入神兽"><img src="button-shenshou.png" width="810" height="215" alt="神兽" loading="eager" decoding="async" fetchpriority="high"></a>
     <a class="menu-link" href="shenzhuang.html" aria-label="进入神装"><img src="button-shenzhuang.png" width="810" height="215" alt="神装" loading="eager" decoding="async" fetchpriority="high"></a>
     <a class="menu-link" href="junshi.html" aria-label="进入军师"><img src="button-junshi.png" width="810" height="215" alt="军师" loading="eager" decoding="async"></a>
     <a class="menu-link" href="jitan.html" aria-label="进入祭坛"><img src="button-jitan.png" width="810" height="215" alt="祭坛" loading="eager" decoding="async"></a>
+    <a class="menu-link" href="tianjige.html" aria-label="进入天机阁"><img src="button-tianjige.png" width="810" height="215" alt="天机阁" loading="eager" decoding="async"></a>
     <a class="menu-link" href="shengxiao.html" aria-label="进入生肖"><img src="button-shengxiao.png" width="810" height="215" alt="生肖" loading="eager" decoding="async"></a>
     <a class="menu-link" href="xingzuo.html" aria-label="进入星座"><img src="button-xingzuo.png" width="810" height="215" alt="星座" loading="eager" decoding="async"></a>
+    <a class="menu-link" href="ningcui.html" aria-label="进入凝萃"><img src="button-ningcui.png" width="810" height="215" alt="凝萃" loading="eager" decoding="async"></a>
   </nav>
   <a class="contact-author" href="mqqapi://card/show_pslcard?src_type=internal&amp;version=1&amp;uin=1979025807&amp;card_type=person&amp;source=sharecard" target="_blank" rel="noopener noreferrer" aria-label="联系作者，添加 QQ 好友 1979025807" title="添加 QQ 好友：1979025807">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c-3.1 0-5.1 2.5-5.1 6.2 0 1.6.4 3.1 1 4.2-.8 1.1-1.7 2.7-1.7 3.7 0 .6.3.9.8.9.7 0 1.4-.7 2-1.3.8.7 1.8 1.1 3 1.1s2.2-.4 3-1.1c.6.6 1.3 1.3 2 1.3.5 0 .8-.3.8-.9 0-1-1-2.6-1.7-3.7.6-1.1 1-2.6 1-4.2 0-3.7-2-6.2-5.1-6.2ZM8.7 8.4a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm6.6 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8ZM7.5 17.8c-.8.4-1.5 1.2-1.5 2 0 1.1 2.7 2 6 2s6-.9 6-2c0-.8-.7-1.6-1.5-2-1.1.8-2.7 1.2-4.5 1.2s-3.4-.4-4.5-1.2Z"/></svg>

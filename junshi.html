@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v1.0.56</title>
+<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v1.0.70</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -224,12 +224,32 @@ body.rebate-on .gift-total>div.gift-metric-cost strong,body.rebate-on .gift-tota
 .inventory-overview-heading .inventory-overview-title{margin:0!important}
 @media(max-width:480px){.inventory-overview-heading{gap:8px}.inventory-overview-heading .reset-stock-btn{padding:7px 10px;font-size:13px}}
 
-/* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
-main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
-@media(max-width:760px){main{width:calc(100% - 20px)!important;max-width:1200px!important;padding-left:10px!important;padding-right:10px!important;}}
+/* v1.0.70：只有红色展开按钮可切换预览状态 */
+.all-gifts-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.all-gifts-heading{flex:1;min-width:0;color:var(--text)}
+.all-gifts-heading strong{display:block;font-size:18px;font-weight:800}
+.all-gifts-heading small{display:block;color:var(--muted);font-size:13px;font-weight:400;margin-top:6px;line-height:1.5}
+.all-gifts-toggle{width:auto;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid #dc4545;border-radius:999px;color:#dc4545;background:rgba(220,69,69,.10);font-weight:750;font-size:14px;padding:7px 15px;white-space:nowrap;cursor:pointer}
+.all-gifts-toggle.is-expanded{color:#16a765;border-color:#16a765;background:rgba(22,167,101,.12)}
+.all-gifts-content{margin-top:16px}
+#allGiftContent.all-gifts-content{height:auto;max-height:200px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+#allGiftContent.all-gifts-content.show-all{height:auto;max-height:none!important;overflow:visible!important}
+#allGiftContent[hidden]{display:none!important}
+@media(max-width:560px){
+  .all-gifts-header{gap:8px}
+  .all-gifts-heading small{font-size:12px}
+  .all-gifts-toggle{font-size:13px;padding:6px 10px}
+}
 
-/* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
-.panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
+
+/* v1.0.70：移除展开按钮文字外围的第二层边框，只保留外圈 */
+.all-gifts-toggle .all-gifts-state{
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  padding:0 !important;
+}
+
 </style></head><body><main>
 <header class="hero"><h1>军师升级材料计算器</h1><p>选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p><p class="muted" style="margin-top:8px">生命 · 武攻 · 法攻 · 武防 · 法防 · 速度</p></header>
 <section class="panel"><h2>计算属性数量</h2><div class="segment"><button id="oneBtn" class="active" type="button">计算一条属性</button><button id="twoBtn" type="button">计算两条属性</button></div></section>
@@ -239,9 +259,15 @@ main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width
 <div class="inventory-title-row"><h2>已有材料库存</h2></div>
 <p class="inventory-intro">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p>
 <div class="stock-grid junshi-stock-grid">
-  <div class="stock stock-yang"><label for="stockYang">阳炎符库存</label><input id="stockYang" min="0" step="1" type="number" inputmode="numeric" value="0" /></div>
-  <div class="stock stock-chang"><label for="stockChang">长生符库存</label><input id="stockChang" min="0" step="1" type="number" inputmode="numeric" value="0" /></div>
-  <div class="stock stock-sheng"><label for="stockSheng">圣人符库存</label><input id="stockSheng" min="0" step="1" type="number" inputmode="numeric" value="0" /></div>
+  <div class="stock stock-yang"><label for="stockYang">阳炎符库存</label><input id="stockYang" min="0" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockYangRange" type="range" min="0" max="10000" step="1" value="0" aria-label="阳炎符库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>10,000</span></div></div>
+  <div class="stock stock-chang"><label for="stockChang">长生符库存</label><input id="stockChang" min="0" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockChangRange" type="range" min="0" max="10000" step="1" value="0" aria-label="长生符库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>10,000</span></div></div>
+  <div class="stock stock-sheng"><label for="stockSheng">圣人符库存</label><input id="stockSheng" min="0" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockShengRange" type="range" min="0" max="10000" step="1" value="0" aria-label="圣人符库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>10,000</span></div></div>
 </div>
 <div class="inventory-overview-heading"><h2 class="inventory-overview-title">材料需求总览</h2><button id="resetStock" class="btn reset-stock-btn" type="button">重置库存</button></div>
 <div class="summary junshi-material-summary">
@@ -265,8 +291,8 @@ main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width
       <div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div>
       <div class="gift-facts"><span>大包 <b>208</b></span><span>中包 <b>80</b></span><span>小包 <b>16,640</b></span></div></button>
     <button type="button" class="gift-card" data-gift="event">
-      <div class="gift-top"><strong>活动大厅限时礼包</strong><span class="gift-price">¥13.8</span></div>
-      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1,200</b></span></div></button>
+      <div class="gift-top"><strong>活动大厅限时礼包</strong><span class="gift-price">¥22.8</span></div>
+      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1,900</b></span><span>小包 <b>1,900</b></span></div></button>
   </div>
   <div class="gift-explain" id="giftExplain">选择礼包方案，查看当前材料缺口对应的购买估算。</div>
   <div class="gift-total">
@@ -282,12 +308,16 @@ main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width
 </section>
 
 <section class="panel all-gifts-panel" id="allGiftPreview">
-  <button type="button" class="all-gifts-toggle" id="allGiftToggle" aria-expanded="false" aria-controls="allGiftContent">
-    <span><strong>全部方案同屏预览</strong><small>同时对比三种礼包方案的购买数量、所需包数、剩余小包与预计费用</small></span>
-     <span class="all-gifts-state" id="allGiftState">展开全部</span>
-    
-  </button>
-  <div id="allGiftContent" class="all-gifts-content" hidden>
+  <div class="all-gifts-header">
+    <div class="all-gifts-heading">
+      <strong>全部方案同屏预览</strong>
+      <small>同时对比三种礼包方案的购买数量、所需包数、剩余小包与预计费用</small>
+    </div>
+    <button type="button" class="all-gifts-toggle" id="allGiftToggle" aria-expanded="false" aria-controls="allGiftContent">
+      <span class="all-gifts-state" id="allGiftState">展开全部</span>
+    </button>
+  </div>
+  <div id="allGiftContent" class="all-gifts-content">
     <div class="all-gifts-grid" id="allGiftGrid"></div>
   </div>
 </section>
@@ -326,15 +356,236 @@ main{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width
 <style>
 .page-footer{position:relative;min-height:88px;padding:12px 18px 18px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}.page-footer .author{letter-spacing:.2px}.page-footer .home-link{position:fixed;right:18px;bottom:18px;z-index:9999;display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:1px solid #8a754e;border-radius:999px;background:var(--panel);color:#e5ad38;text-decoration:none;font-weight:700;white-space:nowrap;transition:background .15s,border-color .15s}.page-footer .home-link:hover{background:var(--panel2);border-color:#e5ad38}.page-footer .home-link svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}@media(max-width:560px){.page-footer{min-height:100px;align-items:flex-start;padding-top:10px}.page-footer .home-link{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));padding:8px 12px;z-index:9999}}
 
-/* v1.0.56：费用/购买份数加强红绿主题；材料包数与剩余数量改为中性黑色 */
+/* v1.0.61：费用/购买份数加强红绿主题；材料包数与剩余数量改为中性黑色 */
 .gift-total>div.gift-metric-cost,.gift-total>div.gift-metric-qty{background:rgba(220,69,69,.19)!important;border-color:rgba(220,69,69,.58)!important}
 .gift-total>div.gift-metric-cost span,.gift-total>div.gift-metric-qty span,.gift-total>div.gift-metric-cost strong,.gift-total>div.gift-metric-qty strong{color:#b91c1c!important}
 body.rebate-on .gift-total>div.gift-metric-cost,body.rebate-on .gift-total>div.gift-metric-qty{background:rgba(22,167,101,.20)!important;border-color:rgba(22,167,101,.62)!important}
 body.rebate-on .gift-total>div.gift-metric-cost span,body.rebate-on .gift-total>div.gift-metric-qty span,body.rebate-on .gift-total>div.gift-metric-cost strong,body.rebate-on .gift-total>div.gift-metric-qty strong{color:#087443!important}
 .gift-total>div.gift-metric-material-yang,.gift-total>div.gift-metric-material-chang,.gift-total>div.gift-metric-material-sheng,.gift-total>div.gift-metric-remaining{background:#f0f2f5!important;border-color:#d5d9e0!important}
 .gift-total>div.gift-metric-material-yang span,.gift-total>div.gift-metric-material-chang span,.gift-total>div.gift-metric-material-sheng span,.gift-total>div.gift-metric-remaining span,.gift-total>div.gift-metric-material-yang strong,.gift-total>div.gift-metric-material-chang strong,.gift-total>div.gift-metric-material-sheng strong,.gift-total>div.gift-metric-remaining strong{color:#20242b!important}
+
+/* v1.0.61 UI 修复：礼包结果区颜色跟随主题，窄屏自适应 */
+.gift-total{
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:8px;
+}
+.gift-total>div.gift-metric-cost,
+.gift-total>div.gift-metric-qty{
+  background:color-mix(in srgb,#20a464 12%,var(--panel))!important;
+  border-color:color-mix(in srgb,#20a464 48%,var(--line))!important;
+}
+.gift-total>div.gift-metric-cost span,
+.gift-total>div.gift-metric-qty span,
+.gift-total>div.gift-metric-cost strong,
+.gift-total>div.gift-metric-qty strong{
+  color:#16834f!important;
+}
+.gift-total>div.gift-metric-material-yang{
+  background:color-mix(in srgb,#dc4545 8%,var(--panel))!important;
+  border-color:color-mix(in srgb,#dc4545 30%,var(--line))!important;
+}
+.gift-total>div.gift-metric-material-yang span,
+.gift-total>div.gift-metric-material-yang strong{color:var(--text)!important}
+.gift-total>div.gift-metric-material-chang{
+  background:color-mix(in srgb,#20a464 8%,var(--panel))!important;
+  border-color:color-mix(in srgb,#20a464 30%,var(--line))!important;
+}
+.gift-total>div.gift-metric-material-chang span,
+.gift-total>div.gift-metric-material-chang strong{color:var(--text)!important}
+.gift-total>div.gift-metric-material-sheng{
+  background:color-mix(in srgb,#347fe0 8%,var(--panel))!important;
+  border-color:color-mix(in srgb,#347fe0 30%,var(--line))!important;
+}
+.gift-total>div.gift-metric-material-sheng span,
+.gift-total>div.gift-metric-material-sheng strong{color:var(--text)!important}
+.gift-total>div.gift-metric-remaining{
+  background:var(--panel2)!important;
+  border-color:var(--line)!important;
+}
+.gift-total>div.gift-metric-remaining span,
+.gift-total>div.gift-metric-remaining strong{color:var(--text)!important}
+@media (max-width:1100px){
+  .gift-total{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .gift-total{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .gift-total>div{min-height:70px;padding:10px 8px}
+  .gift-total>div span{font-size:12px}
+  .gift-total>div strong{font-size:15px}
+}
+
+
+/* v1.0.61：库存标题与材料需求总览标题始终单行 */
+.inventory-title-row,
+.inventory-overview-heading{
+  min-width:0;
+  flex-wrap:nowrap!important;
+}
+.inventory-title-row h2,
+.inventory-overview-heading .inventory-overview-title{
+  min-width:0;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  flex-shrink:1;
+}
+.inventory-overview-heading .reset-stock-btn{
+  flex:0 0 auto;
+  white-space:nowrap!important;
+}
+@media(max-width:480px){
+  .inventory-result-card{padding-left:12px;padding-right:12px}
+  .inventory-result-card h2{font-size:clamp(15px,4.2vw,21px)!important}
+  .inventory-overview-heading{gap:6px}
+  .inventory-overview-heading .reset-stock-btn{padding:6px 8px;font-size:12px}
+}
+
+
+/* v1.0.61：已有材料库存增加数值同步滑动条 */
+.junshi-stock-grid .stock .stock-range{
+  display:block;width:100%;height:20px;margin:10px 0 0;padding:0;
+  border:0;background:transparent;accent-color:var(--accent);
+  cursor:pointer;touch-action:pan-y;
+}
+.junshi-stock-grid .stock .stock-range-scale{
+  display:flex;justify-content:space-between;gap:8px;
+  color:var(--muted);font-size:11px;line-height:1.3;margin-top:1px;
+}
+@media(max-width:600px){
+  .junshi-stock-grid{grid-template-columns:minmax(0,1fr)!important;gap:10px}
+  .junshi-stock-grid .stock{padding:12px}
+  .junshi-stock-grid .stock .stock-range{height:24px;margin-top:7px}
+}
+
+
+/* v1.0.61：库存与需求总览内部卡片在桌面/平板始终单行 */
+.junshi-stock-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.junshi-material-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.junshi-stock-grid>.stock,
+.junshi-material-summary>.metric{
+  min-width:0!important;
+}
+.junshi-stock-grid>.stock label,
+.junshi-material-summary>.metric span,
+.junshi-material-summary>.metric strong,
+.junshi-material-summary>.metric small{
+  overflow-wrap:anywhere;
+}
+@media(max-width:480px){
+  .junshi-stock-grid,.junshi-material-summary{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .junshi-stock-grid>.stock{padding:8px 6px!important}
+  .junshi-stock-grid>.stock label{font-size:11px!important;line-height:1.25}
+  .junshi-stock-grid>.stock input[type=number]{width:100%;min-width:0;font-size:13px}
+  .junshi-stock-grid .stock-range{width:100%;min-width:0;margin-top:6px}
+  .junshi-stock-grid .stock-range-scale{font-size:9px;gap:2px}
+  .junshi-material-summary>.metric{padding:9px 5px!important}
+  .junshi-material-summary>.metric span{font-size:10px!important;line-height:1.25}
+  .junshi-material-summary>.metric strong{font-size:13px!important;overflow-wrap:anywhere}
+  .junshi-material-summary>.metric small{font-size:9px!important;line-height:1.25}
+}
+
+
+/* v1.0.61：礼包购买方案三张礼包卡始终单行 */
+.gift-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+  min-width:0;
+}
+.gift-grid>.gift-card{
+  min-width:0!important;
+  width:100%!important;
+  margin:0!important;
+}
+.gift-grid .gift-card *{min-width:0}
+@media(max-width:560px){
+  .gift-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .gift-grid>.gift-card{padding:9px 6px!important}
+  .gift-grid .gift-card{font-size:12px}
+  .gift-grid .gift-card .gift-title,
+  .gift-grid .gift-card strong{font-size:clamp(11px,3.2vw,14px)!important}
+  .gift-grid .gift-card .gift-price{font-size:clamp(12px,3.5vw,15px)!important}
+}
+
+
+/* v1.0.70：昼夜主题与切换按钮 */
+.page-footer .theme-toggle{
+  position:fixed;right:148px;bottom:18px;z-index:9999;
+  cursor:pointer;font:inherit;
+}
+.page-footer .theme-toggle svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.dark{
+  --bg:#11151d;--panel:#1b2230;--panel2:#222c3d;--text:#f2f4f8;
+  --muted:#aab4c4;--line:#394456;--accent:#d7b879;--accent2:#e0aa30;
+  --shadow:0 8px 26px #00000020;--result-bg:#18283a;--result-text:#f3f6fb;
+  --result-line:#3a536c;--result-cell:#202f41;--result-head:#202f41;--result-head-text:#d8e1ed;
+  color-scheme:dark;
+}
+body.dark .exp-panel{border-color:#6c5a3c}
+body.dark .progress-track{background:#394456}
+body.dark .result-banner{background:var(--result-bg)}
+@media(max-width:560px){
+  .page-footer .theme-toggle{right:145px;bottom:max(12px,env(safe-area-inset-bottom));padding:8px 10px;gap:5px}
+}
+
+/* v1.0.70：返利计算礼包按钮固定一排三列 */
+.rebate-plan-select{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.rebate-plan-select button{
+  min-width:0;
+  width:100%;
+  padding-left:5px;
+  padding-right:5px;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  line-height:1.25;
+}
+@media(max-width:560px){
+  .rebate-plan-select{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:6px;
+  }
+  .rebate-plan-select button{
+    padding:10px 3px;
+    font-size:12px;
+  }
+}
+
+
+/* v1.0.70：默认200px预览；仅指定按钮可切换完整展示 */
+#allGiftContent.all-gifts-content{
+  height:auto;
+  max-height:200px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+}
+#allGiftContent.all-gifts-content.show-all{
+  height:auto;
+  max-height:none !important;
+  overflow:visible !important;
+}
+#allGiftContent[hidden]{display:none!important}
+
 </style>
-<footer class="page-footer"><span class="author">@wwwwwWqq1</span><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></footer>
+<footer class="page-footer"><span class="author">@wwwwwWqq1</span><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></footer>
 
 <script>
 const rows=[[1,0,0,0,0,0,0,0,0],[2,4,0,0,17,20,2,0,0],[3,4,0,0,17,30,4,0,0],[4,24,0,0,17,60,6,0,0],[5,48,0,0,17,110,8,0,0],[6,110,0,0,17,180,10,0,0],[7,192,64,0,17,270,12,4,0],[8,294,126,0,18,380,14,6,0],[9,448,224,0,18,510,16,8,0],[10,666,370,0,18,660,18,10,0],[11,920,552,0,18,830,20,12,0],[12,1254,798,0,18,1020,22,14,0],[13,1632,1088,408,18,1230,24,16,6],[14,2106,1458,648,18,1460,26,18,8],[15,2520,1800,900,19,1710,28,20,10],[16,3120,2288,1248,19,1980,30,22,12],[17,3840,2880,1680,19,2270,32,24,14],[18,4624,3536,2176,19,2580,34,26,16],[19,5508,4284,2754,19,2910,36,28,18],[20,6194,4890,3260,20,3260,38,30,20],[21,6520,5216,3586,20,3260,40,32,22],[22,7602,6154,4344,20,3630,42,34,24],[23,8844,7236,5226,20,4020,44,36,26],[24,10212,8436,6216,20,4430,46,38,28],[25,11664,9720,7290,20,4860,48,40,30],[26,12650,10626,8096,21,5310,50,42,32],[27,14300,12100,9350,21,5780,52,44,34],[28,16146,13754,10764,21,6270,54,46,36],[29,18032,15456,12236,21,6780,56,48,38],[30,20242,17450,13960,21,7310,58,50,40],[31,23760,19440,15120,22,7930,66,54,42],[32,28860,26216,17160,22,8580,74,58,44],[33,34604,30094,19412,22,9280,82,62,46],[34,41040,36006,21888,22,10030,90,66,48],[35,48216,39940,24600,22,10830,98,70,50],[36,56286,44294,27612,22,11680,106,74,52],[37,65208,50046,30888,22,12580,114,78,54],[38,75030,56430,34440,22,13530,122,82,56],[39,85800,63760,38290,22,14530,130,86,58],[40,98118,63990,42660,22,15630,138,90,60],[41,106726,68714,45322,23,16830,146,94,62],[42,121536,77722,50496,23,18130,154,98,64],[43,137538,86598,56034,23,19530,162,102,66],[44,155580,96884,62152,23,21030,170,106,68],[45,175152,108240,68880,23,22630,178,110,70],[46,196416,120384,76032,23,24280,186,114,72],[47,201760,122720,76960,25,25980,194,118,74],[48,210080,126880,78736,25,25980,202,122,76],[49,233520,140112,86736,25,27780,210,126,78],[50,242416,144560,88960,25,27780,218,130,80],[51,248600,147400,90200,27,29680,226,134,82],[52,257400,151800,92400,27,29680,234,138,84],[53,284108,166708,100964,27,31680,242,142,86],[54,293500,171404,103312,27,31680,250,146,88],[55,297216,178288,103680,27,33780,258,150,90],[56,321062,188578,110444,28,33780,266,154,92],[57,352090,203030,120790,28,35980,274,158,94],[58,362370,208170,123360,28,35980,282,162,96],[59,396720,227088,134064,28,38280,290,166,98],[60,432994,247010,145300,28,40680,298,170,100],[61,476442,270918,158814,29,45153,306,174,102],[62,537568,304736,178048,29,49626,314,178,104],[63,600530,339430,197690,29,54099,322,182,106],[64,666600,375720,218160,29,58572,330,186,108],[65,734812,413060,239140,29,63045,338,190,110],[66,778500,436500,252000,30,67518,346,194,112],[67,849600,475200,273600,30,71991,354,198,114],[68,922738,514898,295684,30,76464,362,202,116],[69,998260,555788,318364,30,80937,370,206,118],[70,1076166,597870,341640,30,85410,378,210,120],[71,1119014,620386,353678,31,89883,386,214,122],[72,1199336,663592,377456,31,94356,394,218,124],[73,1281576,707736,401688,31,98829,402,222,126],[74,1366120,753032,426496,31,103302,410,226,128],[75,1453386,799710,452010,31,107775,418,230,130],[76,1494408,820872,463056,32,112248,426,234,132],[77,1582798,867986,488698,32,116721,434,238,134],[78,1674296,916696,515168,32,121194,442,242,136],[79,1767150,966042,541926,32,125667,450,246,138],[80,1862686,1016750,569380,32,130140,458,250,140]];
@@ -359,10 +610,10 @@ $('resetStock').addEventListener('click',()=>{['stockYang','stockChang','stockSh
 $('resetLevels').onclick=()=>{for(let i=1;i<=2;i++){$('level'+i).value=30;$('targetRange'+i).value=45;normalizeLevel(i)}clearResult();$('status').textContent='等级已重置为当前 30 级、目标 45 级。'};
 $('resetExp').onclick=()=>{for(let i=1;i<=2;i++){$('exp'+i).value=0;updateExp(i)}clearResult();$('status').textContent='经验条已重置为 0。'};
 $('tableBody').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?v:fmt(v)}</td>`).join('')}</tr>`).join('');
-function applyTheme(){const h=new Date().getHours();document.body.classList.toggle('dark',h>=18||h<6);document.querySelector('meta[name="theme-color"]').content=(h>=18||h<6)?'#11151d':'#f4f6fa'}const giftPlans={
+const giftPlans={
  monthly:{label:'月初礼包',price:99,small:17040,big:213,middle:80},
  vip10:{label:'VIP10礼包',price:139.8,small:16640,big:208,middle:80},
- event:{label:'活动大厅限时礼包',price:13.8,small:1200,big:1,middle:1}
+ event:{label:'活动大厅限时礼包',price:22.8,small:1900,big:1,middle:1900}
 };
 let selectedGift='monthly';
 let rebateEnabled=false;
@@ -375,16 +626,44 @@ const allGiftState=document.getElementById('allGiftState');
 if(allGiftToggle&&allGiftContent){
   const syncAllGiftState=(expanded)=>{
     allGiftToggle.setAttribute('aria-expanded',String(expanded));
-    allGiftContent.hidden=!expanded;
+    // The preview remains visible in both states; only its max-height changes.
+    allGiftContent.hidden=false;
     allGiftToggle.classList.toggle('is-expanded',expanded);
     if(allGiftState)allGiftState.textContent=expanded?'收起全部':'展开全部';
   };
+  // 初始为200px预览；aria-expanded表示是否处于“全部展开”状态。
+  allGiftContent.classList.remove('show-all');
+  allGiftContent.style.maxHeight='200px';
+  allGiftContent.style.overflowY='auto';
   syncAllGiftState(false);
-  allGiftToggle.addEventListener('click',()=>{
-    const expanded=allGiftToggle.getAttribute('aria-expanded')==='true';
-    syncAllGiftState(!expanded);
-    if(!expanded)renderAllGiftPreview();
+  renderAllGiftPreview();
+  allGiftToggle.addEventListener('click',(event)=>{
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const expanded=allGiftContent.classList.contains('show-all');
+    if(expanded){
+      allGiftContent.classList.remove('show-all');
+      allGiftContent.style.maxHeight='200px';
+      allGiftContent.style.overflowY='auto';
+      syncAllGiftState(false);
+    }else{
+      allGiftContent.classList.add('show-all');
+      allGiftContent.style.maxHeight='none';
+      allGiftContent.style.overflowY='visible';
+      syncAllGiftState(true);
+    }
+    renderAllGiftPreview();
   });
+  // Only the dedicated toggle button may change preview expansion.
+  // Other clicks inside the preview are stopped before ancestor handlers can receive them.
+  const allGiftPanel=document.getElementById('allGiftPreview');
+  if(allGiftPanel){
+    document.addEventListener('click',(event)=>{
+      if(allGiftPanel.contains(event.target) && !event.target.closest('#allGiftToggle')){
+        event.stopPropagation();
+      }
+    }, true);
+  }
 }
 function renderAllGiftPreview(){
   const host=document.getElementById('allGiftGrid');
@@ -393,7 +672,7 @@ function renderAllGiftPreview(){
   const plans=[
     {id:'monthly',label:'月初礼包',price:99,big:213,mid:80,small:17040},
     {id:'vip10',label:'VIP10礼包',price:139.8,big:208,mid:80,small:16640},
-    {id:'event',label:'活动大厅限时礼包',price:13.8,big:1,mid:1,small:1200}
+    {id:'event',label:'活动大厅限时礼包',price:22.8,big:1,mid:1900,small:1900}
   ];
   const fmtAll=n=>Number(n).toLocaleString('en-US');
   const moneyAll=n=>'¥'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
@@ -466,7 +745,7 @@ function renderGiftPlan(){
 const rebateGiftConfigs={
  monthly:{label:'月初礼包',price:99,big:213,middle:80,small:17040},
  vip10:{label:'VIP10礼包',price:139.8,big:208,middle:80,small:16640},
- event:{label:'活动大厅限时礼包',price:13.8,big:1,middle:1,small:1200}
+ event:{label:'活动大厅限时礼包',price:22.8,big:1,middle:1900,small:1900}
 };
 function setRebateGift(id){
  const p=rebateGiftConfigs[id]||rebateGiftConfigs.monthly;
@@ -489,5 +768,85 @@ function setRebateGift(id){
  document.querySelectorAll('[data-rebate-gift]').forEach(b=>b.classList.toggle('active',b.dataset.rebateGift===id));
 }
 document.querySelectorAll('[data-rebate-gift]').forEach(b=>b.addEventListener('click',()=>setRebateGift(b.dataset.rebateGift)));
-applyTheme();setInterval(applyTheme,60000);setRebateGift('monthly');renderResults();renderGiftPlan();if(allGiftToggle?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
-</script></body></html>
+setRebateGift('monthly');renderResults();renderGiftPlan();if(allGiftToggle?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
+</script>
+<script>
+/* v1.0.61 inventory range/input synchronization */
+(function(){
+  const ids = ["stockYang","stockChang","stockSheng"];
+  ids.forEach(function(id){
+    const number = document.getElementById(id);
+    const range = document.getElementById(id + "Range");
+    if(!number || !range) return;
+    function syncRange(){
+      const n = Math.max(0, Number(number.value) || 0);
+      range.value = String(Math.min(Number(range.max), n));
+    }
+    function syncNumber(){
+      number.value = range.value;
+      number.dispatchEvent(new Event("input", {bubbles:true}));
+      number.dispatchEvent(new Event("change", {bubbles:true}));
+    }
+    number.addEventListener("input", syncRange);
+    number.addEventListener("change", syncRange);
+    range.addEventListener("input", syncNumber);
+    syncRange();
+  });
+})();
+</script>
+
+
+<script>
+/* v1.0.70 昼夜模式：06:00–17:59 白天，18:00–05:59 夜间；按钮可临时手动切换 */
+(function(){
+  const body=document.body;
+  const button=document.getElementById('themeToggle');
+  const themeMeta=document.querySelector('meta[name="theme-color"]');
+  if(!button||!themeMeta)return;
+
+  let manualTheme=null;
+  let lastSchedulePeriod='';
+  function scheduledTheme(){
+    const now=new Date();
+    const hour=now.getHours();
+    return hour>=6&&hour<18?'day':'night';
+  }
+  function periodKey(){
+    const now=new Date();
+    return now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate()+'-'+(now.getHours()>=18?'night':now.getHours()<6?'night':'day');
+  }
+  function apply(theme){
+    const night=theme==='night';
+    body.classList.toggle('dark',night);
+    themeMeta.content=night?'#11151d':'#f4f6fa';
+    button.setAttribute('aria-pressed',String(night));
+    button.setAttribute('aria-label',night?'切换到白天模式':'切换到夜间模式');
+    const span=button.querySelector('span');
+    if(span)span.textContent='切换昼夜';
+    const svg=button.querySelector('svg');
+    if(svg){
+      svg.innerHTML=night
+        ?'<path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"></path>'
+        :'<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>';
+    }
+  }
+  function refreshByClock(){
+    const currentPeriod=periodKey();
+    if(currentPeriod!==lastSchedulePeriod){
+      lastSchedulePeriod=currentPeriod;
+      manualTheme=null;
+    }
+    apply(manualTheme||scheduledTheme());
+  }
+  button.addEventListener('click',function(){
+    const current=body.classList.contains('dark')?'night':'day';
+    manualTheme=current==='night'?'day':'night';
+    apply(manualTheme);
+  });
+  lastSchedulePeriod=periodKey();
+  apply(scheduledTheme());
+  window.setInterval(refreshByClock,30000);
+})();
+</script>
+
+</body></html>
