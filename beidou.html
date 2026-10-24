@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f9fc"><title>北斗材料计算器 v1.0.12</title>
+<style>
+:root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
+main{width:min(100%,1200px);margin:auto;padding:20px 14px 38px}.hero{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--shadow)}.hero h1{font-size:clamp(22px,4vw,30px);margin:0 0 6px}.hero p{margin:0;color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}h2{font-size:20px;margin:0 0 14px}h3{font-size:17px;margin:0 0 12px;color:var(--accent)}.muted{color:var(--muted);font-size:13px}.segment{display:grid;grid-template-columns:1fr 1fr;gap:10px}.segment button,.btn{border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:var(--panel2);color:var(--text);font-size:15px;cursor:pointer}.segment button.active,.btn.primary{background:var(--accent);color:white;border-color:var(--accent);font-weight:700}
+.attribute-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.attribute-btn{border:1px solid var(--line);border-radius:9px;padding:7px 13px;background:var(--panel);color:var(--text);font-size:14px;cursor:pointer;min-width:60px}
+.attribute-btn.selected{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.level-boxes{margin-top:8px}
+.level-box{padding:11px 13px}
+.level-label{margin-bottom:6px}
+.range-ends{margin-top:3px}
+@media(max-width:560px){.attribute-buttons{gap:6px}.attribute-btn{padding:7px 10px;min-width:54px}.level-box{padding:10px 11px}}
+.attr-card{border:1px solid var(--line);border-radius:14px;padding:15px;margin-top:13px;background:var(--panel2)}.attr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:13px}.attr-head h3{margin:0}.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}.field select,.field input[type=number]{width:100%;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:16px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.level-boxes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.level-box{border:1px solid var(--line);border-radius:14px;padding:15px;background:var(--panel)}.level-label{font-size:16px;color:var(--muted);margin-bottom:10px}.level-row{display:grid;grid-template-columns:minmax(0,1fr) 74px;gap:10px;align-items:center}.level-row input[type=range]{width:100%;min-width:0;accent-color:var(--accent)}.level-value{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:6px 4px;text-align:center;font-weight:750;font-size:19px;white-space:nowrap}.range-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:7px}.exp-panel{border:1px solid #d4c4a7;border-radius:14px;background:var(--panel2);padding:15px;margin-top:13px}.exp-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center}.exp-input-row{display:grid;grid-template-columns:1fr;gap:9px}.exp-number{font-size:18px!important}.exp-range{width:100%;margin:12px 0 0;accent-color:var(--accent2)}.progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.progress-track{height:12px;background:#d6deeb;border-radius:99px;overflow:hidden;margin:9px 0}.progress-fill{height:100%;width:0;background:var(--accent2);border-radius:99px}.actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;margin-top:15px}.actions button{flex:0 0 auto;min-width:0;padding:8px 13px;font-size:14px;border-radius:10px}.actions .btn{white-space:nowrap}.result-banner{background:var(--result-bg);color:var(--result-text);border:1px solid var(--result-line);border-radius:16px;padding:16px;margin:14px 0;overflow:hidden}.result-banner .result-detail,.result-banner table{background:var(--result-cell)}.result-banner table td{background:var(--result-cell);color:var(--result-text)}.result-banner table th{background:var(--result-head)!important;color:var(--result-head-text)}.result-banner h2{margin-bottom:4px}.result-banner .summary{color:var(--muted);font-size:14px;font-weight:600;line-height:1.5}.result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.result{border:1px solid var(--result-line);border-radius:13px;background:var(--result-cell);color:var(--result-text);padding:14px 12px;min-width:0}.result .name{font-size:15px;font-weight:600;color:var(--result-text)}.result strong{display:block;font-size:clamp(23px,4vw,34px);line-height:1.25;margin-top:5px;overflow-wrap:anywhere;color:#f6d7a0;font-variant-numeric:tabular-nums}.result:nth-child(1) strong{color:#ff7777}.result:nth-child(2) strong{color:#8fe0a6}.result:nth-child(3) strong{color:#83bfff}.result .small{font-size:14px;font-weight:500;color:var(--muted);margin-top:6px;line-height:1.45}.result:nth-child(1){border-color:#c45a62}.result:nth-child(2){border-color:#4c9864}.result:nth-child(3){border-color:#4d86bd}.result-table{width:100%;border-collapse:collapse;font-size:14px;background:var(--result-cell);border-radius:10px;overflow:hidden}.result-table thead{background:var(--result-head)}.result-table th{background:var(--result-head)!important;color:var(--result-head-text)}.result-table th:nth-child(3),.result-table td:nth-child(3){color:#ff7777}.result-table th:nth-child(4),.result-table td:nth-child(4){color:#8fe0a6}.result-table th:nth-child(5),.result-table td:nth-child(5){color:#83bfff}.result-table td,.result-table th{border-bottom:1px solid var(--line);padding:9px 7px;text-align:right}.result-table td:first-child,.result-table th:first-child{text-align:left}.result-table th:nth-child(3),.result-table td:nth-child(3){color:#ff7777}.result-table th:nth-child(4),.result-table td:nth-child(4){color:#8fe0a6}.result-table th:nth-child(5),.result-table td:nth-child(5){color:#83bfff}.table-wrap{overflow:auto;max-height:420px}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right}th{position:sticky;top:0;background:var(--panel2);color:var(--accent)}.result-banner th{background:var(--result-head)!important;color:var(--result-head-text)!important}th:first-child,td:first-child{text-align:center}.notice{font-size:13px;color:var(--muted);margin-top:12px}
+body.dark{--bg:#11151d;--panel:#1b2230;--panel2:#222c3d;--text:#f2f4f8;--muted:#aab4c4;--line:#394456;--accent:#d7b879;--accent2:#e0aa30;--shadow:0 8px 26px #00000020;--result-bg:#18283a;--result-text:#f3f6fb;--result-line:#3a536c;--result-cell:#202f41;--result-head:#202f41;--result-head-text:#d8e1ed;color-scheme:dark}.dark .exp-panel{border-color:#6c5a3c}.dark .progress-track{background:#394456}.dark .result-banner{background:var(--result-bg)}
+@media(max-width:560px){main{padding:12px 10px 28px}.hero{padding:17px}.panel{padding:13px}h2{font-size:18px}.fields,.level-boxes,.exp-layout{grid-template-columns:1fr}.result-grid{gap:7px}.result{padding:11px 8px}.result .name{font-size:14px}.result strong{font-size:clamp(19px,5vw,26px)}.level-box{padding:12px}.level-row{grid-template-columns:minmax(0,1fr) 70px}}
+
+.gift-panel{margin-top:16px;position:relative}
+/* v1.0.12 缺失礼包信息提示：放大字体，覆盖礼包购买方案，点击任意位置关闭 */
+.missing-gift-overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:18px;border-radius:18px;background:rgba(31,41,55,.24);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);cursor:pointer}
+.missing-gift-message{max-width:420px;width:100%;padding:22px 20px;border:1px solid rgba(255,255,255,.7);border-radius:16px;background:rgba(255,255,255,.84);box-shadow:0 12px 34px rgba(15,23,42,.16);color:#1b2434;text-align:center;font-weight:750;font-size:clamp(22px,5vw,28px);line-height:1.6;pointer-events:none}
+body.dark .missing-gift-message{background:rgba(27,34,48,.88);border-color:rgba(255,255,255,.16);color:#f2f4f8}
+.missing-gift-message small{display:block;margin-top:5px;font-size:clamp(16px,3.8vw,20px);font-weight:600;opacity:.9}
+
+.gift-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.gift-card{display:block;text-align:left;border:1px solid var(--line);border-radius:13px;padding:14px;background:var(--panel2);color:var(--text);cursor:pointer;min-width:0}
+.gift-card.selected{border:2px solid var(--accent);padding:13px;background:var(--panel)}
+.gift-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:16px;margin-bottom:10px}
+.gift-price{font-weight:800;color:var(--accent);white-space:nowrap}
+.gift-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;font-size:13px;color:var(--muted);margin-bottom:12px}
+.gift-facts span{background:var(--panel);border-radius:7px;padding:7px 5px;text-align:center}
+.gift-facts b{display:block;color:var(--text);font-size:15px;margin-top:3px}
+
+.gift-explain{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.6}
+.gift-total{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+.gift-total>div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel2);min-width:0}
+.gift-total span{display:block;color:var(--muted);font-size:13px;line-height:1.4}
+.gift-total strong{display:block;font-size:18px;overflow-wrap:anywhere;margin-top:6px}
+@media(max-width:760px){.gift-grid{grid-template-columns:1fr}.gift-total{grid-template-columns:repeat(2,minmax(0,1fr))}.gift-top{font-size:15px}}
+
+.gift-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.gift-heading h2{margin:0}
+.attr-title-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-width:0}
+.attr-title-row h3{white-space:nowrap;flex-shrink:0}
+.attr-title-row .attribute-buttons{margin:0;flex:1;min-width:0}
+@media(max-width:560px){.attr-title-row{align-items:flex-start;gap:8px}.attr-title-row .attribute-buttons{flex-basis:100%}}
+
+body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8298b5;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px}
+body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8298b5;opacity:.10;transform:rotate(-12deg)}
+body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{color:#5b7398;opacity:.10}
+.wrap{position:relative;isolation:isolate}.wrap>*{position:relative;z-index:1}
+.card{position:relative;isolation:isolate;overflow:hidden}.card>*{position:relative;z-index:1}
+.card::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#819bbf;opacity:.045;transform:rotate(-9deg)}
+.card::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#7f9fc9;opacity:.07;transform:rotate(-10deg)}
+
+.inventory-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.inventory-title-row h2{margin:0!important}
+.reset-stock-btn{flex:0 0 auto;min-width:0;white-space:nowrap;padding:8px 13px;border-radius:10px;font-size:14px;font-weight:400;line-height:1.4;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
+.reset-stock-btn:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:480px){.inventory-title-row{align-items:center}.reset-stock-btn{padding:8px 12px;font-size:13px}.actions button{padding:8px 11px;font-size:13px}}
+
+/* 仿照神装页面的库存与材料需求总览模块，仅调整呈现，不改计算公式 */
+.inventory-result-card{padding:24px 28px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:24px;margin:14px 0;overflow:hidden}
+.inventory-result-card h2{font-size:24px;line-height:1.25;margin:0 0 10px;color:var(--text)}
+.inventory-intro{font-size:13px;color:var(--muted);margin:0 0 18px;line-height:1.6}
+.junshi-stock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.junshi-stock-grid .stock{min-width:0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}
+.junshi-stock-grid .stock label{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}
+.junshi-stock-grid .stock input{width:100%;min-width:0;box-sizing:border-box;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:16px}
+.junshi-stock-grid .stock-yang label{color:#d84a4a}.junshi-stock-grid .stock-chang label{color:#159b61}.junshi-stock-grid .stock-sheng label{color:#347fe0}
+.inventory-overview-title{margin-top:22px!important;margin-bottom:14px!important}
+.junshi-material-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.junshi-material-summary .metric{min-width:0;padding:16px 20px;border:1px solid var(--line);border-radius:15px;background:var(--panel2)}
+.junshi-material-summary .metric span{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.junshi-material-summary .metric strong{display:block;font-size:clamp(22px,2.6vw,32px);line-height:1.2;overflow-wrap:anywhere;color:var(--accent)}
+.junshi-material-summary .metric small{display:block;font-size:12px;line-height:1.5;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}
+.junshi-material-summary .metric-yang strong{color:#d84a4a}.junshi-material-summary .metric-chang strong{color:#159b61}.junshi-material-summary .metric-sheng strong{color:#347fe0}
+.junshi-level-progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:18px}
+.junshi-level-progress div{height:100%;width:0;background:var(--accent);transition:width .2s}
+.inventory-progress-text{margin:10px 0 0;color:var(--muted);font-size:13px}
+@media(max-width:760px){.inventory-result-card{padding:18px 16px;border-radius:18px}.inventory-result-card h2{font-size:21px}.junshi-stock-grid{grid-template-columns:1fr}.junshi-material-summary{grid-template-columns:1fr;gap:10px}.junshi-material-summary .metric{padding:14px 16px}.junshi-material-summary .metric strong{font-size:25px}}
+.actions .reset-stock-btn{font-weight:400!important}
+
+.gift-total{grid-template-columns:repeat(7,minmax(0,1fr));align-items:stretch}
+.gift-total>div{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:76px;padding:10px 8px}
+.gift-total>div span{width:100%;text-align:center}
+.gift-total>div strong{width:100%;text-align:center;font-variant-numeric:tabular-nums}
+.gift-total>div.gift-metric-cost,.gift-total>div.gift-metric-qty{background:color-mix(in srgb,#dc4545 9%,var(--panel));border-color:color-mix(in srgb,#dc4545 42%,var(--border))}
+.gift-total>div.gift-metric-cost strong,.gift-total>div.gift-metric-qty strong{color:#cf3434}
+.gift-total>div.gift-metric-material-yang{background:color-mix(in srgb,#dc4545 6%,var(--panel));border-color:color-mix(in srgb,#dc4545 28%,var(--border))}
+.gift-total>div.gift-metric-material-yang strong{color:#cf3434}
+.gift-total>div.gift-metric-material-chang{background:color-mix(in srgb,#20a464 6%,var(--panel));border-color:color-mix(in srgb,#20a464 28%,var(--border))}
+.gift-total>div.gift-metric-material-chang strong{color:#16834f}
+.gift-total>div.gift-metric-material-sheng{background:color-mix(in srgb,#347fe0 7%,var(--panel));border-color:color-mix(in srgb,#347fe0 30%,var(--border))}
+.gift-total>div.gift-metric-material-sheng strong{color:#347fe0}
+.gift-total>div.gift-metric-remaining{background:color-mix(in srgb,var(--accent) 7%,var(--panel))}
+@media(max-width:1000px){.gift-total{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){.gift-total{grid-template-columns:repeat(2,minmax(0,1fr))}.gift-total>div{min-height:72px;padding:10px 7px}}
+
+
+.inventory-overview-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;margin-bottom:14px}
+.inventory-overview-heading .inventory-overview-title{margin:0!important}
+@media(max-width:480px){.inventory-overview-heading{gap:8px}.inventory-overview-heading .reset-stock-btn{padding:7px 10px;font-size:13px}}
+
+/* v1.0.9：当前/目标等级与经验区始终保持双列单行展示 */
+.level-boxes{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.exp-layout{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:center}
+.level-box,.exp-layout>*{min-width:0}
+.level-row{grid-template-columns:minmax(0,1fr) auto!important;gap:6px!important}
+.level-value{font-size:clamp(13px,2.8vw,19px)!important;padding:6px 4px!important}
+.exp-number{min-width:0!important;width:100%!important}
+@media(max-width:560px){.level-boxes,.exp-layout{grid-template-columns:repeat(2,minmax(0,1fr))!important}.level-box{padding:9px 7px!important}.level-label{font-size:14px!important;margin-bottom:7px!important}.level-row{gap:4px!important}.level-value{font-size:13px!important;padding:5px 2px!important}.exp-panel{padding:10px!important}.exp-layout{gap:8px!important}.exp-layout .progress-meta{font-size:10px!important;gap:4px}.exp-layout .progress-meta span{min-width:0;overflow-wrap:anywhere}.exp-input-row{gap:6px!important}.exp-number{font-size:14px!important;min-height:38px!important;padding:7px!important}.exp-range{margin-top:8px!important}}
+</style></head><body><main>
+<header class="hero"><h1>北斗材料计算器</h1><p>北斗共七条属性，可选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p><p class="muted" style="margin-top:8px">速度 · 穿透 · 护甲 · 生命 · 暴击 · 命中 · 闪避</p></header>
+<section class="panel"><h2>计算属性数量</h2><div class="segment"><button id="oneBtn" class="active" type="button">计算一条属性</button><button id="twoBtn" type="button">计算两条属性</button></div></section>
+<section class="panel"><h2>属性与等级</h2><div id="attr1" class="attr-card"></div><div id="attr2" class="attr-card" hidden></div>
+<div class="actions"><button id="resetLevels" class="btn" type="button">重置等级</button><button id="resetExp" class="btn" type="button">重置经验</button></div><div id="status" class="muted" style="display:none" aria-live="polite"></div></section>
+<section class="result-banner inventory-result-card">
+<div class="inventory-title-row"><h2>已有材料库存</h2></div>
+<p class="inventory-intro">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p>
+<div class="stock-grid junshi-stock-grid">
+  <div class="stock stock-yang"><label for="stockYang">古魁经库存</label><input id="stockYang" min="0" max="100000" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockYangRange" type="range" min="0" max="100000" step="1" value="0" aria-label="古魁经库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>100,000</span></div></div>
+  <div class="stock stock-chang"><label for="stockChang">古朴文库存</label><input id="stockChang" min="0" max="100000" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockChangRange" type="range" min="0" max="100000" step="1" value="0" aria-label="古朴文库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>100,000</span></div></div>
+  <div class="stock stock-sheng"><label for="stockSheng">北极令库存</label><input id="stockSheng" min="0" max="100000" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockShengRange" type="range" min="0" max="100000" step="1" value="0" aria-label="北极令库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>100,000</span></div></div>
+</div>
+<div class="inventory-overview-heading"><h2 class="inventory-overview-title">材料需求总览</h2><button id="resetStock" class="btn reset-stock-btn" type="button">重置库存</button></div>
+<div class="summary junshi-material-summary">
+  <div class="metric metric-yang"><span>预计古魁经</span><strong id="rYang">待计算</strong><small id="dYang">扣除库存后的剩余需求</small></div>
+  <div class="metric metric-chang"><span>预计古朴文</span><strong id="rChang">待计算</strong><small id="dChang">扣除库存后的剩余需求</small></div>
+  <div class="metric metric-sheng"><span>预计北极令</span><strong id="rSheng">待计算</strong><small id="dSheng">扣除库存后的剩余需求</small></div>
+</div>
+<p class="hint inventory-progress-text" id="progressText">当前起始等级 — · 目标等级 — / 50</p>
+<div class="progress junshi-level-progress"><div id="levelProgress"></div></div>
+<div id="resultDetail" hidden></div>
+</section>
+
+<section class="panel gift-panel" id="giftPlan">
+  <div class="missing-gift-overlay" id="missingGiftOverlay" role="button" tabindex="0" aria-label="缺失礼包信息提示，点击关闭">
+    <div class="missing-gift-message">缺失礼包信息<small>有数据可提供给作者更新</small></div>
+  </div>
+  <div class="gift-heading"><h2>礼包购买方案</h2></div>
+  <p class="muted">北斗共有四种礼包。以下数量、价格及三种材料数值均按你提供的数据录入。</p>
+  <div class="gift-grid">
+    <button type="button" class="gift-card selected" data-gift="monthly">
+      <div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥1</span></div>
+      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
+      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
+    </button>
+    <button type="button" class="gift-card" data-gift="vip10">
+      <div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥1</span></div>
+      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
+      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
+    </button>
+    <button type="button" class="gift-card" data-gift="event">
+      <div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥1</span></div>
+      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
+      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
+    </button>
+    <button type="button" class="gift-card" data-gift="value">
+      <div class="gift-top"><strong>越兑越划算</strong><span class="gift-price">¥1</span></div>
+      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
+      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
+    </button>
+  </div>
+  <div class="gift-explain" id="giftExplain">选择礼包方案，查看当前材料缺口对应的购买估算。</div>
+  <div class="gift-total">
+    <div class="gift-metric-cost"><span>预计费用</span><strong id="giftAmount">—</strong></div>
+    <div class="gift-metric-qty"><span>购买礼包数量</span><strong id="giftPurchaseCount">—</strong></div>
+    <div class="gift-metric-material-yang"><span>可获古魁经</span><strong id="openYang">—</strong></div>
+    <div class="gift-metric-material-chang"><span>可获古朴文</span><strong id="openChang">—</strong></div>
+    <div class="gift-metric-material-sheng"><span>可获北极令</span><strong id="openSheng">—</strong></div>
+    <div class="gift-metric-remaining"><span>剩余材料合计</span><strong id="giftRemainingSmall">—</strong></div>
+  </div>
+</section>
+
+
+
+<section class="panel skill-effect-panel">
+  <h2>技能效果表</h2>
+  <div class="table-wrap"><table class="skill-effect-table"><thead><tr><th>等级</th><th>阶级</th><th>回血</th><th>降攻</th><th>加攻</th></tr></thead><tbody>
+    <tr><td>10级</td><td>1阶</td><td>10%</td><td>15%</td><td>10%</td></tr>
+    <tr><td>15级</td><td>2阶</td><td>15%</td><td>18%</td><td>12%</td></tr>
+    <tr><td>20级</td><td>3阶</td><td>20%</td><td>20%</td><td>15%</td></tr>
+    <tr><td>25级</td><td>4阶</td><td>30%</td><td>25%</td><td>20%</td></tr>
+    <tr><td>30级</td><td>5阶</td><td>50%</td><td>30%</td><td>25%</td></tr>
+    <tr><td>40级</td><td>6阶</td><td>55%</td><td>33%</td><td>28%</td></tr>
+    <tr><td>50级</td><td>7阶</td><td>60%</td><td>35%</td><td>30%</td></tr>
+  </tbody></table></div>
+  <div class="skill-effect-notes muted">
+    <p>任意两个星系升级到10级可选择一条技能；任意四个星系升级到10级可选择两条技能；任意七个星系升级到10级可选择三条技能。</p>
+    <p>全部星系升到15级技能自动升级到2级；全部星系升到20级技能自动升级到3级；全部星系升到25级技能自动升级到4级；全部星系升到30级技能自动升级到5级；全部星系升到40级技能自动升级到6级；全部星系升到50级技能自动升级到7级。</p>
+  </div>
+</section>
+
+<section class="panel"><h2>完整升级数据表（0–50级）</h2><div class="table-wrap"><table><thead><tr><th>等级区间</th><th>古魁经</th><th>古朴文</th><th>北极令</th><th>成长值</th><th>经验条</th><th>古魁经(次需)</th><th>古朴文(次需)</th><th>北极令(次需)</th></tr></thead><tbody id="tableBody"></tbody></table></div><div class="notice">数据来源：你提供的北斗系统 0–50 级升级表。经验抵扣按当前经验值 ÷ 当前等级成长值向下取整，折算可抵扣的当前等级次需材料；结果最低为 0。</div></section>
+</main>
+<style>
+.skill-effect-table th,.skill-effect-table td{text-align:center}
+.skill-effect-notes{font-size:12px;line-height:1.65;margin-top:12px}
+.skill-effect-notes p{margin:4px 0}
+.page-footer{position:relative;min-height:88px;padding:12px 18px 18px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}.page-footer .author{letter-spacing:.2px}.page-footer .home-link{position:fixed;right:18px;bottom:18px;z-index:9999;display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:1px solid #8a754e;border-radius:999px;background:var(--panel);color:#e5ad38;text-decoration:none;font-weight:700;white-space:nowrap;transition:background .15s,border-color .15s}.page-footer .home-link:hover{background:var(--panel2);border-color:#e5ad38}.page-footer .home-link svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}@media(max-width:560px){.page-footer{min-height:100px;align-items:flex-start;padding-top:10px}.page-footer .home-link{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));padding:8px 12px;z-index:9999}}
+
+/* v1.0.61：费用/购买份数加强红绿主题；材料包数与剩余数量改为中性黑色 */
+.gift-total>div.gift-metric-cost,.gift-total>div.gift-metric-qty{background:rgba(220,69,69,.19)!important;border-color:rgba(220,69,69,.58)!important}
+.gift-total>div.gift-metric-cost span,.gift-total>div.gift-metric-qty span,.gift-total>div.gift-metric-cost strong,.gift-total>div.gift-metric-qty strong{color:#b91c1c!important}
+.gift-total>div.gift-metric-material-yang span,.gift-total>div.gift-metric-material-chang span,.gift-total>div.gift-metric-material-sheng span,.gift-total>div.gift-metric-remaining span,.gift-total>div.gift-metric-material-yang strong,.gift-total>div.gift-metric-material-chang strong,.gift-total>div.gift-metric-material-sheng strong,.gift-total>div.gift-metric-remaining strong{color:#20242b!important}
+
+/* v1.0.61 UI 修复：礼包结果区颜色跟随主题，窄屏自适应 */
+.gift-total{
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:8px;
+}
+.gift-total>div.gift-metric-cost,
+.gift-total>div.gift-metric-qty{
+  background:color-mix(in srgb,#20a464 12%,var(--panel))!important;
+  border-color:color-mix(in srgb,#20a464 48%,var(--line))!important;
+}
+.gift-total>div.gift-metric-cost span,
+.gift-total>div.gift-metric-qty span,
+.gift-total>div.gift-metric-cost strong,
+.gift-total>div.gift-metric-qty strong{
+  color:#16834f!important;
+}
+.gift-total>div.gift-metric-material-yang{
+  background:color-mix(in srgb,#dc4545 8%,var(--panel))!important;
+  border-color:color-mix(in srgb,#dc4545 30%,var(--line))!important;
+}
+.gift-total>div.gift-metric-material-yang span,
+.gift-total>div.gift-metric-material-yang strong{color:var(--text)!important}
+.gift-total>div.gift-metric-material-chang{
+  background:color-mix(in srgb,#20a464 8%,var(--panel))!important;
+  border-color:color-mix(in srgb,#20a464 30%,var(--line))!important;
+}
+.gift-total>div.gift-metric-material-chang span,
+.gift-total>div.gift-metric-material-chang strong{color:var(--text)!important}
+.gift-total>div.gift-metric-material-sheng{
+  background:color-mix(in srgb,#347fe0 8%,var(--panel))!important;
+  border-color:color-mix(in srgb,#347fe0 30%,var(--line))!important;
+}
+.gift-total>div.gift-metric-material-sheng span,
+.gift-total>div.gift-metric-material-sheng strong{color:var(--text)!important}
+.gift-total>div.gift-metric-remaining{
+  background:var(--panel2)!important;
+  border-color:var(--line)!important;
+}
+.gift-total>div.gift-metric-remaining span,
+.gift-total>div.gift-metric-remaining strong{color:var(--text)!important}
+@media (max-width:1100px){
+  .gift-total{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .gift-total{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .gift-total>div{min-height:70px;padding:10px 8px}
+  .gift-total>div span{font-size:12px}
+  .gift-total>div strong{font-size:15px}
+}
+
+
+/* v1.0.61：库存标题与材料需求总览标题始终单行 */
+.inventory-title-row,
+.inventory-overview-heading{
+  min-width:0;
+  flex-wrap:nowrap!important;
+}
+.inventory-title-row h2,
+.inventory-overview-heading .inventory-overview-title{
+  min-width:0;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  flex-shrink:1;
+}
+.inventory-overview-heading .reset-stock-btn{
+  flex:0 0 auto;
+  white-space:nowrap!important;
+}
+@media(max-width:480px){
+  .inventory-result-card{padding-left:12px;padding-right:12px}
+  .inventory-result-card h2{font-size:clamp(15px,4.2vw,21px)!important}
+  .inventory-overview-heading{gap:6px}
+  .inventory-overview-heading .reset-stock-btn{padding:6px 8px;font-size:12px}
+}
+
+
+/* v1.0.61：已有材料库存增加数值同步滑动条 */
+.junshi-stock-grid .stock .stock-range{
+  display:block;width:100%;height:20px;margin:10px 0 0;padding:0;
+  border:0;background:transparent;accent-color:var(--accent);
+  cursor:pointer;touch-action:pan-y;
+}
+.junshi-stock-grid .stock .stock-range-scale{
+  display:flex;justify-content:space-between;gap:8px;
+  color:var(--muted);font-size:11px;line-height:1.3;margin-top:1px;
+}
+@media(max-width:600px){
+  .junshi-stock-grid{grid-template-columns:minmax(0,1fr)!important;gap:10px}
+  .junshi-stock-grid .stock{padding:12px}
+  .junshi-stock-grid .stock .stock-range{height:24px;margin-top:7px}
+}
+
+
+/* v1.0.61：库存与需求总览内部卡片在桌面/平板始终单行 */
+.junshi-stock-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.junshi-material-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.junshi-stock-grid>.stock,
+.junshi-material-summary>.metric{
+  min-width:0!important;
+}
+.junshi-stock-grid>.stock label,
+.junshi-material-summary>.metric span,
+.junshi-material-summary>.metric strong,
+.junshi-material-summary>.metric small{
+  overflow-wrap:anywhere;
+}
+@media(max-width:480px){
+  .junshi-stock-grid,.junshi-material-summary{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .junshi-stock-grid>.stock{padding:8px 6px!important}
+  .junshi-stock-grid>.stock label{font-size:11px!important;line-height:1.25}
+  .junshi-stock-grid>.stock input[type=number]{width:100%;min-width:0;font-size:13px}
+  .junshi-stock-grid .stock-range{width:100%;min-width:0;margin-top:6px}
+  .junshi-stock-grid .stock-range-scale{font-size:9px;gap:2px}
+  .junshi-material-summary>.metric{padding:9px 5px!important}
+  .junshi-material-summary>.metric span{font-size:10px!important;line-height:1.25}
+  .junshi-material-summary>.metric strong{font-size:13px!important;overflow-wrap:anywhere}
+  .junshi-material-summary>.metric small{font-size:9px!important;line-height:1.25}
+}
+
+
+/* v1.0.10：四种礼包卡片自适应排列 */
+.gift-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  min-width:0;
+}
+.gift-grid>.gift-card{
+  min-width:0!important;
+  width:100%!important;
+  margin:0!important;
+}
+.gift-grid .gift-card *{min-width:0}
+@media(max-width:560px){
+  .gift-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .gift-grid>.gift-card{padding:9px 6px!important}
+  .gift-grid .gift-card{font-size:12px}
+  .gift-grid .gift-card .gift-title,
+  .gift-grid .gift-card strong{font-size:clamp(11px,3.2vw,14px)!important}
+  .gift-grid .gift-card .gift-price{font-size:clamp(12px,3.5vw,15px)!important}
+}
+
+
+/* v1.0.4：昼夜主题与切换按钮 */
+.page-footer .theme-toggle{
+  position:fixed;right:148px;bottom:18px;z-index:9999;
+  cursor:pointer;font:inherit;
+}
+.page-footer .theme-toggle svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.dark{
+  --bg:#11151d;--panel:#1b2230;--panel2:#222c3d;--text:#f2f4f8;
+  --muted:#aab4c4;--line:#394456;--accent:#d7b879;--accent2:#e0aa30;
+  --shadow:0 8px 26px #00000020;--result-bg:#18283a;--result-text:#f3f6fb;
+  --result-line:#3a536c;--result-cell:#202f41;--result-head:#202f41;--result-head-text:#d8e1ed;
+  color-scheme:dark;
+}
+body.dark .exp-panel{border-color:#6c5a3c}
+body.dark .progress-track{background:#394456}
+body.dark .result-banner{background:var(--result-bg)}
+@media(max-width:560px){
+  .page-footer .theme-toggle{right:145px;bottom:max(12px,env(safe-area-inset-bottom));padding:8px 10px;gap:5px}
+}
+
+</style>
+<footer class="page-footer"><span class="author">@wwwwwWqq1</span><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></footer>
+
+<script>
+const rows=[[1,2,0,0,17,17,2,0,0],[2,8,0,0,17,20,4,0,0],[3,18,0,0,17,50,6,0,0],[4,48,0,0,17,110,8,0,0],[5,130,0,0,17,220,10,0,0],[6,288,48,0,17,400,12,2,0],[7,546,156,0,17,670,14,4,0],[8,928,348,0,18,1050,16,6,0],[9,1566,696,0,18,1560,18,8,0],[10,2460,1230,0,18,2220,20,10,0],[11,3740,2040,0,18,3050,22,12,0],[12,5424,3164,1130,18,4070,24,14,5],[13,7644,4704,2058,18,5300,26,16,7],[14,10528,6768,3384,18,6760,28,18,9],[15,13380,8920,4906,19,8470,30,20,11],[16,17600,12100,7150,19,10450,32,22,13],[17,22746,16056,10035,19,12720,34,24,15],[18,28980,20930,13685,19,15300,36,26,17],[19,36442,26852,18221,19,18210,38,28,19],[20,42920,32190,22533,20,21470,40,30,21],[21,51954,39584,28451,20,24730,42,32,23],[22,62392,48212,35450,20,28360,44,34,25],[23,74474,58284,43713,20,32380,46,36,27],[24,88320,69920,53360,20,36810,48,38,29],[25,104200,83360,64604,20,41670,50,40,31],[26,116324,93954,73821,21,46980,52,42,33],[27,135648,110528,87920,21,52760,54,44,35],[28,157416,129306,104007,21,59030,56,46,37],[29,181772,150432,122226,21,65810,58,48,39],[30,208920,174100,142762,21,73120,60,50,41],[31,209820,174850,143377,23,80432,60,50,41],[32,212160,176800,144976,25,88395,60,50,41],[33,215700,179750,147395,27,97057,60,50,41],[34,220260,183550,150511,29,106472,60,50,41],[35,225900,188250,154365,31,116693,60,50,41],[36,232320,193600,158752,33,127779,60,50,41],[37,239640,199700,163754,35,139790,60,50,41],[38,247740,206450,169289,37,152791,60,50,41],[39,256680,213900,175398,39,166848,60,50,41],[40,266400,222000,182040,41,182031,60,50,41],[41,276900,230750,189215,43,198414,60,50,41],[42,288060,240050,196841,45,216072,60,50,41],[43,300120,250100,205082,47,235087,60,50,41],[44,312900,260750,213815,49,255539,60,50,41],[45,326520,272100,223122,51,277516,60,50,41],[46,340860,284050,232921,53,301105,60,50,41],[47,356040,296700,243294,55,326397,60,50,41],[48,372120,310100,254282,57,353488,60,50,41],[49,388980,324150,265803,59,382474,60,50,41],[50,406680,338900,277898,61,413455,60,50,41]];
+const attrs=['速度','穿透','护甲','生命','暴击','命中','闪避'];
+const $=id=>document.getElementById(id);let count=1;const fmt=n=>Math.max(0,Math.floor(n)).toLocaleString('en-US');const row=l=>rows[Math.max(0,Math.min(49,Number(l)||0))];
+function fieldMarkup(i){return `<div class="attr-head"><div class="attr-title-row"><h3>属性 ${i}</h3><div class="attribute-buttons" role="group" aria-label="选择属性 ${i}">${attrs.map((a,j)=>`<button type="button" class="attribute-btn ${j===i-1?'selected':''}" data-attr-index="${i}" data-attr="${a}" aria-pressed="${j===i-1?'true':'false'}">${a}</button>`).join('')}</div></div><span class="muted">独立设置当前等级与目标等级</span></div><div class="level-boxes"><div class="level-box"><div class="level-label">当前等级</div><div class="level-row"><input id="level${i}" type="range" min="0" max="49" value="20" step="1" aria-label="当前等级滑块"><div class="level-value" id="levelValue${i}">20 级</div></div><div class="range-ends"><span>0 级</span><span>49 级</span></div></div><div class="level-box"><div class="level-label">目标等级</div><div class="level-row"><input id="targetRange${i}" type="range" min="21" max="50" value="30" step="1" aria-label="目标等级滑块"><div class="level-value" id="targetValue${i}">30 级</div></div><div class="range-ends"><span id="targetMinLabel${i}">21 级</span><span>50 级</span></div></div></div><div class="exp-panel"><h3>当前经验条</h3><div class="exp-layout"><div class="exp-input-row"><div class="field"><label for="exp${i}">当前等级已获得经验值</label><input id="exp${i}" class="exp-number" type="number" min="0" value="0" step="1"></div><input id="expRange${i}" class="exp-range" type="range" min="0" max="1" value="0" step="1" aria-label="当前经验条滑块"><div class="progress-meta"><span id="expMin${i}">0</span><span id="expMax${i}">经验上限待计算</span></div></div><div><div class="progress-meta"><span id="expFraction${i}">0 / 0</span><span id="expPercent${i}">0.0%</span></div><div class="progress-track"><div id="fill${i}" class="progress-fill"></div></div><div class="progress-meta"><span>本级经验上限</span><span id="expCap${i}">—</span></div></div></div><div class="muted" style="margin-top:10px">已获得经验会按当前等级成长值和三种材料次需折算，抵扣已完成的升级消耗。</div></div>`}
+$('attr1').innerHTML=fieldMarkup(1);$('attr2').innerHTML=fieldMarkup(2);
+function chooseAttribute(i,a){document.querySelectorAll(`[data-attr-index="${i}"]`).forEach(b=>{const on=b.dataset.attr===a;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on?'true':'false')})}
+function setCount(n){count=n;if(n===2&&selectedAttr(1)===selectedAttr(2)){chooseAttribute(2,attrs.find(a=>a!==selectedAttr(1)))}refreshAttributeButtons();$('oneBtn').classList.toggle('active',n===1);$('twoBtn').classList.toggle('active',n===2);$('attr2').hidden=n===1;clearResult();renderResults()}
+$('oneBtn').onclick=()=>setCount(1);$('twoBtn').onclick=()=>setCount(2);
+function selectedAttr(i){return document.querySelector(`[data-attr-index="${i}"].selected`)?.dataset.attr||attrs[i-1]}
+function refreshAttributeButtons(){document.querySelectorAll('.attribute-btn').forEach(btn=>{const i=Number(btn.dataset.attrIndex),selected=btn.classList.contains('selected');const other=i===1?2:1;const conflict=btn.dataset.attr===selectedAttr(other)&&count===2&&!selected;btn.disabled=conflict;btn.style.opacity=conflict?'.35':'1';btn.setAttribute('aria-pressed',selected?'true':'false')})}
+document.querySelectorAll('.attribute-btn').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.attrIndex),a=btn.dataset.attr;if(count===2&&a===selectedAttr(i===1?2:1))return;document.querySelectorAll(`[data-attr-index="${i}"]`).forEach(b=>{const on=b===btn;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on?'true':'false')});refreshAttributeButtons();clearResult();renderResults()}));
+function normalizeLevel(i){let lv=Number($('level'+i).value);let target=Number($('targetRange'+i).value);const minTarget=Math.min(50,lv+1);$('targetRange'+i).min=String(minTarget);$('targetMinLabel'+i).textContent=minTarget+' 级';if(target<minTarget){target=minTarget;$('targetRange'+i).value=String(target)}$('levelValue'+i).textContent=lv+' 级';$('targetValue'+i).textContent=target+' 级';updateExp(i)}
+function updateExp(i){const lv=Math.max(0,Math.min(49,Number($('level'+i).value)||0)),r=row(lv);let cap=Number(r[5]);if(!Number.isFinite(cap)||cap<=0)cap=Number(row(Math.min(49,lv+1))[5])||1;const expInput=$('exp'+i),expRange=$('expRange'+i);expInput.max=String(cap);expRange.max=String(cap);let raw=Number(expInput.value);if(!Number.isFinite(raw))raw=0;let exp=Math.max(0,Math.min(cap,raw));expInput.value=String(exp);expRange.value=String(exp);$('expMin'+i).textContent='0';$('expMax'+i).textContent=fmt(cap);$('expCap'+i).textContent=fmt(cap)+' 经验';$('expFraction'+i).textContent=fmt(exp)+' / '+fmt(cap);let pct=cap?exp/cap*100:0;$('expPercent'+i).textContent=pct.toFixed(1)+'%';$('fill'+i).style.width=pct+'%'}
+for(let i=1;i<=2;i++){$('level'+i).addEventListener('input',()=>{normalizeLevel(i);renderResults()});$('targetRange'+i).addEventListener('input',()=>{normalizeLevel(i);renderResults()});$('exp'+i).addEventListener('input',()=>{updateExp(i);renderResults()});$('expRange'+i).addEventListener('input',()=>{const v=$('expRange'+i).value;$('exp'+i).value=v;updateExp(i);renderResults()});normalizeLevel(i)}refreshAttributeButtons();
+function clearResult(){$('rYang').textContent=$('rChang').textContent=$('rSheng').textContent='—';$('dYang').textContent=$('dChang').textContent=$('dSheng').textContent='剩余需求';const detail=$('resultDetail');if(detail)detail.innerHTML='';const summary=$('resultSummary');if(summary)summary.textContent='修改属性、等级或经验值后，自动显示剩余材料需求。'}
+function calculateOne(i){const lv=Number($('level'+i).value),target=Number($('targetRange'+i).value),exp=Number($('exp'+i).value)||0;if(target<=lv)return {error:'目标等级必须高于当前等级。'};const start=row(lv),end=row(Math.min(49,target));let need=[1,2,3].map(col=>rows.filter(r=>r[0]>lv&&r[0]<=target).reduce((sum,r)=>sum+Number(r[col]||0),0));const growth=Number(start[4]);const times=growth>0?Math.floor(exp/growth):0;const credit=[start[6]*times,start[7]*times,start[8]*times];need=need.map((v,j)=>Math.max(0,v-credit[j]));return {attr:selectedAttr(i),lv,target,exp,cap:Number(start[5])||Number(row(Math.min(49,lv+1))[5])||0,need,credit,times}}
+function renderResults(){try{const results=[];for(let i=1;i<=count;i++){const r=calculateOne(i);if(r.error){$('status').textContent=r.error;return}results.push(r)}const gross=[0,0,0];results.forEach(r=>r.need.forEach((v,j)=>gross[j]+=v));const stock=[Math.max(0,Math.floor(Number($('stockYang')?.value)||0)),Math.max(0,Math.floor(Number($('stockChang')?.value)||0)),Math.max(0,Math.floor(Number($('stockSheng')?.value)||0))];const totals=gross.map((v,j)=>Math.max(0,v-stock[j]));['rYang','rChang','rSheng'].forEach((id,j)=>$(id).textContent=fmt(totals[j]));['dYang','dChang','dSheng'].forEach((id,j)=>$(id).textContent=`总需求 ${fmt(gross[j])} − 库存 ${fmt(stock[j])}`);$('resultDetail').innerHTML=`<table class="result-table"><thead><tr><th>属性</th><th>升级区间</th><th>古魁经总需求</th><th>古朴文总需求</th><th>北极令总需求</th></tr></thead><tbody>${results.map(r=>`<tr><td>${r.attr}</td><td>${r.lv} → ${r.target}</td><td>${fmt(r.need[0])}</td><td>${fmt(r.need[1])}</td><td>${fmt(r.need[2])}</td></tr>`).join('')}<tr><th colspan="2">合计总需求</th>${gross.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><th colspan="2">扣除库存后</th>${totals.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></tbody></table>`;const minLv=Math.min(...results.map(r=>r.lv)),maxTarget=Math.max(...results.map(r=>r.target));$('progressText').textContent=`当前起始等级 ${minLv} · 目标等级 ${maxTarget} / 50`;$('levelProgress').style.width=`${Math.max(0,Math.min(100,maxTarget/50*100))}%`;$('status').textContent='已实时更新。先合计升级材料总需求，再分别扣除库存，结果最低为 0。经验抵扣仍按当前等级成长值折算。';if(typeof renderGiftPlan==='function')renderGiftPlan()}catch(err){console.error('北斗材料需求计算失败',err);const status=$('status');if(status)status.textContent='计算出现异常，请检查等级与经验输入后重试。';}}
+['stockYang','stockChang','stockSheng'].forEach(id=>$(id).addEventListener('input',()=>renderResults()));
+$('resetStock').addEventListener('click',()=>{['stockYang','stockChang','stockSheng'].forEach(id=>$(id).value='0');renderResults();});
+$('resetLevels').onclick=()=>{for(let i=1;i<=2;i++){$('level'+i).value=20;$('targetRange'+i).value=30;normalizeLevel(i)}clearResult();$('status').textContent='等级已重置为当前 20 级、目标 30 级。'};
+$('resetExp').onclick=()=>{for(let i=1;i<=2;i++){$('exp'+i).value=0;updateExp(i)}clearResult();$('status').textContent='经验条已重置为 0。'};
+$('tableBody').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?`${v-1}-${v}级`:fmt(v)}</td>`).join('')}</tr>`).join('');
+const giftPlans={
+ monthly:{label:'月初礼包',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1},
+ vip10:{label:'VIP10礼包',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1},
+ event:{label:'限时礼包',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1},
+ value:{label:'越兑越划算',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1}
+};
+let selectedGift='monthly';
+const missingGiftOverlay=document.getElementById('missingGiftOverlay');
+if(missingGiftOverlay){
+  const closeMissingGiftNotice=()=>missingGiftOverlay.remove();
+  missingGiftOverlay.addEventListener('click',closeMissingGiftNotice);
+  missingGiftOverlay.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();closeMissingGiftNotice();}});
+}
+document.querySelectorAll('[data-gift]').forEach(btn=>btn.addEventListener('click',()=>{selectedGift=btn.dataset.gift;document.querySelectorAll('[data-gift]').forEach(b=>b.classList.toggle('selected',b===btn));renderGiftPlan()}));
+function money(v){return '¥'+Number(v||0).toLocaleString('zh-CN',{minimumFractionDigits: v%1?1:0,maximumFractionDigits:2})}
+function getCurrentMaterialNeeds(){return [Number(($('rYang')?.textContent||'0').replace(/,/g,''))||0,Number(($('rChang')?.textContent||'0').replace(/,/g,''))||0,Number(($('rSheng')?.textContent||'0').replace(/,/g,''))||0]}
+function renderGiftPlan(){
+ const need=getCurrentMaterialNeeds(), p=giftPlans[selectedGift];
+ const yields=[p.yang,p.chang,p.sheng];
+ const qty=Math.max(0,...need.map((n,i)=>Math.ceil(n/Math.max(1,yields[i]))));
+ const gained=yields.map(v=>v*qty);
+ const excess=gained.reduce((sum,v,i)=>sum+Math.max(0,v-need[i]),0);
+ $('giftAmount').textContent=money(qty*p.price);
+ $('giftPurchaseCount').textContent=fmt(qty)+' 份';
+ $('openYang').textContent=fmt(gained[0]);
+ $('openChang').textContent=fmt(gained[1]);
+ $('openSheng').textContent=fmt(gained[2]);
+ $('giftRemainingSmall').textContent=fmt(excess);
+ $('giftExplain').textContent=`当前选择：${p.label}。每份礼包按表格数值提供古魁经 ${fmt(p.yang)}、古朴文 ${fmt(p.chang)}、北极令 ${fmt(p.sheng)}；按当前剩余材料需求估算需购买 ${fmt(qty)} 份。`;
+}
+
+
+renderResults();renderGiftPlan();
+</script>
+<script>
+/* v1.0.61 inventory range/input synchronization */
+(function(){
+  const ids = ["stockYang","stockChang","stockSheng"];
+  ids.forEach(function(id){
+    const number = document.getElementById(id);
+    const range = document.getElementById(id + "Range");
+    if(!number || !range) return;
+    function syncRange(){
+      const n = Math.max(0, Number(number.value) || 0);
+      range.value = String(Math.min(Number(range.max), n));
+    }
+    function syncNumber(){
+      number.value = range.value;
+      number.dispatchEvent(new Event("input", {bubbles:true}));
+      number.dispatchEvent(new Event("change", {bubbles:true}));
+    }
+    number.addEventListener("input", syncRange);
+    number.addEventListener("change", syncRange);
+    range.addEventListener("input", syncNumber);
+    syncRange();
+  });
+})();
+</script>
+
+
+<script>
+/* v1.0.4 移除返利功能；昼夜模式：06:00–17:59 白天，18:00–05:59 夜间；按钮可临时手动切换 */
+(function(){
+  const body=document.body;
+  const button=document.getElementById('themeToggle');
+  const themeMeta=document.querySelector('meta[name="theme-color"]');
+  if(!button||!themeMeta)return;
+
+  let manualTheme=null;
+  let lastSchedulePeriod='';
+  function scheduledTheme(){
+    const now=new Date();
+    const hour=now.getHours();
+    return hour>=6&&hour<18?'day':'night';
+  }
+  function periodKey(){
+    const now=new Date();
+    return now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate()+'-'+(now.getHours()>=18?'night':now.getHours()<6?'night':'day');
+  }
+  function apply(theme){
+    const night=theme==='night';
+    body.classList.toggle('dark',night);
+    themeMeta.content=night?'#11151d':'#f4f6fa';
+    button.setAttribute('aria-pressed',String(night));
+    button.setAttribute('aria-label',night?'切换到白天模式':'切换到夜间模式');
+    const span=button.querySelector('span');
+    if(span)span.textContent='切换昼夜';
+    const svg=button.querySelector('svg');
+    if(svg){
+      svg.innerHTML=night
+        ?'<path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"></path>'
+        :'<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>';
+    }
+  }
+  function refreshByClock(){
+    const currentPeriod=periodKey();
+    if(currentPeriod!==lastSchedulePeriod){
+      lastSchedulePeriod=currentPeriod;
+      manualTheme=null;
+    }
+    apply(manualTheme||scheduledTheme());
+  }
+  button.addEventListener('click',function(){
+    const current=body.classList.contains('dark')?'night':'day';
+    manualTheme=current==='night'?'day':'night';
+    apply(manualTheme);
+  });
+  lastSchedulePeriod=periodKey();
+  apply(scheduledTheme());
+  window.setInterval(refreshByClock,30000);
+})();
+</script>
+
+</body></html>
