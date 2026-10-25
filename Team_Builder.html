@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.2.141</title>
+<title>QQ水浒阵容规划器 v1.2.148</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -783,6 +783,56 @@ body.light .share-panel{background:#f6f7fa}
 .roster-code-card textarea{box-sizing:border-box;max-width:100%}
 .roster-code-card .footer-note{margin:0 0 8px}
 
+
+/* v1.2.148：手机端选将卡片使用滚动监听固定吸顶，默认高度40vh */
+.roster-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.roster-heading .section-title{margin:0}
+.roster-collapse-btn{flex:none;padding:7px 12px;white-space:nowrap}
+@media(max-width:760px){
+  .layout{display:flex !important;flex-direction:column !important;gap:12px}
+  /* 手机端把选将面板放到导入阵容卡片之前，并在页面滚动时吸顶 */
+  .app > #rosterPanel{
+    position:relative;top:auto;left:auto;right:auto;bottom:auto;order:0;
+    z-index:1000;width:100% !important;max-width:100% !important;box-sizing:border-box;
+    height:40vh;height:40dvh;max-height:40vh;max-height:40dvh;min-height:0;
+    margin:0 0 12px;padding:12px;display:flex;flex-direction:column;
+    overflow:hidden;backdrop-filter:blur(10px);scroll-margin-top:0;
+  }
+  .app > #rosterPanel.roster-fixed-top{
+    position:fixed !important;top:0 !important;left:var(--roster-fixed-left,0px) !important;
+    right:auto !important;bottom:auto !important;width:var(--roster-fixed-width,100vw) !important;
+    max-width:none !important;margin:0 !important;z-index:10000 !important;
+  }
+  .roster-sticky-placeholder{display:none;height:0;pointer-events:none;visibility:hidden}
+  .roster-sticky-placeholder.active{display:block}
+  .app > #rosterPanel .roster-heading{flex:0 0 auto;margin-bottom:10px}
+  .app > #rosterPanel .selected-slot{flex:0 0 auto;margin:0 0 8px}
+  .app > #rosterPanel .roster-tools{flex:0 0 auto;margin-bottom:8px}
+  .app > #rosterPanel .hero-list{flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto;grid-template-columns:repeat(3,minmax(0,1fr));overscroll-behavior:contain}
+  .app > #rosterPanel .union-candidate-panel{flex:0 0 auto;max-height:22%;overflow:auto}
+  .app > #rosterPanel.roster-collapsed{height:auto;max-height:none;min-height:0;padding:10px 12px}
+  .app > #rosterPanel.roster-collapsed .roster-heading{margin:0}
+  .app > #rosterPanel.roster-collapsed > :not(.roster-heading){display:none !important}
+}
+
+
+/* v1.2.145：三个快捷按钮使用同一弹性操作栏，按内容自动排布，避免重叠 */
+.page-footer .floating-actions{
+  position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));
+  z-index:10001;display:flex;align-items:center;justify-content:flex-end;gap:8px;max-width:calc(100vw - 24px);
+}
+.page-footer .floating-actions .home-link,
+.page-footer .floating-actions .share-fab,
+.page-footer .floating-actions .theme-toggle{
+  position:static!important;right:auto!important;bottom:auto!important;flex:0 0 auto;min-width:0;
+  box-sizing:border-box;white-space:nowrap;
+}
+.page-footer .floating-actions .share-fab{right:auto!important}
+@media(max-width:560px){
+  .page-footer .floating-actions{right:max(8px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:5px;max-width:calc(100vw - 16px)}
+  .page-footer .floating-actions .home-link{padding:7px 8px;gap:4px;font-size:11px}
+  .page-footer .floating-actions .home-link svg{width:13px;height:13px}
+}
 </style>
 </head>
 <body>
@@ -807,8 +857,8 @@ body.light .share-panel{background:#f6f7fa}
     <div class="actions history-actions"><button class="action-btn" id="undoMain" disabled>撤销</button><button class="action-btn" id="redoMain" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="clearAll">清空本阵</button><button class="action-btn" id="clearSideCamps">清空副将营 聚义营</button><button class="action-btn" id="smartFill">智能补齐副将营 聚义营</button></div>
     
   </section>
-  <section class="panel">
-    <h2 class="section-title"> 选择武将</h2>
+  <section class="panel" id="rosterPanel">
+    <div class="roster-heading"><h2 class="section-title">选择武将</h2><button type="button" id="toggleRosterPanel" class="action-btn roster-collapse-btn" aria-expanded="true">收起</button></div>
     <div class="selected-slot" id="slotPrompt">请先点击阵型中的一个可上阵位置。</div>
     <div class="roster-tools">
       <input id="search" type="search" placeholder="搜索武将本名…" autocomplete="off" aria-label="搜索武将">
@@ -859,18 +909,20 @@ body.light .share-panel{background:#f6f7fa}
 </div>
 <footer class="page-footer">
   <span class="author"></span>
-  <button class="home-link share-fab" id="sharePlan" type="button" aria-label="生成并分享方案">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"></path></svg>
-    <span>分享方案</span>
-  </button>
-  <button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42-1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
-    <span>切换昼夜</span>
-  </button>
-  <a class="home-link" href="index.html" aria-label="返回首页">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg>
-    <span>返回首页</span>
-  </a>
+  <div class="floating-actions" aria-label="页面快捷操作">
+    <button class="home-link share-fab" id="sharePlan" type="button" aria-label="保存阵容图片">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"></path></svg>
+      <span>保存阵容图片</span>
+    </button>
+    <button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42-1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+      <span>切换昼夜</span>
+    </button>
+    <a class="home-link" href="index.html" aria-label="返回主页">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg>
+      <span>返回主页</span>
+    </a>
+  </div>
 <div class="page-author-credit">@wwwwwqq1</div>
 </footer>
 <script>
@@ -1092,12 +1144,33 @@ function renderFormations(){
    try{output.value=makeCode();status.textContent="阵容码已生成，可复制后发送给好友。";}
    catch(err){console.error(err);status.textContent="导出失败，请重试。";}
  });
- document.getElementById("copyRosterCode").addEventListener("click",async()=>{
-   if(!output.value.trim()){output.value=makeCode();}
+ async function copyTextAutomatically(text){
+   if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
+     try{await navigator.clipboard.writeText(text);return true;}catch(err){/* Continue to the compatibility fallback used by mobile embedded browsers. */}
+   }
+   let temporary=null;
    try{
-     if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(output.value);status.textContent="阵容码已复制。";}
-     else{output.focus();output.select();const ok=document.execCommand("copy");status.textContent=ok?"阵容码已复制。":"请长按或手动选择阵容码进行复制。";}
-   }catch(err){output.focus();output.select();status.textContent="请手动复制已选中的阵容码。";}
+     temporary=document.createElement("textarea");
+     temporary.value=text;
+     temporary.setAttribute("readonly","");
+     temporary.style.position="fixed";
+     temporary.style.left="-9999px";
+     temporary.style.top="0";
+     temporary.style.opacity="0";
+     document.body.appendChild(temporary);
+     temporary.focus({preventScroll:true});
+     temporary.select();
+     temporary.setSelectionRange(0,temporary.value.length);
+     return !!document.execCommand("copy");
+   }catch(err){return false;}
+   finally{if(temporary&&temporary.parentNode)temporary.parentNode.removeChild(temporary);}
+ }
+ document.getElementById("copyRosterCode").addEventListener("click",async()=>{
+   try{
+     if(!output.value.trim())output.value=makeCode();
+     const copied=await copyTextAutomatically(output.value);
+     status.textContent=copied?"阵容码已自动复制，可直接粘贴发送。":"当前浏览器未允许自动复制，请检查浏览器剪贴板权限后重试。";
+   }catch(err){console.error(err);status.textContent="复制失败，请重试。";}
  });
  document.getElementById("importRosterCode").addEventListener("click",()=>{
    try{
@@ -1721,12 +1794,33 @@ $("clearSideCamps").addEventListener("click",()=>{
    try{output.value=makeCode();status.textContent="阵容码已生成，可复制后发送给好友。";}
    catch(err){console.error(err);status.textContent="导出失败，请重试。";}
  });
- document.getElementById("copyRosterCode").addEventListener("click",async()=>{
-   if(!output.value.trim()){output.value=makeCode();}
+ async function copyTextAutomatically(text){
+   if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
+     try{await navigator.clipboard.writeText(text);return true;}catch(err){/* Continue to the compatibility fallback used by mobile embedded browsers. */}
+   }
+   let temporary=null;
    try{
-     if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(output.value);status.textContent="阵容码已复制。";}
-     else{output.focus();output.select();const ok=document.execCommand("copy");status.textContent=ok?"阵容码已复制。":"请长按或手动选择阵容码进行复制。";}
-   }catch(err){output.focus();output.select();status.textContent="请手动复制已选中的阵容码。";}
+     temporary=document.createElement("textarea");
+     temporary.value=text;
+     temporary.setAttribute("readonly","");
+     temporary.style.position="fixed";
+     temporary.style.left="-9999px";
+     temporary.style.top="0";
+     temporary.style.opacity="0";
+     document.body.appendChild(temporary);
+     temporary.focus({preventScroll:true});
+     temporary.select();
+     temporary.setSelectionRange(0,temporary.value.length);
+     return !!document.execCommand("copy");
+   }catch(err){return false;}
+   finally{if(temporary&&temporary.parentNode)temporary.parentNode.removeChild(temporary);}
+ }
+ document.getElementById("copyRosterCode").addEventListener("click",async()=>{
+   try{
+     if(!output.value.trim())output.value=makeCode();
+     const copied=await copyTextAutomatically(output.value);
+     status.textContent=copied?"阵容码已自动复制，可直接粘贴发送。":"当前浏览器未允许自动复制，请检查浏览器剪贴板权限后重试。";
+   }catch(err){console.error(err);status.textContent="复制失败，请重试。";}
  });
  document.getElementById("importRosterCode").addEventListener("click",()=>{
    try{
@@ -1892,7 +1986,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
    }catch(err){
      console.error('实时更新分享预览失败：',err);
      const caption=document.getElementById('shareCombinedCaption');
-     if(caption)caption.textContent='预览生成失败，请点击「分享方案」重试';
+     if(caption)caption.textContent='预览生成失败，请点击「保存阵容图片」重试';
    }
    finally{
      previewBusy=false;
@@ -1950,6 +2044,94 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
   function refreshByClock(){const p=periodKey();if(p!==lastSchedulePeriod){lastSchedulePeriod=p;manualTheme=null;}apply(manualTheme||scheduledTheme());}
   button.addEventListener('click',function(){manualTheme=(body.classList.contains('dark')?'day':'night');apply(manualTheme);});
   lastSchedulePeriod=periodKey();apply(scheduledTheme());window.setInterval(refreshByClock,30000);
+})();
+
+
+/* v1.2.148：手机端通过滚动监听固定选将面板，避免 sticky 在移动端失效 */
+(function(){
+  const panel=document.getElementById('rosterPanel');
+  const toggle=document.getElementById('toggleRosterPanel');
+  const layout=document.querySelector('.layout');
+  const importPanel=document.getElementById('importRosterPanel');
+  const mainPanel=layout&&layout.querySelector(':scope > section:first-child');
+  const app=document.querySelector('.app');
+  if(!panel||!toggle||!layout||!importPanel||!mainPanel||!app)return;
+  const placeholder=document.createElement('div');
+  placeholder.className='roster-sticky-placeholder';
+  placeholder.setAttribute('aria-hidden','true');
+  panel.parentNode.insertBefore(placeholder,panel);
+  let fixed=false, ticking=false;
+  function mobile(){return window.matchMedia('(max-width:760px)').matches;}
+  function setFixed(on){
+    if(on===fixed)return;
+    if(on){
+      const r=panel.getBoundingClientRect();
+      placeholder.style.height=r.height+'px';
+      placeholder.classList.add('active');
+      panel.style.setProperty('--roster-fixed-left',r.left+'px');
+      panel.style.setProperty('--roster-fixed-width',r.width+'px');
+      panel.classList.add('roster-fixed-top');
+      fixed=true;
+    }else{
+      panel.classList.remove('roster-fixed-top');
+      panel.style.removeProperty('--roster-fixed-left');
+      panel.style.removeProperty('--roster-fixed-width');
+      placeholder.classList.remove('active');
+      placeholder.style.height='0px';
+      fixed=false;
+    }
+  }
+  function updateSticky(){
+    ticking=false;
+    if(!mobile()){setFixed(false);return;}
+    // 固定时用占位元素的原始文档位置判断何时解除吸顶，避免卡片跳动。
+    const anchor=placeholder.getBoundingClientRect();
+    if(fixed){
+      if(anchor.top>=0)setFixed(false);
+      else{
+        const r=placeholder.getBoundingClientRect();
+        panel.style.setProperty('--roster-fixed-left',r.left+'px');
+        panel.style.setProperty('--roster-fixed-width',r.width+'px');
+      }
+    }else{
+      const r=panel.getBoundingClientRect();
+      if(r.top<=0)setFixed(true);
+    }
+  }
+  function requestUpdate(){if(!ticking){ticking=true;window.requestAnimationFrame(updateSticky);}}
+  function placePanel(){
+    if(mobile()){
+      if(panel.parentElement!==app || panel.previousElementSibling!==placeholder){
+        app.insertBefore(placeholder,importPanel);
+        app.insertBefore(panel,importPanel);
+      }
+      panel.classList.remove('roster-fixed-top');
+      placeholder.classList.remove('active');placeholder.style.height='0px';fixed=false;
+      panel.classList.remove('roster-collapsed');
+      toggle.textContent='收起';toggle.setAttribute('aria-expanded','true');
+    }else{
+      setFixed(false);
+      if(panel.parentElement!==layout){
+        placeholder.remove();
+        if(mainPanel.nextElementSibling)layout.insertBefore(panel,mainPanel.nextElementSibling);
+        else layout.appendChild(panel);
+      }
+      panel.classList.remove('roster-collapsed');
+      toggle.textContent='收起';toggle.setAttribute('aria-expanded','true');
+    }
+    requestUpdate();
+  }
+  toggle.addEventListener('click',function(){
+    if(!mobile())return;
+    const collapsed=panel.classList.toggle('roster-collapsed');
+    toggle.textContent=collapsed?'展开':'收起';
+    toggle.setAttribute('aria-expanded',String(!collapsed));
+    if(fixed){const h=panel.getBoundingClientRect().height;placeholder.style.height=h+'px';}
+  });
+  window.addEventListener('scroll',requestUpdate,{passive:true});
+  window.addEventListener('resize',placePanel);
+  window.addEventListener('orientationchange',placePanel);
+  placePanel();
 })();
 
 </script>
