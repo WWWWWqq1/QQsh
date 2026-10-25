@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.2.148</title>
+<title>QQ水浒阵容规划器 v1.2.151</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -833,6 +833,180 @@ body.light .share-panel{background:#f6f7fa}
   .page-footer .floating-actions .home-link{padding:7px 8px;gap:4px;font-size:11px}
   .page-footer .floating-actions .home-link svg{width:13px;height:13px}
 }
+
+/* v1.2.152：宽屏双栏比例恢复为主体70%、选择武将30%。 */
+@media (min-width: 761px) {
+  .app {
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: clamp(14px, 3vw, 28px) !important;
+    box-sizing: border-box !important;
+  }
+  .app > *, .app .panel, .app .layout, .app .layout > section,
+  .camp-layout, .camp-layout > .panel, .camp-layout .camp-panel {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .app .layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3fr) !important; /* 宽屏：主体70%，选择武将30% */
+    gap: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-items: start !important;
+  }
+  .app .layout > section:first-child,
+  .app .layout > section:nth-child(2) {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 0 16px !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+  .app .layout > section:nth-child(2) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: start !important;
+    box-shadow: 0 12px 32px #0002 !important;
+    backdrop-filter: none !important;
+  }
+  .app .layout > section:nth-child(2) .hero-list {
+    max-height: min(58vh, 680px) !important;
+    min-height: 120px !important;
+    overflow-y: auto !important;
+  }
+  .camp-layout {
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 clamp(14px, 3vw, 28px) !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+
+
+/* v1.2.155：左侧主体框架包含副将营、聚义营、导出阵容码与分享预览；右侧30%恢复独立选将面板 */
+@media (min-width: 761px) {
+  :root { --planner-width: min(1200px, 100vw); --planner-left: max(0px, calc((100vw - 1200px) / 2)); --planner-main-width: calc(var(--planner-width) * .70); --planner-roster-width: calc(var(--planner-width) * .30); }
+  body { overflow-x:hidden !important; }
+  .app {
+    width:var(--planner-main-width) !important; max-width:var(--planner-main-width) !important;
+    margin-left:var(--planner-left) !important; margin-right:0 !important;
+    padding:16px 12px 0 16px !important; box-sizing:border-box !important;
+  }
+  .app > header, .app > #importRosterPanel, .app > .panel:not(#rosterPanel), .app .layout,
+  .app .layout > section:first-child {
+    width:100% !important; max-width:100% !important; min-width:0 !important; box-sizing:border-box !important;
+  }
+  /* 主阵所在列只负责主阵；选将卡片独立固定在右侧30%区域 */
+  .app .layout { display:block !important; width:100% !important; }
+  .app .layout > section:first-child { margin:0 0 16px !important; }
+  .app .layout > #rosterPanel {
+    position:fixed !important; z-index:1000 !important;
+    top:16px !important; right:var(--planner-left) !important; left:auto !important; bottom:84px !important; /* v1.2.161：宽屏卡片明确限定视口高度，避免窄屏切回宽屏时百分比高度失去参照 */
+    width:var(--planner-roster-width) !important; max-width:var(--planner-roster-width) !important; min-width:0 !important;
+    height:calc(100dvh - 100px) !important; max-height:calc(100dvh - 100px) !important; min-height:0 !important; margin:0 !important; padding:12px !important;
+    box-sizing:border-box !important; display:flex !important; flex-direction:column !important;
+    overflow:hidden !important; transform:none !important;
+  }
+  .app .layout > #rosterPanel .roster-heading,
+  .app .layout > #rosterPanel .selected-slot,
+  .app .layout > #rosterPanel .roster-tools { flex:0 0 auto !important; min-width:0 !important; }
+  .app .layout > #rosterPanel .roster-tools { flex-wrap:wrap !important; }
+  .app .layout > #rosterPanel .roster-tools #search { flex:1 1 100% !important; width:100% !important; min-width:0 !important; }
+  .app .layout > #rosterPanel .roster-filter-buttons { width:100% !important; flex-wrap:wrap !important; }
+  .app .layout > #rosterPanel .hero-list { flex:1 1 auto !important; min-height:80px !important; max-height:none !important; overflow-y:auto !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .app .layout > #rosterPanel .union-candidate-panel { flex:0 1 26% !important; min-height:0 !important; max-height:26% !important; overflow:auto !important; }
+  /* v1.2.161：宽屏下卡片高度明确，候补区在切换屏幕模式后仍按选将卡片内容区的40%分配 */
+  .app .layout > #rosterPanel {
+    display:flex !important;
+    flex-direction:column !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+  .app .layout > #rosterPanel .union-candidate-panel {
+    flex:0 0 40% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    box-sizing:border-box !important;
+    overflow:auto !important;
+  }
+  /* 副将营、聚义营、导出阵容码、分享预览都属于左侧70%主体列 */
+  /* 所有左侧主体内容（含副将营、聚义营、导出阵容码、分享预览）都纳入 .app 主体框架 */
+  .app > .camp-layout, .app > #exportRosterPanel, .app > #sharePanel {
+    width:100% !important; max-width:100% !important;
+    margin:0 0 16px !important; padding:0 !important; box-sizing:border-box !important;
+  }
+  .app > .camp-layout { display:grid !important; grid-template-columns:minmax(0,1fr) !important; gap:16px !important; }
+  .app > .camp-layout > *, .app > #exportRosterPanel, .app > #sharePanel { min-width:0 !important; }
+}
+
+
+/* v1.2.156：宽屏未选分类时，涅槃每行两个，神将/修罗/其他每行三个 */
+@media (min-width:761px) {
+  .app .layout > #rosterPanel .hero-list.mixed-roster {
+    display:grid !important;
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  }
+  .app .layout > #rosterPanel .hero-list.mixed-roster .hero-option.nirvana-option {
+    grid-column:span 3 !important;
+  }
+  .app .layout > #rosterPanel .hero-list.mixed-roster .hero-option:not(.nirvana-option) {
+    grid-column:span 2 !important;
+  }
+}
+
+/* v1.2.158：聚义候补明确占选将卡片内容区高度40%，选将列表占其余可用空间 */
+.app #rosterPanel {
+  min-height:0 !important;
+}
+.app #rosterPanel .hero-list {
+  flex:1 1 0% !important;
+  min-height:0 !important;
+  max-height:none !important;
+}
+.app #rosterPanel .union-candidate-panel {
+  flex:0 0 40% !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  box-sizing:border-box !important;
+  overflow:auto !important;
+}
+@media (min-width:761px) {
+  .app .layout > #rosterPanel .hero-list.nirvana-filter {
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+
+/* v1.2.161：宽屏断点最终覆盖，保证从窄屏切回时高度基准和候补比例重新计算 */
+@media (min-width:761px) {
+  .app .layout > #rosterPanel {
+    top:16px !important;
+    bottom:84px !important;
+    height:calc(100dvh - 100px) !important;
+    max-height:calc(100dvh - 100px) !important;
+    min-height:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+  }
+  .app .layout > #rosterPanel .union-candidate-panel {
+    flex:0 0 40% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -879,7 +1053,6 @@ body.light .share-panel{background:#f6f7fa}
     </div>
   </section>
 </div>
-</div>
 <div class="camp-layout">
   <section class="panel camp-panel">
     <div class="camp-head"><h2 class="section-title"> 副将营</h2><span class="camp-count" id="deputyCounter">已上阵 0 / 7</span></div>
@@ -906,6 +1079,7 @@ body.light .share-panel{background:#f6f7fa}
     <input id="formationDescription" class="formation-description-input" type="text" maxlength="100" placeholder="输入阵容说明，例如：速度优先，适合先手控制" autocomplete="off">
     <article class="share-preview-card"><img id="shareCombinedPreview" alt="主阵、副将营、聚义营合并分享图片预览"><p id="shareCombinedCaption">修改阵容或描述后自动生成预览</p></article>
   </section>
+</div>
 </div>
 <footer class="page-footer">
   <span class="author"></span>
@@ -1109,12 +1283,34 @@ function renderFormations(){
  const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
  function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
  function makeCode(){
-   const payload={v:1,formation:state.formation,main:JSON.parse(JSON.stringify(state.lineups[state.formation]||{})),deputy:JSON.parse(JSON.stringify(state.deputy||{})),gathering:JSON.parse(JSON.stringify(state.gathering||{}))};
-   const body=utf8ToBase64Url(JSON.stringify(payload));
-   return "TB1."+body+"."+checksum(body);
+   // TB2 uses numeric indexes and compact arrays, avoiding repeated Chinese hero names and checksum text.
+   const heroIndex=new Map(heroes.map((h,i)=>[h.name,i]));
+   const compactLineup=obj=>Object.entries(obj||{}).filter(([slot,name])=>name&&heroIndex.has(name)).map(([slot,name])=>[+slot,heroIndex.get(name)]);
+   const formationIndex=formations.findIndex(f=>f.name===state.formation);
+   const payload=[2,formationIndex,compactLineup(state.lineups[state.formation]),compactLineup(state.deputy),compactLineup(state.gathering)];
+   return "TB2."+utf8ToBase64Url(JSON.stringify(payload));
  }
  function parseCode(raw){
    const code=String(raw||"").trim().replace(/\s+/g,"");
+   if(code.startsWith("TB2.")){
+     let packed;try{packed=JSON.parse(base64UrlToUtf8(code.slice(4)));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
+     if(!Array.isArray(packed)||packed[0]!==2||!Number.isInteger(packed[1])||!formations[packed[1]])throw new Error("阵容码版本或阵法无效。");
+     const decodeLineup=(arr,area,capacity,validSlots)=>{
+       if(!Array.isArray(arr))throw new Error(area+"数据格式无效。");
+       const clean={}, seen=new Set();
+       for(const pair of arr){
+         if(!Array.isArray(pair)||pair.length!==2)throw new Error(area+"数据格式无效。");
+         const slot=String(pair[0]), index=pair[1];
+         if(!validSlots.includes(slot)||seen.has(slot))throw new Error(area+"存在无效位置："+slot);
+         if(!Number.isInteger(index)||!heroes[index])throw new Error(area+"包含无效武将编号。");
+         seen.add(slot);clean[slot]=heroes[index].name;
+       }
+       if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
+       return clean;
+     };
+     const formation=formations[packed[1]];
+     return {formation:formation.name,main:decodeLineup(packed[2],"主阵",formation.positions.length,formation.positions.map(String)),deputy:decodeLineup(packed[3],"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:decodeLineup(packed[4],"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
+   }
    const m=/^TB1\.([A-Za-z0-9_-]+)\.([0-9a-f]{8})$/i.exec(code);
    if(!m)throw new Error("阵容码格式不正确，或版本不受支持。");
    if(checksum(m[1])!==m[2].toLowerCase())throw new Error("阵容码校验失败，内容可能不完整或已损坏。");
@@ -1759,12 +1955,34 @@ $("clearSideCamps").addEventListener("click",()=>{
  const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
  function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
  function makeCode(){
-   const payload={v:1,formation:state.formation,main:JSON.parse(JSON.stringify(state.lineups[state.formation]||{})),deputy:JSON.parse(JSON.stringify(state.deputy||{})),gathering:JSON.parse(JSON.stringify(state.gathering||{}))};
-   const body=utf8ToBase64Url(JSON.stringify(payload));
-   return "TB1."+body+"."+checksum(body);
+   // TB2 uses numeric indexes and compact arrays, avoiding repeated Chinese hero names and checksum text.
+   const heroIndex=new Map(heroes.map((h,i)=>[h.name,i]));
+   const compactLineup=obj=>Object.entries(obj||{}).filter(([slot,name])=>name&&heroIndex.has(name)).map(([slot,name])=>[+slot,heroIndex.get(name)]);
+   const formationIndex=formations.findIndex(f=>f.name===state.formation);
+   const payload=[2,formationIndex,compactLineup(state.lineups[state.formation]),compactLineup(state.deputy),compactLineup(state.gathering)];
+   return "TB2."+utf8ToBase64Url(JSON.stringify(payload));
  }
  function parseCode(raw){
    const code=String(raw||"").trim().replace(/\s+/g,"");
+   if(code.startsWith("TB2.")){
+     let packed;try{packed=JSON.parse(base64UrlToUtf8(code.slice(4)));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
+     if(!Array.isArray(packed)||packed[0]!==2||!Number.isInteger(packed[1])||!formations[packed[1]])throw new Error("阵容码版本或阵法无效。");
+     const decodeLineup=(arr,area,capacity,validSlots)=>{
+       if(!Array.isArray(arr))throw new Error(area+"数据格式无效。");
+       const clean={}, seen=new Set();
+       for(const pair of arr){
+         if(!Array.isArray(pair)||pair.length!==2)throw new Error(area+"数据格式无效。");
+         const slot=String(pair[0]), index=pair[1];
+         if(!validSlots.includes(slot)||seen.has(slot))throw new Error(area+"存在无效位置："+slot);
+         if(!Number.isInteger(index)||!heroes[index])throw new Error(area+"包含无效武将编号。");
+         seen.add(slot);clean[slot]=heroes[index].name;
+       }
+       if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
+       return clean;
+     };
+     const formation=formations[packed[1]];
+     return {formation:formation.name,main:decodeLineup(packed[2],"主阵",formation.positions.length,formation.positions.map(String)),deputy:decodeLineup(packed[3],"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:decodeLineup(packed[4],"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
+   }
    const m=/^TB1\.([A-Za-z0-9_-]+)\.([0-9a-f]{8})$/i.exec(code);
    if(!m)throw new Error("阵容码格式不正确，或版本不受支持。");
    if(checksum(m[1])!==m[2].toLowerCase())throw new Error("阵容码校验失败，内容可能不完整或已损坏。");
