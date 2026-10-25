@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.2.131</title>
+<title>QQ水浒阵容规划器 v1.2.132</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -759,7 +759,7 @@ body.light .union-candidate-item { background:#fff; }
 }
 
 
-/* v1.2.131：合并分享预览图、98888水印、容器内布局与按钮位置 */
+/* v1.2.132：合并分享预览图、98888水印、容器内布局与按钮位置 */
 .share-panel{margin:18px 0 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);width:100%;box-sizing:border-box}
 .share-panel .section-title{margin-bottom:10px}
 .share-theme-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;color:var(--text);font-size:13px}
@@ -1578,7 +1578,7 @@ document.addEventListener("drop",ev=>{
 });
 renderFormations();renderBoard();renderCamps();renderHeroes();
 
-/* v1.2.131：生成纵向合并的三阵营九宫格分享图，水印统一为98888 */
+/* v1.2.132：生成纵向合并的三阵营九宫格分享图，水印统一为98888 */
 (function(){
  try {
  const btn=document.getElementById('sharePlan'); if(!btn)return;
@@ -1736,8 +1736,9 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
  setTimeout(queueSharePreview,900);
  btn.addEventListener('click',async()=>{const old=btn.innerHTML;btn.disabled=true;btn.querySelector('span').textContent='正在生成…';try{
    const f=currentFormation(),im=await renderCombined();document.getElementById('shareCombinedPreview').src=im.url;document.getElementById('shareCombinedPreview').style.display='block';document.getElementById('shareCombinedCaption').textContent='已生成 · '+im.filename;document.getElementById('sharePanel').scrollIntoView({behavior:'smooth',block:'start'});
-   let shared=false;if(navigator.share&&navigator.canShare&&typeof File==='function'){try{const file=new File([im.blob],im.filename,{type:'image/png'});if(navigator.canShare({files:[file]})){await navigator.share({title:'QQ水浒阵容方案',text:`${f.name}阵容方案`,files:[file]});shared=true;}}catch(err){if(err&&err.name==='AbortError')shared=true;}}
-   if(!shared){saveBlob(im.blob,im.filename);document.getElementById('shareCombinedCaption').textContent='图片已生成并尝试下载；可在 QQ 群中发送该图片。';}
+   // 始终直接下载 PNG，不调用系统分享面板。
+   saveBlob(im.blob,im.filename);
+   document.getElementById('shareCombinedCaption').textContent='图片已生成，已触发本地下载；可从下载目录发送到 QQ 群。';
  }catch(err){console.error('生成分享图片失败：',err);const caption=document.getElementById('shareCombinedCaption');if(caption)caption.textContent='分享图片生成失败，阵容编辑不受影响';}finally{btn.disabled=false;btn.innerHTML=old;}});
  } catch(initErr) {
    console.error('分享预览模块初始化失败：',initErr);
