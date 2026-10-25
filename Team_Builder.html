@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.2.132</title>
+<title>QQ水浒阵容规划器 v1.2.141</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -759,7 +759,7 @@ body.light .union-candidate-item { background:#fff; }
 }
 
 
-/* v1.2.132：合并分享预览图、98888水印、容器内布局与按钮位置 */
+/* v1.2.136：合并分享预览图、98888水印、容器内布局与按钮位置 */
 .share-panel{margin:18px 0 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);width:100%;box-sizing:border-box}
 .share-panel .section-title{margin-bottom:10px}
 .share-theme-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;color:var(--text);font-size:13px}
@@ -778,6 +778,11 @@ body.light .union-candidate-item { background:#fff; }
 body.light .share-panel{background:#f6f7fa}
 @media(max-width:560px){.share-fab{right:calc(145px + 118px);bottom:max(12px,env(safe-area-inset-bottom));padding:8px 10px;gap:5px}.share-panel{padding:9px}}
 
+
+.roster-code-card{margin:14px 0;padding:14px;min-width:0}
+.roster-code-card textarea{box-sizing:border-box;max-width:100%}
+.roster-code-card .footer-note{margin:0 0 8px}
+
 </style>
 </head>
 <body>
@@ -785,19 +790,25 @@ body.light .share-panel{background:#f6f7fa}
 <header>
   <div><h1>QQ水浒 · 阵容规划器</h1></div>
 </header>
+<section class="panel roster-code-card" id="importRosterPanel">
+  <h2 class="section-title">导入阵容码</h2>
+  <p class="footer-note">导入后将完整替换当前主阵、副将营、聚义营和阵法。</p>
+  <textarea id="rosterCodeInput" rows="3" placeholder="粘贴好友发送的阵容码" style="width:100%;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px;font:12px/1.5 ui-monospace,monospace"></textarea>
+  <div class="actions"><button type="button" class="action-btn primary" id="importRosterCode">导入阵容码</button></div>
+</section>
 <section class="panel">
-  <h2 class="section-title">① 选择阵型</h2>
+  <h2 class="section-title"> 选择阵型</h2>
   <div id="formationList" class="formation-list"></div>
 </section>
 <div class="layout">
   <section class="panel">
     <div class="board-title"><strong id="boardName">飞龙阵</strong><span class="counter" id="counter">已上阵 0 / 5</span></div>
     <div class="board-wrap"><div id="board" class="board" aria-label="阵型九宫格"></div></div>
-    <div class="actions history-actions"><button class="action-btn" id="undoMain" disabled>撤销</button><button class="action-btn" id="redoMain" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="smartFill">智能补齐副将营 聚义营</button><button class="action-btn" id="clearAll">清空本阵</button></div>
+    <div class="actions history-actions"><button class="action-btn" id="undoMain" disabled>撤销</button><button class="action-btn" id="redoMain" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="clearAll">清空本阵</button><button class="action-btn" id="clearSideCamps">清空副将营 聚义营</button><button class="action-btn" id="smartFill">智能补齐副将营 聚义营</button></div>
     
   </section>
   <section class="panel">
-    <h2 class="section-title">② 选择武将</h2>
+    <h2 class="section-title"> 选择武将</h2>
     <div class="selected-slot" id="slotPrompt">请先点击阵型中的一个可上阵位置。</div>
     <div class="roster-tools">
       <input id="search" type="search" placeholder="搜索武将本名…" autocomplete="off" aria-label="搜索武将">
@@ -821,19 +832,26 @@ body.light .share-panel{background:#f6f7fa}
 </div>
 <div class="camp-layout">
   <section class="panel camp-panel">
-    <div class="camp-head"><h2 class="section-title">③ 副将营</h2><span class="camp-count" id="deputyCounter">已上阵 0 / 7</span></div>
+    <div class="camp-head"><h2 class="section-title"> 副将营</h2><span class="camp-count" id="deputyCounter">已上阵 0 / 7</span></div>
     <div class="camp-grid deputy-grid" id="deputyGrid" aria-label="七个副将位置"></div>
     <div class="actions history-actions"><button class="action-btn" id="undoDeputy" disabled>撤销</button><button class="action-btn" id="redoDeputy" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="smartFillDeputy">智能补齐副将营</button><button class="action-btn" id="clearDeputy">清空副将营</button></div>
     <div class="footer-note">点击位置，再从武将名单中选择副将。副将营最多上阵 7 名武将。</div>
   </section>
   <section class="panel camp-panel">
-    <div class="camp-head"><h2 class="section-title">④ 聚义营</h2><span class="camp-count" id="gatheringCounter">已上阵 0 / 9</span></div>
+    <div class="camp-head"><h2 class="section-title"> 聚义营</h2><span class="camp-count" id="gatheringCounter">已上阵 0 / 9</span></div>
     <div class="camp-grid gathering-grid" id="gatheringGrid" aria-label="九个聚义营位置"></div>
     <div class="actions history-actions"><button class="action-btn" id="undoGathering" disabled>撤销</button><button class="action-btn" id="redoGathering" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="smartFillGathering">智能补齐聚义营</button><button class="action-btn" id="clearGathering">清空聚义营</button></div>
     <div class="footer-note">点击位置，再从武将名单中选择聚义营武将。聚义激活效果将在后续接入聚义数据后计算。</div>
   </section>
+
+<section class="panel roster-code-card" id="exportRosterPanel">
+  <h2 class="section-title">导出阵容码</h2>
+  <div class="actions" style="margin-top:0"><button type="button" class="action-btn primary" id="exportRosterCode">导出阵容码</button><button type="button" class="action-btn" id="copyRosterCode">复制阵容码</button></div>
+  <textarea id="rosterCodeOutput" rows="3" readonly placeholder="点击“导出阵容码”生成可分享的阵容码" style="width:100%;margin-top:10px;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px;font:12px/1.5 ui-monospace,monospace"></textarea>
+  <div id="rosterCodeStatus" class="empty-note" role="status" aria-live="polite" style="margin-top:8px"></div>
+</section>
   <section class="panel share-panel" id="sharePanel">
-    <h2 class="section-title">⑤ 分享界面预览</h2>
+    <h2 class="section-title"> 分享界面预览</h2>
     <label class="formation-description-label" for="formationDescription">阵型描述</label>
     <input id="formationDescription" class="formation-description-input" type="text" maxlength="100" placeholder="输入阵容说明，例如：速度优先，适合先手控制" autocomplete="off">
     <article class="share-preview-card"><img id="shareCombinedPreview" alt="主阵、副将营、聚义营合并分享图片预览"><p id="shareCombinedCaption">修改阵容或描述后自动生成预览</p></article>
@@ -1031,7 +1049,75 @@ function renderFormations(){
       if(state.formation!==f.name)recordUndo("main");
       state.formation=f.name;state.selectedPosition=null;state.selectedCamp=null;
       $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
-      // 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
+      /* v1.2.143：阵容码独立卡片布局，完整替换当前主阵、副将营、聚义营及阵法。 */
+(function(){
+ const output=$("rosterCodeOutput"), input=$("rosterCodeInput"), status=$("rosterCodeStatus");
+ if(!output||!input||!status)return;
+ const utf8ToBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+ const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
+ function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
+ function makeCode(){
+   const payload={v:1,formation:state.formation,main:JSON.parse(JSON.stringify(state.lineups[state.formation]||{})),deputy:JSON.parse(JSON.stringify(state.deputy||{})),gathering:JSON.parse(JSON.stringify(state.gathering||{}))};
+   const body=utf8ToBase64Url(JSON.stringify(payload));
+   return "TB1."+body+"."+checksum(body);
+ }
+ function parseCode(raw){
+   const code=String(raw||"").trim().replace(/\s+/g,"");
+   const m=/^TB1\.([A-Za-z0-9_-]+)\.([0-9a-f]{8})$/i.exec(code);
+   if(!m)throw new Error("阵容码格式不正确，或版本不受支持。");
+   if(checksum(m[1])!==m[2].toLowerCase())throw new Error("阵容码校验失败，内容可能不完整或已损坏。");
+   let data;try{data=JSON.parse(base64UrlToUtf8(m[1]));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
+   if(!data||data.v!==1||!formations.some(f=>f.name===data.formation))throw new Error("阵容码版本或阵法无效。");
+   const known=new Set(heroes.map(h=>h.name));
+   const checkLineup=(obj,area,capacity,validSlots)=>{
+     if(!obj||typeof obj!=="object"||Array.isArray(obj))throw new Error(area+"数据格式无效。");
+     const clean={};
+     for(const [slot,name] of Object.entries(obj)){
+       if(!validSlots.includes(String(slot)))throw new Error(area+"存在无效位置："+slot);
+       if(name!==null&&name!==""){
+         if(typeof name!=="string"||!known.has(name))throw new Error(area+"包含当前版本不存在的武将："+String(name));
+         clean[String(slot)]=name;
+       }
+     }
+     if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
+     return clean;
+   };
+   const formation=formations.find(f=>f.name===data.formation);
+   const main=checkLineup(data.main,"主阵",formation.positions.length,formation.positions.map(String));
+   const deputy=checkLineup(data.deputy,"副将营",7,Array.from({length:7},(_,i)=>String(i+1)));
+   const gathering=checkLineup(data.gathering,"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)));
+   return {formation:data.formation,main,deputy,gathering};
+ }
+ document.getElementById("exportRosterCode").addEventListener("click",()=>{
+   try{output.value=makeCode();status.textContent="阵容码已生成，可复制后发送给好友。";}
+   catch(err){console.error(err);status.textContent="导出失败，请重试。";}
+ });
+ document.getElementById("copyRosterCode").addEventListener("click",async()=>{
+   if(!output.value.trim()){output.value=makeCode();}
+   try{
+     if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(output.value);status.textContent="阵容码已复制。";}
+     else{output.focus();output.select();const ok=document.execCommand("copy");status.textContent=ok?"阵容码已复制。":"请长按或手动选择阵容码进行复制。";}
+   }catch(err){output.focus();output.select();status.textContent="请手动复制已选中的阵容码。";}
+ });
+ document.getElementById("importRosterCode").addEventListener("click",()=>{
+   try{
+     const data=parseCode(input.value);
+     if(!window.confirm("导入将完整替换当前主阵、副将营、聚义营和阵法，确定继续吗？"))return;
+     const before=getActiveUnionKeys();
+     recordUndo("main");recordUndo("deputy");recordUndo("gathering");
+     state.formation=data.formation;
+     state.lineups[state.formation]=data.main;
+     state.deputy=data.deputy;state.gathering=data.gathering;
+     state.selectedPosition=null;state.selectedCamp=null;
+     $("slotPrompt").textContent="阵容码导入成功。请点击任意阵位继续调整。";
+     renderFormations();renderBoard();renderCamps();renderHeroes();
+     showLineupChange(before,getActiveUnionKeys());
+     status.textContent="导入成功：主阵、副将营、聚义营和阵法已完整替换。";
+   }catch(err){status.textContent=err&&err.message?err.message:"导入失败，请检查阵容码。";}
+ });
+})();
+
+// 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
 document.addEventListener("dragover",ev=>{if(window.__qqshActiveSlotDrag)ev.preventDefault();});
 document.addEventListener("drop",ev=>{
   if(!window.__qqshActiveSlotDrag||window.__qqshSlotDropHandled)return;
@@ -1329,13 +1415,16 @@ function renderUnionCandidates(){
     return;
   }
   candidates.forEach(name=>{
+    // 候补武将存在修罗形态时，只展示并拖拽修罗形态；不存在时保留原始武将。
+    const shuraVariant=heroes.find(h=>h.type==="修罗"&&baseHeroName(h.name)===name);
+    const candidateName=shuraVariant?shuraVariant.name:name;
     const item=document.createElement("div");
     item.className="union-candidate-item";
-    item.draggable=heroOrder.has(name);
+    item.draggable=heroOrder.has(candidateName);
     if(item.draggable){
       item.addEventListener("dragstart",ev=>{
-        ev.dataTransfer.setData("application/x-qqsh-union-candidate",name);
-        ev.dataTransfer.setData("text/plain",name);
+        ev.dataTransfer.setData("application/x-qqsh-union-candidate",candidateName);
+        ev.dataTransfer.setData("text/plain",candidateName);
         ev.dataTransfer.effectAllowed="copy";
         item.classList.add("dragging");
         document.querySelectorAll(".camp-slot").forEach(el=>el.classList.add("drop-ready"));
@@ -1351,7 +1440,7 @@ function renderUnionCandidates(){
       const title=`${u.name}：${baseHeroName(u.hero)}与${targetText}上阵，${u.effect}；未激活`;
       return `<span class="union-chip inactive" title="${escapeHtml(title)}">${label}</span>`;
     }).join("");
-    item.innerHTML=`<div class="union-candidate-name">${escapeHtml(displayHeroName(name))}</div><div class="union-list union-camp-details">${chips}</div>`;
+    item.innerHTML=`<div class="union-candidate-name">${escapeHtml(displayHeroName(candidateName))}</div><div class="union-list union-camp-details">${chips}</div>`;
     root.appendChild(item);
   });
 }
@@ -1378,9 +1467,17 @@ function renderHeroes(){
     if(tier){if(!mainTiersByBase.has(base))mainTiersByBase.set(base,new Set());mainTiersByBase.get(base).add(tier);}
   });
   const typeOrder={"涅槃三阶":0,"神将":1,"修罗":2,"其他":3};
-  const otherOrder=h=>h.name==="晁盖"||h.baseName==="晁盖"?0:h.type==="天罡"?1:h.type==="地煞"?2:3;
-  const visible=heroes.filter(h=>!assignedNames.has(h.name)&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("nirvana")&&isGodHero(h.name))&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("ordinary")&&isNirvanaHero(h.name))&&(type==="全部"||h.type===type||(type==="其他"&&(h.type==="天罡"||h.type==="地煞")))&&(h.name.toLowerCase().includes(q)||(h.baseName||"").toLowerCase().includes(q)))
-    .sort((a,b)=>type==="其他"?(otherOrder(a)-otherOrder(b)||(a.rank??9999)-(b.rank??9999)||a.name.localeCompare(b.name,"zh-CN")):(typeOrder[a.type]??4)-(typeOrder[b.type]??4)||(a.rank??9999)-(b.rank??9999)||a.name.localeCompare(b.name,"zh-CN"));
+  // 用原始天罡/地煞武将的本名建立统一排位表；晁盖固定为第一位。
+  const baseRank=new Map();
+  heroes.filter(h=>h.type==="天罡"||h.type==="地煞").forEach(h=>{
+    const base=baseHeroName(h.name);
+    if(!baseRank.has(base))baseRank.set(base,h.rank??9999);
+  });
+  baseRank.set("晁盖",1);
+  const rankByBase=h=>baseRank.get(baseHeroName(h.name))??9999;
+  const otherOrder=h=>h.name==="晁盖"||baseHeroName(h.name)==="晁盖"?0:h.type==="天罡"?1:h.type==="地煞"?2:3;
+  const visible=heroes.filter(h=>!assignedNames.has(h.name)&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("nirvana")&&isGodHero(h.name))&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("ordinary")&&isNirvanaHero(h.name))&&(type==="全部"||h.type===type||(type==="其他"&&h.type!=="涅槃三阶"&&h.type!=="神将"&&h.type!=="修罗"))&&(h.name.toLowerCase().includes(q)||(h.baseName||"").toLowerCase().includes(q)))
+    .sort((a,b)=>(type==="全部"?((h=>h.type==="涅槃三阶"?0:h.type==="神将"?1:h.type==="修罗"?2:3)(a)-(h=>h.type==="涅槃三阶"?0:h.type==="神将"?1:h.type==="修罗"?2:3)(b)):0)||rankByBase(a)-rankByBase(b)||a.name.localeCompare(b.name,"zh-CN"));
   visible.forEach(h=>{
     const b=document.createElement("button");b.className="hero-option"+(type==="全部"&&h.type==="涅槃三阶"?" nirvana-option":"");
     b.draggable=true;
@@ -1567,6 +1664,88 @@ function clearCampWithNotice(area){
 }
 $("clearDeputy").addEventListener("click",()=>clearCampWithNotice("deputy"));
 $("clearGathering").addEventListener("click",()=>clearCampWithNotice("gathering"));
+$("clearSideCamps").addEventListener("click",()=>{
+  const hasDeputy=Object.values(state.deputy).some(Boolean);
+  const hasGathering=Object.values(state.gathering).some(Boolean);
+  if(!hasDeputy&&!hasGathering)return;
+  const before=getActiveUnionKeys();
+  if(hasDeputy)recordUndo("deputy");
+  if(hasGathering)recordUndo("gathering");
+  state.deputy={};
+  state.gathering={};
+  if(state.selectedCamp)state.selectedCamp=null;
+  $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
+  showLineupChange(before,getActiveUnionKeys());
+  renderBoard();renderCamps();renderHeroes();
+});
+/* v1.2.143：阵容码独立卡片布局，完整替换当前主阵、副将营、聚义营及阵法。 */
+(function(){
+ const output=$("rosterCodeOutput"), input=$("rosterCodeInput"), status=$("rosterCodeStatus");
+ if(!output||!input||!status)return;
+ const utf8ToBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+ const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
+ function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
+ function makeCode(){
+   const payload={v:1,formation:state.formation,main:JSON.parse(JSON.stringify(state.lineups[state.formation]||{})),deputy:JSON.parse(JSON.stringify(state.deputy||{})),gathering:JSON.parse(JSON.stringify(state.gathering||{}))};
+   const body=utf8ToBase64Url(JSON.stringify(payload));
+   return "TB1."+body+"."+checksum(body);
+ }
+ function parseCode(raw){
+   const code=String(raw||"").trim().replace(/\s+/g,"");
+   const m=/^TB1\.([A-Za-z0-9_-]+)\.([0-9a-f]{8})$/i.exec(code);
+   if(!m)throw new Error("阵容码格式不正确，或版本不受支持。");
+   if(checksum(m[1])!==m[2].toLowerCase())throw new Error("阵容码校验失败，内容可能不完整或已损坏。");
+   let data;try{data=JSON.parse(base64UrlToUtf8(m[1]));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
+   if(!data||data.v!==1||!formations.some(f=>f.name===data.formation))throw new Error("阵容码版本或阵法无效。");
+   const known=new Set(heroes.map(h=>h.name));
+   const checkLineup=(obj,area,capacity,validSlots)=>{
+     if(!obj||typeof obj!=="object"||Array.isArray(obj))throw new Error(area+"数据格式无效。");
+     const clean={};
+     for(const [slot,name] of Object.entries(obj)){
+       if(!validSlots.includes(String(slot)))throw new Error(area+"存在无效位置："+slot);
+       if(name!==null&&name!==""){
+         if(typeof name!=="string"||!known.has(name))throw new Error(area+"包含当前版本不存在的武将："+String(name));
+         clean[String(slot)]=name;
+       }
+     }
+     if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
+     return clean;
+   };
+   const formation=formations.find(f=>f.name===data.formation);
+   const main=checkLineup(data.main,"主阵",formation.positions.length,formation.positions.map(String));
+   const deputy=checkLineup(data.deputy,"副将营",7,Array.from({length:7},(_,i)=>String(i+1)));
+   const gathering=checkLineup(data.gathering,"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)));
+   return {formation:data.formation,main,deputy,gathering};
+ }
+ document.getElementById("exportRosterCode").addEventListener("click",()=>{
+   try{output.value=makeCode();status.textContent="阵容码已生成，可复制后发送给好友。";}
+   catch(err){console.error(err);status.textContent="导出失败，请重试。";}
+ });
+ document.getElementById("copyRosterCode").addEventListener("click",async()=>{
+   if(!output.value.trim()){output.value=makeCode();}
+   try{
+     if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(output.value);status.textContent="阵容码已复制。";}
+     else{output.focus();output.select();const ok=document.execCommand("copy");status.textContent=ok?"阵容码已复制。":"请长按或手动选择阵容码进行复制。";}
+   }catch(err){output.focus();output.select();status.textContent="请手动复制已选中的阵容码。";}
+ });
+ document.getElementById("importRosterCode").addEventListener("click",()=>{
+   try{
+     const data=parseCode(input.value);
+     if(!window.confirm("导入将完整替换当前主阵、副将营、聚义营和阵法，确定继续吗？"))return;
+     const before=getActiveUnionKeys();
+     recordUndo("main");recordUndo("deputy");recordUndo("gathering");
+     state.formation=data.formation;
+     state.lineups[state.formation]=data.main;
+     state.deputy=data.deputy;state.gathering=data.gathering;
+     state.selectedPosition=null;state.selectedCamp=null;
+     $("slotPrompt").textContent="阵容码导入成功。请点击任意阵位继续调整。";
+     renderFormations();renderBoard();renderCamps();renderHeroes();
+     showLineupChange(before,getActiveUnionKeys());
+     status.textContent="导入成功：主阵、副将营、聚义营和阵法已完整替换。";
+   }catch(err){status.textContent=err&&err.message?err.message:"导入失败，请检查阵容码。";}
+ });
+})();
+
 // 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
 document.addEventListener("dragover",ev=>{if(window.__qqshActiveSlotDrag)ev.preventDefault();});
 document.addEventListener("drop",ev=>{
@@ -1578,7 +1757,7 @@ document.addEventListener("drop",ev=>{
 });
 renderFormations();renderBoard();renderCamps();renderHeroes();
 
-/* v1.2.132：生成纵向合并的三阵营九宫格分享图，水印统一为98888 */
+/* v1.2.136：生成纵向合并的三阵营九宫格分享图，水印统一为98888 */
 (function(){
  try {
  const btn=document.getElementById('sharePlan'); if(!btn)return;
