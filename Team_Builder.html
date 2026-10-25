@@ -911,7 +911,7 @@ body.light .share-panel{background:#f6f7fa}
   .app .layout > section:first-child { margin:0 0 16px !important; }
   .app .layout > #rosterPanel {
     position:fixed !important; z-index:1000 !important;
-    top:16px !important; right:var(--planner-left) !important; left:auto !important; bottom:84px !important; /* v1.2.161：宽屏卡片明确限定视口高度，避免窄屏切回宽屏时百分比高度失去参照 */
+    top:16px !important; right:var(--planner-left) !important; left:auto !important; bottom:84px !important; /* v1.2.161：宽屏卡片明确限定视口高度，避免移动端切回宽屏时百分比高度失去参照 */
     width:var(--planner-roster-width) !important; max-width:var(--planner-roster-width) !important; min-width:0 !important;
     height:calc(100dvh - 100px) !important; max-height:calc(100dvh - 100px) !important; min-height:0 !important; margin:0 !important; padding:12px !important;
     box-sizing:border-box !important; display:flex !important; flex-direction:column !important;
@@ -988,7 +988,7 @@ body.light .share-panel{background:#f6f7fa}
   }
 }
 
-/* v1.2.161：宽屏断点最终覆盖，保证从窄屏切回时高度基准和候补比例重新计算 */
+/* v1.2.161：宽屏断点最终覆盖，保证从移动端切回时高度基准和候补比例重新计算 */
 @media (min-width:761px) {
   .app .layout > #rosterPanel {
     top:16px !important;
@@ -1116,7 +1116,7 @@ const state = {
   selectedCamp: null,
   rosterFilter: "全部"
 };
-// 默认打开长蛇阵，但不预置任何武将。
+// 移动端默认打开长蛇阵；所有端首次打开均以长蛇阵为默认阵型，不预置任何武将。
 state.lineups["长蛇阵"] = {};
 const $ = id => document.getElementById(id);
 function baseHeroName(name){if(!name)return "";let value=String(name).trim().replace(/[・･]/g,"·");const prefix=/^(?:涅槃三阶神|涅槃三阶|真|神|修罗)·/;while(prefix.test(value))value=value.replace(prefix,"");return value.trim();}
@@ -2265,7 +2265,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
 })();
 
 
-/* v1.2.148：手机端通过滚动监听固定选将面板，避免 sticky 在移动端失效 */
+/* v1.2.148 / v1.2.162：手机端滚动吸顶；初始打开时不固定覆盖导入阵容码卡片 */
 (function(){
   const panel=document.getElementById('rosterPanel');
   const toggle=document.getElementById('toggleRosterPanel');
@@ -2278,7 +2278,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
   placeholder.className='roster-sticky-placeholder';
   placeholder.setAttribute('aria-hidden','true');
   panel.parentNode.insertBefore(placeholder,panel);
-  let fixed=false, ticking=false;
+  let fixed=false, ticking=false, userHasScrolled=false;
   function mobile(){return window.matchMedia('(max-width:760px)').matches;}
   function setFixed(on){
     if(on===fixed)return;
@@ -2302,6 +2302,8 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
   function updateSticky(){
     ticking=false;
     if(!mobile()){setFixed(false);return;}
+    // v1.2.162：初次打开或浏览器恢复滚动位置时，选将卡片保持文档流布局；只有用户主动滚动后才允许吸顶，避免覆盖导入阵容码卡片。
+    if(!userHasScrolled){setFixed(false);return;}
     // 固定时用占位元素的原始文档位置判断何时解除吸顶，避免卡片跳动。
     const anchor=placeholder.getBoundingClientRect();
     if(fixed){
@@ -2346,7 +2348,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
     toggle.setAttribute('aria-expanded',String(!collapsed));
     if(fixed){const h=panel.getBoundingClientRect().height;placeholder.style.height=h+'px';}
   });
-  window.addEventListener('scroll',requestUpdate,{passive:true});
+  window.addEventListener('scroll',function(){userHasScrolled=true;requestUpdate();},{passive:true});
   window.addEventListener('resize',placePanel);
   window.addEventListener('orientationchange',placePanel);
   placePanel();
