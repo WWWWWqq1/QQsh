@@ -1,0 +1,1784 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>QQ水浒阵容规划器 v1.2.131</title>
+<style>
+:root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
+*{box-sizing:border-box;max-width:100%}
+html,body{width:100%;max-width:100%;margin:0;overflow-x:hidden}
+body{margin:0;background:linear-gradient(145deg,#151923,#1b2230 60%,#141820);color:var(--text);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;min-height:100vh}
+.app{width:100%;max-width:1200px;margin:0 auto;padding:clamp(14px,3vw,28px);min-width:0;overflow-x:clip}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}
+h1{font-size:clamp(22px,4vw,32px);margin:0 0 7px;letter-spacing:.04em}
+.subtitle{font-size:13px;color:var(--muted);line-height:1.6}
+.pill{border:1px solid #77613b;color:#f0cc7e;border-radius:999px;padding:6px 10px;font-size:12px;white-space:nowrap}
+.panel{background:rgba(32,38,51,.94);border:1px solid var(--line);border-radius:16px;padding:clamp(14px,2.5vw,22px);box-shadow:0 12px 32px #0002;margin-bottom:16px}
+.section-title{font-size:16px;font-weight:700;margin:0 0 14px}
+.formation-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.formation-btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px 8px;text-align:center;font-size:15px;cursor:pointer;min-height:54px}
+.formation-btn small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.formation-btn.selected{border-color:var(--accent);background:#59462a;color:#ffe0a0;box-shadow:inset 0 0 0 1px #d6a84f66}
+.layout{width:100%;max-width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);gap:16px;align-items:start}
+.board-wrap{max-width:540px;margin:0 auto}
+.board-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.board-title strong{font-size:20px}
+.counter{font-size:12px;color:var(--muted)}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;aspect-ratio:1}
+.cell{border:2px solid #606a7a;border-radius:10px;background:var(--empty);color:#6f7888;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:0;padding:6px;text-align:center}
+.cell.active{background:var(--active);border-color:#11151c;color:var(--activeText);cursor:pointer;box-shadow:0 3px 0 #0003}
+.cell.active:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cell .pos{font-size:13px;opacity:.8;margin-bottom:7px}
+.cell .hero{font-size:clamp(12px,2vw,18px);font-weight:700;line-height:1.35;overflow-wrap:anywhere}
+.cell .hint{font-size:11px;margin-top:6px;opacity:.72}
+.cell.filled{background:#f0d7a2;border-color:#a87929;color:#352714}
+.cell.filled .pos{color:#6b512c}
+.cell.filled .hint{color:#725326}
+/* 主阵下阵叉号：圆圈固定尺寸，叉号在圆内水平、垂直居中 */
+.cell{position:relative}
+.cell .main-remove-hero{position:absolute;top:4px;right:4px;z-index:6;width:22px;height:22px;min-width:22px;min-height:22px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;margin:0;padding:0 0 1px;border:0;border-radius:50%;background:#c83d3d;color:#fff;font-family:Arial,sans-serif;font-size:18px;font-weight:800;line-height:1;text-align:center;vertical-align:middle;opacity:0;visibility:hidden;pointer-events:none;cursor:pointer;box-shadow:0 1px 4px #0004;transition:opacity .12s ease,transform .12s ease}
+.cell:hover .main-remove-hero,.cell:focus-within .main-remove-hero,.cell.selected .main-remove-hero{opacity:1;visibility:visible;pointer-events:auto}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.history-actions{align-items:center}.history-actions .action-spacer{flex:1}
+button{font:inherit}
+.action-btn{border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:#30394a;color:var(--text);cursor:pointer}
+.action-btn.primary{background:#c89b45;color:#211a0e;border-color:#e1b75e;font-weight:700}
+.action-btn:disabled{opacity:.45;cursor:not-allowed}
+.roster-tools{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.roster-tools #search{flex:0 1 220px;width:220px;max-width:42%;}
+.roster-filter-buttons{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.roster-filter-btn{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#30394a;color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap}
+.roster-filter-btn.active{background:#59462a;border-color:var(--accent);color:#ffe0a0}
+body.light .roster-filter-btn{background:#fff;color:var(--text)}
+body.light .roster-filter-btn.active{background:#f6e9ce;color:#77521b;border-color:#bd8a2e}
+input,select{width:100%;min-width:0;background:#151b25;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font:inherit}
+.hero-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;align-items:start;gap:5px;max-height:440px;overflow:auto;padding-right:3px}
+.hero-option{border:1px solid var(--line);background:#282f3d;border-radius:7px;color:var(--text);text-align:left;padding:6px 5px;font-size:12px;line-height:1.25;cursor:pointer;min-width:0;height:auto;min-height:0;align-self:start}
+.hero-option strong{display:block;overflow-wrap:anywhere}
+.hero-option small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.hero-option.chosen{border-color:var(--accent);background:#4a3d29}
+.empty-note{color:var(--muted);font-size:13px;line-height:1.6}
+.selected-slot{font-size:13px;color:var(--muted);margin:-5px 0 12px}
+.footer-note{color:var(--muted);font-size:12px;line-height:1.7;margin-top:12px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.formation-list{grid-template-columns:repeat(3,minmax(0,1fr))}.board-wrap{max-width:500px}.hero-list{max-height:330px}}
+@media(max-width:380px){.formation-list{gap:6px}.formation-btn{font-size:13px;padding:10px 4px}.panel{padding:12px}.hero-list{grid-template-columns:repeat(3,minmax(0,1fr))}.cell{padding:3px}.cell .pos{margin-bottom:4px}}
+
+/* 与军师页面一致的昼夜主题按钮和自动昼夜配色 */
+body.light{
+  --bg:#f4f6fa;--panel:#ffffff;--panel2:#eef1f6;--text:#242936;--muted:#687386;
+  --accent:#bd8a2e;--line:#d5dae3;--active:#bfc1c4;--activeText:#17191d;--empty:#edf0f4;--danger:#c64e4a;
+  background:linear-gradient(145deg,#f4f6fa,#e9edf4 60%,#f8f9fb);color:var(--text)
+}
+body.light .panel{background:rgba(255,255,255,.95);box-shadow:0 12px 32px #26334a12}
+body.light .formation-btn{background:var(--panel2);color:var(--text)}
+body.light .formation-btn.selected{background:#f6e9ce;color:#77521b;border-color:#bd8a2e}
+body.light input,body.light select{background:#fff;color:var(--text)}
+body.light .hero-option{background:#f6f7fa;color:var(--text)}
+body.light .hero-option.chosen{background:#f6e9ce}
+body.light .action-btn{background:#eef1f6;color:var(--text)}
+body.light .action-btn.primary{background:#c89b45;color:#211a0e}
+.page-footer{position:relative;min-height:82px;padding:12px 18px 18px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+.page-footer .author{letter-spacing:.2px}
+.page-footer 
+.page-author-credit{width:100%;box-sizing:border-box;text-align:center;margin:14px 0 4px;color:var(--muted,#aeb7c6);font-size:13px;line-height:1.5}
+.home-link{
+ position:fixed;right:18px;bottom:18px;z-index:9999;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+ padding:9px 15px;border:1px solid #8a754e;border-radius:999px;background:var(--panel);color:#e5ad38;
+ text-decoration:none;font-weight:700;white-space:nowrap;cursor:pointer;font-size:13px;
+ transition:background .15s,border-color .15s;box-shadow:0 4px 14px #0002
+}
+.page-footer .home-link:hover{background:var(--panel2);border-color:#e5ad38}
+.page-footer .home-link svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.page-footer .theme-toggle{right:145px}
+@media(max-width:560px){
+ .page-footer{min-height:100px;align-items:flex-start;padding-top:10px}
+ .page-footer .home-link{right:max(10px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));padding:8px 12px}
+ .page-footer .theme-toggle{right:145px;bottom:max(12px,env(safe-area-inset-bottom));padding:8px 10px;gap:5px}
+}
+
+
+/* 副将营与聚义营 */
+.camp-layout{width:100%;max-width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.camp-panel{min-width:0}
+.camp-grid{display:grid;gap:7px}
+.deputy-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.gathering-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.camp-slot{min-width:0;min-height:68px;padding:8px 5px;border:1px solid var(--line);border-radius:10px;background:var(--empty);color:var(--muted);cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.camp-slot .slot-number{font-size:11px;opacity:.75}
+.camp-slot .slot-name{font-size:14px;font-weight:700;line-height:1.35;overflow-wrap:anywhere;color:var(--text)}
+.camp-slot.selected{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.camp-slot.filled{background:#f0d7a2;border-color:#a87929;color:#352714}
+.camp-slot.filled .slot-name{color:#352714}
+.camp-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.camp-head .section-title{margin:0}
+.camp-count{font-size:12px;color:var(--muted);white-space:nowrap}
+body.light .camp-slot{background:#edf0f4;color:#687386}
+body.light .camp-slot .slot-name{color:#242936}
+body.light .camp-slot.filled{background:#f0d7a2;border-color:#a87929}
+body.light .camp-slot.filled .slot-name{color:#352714}
+@media(max-width:760px){.camp-layout{grid-template-columns:1fr}.deputy-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.gathering-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:380px){.camp-slot{min-height:58px;padding:6px 3px}.camp-slot .slot-name{font-size:12px}.deputy-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+
+/* 严格限制页面横向尺寸，避免网格、长文本或控件撑破 1200px 容器 */
+.app > *, .panel, .formation-list, .layout, .camp-layout, .camp-panel, .roster-tools, .hero-list { min-width:0; max-width:100%; }
+img, input, select, button { max-width:100%; }
+
+/* v1.0.6: 强制所有卡片在 1200px 页面容器内，禁止 grid/flex 子项撑开 */
+html, body { width:100%; max-width:100%; min-width:0; }
+body { overflow-x:hidden; }
+.app { width:100%; max-width:1200px; min-width:0; margin-left:auto; margin-right:auto; overflow-x:clip; }
+.app > *, .panel, .layout, .camp-layout, .camp-panel, .board-wrap, .board, .formation-list,
+.roster-tools, .hero-list, .camp-grid, .actions, header, header > div {
+  box-sizing:border-box; min-width:0; max-width:100%;
+}
+.layout { grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); }
+.camp-layout { grid-template-columns:minmax(0, 1fr) !important; width:100%; }
+.panel { width:100%; }
+.board-wrap { width:100%; }
+.board { width:100%; }
+input, select, button { box-sizing:border-box; min-width:0; }
+@media (max-width:760px) {
+  .layout { grid-template-columns:minmax(0, 1fr); }
+}
+
+
+/* v1.0.7: 副将营/聚义营必须与主内容共用 1200px 页面边界 */
+.camp-layout {
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) !important;
+  width:calc(100% - 2 * clamp(14px, 3vw, 28px)) !important;
+  max-width:1200px !important;
+  min-width:0 !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  box-sizing:border-box !important;
+}
+.camp-layout > .panel,
+.camp-layout .camp-panel {
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+
+/* 聚义状态：黄色为已激活，灰色为未激活 */
+.union-list{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;width:100%;margin-top:5px;min-width:0}
+.union-chip{display:inline-block;max-width:100%;padding:2px 5px;border-radius:5px;font-size:10px;line-height:1.35;overflow-wrap:anywhere;box-sizing:border-box;background:#d6d9df;color:#4b5563;border:1px solid #b7bec9}
+.union-chip.active{background:#ffe08a;color:#6c4800;border-color:#d6a027;font-weight:700}
+.union-chip.inactive{background:#d6d9df;color:#515967;border-color:#b8bec8}
+.union-camp-details{display:flex;flex-direction:column;align-items:stretch;gap:4px}
+.union-camp-details .union-chip{display:block;width:100%;text-align:left;white-space:normal;line-height:1.4}
+.union-main-name{font-weight:800;text-decoration:underline;text-underline-offset:2px;color:#9b2d18}
+.union-chip.active .union-main-name{color:#704000}
+body:not(.light) .union-main-name{color:#ffb36b}
+body:not(.light) .union-chip.active .union-main-name{color:#704000}
+.cell .union-list{justify-content:flex-start;align-content:flex-start}
+.cell{height:auto;min-height:160px;justify-content:flex-start;overflow:hidden}
+.cell .pos{margin-top:3px;margin-bottom:5px;flex:none}
+.cell .hero{flex:none}
+.cell .hint{flex:none;margin-top:5px}
+.board{aspect-ratio:auto;grid-auto-rows:minmax(160px,auto)}
+.camp-slot{height:auto;min-height:100px;justify-content:flex-start}
+.camp-slot .slot-number,.camp-slot .slot-name{flex:none}
+.camp-slot .union-list{justify-content:flex-start}
+body.light .union-chip.inactive{background:#dfe3e9;color:#596273;border-color:#c6ccd5}
+body.light .union-chip.active{background:#ffe08a;color:#6c4800;border-color:#d6a027}
+@media(max-width:760px){
+ .cell{min-height:145px;padding:5px 3px}
+ .board{grid-auto-rows:minmax(145px,auto)}
+ .camp-slot{min-height:90px}
+ .union-chip{font-size:9px;padding:2px 4px}
+}
+
+
+/* v1.0.9：选择武将卡片固定悬浮，滚动整页时始终可用 */
+.layout { grid-template-columns:minmax(0,1fr) !important; }
+.layout > section:nth-child(2) {
+  position:fixed !important;
+  z-index:1000;
+  top:112px;
+  right:max(16px, calc((100vw - 1200px)/2 + 16px));
+  width:min(390px, calc(100vw - 32px));
+  max-width:calc(100vw - 32px);
+  max-height:calc(100vh - 32px);
+  max-height:calc(100dvh - 32px);
+  min-width:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:rgba(32,38,51,.98);
+  box-shadow:0 14px 40px #0005;
+  backdrop-filter:blur(10px);
+}
+.layout > section:nth-child(2) .hero-list {
+  flex:1 1 auto;
+  min-height:80px;
+  max-height:none;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:max-content;
+  align-content:start;
+  align-items:start;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.layout > section:nth-child(2) .footer-note { flex:0 0 auto; }
+.layout > section:nth-child(2) .actions { flex:0 0 auto; }
+body.light .layout > section:nth-child(2) {
+  background:rgba(255,255,255,.98);
+  box-shadow:0 14px 40px #26334a2b;
+}
+@media(max-width:760px) {
+  .layout > section:nth-child(2) {
+    top:auto;
+    right:12px;
+    bottom:calc(72px + env(safe-area-inset-bottom));
+    left:12px;
+    width:auto;
+    max-width:none;
+    max-height:44vh;
+    max-height:44dvh;
+    padding:12px;
+  }
+  .layout > section:nth-child(2) .section-title { margin-bottom:8px; }
+  .layout > section:nth-child(2) .selected-slot { margin-bottom:8px; }
+  .roster-tools #search{flex:1 1 150px;width:auto;max-width:none;}
+  .layout > section:nth-child(2) .footer-note { display:none; }
+  .layout > section:nth-child(2) .hero-list { min-height:70px; }
+}
+
+
+/* v1.1.0：左侧所有规划 UI 占 70%，右侧悬浮选将面板占 30% */
+@media (min-width: 761px) {
+  body { padding-right:0; }
+  .app {
+    width:70% !important;
+    max-width:840px !important; /* 页面总宽度上限1200px的70% */
+    margin-left:max(0px, calc((100vw - 1200px)/2)) !important;
+    margin-right:auto !important;
+    padding-right:16px;
+  }
+  .app header { max-width:100%; }
+  .app .formation-list { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .app .layout { display:grid; grid-template-columns:minmax(0,1fr) !important; width:100%; }
+  .app .layout > section:first-child { width:100%; max-width:100%; }
+  .layout > section:nth-child(2) {
+    position:fixed !important;
+    top:112px;
+    right:max(0px, calc((100vw - 1200px)/2));
+    width:calc(min(1200px, 100vw) * .30) !important;
+    max-width:360px !important;
+    height:calc(100vh - 32px);
+    height:calc(100dvh - 32px);
+    max-height:none;
+    box-sizing:border-box;
+  }
+}
+@media (max-width:760px) {
+  /* 小屏幕改为上下流式布局，避免左侧70%过窄 */
+  .app { width:100% !important; max-width:1200px !important; margin:0 auto !important; padding:14px; }
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) !important; }
+  .layout > section:nth-child(2) {
+    position:fixed !important;
+    top:auto;
+    right:12px;
+    bottom:calc(72px + env(safe-area-inset-bottom));
+    left:12px;
+    width:auto !important;
+    max-width:none !important;
+    max-height:44vh;
+    max-height:44dvh;
+    height:auto;
+  }
+}
+
+
+/* v1.1.1 修正：主阵、副将营、聚义营全部进入左侧70%列；选将卡片固定在右侧30% */
+@media (min-width: 761px) {
+  .app {
+    width:70% !important;
+    max-width:840px !important;
+    margin-left:max(0px, calc((100vw - 1200px)/2)) !important;
+    margin-right:auto !important;
+    padding-left:clamp(14px, 3vw, 28px) !important;
+    padding-right:16px !important;
+    box-sizing:border-box !important;
+  }
+  .app > .panel,
+  .app > .layout,
+  .app > section,
+  .app .panel {
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+  .app .layout {
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+  .app .layout > section:first-child {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+  /* camp-layout 位于 .app 外部，必须单独约束到左侧70% */
+  .camp-layout {
+    width:70% !important;
+    max-width:840px !important;
+    min-width:0 !important;
+    margin-left:max(0px, calc((100vw - 1200px)/2)) !important;
+    margin-right:auto !important;
+    padding-left:clamp(14px, 3vw, 28px) !important;
+    padding-right:16px !important;
+    box-sizing:border-box !important;
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+  .camp-layout > .panel,
+  .camp-layout .camp-panel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+  .layout > section:nth-child(2) {
+    position:fixed !important;
+    z-index:1000 !important;
+    top:16px !important;
+    right:max(0px, calc((100vw - 1200px)/2)) !important;
+    width:calc(min(1200px, 100vw) * .30) !important;
+    max-width:360px !important;
+    min-width:0 !important;
+    height:calc(100vh - 32px) !important;
+    height:calc(100dvh - 32px) !important;
+    max-height:none !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+  }
+}
+@media (max-width:760px) {
+  .app {
+    width:100% !important;
+    max-width:1200px !important;
+    margin:0 auto !important;
+    padding:14px !important;
+  }
+  .camp-layout {
+    width:100% !important;
+    max-width:1200px !important;
+    margin:0 auto !important;
+    padding:0 14px !important;
+  }
+}
+
+
+/* v1.1.2：副将营最后三格居中；聚义营按上5下4排列并居中 */
+.deputy-grid {
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+}
+.deputy-grid .camp-slot:nth-child(5) {
+  grid-column:2;
+}
+.deputy-grid .camp-slot:nth-child(6) {
+  grid-column:3;
+}
+.deputy-grid .camp-slot:nth-child(7) {
+  grid-column:4;
+}
+.gathering-grid {
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+}
+.gathering-grid .camp-slot:nth-child(6) {
+  grid-column:2;
+}
+.gathering-grid .camp-slot:nth-child(7) {
+  grid-column:3;
+}
+.gathering-grid .camp-slot:nth-child(8) {
+  grid-column:4;
+}
+.gathering-grid .camp-slot:nth-child(9) {
+  grid-column:5;
+}
+@media (max-width:760px) {
+  .deputy-grid { grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+  .deputy-grid .camp-slot:nth-child(5) { grid-column:2; }
+  .deputy-grid .camp-slot:nth-child(6) { grid-column:3; }
+  .deputy-grid .camp-slot:nth-child(7) { grid-column:4; }
+  .gathering-grid { grid-template-columns:repeat(5,minmax(0,1fr)) !important; }
+  .gathering-grid .camp-slot:nth-child(6) { grid-column:2; }
+  .gathering-grid .camp-slot:nth-child(7) { grid-column:3; }
+  .gathering-grid .camp-slot:nth-child(8) { grid-column:4; }
+  .gathering-grid .camp-slot:nth-child(9) { grid-column:5; }
+}
+@media (max-width:480px) {
+  .camp-slot { padding:7px 2px; }
+  .camp-slot .slot-name { font-size:12px; }
+}
+
+
+/* v1.1.3：第二排卡片组真正水平居中 */
+.deputy-grid {
+  display:grid !important;
+  grid-template-columns:repeat(12,minmax(0,1fr)) !important;
+}
+.deputy-grid .camp-slot:nth-child(-n+4) {
+  grid-column:span 3 !important;
+}
+.deputy-grid .camp-slot:nth-child(5) {
+  grid-column:2 / span 3 !important;
+}
+.deputy-grid .camp-slot:nth-child(6) {
+  grid-column:5 / span 3 !important;
+}
+.deputy-grid .camp-slot:nth-child(7) {
+  grid-column:8 / span 3 !important;
+}
+.gathering-grid {
+  display:grid !important;
+  grid-template-columns:repeat(10,minmax(0,1fr)) !important;
+}
+.gathering-grid .camp-slot:nth-child(-n+5) {
+  grid-column:span 2 !important;
+}
+.gathering-grid .camp-slot:nth-child(6) {
+  grid-column:2 / span 2 !important;
+}
+.gathering-grid .camp-slot:nth-child(7) {
+  grid-column:4 / span 2 !important;
+}
+.gathering-grid .camp-slot:nth-child(8) {
+  grid-column:6 / span 2 !important;
+}
+.gathering-grid .camp-slot:nth-child(9) {
+  grid-column:8 / span 2 !important;
+}
+@media (max-width:760px) {
+  .deputy-grid { grid-template-columns:repeat(12,minmax(0,1fr)) !important; }
+  .deputy-grid .camp-slot:nth-child(-n+4) { grid-column:span 3 !important; }
+  .deputy-grid .camp-slot:nth-child(5) { grid-column:2 / span 3 !important; }
+  .deputy-grid .camp-slot:nth-child(6) { grid-column:5 / span 3 !important; }
+  .deputy-grid .camp-slot:nth-child(7) { grid-column:8 / span 3 !important; }
+  .gathering-grid { grid-template-columns:repeat(10,minmax(0,1fr)) !important; }
+  .gathering-grid .camp-slot:nth-child(-n+5) { grid-column:span 2 !important; }
+  .gathering-grid .camp-slot:nth-child(6) { grid-column:2 / span 2 !important; }
+  .gathering-grid .camp-slot:nth-child(7) { grid-column:4 / span 2 !important; }
+  .gathering-grid .camp-slot:nth-child(8) { grid-column:6 / span 2 !important; }
+  .gathering-grid .camp-slot:nth-child(9) { grid-column:8 / span 2 !important; }
+}
+
+
+/* v1.1.5：副将营两排卡片使用等宽8列网格，第二排3格严格居中 */
+.deputy-grid {
+  display:grid !important;
+  grid-template-columns:repeat(8,minmax(0,1fr)) !important;
+}
+.deputy-grid .camp-slot:nth-child(-n+4) {
+  grid-column:span 2 !important;
+}
+.deputy-grid .camp-slot:nth-child(5) {
+  grid-column:2 / span 2 !important;
+}
+.deputy-grid .camp-slot:nth-child(6) {
+  grid-column:4 / span 2 !important;
+}
+.deputy-grid .camp-slot:nth-child(7) {
+  grid-column:6 / span 2 !important;
+}
+@media (max-width:760px) {
+  .deputy-grid { grid-template-columns:repeat(8,minmax(0,1fr)) !important; }
+  .deputy-grid .camp-slot:nth-child(-n+4) { grid-column:span 2 !important; }
+  .deputy-grid .camp-slot:nth-child(5) { grid-column:2 / span 2 !important; }
+  .deputy-grid .camp-slot:nth-child(6) { grid-column:4 / span 2 !important; }
+  .deputy-grid .camp-slot:nth-child(7) { grid-column:6 / span 2 !important; }
+}
+
+
+/* v1.1.9：支持从武将名单拖放到主阵、副将营、聚义营 */
+.hero-option { cursor:grab; }
+.hero-option:active { cursor:grabbing; }
+.hero-option.dragging { opacity:.45; }
+.cell.drop-ready,.camp-slot.drop-ready { outline:3px dashed #d9a21b !important; outline-offset:-4px; }
+.cell.drop-hover,.camp-slot.drop-hover { background:#fff0b8 !important; border-color:#d9a21b !important; }
+
+
+/* v1.2.2：主阵聚义详情按列纵向排列 */
+.cell .union-list.union-details {
+  display:flex;
+  flex-direction:column;
+  flex-wrap:nowrap;
+  align-items:stretch;
+  justify-content:flex-start;
+  gap:3px;
+  width:100%;
+}
+.cell .union-list.union-details .union-chip {
+  display:block;
+  width:100%;
+  max-width:100%;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  line-height:1.35;
+}
+
+
+/* v1.2.5：已上阵主阵格子不再显示“点击更换”提示 */
+.cell.empty-slot {
+  justify-content:center !important;
+  align-items:center !important;
+}
+.cell .hint.hint-ready {
+  display:flex; align-items:center; justify-content:center;
+  width:100%; min-height:1.5em; margin:0;
+  text-align:center; font-size:clamp(14px, 1.7vw, 18px);
+  line-height:1.25; font-weight:800; opacity:1;
+}
+.cell .unavailable-icon {
+  display:flex; align-items:center; justify-content:center;
+  width:clamp(23px, 3vw, 32px); height:clamp(23px, 3vw, 32px);
+  margin:auto; color:#8a93a2; opacity:.9;
+}
+.cell .unavailable-icon svg {display:block;width:100%;height:100%;}
+.slot-draggable{cursor:grab}.slot-draggable:active{cursor:grabbing}
+/* v1.2.14：主阵武将卡片右上角下阵按钮与阵容变更提示 */
+.cell.filled{position:relative;padding-top:22px !important}
+.cell .main-remove-hero:hover{background:#a91f1f;transform:scale(1.06)}
+.lineup-toast{position:fixed;left:50%;top:50%;transform:translate(-50%,calc(-50% + 50px));z-index:20000;max-width:calc(100vw - 24px);padding:12px 18px;border-radius:10px;background:transparent;color:var(--text);border:1px solid transparent;box-shadow:none;font-size:32px;font-weight:700;text-align:center;line-height:1.5;pointer-events:none;animation:lineupToastRise .45s cubic-bezier(.2,.75,.25,1) forwards}
+@keyframes lineupToastRise{from{transform:translate(-50%,calc(-50% + 50px));opacity:0}to{transform:translate(-50%,-50%);opacity:1}}
+.lineup-toast .lit{color:#168447;font-weight:800}.lineup-toast .extinguished{color:#d33b3b;font-weight:800}
+body:not(.light) .lineup-toast .lit{color:#58df91}body:not(.light) .lineup-toast .extinguished{color:#ff6b6b}
+@media(max-width:760px){.lineup-toast{font-size:30px;padding:10px 14px}.cell .main-remove-hero{width:21px;height:21px;min-width:21px;min-height:21px;right:3px;top:3px;font-size:17px}}
+
+/* v1.2.10：主阵九宫格固定为等宽等高正方形 */
+.app .board {
+  width:100% !important;
+  aspect-ratio:1 / 1 !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  grid-template-rows:repeat(3,minmax(0,1fr)) !important;
+  grid-auto-rows:unset !important;
+  align-items:stretch !important;
+}
+.app .board .cell {
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  aspect-ratio:1 / 1 !important;
+  box-sizing:border-box !important;
+  padding:clamp(3px,0.6vw,6px) !important;
+  overflow:hidden !important;
+}
+@media(max-width:760px) {
+  .app .board {aspect-ratio:1 / 1 !important;grid-template-rows:repeat(3,minmax(0,1fr)) !important;}
+  .app .board .cell {min-height:0 !important;padding:3px !important;}
+}
+
+/* v1.2.12：宽屏阵型按钮单行排列，只显示阵型名称 */
+.formation-list { display:grid; grid-template-columns:repeat(9,minmax(0,1fr)); gap:6px; }
+.formation-btn { min-width:0; min-height:44px; padding:8px 2px; white-space:nowrap; font-size:clamp(10px,1.1vw,14px); overflow:hidden; text-overflow:clip; }
+.formation-btn small { display:none !important; }
+@media(min-width:761px) {
+  /* 修复桌面端高优先级旧规则覆盖：九种阵型强制同排展示 */
+  .app .formation-list { grid-template-columns:repeat(9,minmax(0,1fr)) !important; gap:6px; }
+  .app .formation-btn { min-width:0; min-height:44px; padding:8px 2px; white-space:nowrap; font-size:clamp(10px,1.1vw,14px); }
+  .app .formation-btn small { display:none !important; }
+}
+@media(max-width:760px) {
+  .app .formation-list { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .app .formation-btn { min-height:44px; padding:9px 4px; font-size:13px; }
+}
+
+
+/* v1.2.27：三个阵营的撤销/重做历史独立，互不影响，宽屏和手机端均保持一致 */
+.camp-layout .camp-slot {
+  box-sizing:border-box !important;
+  aspect-ratio:1 / 1 !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  align-self:start !important;
+  justify-content:flex-start !important;
+  overflow:auto !important;
+  padding:7px 5px !important;
+}
+.camp-layout .camp-slot .slot-number,
+.camp-layout .camp-slot .slot-name { flex:0 0 auto !important; }
+@media (max-width:480px) {
+  .camp-layout .camp-slot { padding:5px 3px !important; }
+  .camp-layout .camp-slot .slot-name { font-size:12px; }
+}
+
+/* v1.2.37：统一修正主阵、副将营、聚义营叉号圆圈内的居中 */
+.camp-layout .camp-slot { position:relative !important; }
+.camp-layout .camp-slot.has-hero { padding-top:25px !important; }
+.camp-remove-hero {
+  position:absolute; top:4px; right:4px; z-index:6;
+  width:22px; height:22px; min-width:22px; min-height:22px;
+  display:inline-flex; align-items:center; justify-content:center;
+  box-sizing:border-box; margin:0; padding:0 0 1px;
+  border:0; border-radius:50%; background:#c83d3d; color:#fff;
+  font-family:Arial,sans-serif; font-size:18px; font-weight:800;
+  line-height:1; text-align:center; vertical-align:middle;
+  opacity:0; visibility:hidden; pointer-events:none; cursor:pointer;
+  box-shadow:0 1px 4px #0004; transition:opacity .12s ease, transform .12s ease;
+}
+.camp-slot:hover .camp-remove-hero,
+.camp-slot:focus-within .camp-remove-hero,
+.camp-slot.selected .camp-remove-hero {
+  opacity:1; visibility:visible; pointer-events:auto;
+}
+.camp-remove-hero:hover { background:#a91f1f; transform:scale(1.06); }
+@media(max-width:760px) {
+  .camp-remove-hero { width:21px; height:21px; min-width:21px; min-height:21px; top:3px; right:3px; font-size:17px; }
+  .camp-layout .camp-slot.has-hero { padding-top:24px !important; }
+}
+
+
+/* v1.2.37：深色主题阵容格子使用协调的暗色底，避免固定浅金色与深色主题冲突 */
+body:not(.light) .cell.filled,
+body:not(.light) .camp-slot.filled {
+  background:#393329;
+  border-color:#a87929;
+  color:#f2e5c9;
+}
+body:not(.light) .cell.filled .pos,
+body:not(.light) .cell.filled .hint { color:#d4bd8d; }
+body:not(.light) .camp-slot.filled .slot-name { color:#f2e5c9; }
+
+/* v1.2.46：修正候补统计数据源并隐藏三个阵营格子滚动条，避免其他格子的未激活关系被漏掉 */
+.layout > section:nth-child(2) .hero-list {
+  flex: 3 1 0;
+  min-height: 90px;
+  max-height: none;
+  overflow-y: auto;
+}
+.union-candidate-panel {
+  flex: 2 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: 10px;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel2);
+}
+.union-candidate-head { flex: 0 0 auto; margin-bottom: 6px; }
+.union-candidate-title { font-size: 12px; font-weight: 800; line-height: 1.4; }
+.union-candidate-note { margin-top: 2px; font-size: 10px; line-height: 1.4; color: var(--muted); }
+.union-candidate-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 5px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.union-candidate-item {
+  min-width: 0;
+  display:flex;
+  flex-direction:row;
+  align-items:flex-start;
+  gap:7px;
+  cursor: grab;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 5px 4px;
+  background: rgba(0,0,0,.12);
+}
+.union-candidate-name { flex:0 0 68px; min-width:0; font-size:11px; font-weight:800; overflow-wrap:anywhere; margin:2px 0 0; }
+.union-candidate-item .union-list { flex:1 1 auto; min-width:0; width:auto; margin-top:0; gap:3px; justify-content:flex-start; }
+.union-candidate-item .union-chip { display:inline-block; width:auto; max-width:100%; font-size:8px; line-height:1.3; padding:2px 4px; text-align:left; overflow-wrap:anywhere; }
+body.light .union-candidate-panel { background:#f3f5f8; }
+body.light .union-candidate-item { background:#fff; }
+@media(max-width:760px) {
+  .layout > section:nth-child(2) { max-height:64vh; max-height:64dvh; }
+  .layout > section:nth-child(2) .hero-list { flex:3 1 0; min-height:70px; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:max-content; align-content:start; align-items:start; }
+  .union-candidate-panel { flex:2 1 0; }
+  .union-candidate-name { flex-basis:52px; font-size:10px; }
+  .union-candidate-item { gap:5px; }
+  .union-candidate-item .union-chip { font-size:7.5px; }
+}
+
+
+/* v1.2.47：聚义营不显示位置编号；三阵营格子禁用纵向滚动；候补聚义覆盖所有主阵武将 */
+.gathering-grid .camp-slot .slot-number { display:none !important; }
+.board .cell, .camp-layout .camp-slot {
+  overflow-x:hidden !important;
+  overflow-y:hidden !important;
+  scrollbar-width:none !important;
+  -ms-overflow-style:none !important;
+}
+.board .cell::-webkit-scrollbar, .camp-layout .camp-slot::-webkit-scrollbar {
+  display:none !important;
+  width:0 !important;
+  height:0 !important;
+}
+.camp-layout .camp-slot .union-list,
+.board .cell .union-list {
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+}
+.union-candidate-grid { overflow-x:hidden; overflow-y:auto; scrollbar-width:thin; }
+.union-candidate-item { min-width:0; overflow-wrap:anywhere; }
+
+
+/* v1.2.62：移除提示副标题、移除武将按钮及其说明，并清理相关按钮代码 */
+.pill { display:none !important; }
+@media (min-width:761px) {
+  .layout > section:nth-child(2) { top:112px !important; }
+}
+
+/* v1.2.69：修复顶部对齐 CSS 被输出到页面正文的问题 */
+.layout > section:nth-child(2) { top:0 !important; }
+@media (max-width:760px) {
+  .layout > section:nth-child(2) { top:0 !important; bottom:auto !important; }
+}
+
+/* v1.2.77：涅槃筛选每行两名；宽屏搜索框与筛选按钮固定同排 */
+.hero-list.nirvana-filter { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+/* v1.2.78：未筛选时涅槃武将每行两名，其余武将每行三名 */
+/* v1.2.79：涅槃神将与普通神将互斥；修复聚义悬浮描述重复“与” */
+.hero-list.mixed-roster { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
+.hero-list.mixed-roster .hero-option.nirvana-option { grid-column:span 3; }
+.hero-list.mixed-roster .hero-option:not(.nirvana-option) { grid-column:span 2; }
+@media (min-width:761px) {
+  .roster-tools { flex-wrap:nowrap; gap:5px; }
+  .roster-tools #search { flex:0 1 112px; width:112px; min-width:80px; max-width:none; }
+  .roster-filter-buttons { flex:1 1 auto; flex-wrap:nowrap; gap:3px; }
+  .roster-filter-btn { flex:1 1 0; min-width:0; padding:7px 5px; font-size:11px; }
+}
+
+
+/* v1.2.131：合并分享预览图、98888水印、容器内布局与按钮位置 */
+.share-panel{margin:18px 0 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);width:100%;box-sizing:border-box}
+.share-panel .section-title{margin-bottom:10px}
+.share-theme-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;color:var(--text);font-size:13px}
+.share-theme-row .action-btn{white-space:nowrap}
+.formation-description-label{display:block;margin:0 0 6px;color:var(--text);font-size:13px;font-weight:700}
+.formation-description-input{display:block;width:100%;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font:inherit;outline:none}
+.formation-description-input:focus{border-color:var(--gold,#d6a84f);box-shadow:0 0 0 2px rgba(214,168,79,.16)}
+
+.share-preview-card{min-width:0;width:100%;box-sizing:border-box}
+.share-preview-card img{display:none;width:100%;height:auto;object-fit:contain;background:#202633;border-radius:8px}.share-preview-card img[src]{display:block}
+.share-preview-card p{margin:0;padding:14px 10px;text-align:center;color:var(--muted);font-size:12px;line-height:1.5}.share-preview-card img[src]+p{padding:7px 0 0}
+.share-help{margin:10px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
+.share-fab{position:fixed;right:286px;bottom:18px;z-index:10000;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 15px;border:1px solid #8a754e;border-radius:999px;background:var(--panel);color:#e5ad38;text-decoration:none;font-weight:700;white-space:nowrap;cursor:pointer;font-size:13px;transition:background .15s,border-color .15s;box-shadow:0 4px 14px #0002}
+.share-fab:hover{background:var(--panel2);border-color:#e5ad38;color:#e5ad38}
+.share-fab svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+body.light .share-panel{background:#f6f7fa}
+@media(max-width:560px){.share-fab{right:calc(145px + 118px);bottom:max(12px,env(safe-area-inset-bottom));padding:8px 10px;gap:5px}.share-panel{padding:9px}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div><h1>QQ水浒 · 阵容规划器</h1></div>
+</header>
+<section class="panel">
+  <h2 class="section-title">① 选择阵型</h2>
+  <div id="formationList" class="formation-list"></div>
+</section>
+<div class="layout">
+  <section class="panel">
+    <div class="board-title"><strong id="boardName">飞龙阵</strong><span class="counter" id="counter">已上阵 0 / 5</span></div>
+    <div class="board-wrap"><div id="board" class="board" aria-label="阵型九宫格"></div></div>
+    <div class="actions history-actions"><button class="action-btn" id="undoMain" disabled>撤销</button><button class="action-btn" id="redoMain" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="smartFill">智能补齐副将营 聚义营</button><button class="action-btn" id="clearAll">清空本阵</button></div>
+    
+  </section>
+  <section class="panel">
+    <h2 class="section-title">② 选择武将</h2>
+    <div class="selected-slot" id="slotPrompt">请先点击阵型中的一个可上阵位置。</div>
+    <div class="roster-tools">
+      <input id="search" type="search" placeholder="搜索武将本名…" autocomplete="off" aria-label="搜索武将">
+      <div class="roster-filter-buttons" role="group" aria-label="武将类型筛选">
+        <button type="button" class="roster-filter-btn" data-roster-filter="涅槃三阶">涅槃</button>
+        <button type="button" class="roster-filter-btn" data-roster-filter="神将">神将</button>
+        <button type="button" class="roster-filter-btn" data-roster-filter="修罗">修罗</button>
+        <button type="button" class="roster-filter-btn" data-roster-filter="其他">其他</button>
+      </div>
+    </div>
+    <div id="heroList" class="hero-list"></div>
+    <div class="union-candidate-panel" aria-label="主阵聚义候补武将">
+      <div class="union-candidate-head">
+        <div class="union-candidate-title">主阵聚义候补</div>
+        <div class="union-candidate-note">可拖入主阵、副将营或聚义营；条目展示主阵武将与候补武将的聚义属性</div>
+      </div>
+      <div id="unionCandidateGrid" class="union-candidate-grid"></div>
+    </div>
+  </section>
+</div>
+</div>
+<div class="camp-layout">
+  <section class="panel camp-panel">
+    <div class="camp-head"><h2 class="section-title">③ 副将营</h2><span class="camp-count" id="deputyCounter">已上阵 0 / 7</span></div>
+    <div class="camp-grid deputy-grid" id="deputyGrid" aria-label="七个副将位置"></div>
+    <div class="actions history-actions"><button class="action-btn" id="undoDeputy" disabled>撤销</button><button class="action-btn" id="redoDeputy" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="smartFillDeputy">智能补齐副将营</button><button class="action-btn" id="clearDeputy">清空副将营</button></div>
+    <div class="footer-note">点击位置，再从武将名单中选择副将。副将营最多上阵 7 名武将。</div>
+  </section>
+  <section class="panel camp-panel">
+    <div class="camp-head"><h2 class="section-title">④ 聚义营</h2><span class="camp-count" id="gatheringCounter">已上阵 0 / 9</span></div>
+    <div class="camp-grid gathering-grid" id="gatheringGrid" aria-label="九个聚义营位置"></div>
+    <div class="actions history-actions"><button class="action-btn" id="undoGathering" disabled>撤销</button><button class="action-btn" id="redoGathering" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="smartFillGathering">智能补齐聚义营</button><button class="action-btn" id="clearGathering">清空聚义营</button></div>
+    <div class="footer-note">点击位置，再从武将名单中选择聚义营武将。聚义激活效果将在后续接入聚义数据后计算。</div>
+  </section>
+  <section class="panel share-panel" id="sharePanel">
+    <h2 class="section-title">⑤ 分享界面预览</h2>
+    <label class="formation-description-label" for="formationDescription">阵型描述</label>
+    <input id="formationDescription" class="formation-description-input" type="text" maxlength="100" placeholder="输入阵容说明，例如：速度优先，适合先手控制" autocomplete="off">
+    <article class="share-preview-card"><img id="shareCombinedPreview" alt="主阵、副将营、聚义营合并分享图片预览"><p id="shareCombinedCaption">修改阵容或描述后自动生成预览</p></article>
+  </section>
+</div>
+<footer class="page-footer">
+  <span class="author"></span>
+  <button class="home-link share-fab" id="sharePlan" type="button" aria-label="生成并分享方案">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"></path></svg>
+    <span>分享方案</span>
+  </button>
+  <button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42-1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+    <span>切换昼夜</span>
+  </button>
+  <a class="home-link" href="index.html" aria-label="返回首页">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg>
+    <span>返回首页</span>
+  </a>
+<div class="page-author-credit">@wwwwwqq1</div>
+</footer>
+<script>
+const heroes = [{"rank":1,"type":"天罡","name":"晁盖"},{"rank":2,"type":"天罡","name":"卢俊义"},{"rank":3,"type":"天罡","name":"吴用"},{"rank":4,"type":"天罡","name":"公孙胜"},{"rank":5,"type":"天罡","name":"关胜"},{"rank":6,"type":"天罡","name":"林冲"},{"rank":7,"type":"天罡","name":"秦明"},{"rank":8,"type":"天罡","name":"呼延灼"},{"rank":9,"type":"天罡","name":"花荣"},{"rank":10,"type":"天罡","name":"柴进"},{"rank":11,"type":"天罡","name":"李应"},{"rank":12,"type":"天罡","name":"朱仝"},{"rank":13,"type":"天罡","name":"鲁智深"},{"rank":14,"type":"天罡","name":"武松"},{"rank":15,"type":"天罡","name":"董平"},{"rank":16,"type":"天罡","name":"张清"},{"rank":17,"type":"天罡","name":"杨志"},{"rank":18,"type":"天罡","name":"徐宁"},{"rank":19,"type":"天罡","name":"索超"},{"rank":20,"type":"天罡","name":"戴宗"},{"rank":21,"type":"天罡","name":"刘唐"},{"rank":22,"type":"天罡","name":"李逵"},{"rank":23,"type":"天罡","name":"史进"},{"rank":24,"type":"天罡","name":"穆弘"},{"rank":25,"type":"天罡","name":"雷横"},{"rank":26,"type":"天罡","name":"李俊"},{"rank":27,"type":"天罡","name":"阮小二"},{"rank":28,"type":"天罡","name":"张横"},{"rank":29,"type":"天罡","name":"阮小五"},{"rank":30,"type":"天罡","name":"张顺"},{"rank":31,"type":"天罡","name":"阮小七"},{"rank":32,"type":"天罡","name":"杨雄"},{"rank":33,"type":"天罡","name":"石秀"},{"rank":34,"type":"天罡","name":"解珍"},{"rank":35,"type":"天罡","name":"解宝"},{"rank":36,"type":"天罡","name":"燕青"},{"rank":37,"type":"地煞","name":"朱武"},{"rank":38,"type":"地煞","name":"黄信"},{"rank":39,"type":"地煞","name":"孙立"},{"rank":40,"type":"地煞","name":"宣赞"},{"rank":41,"type":"地煞","name":"郝思文"},{"rank":42,"type":"地煞","name":"韩滔"},{"rank":43,"type":"地煞","name":"彭玘"},{"rank":44,"type":"地煞","name":"单廷珪"},{"rank":45,"type":"地煞","name":"魏定国"},{"rank":46,"type":"地煞","name":"萧让"},{"rank":47,"type":"地煞","name":"裴宣"},{"rank":48,"type":"地煞","name":"欧鹏"},{"rank":49,"type":"地煞","name":"邓飞"},{"rank":50,"type":"地煞","name":"燕顺"},{"rank":51,"type":"地煞","name":"杨林"},{"rank":52,"type":"地煞","name":"凌振"},{"rank":53,"type":"地煞","name":"蒋敬"},{"rank":54,"type":"地煞","name":"吕方"},{"rank":55,"type":"地煞","name":"郭盛"},{"rank":56,"type":"地煞","name":"安道全"},{"rank":57,"type":"地煞","name":"皇甫端"},{"rank":58,"type":"地煞","name":"王英"},{"rank":59,"type":"地煞","name":"扈三娘"},{"rank":60,"type":"地煞","name":"鲍旭"},{"rank":61,"type":"地煞","name":"樊瑞"},{"rank":62,"type":"地煞","name":"孔明"},{"rank":63,"type":"地煞","name":"孔亮"},{"rank":64,"type":"地煞","name":"项充"},{"rank":65,"type":"地煞","name":"李衮"},{"rank":66,"type":"地煞","name":"金大坚"},{"rank":67,"type":"地煞","name":"马麟"},{"rank":68,"type":"地煞","name":"童威"},{"rank":69,"type":"地煞","name":"童猛"},{"rank":70,"type":"地煞","name":"孟康"},{"rank":71,"type":"地煞","name":"侯健"},{"rank":72,"type":"地煞","name":"陈达"},{"rank":73,"type":"地煞","name":"杨春"},{"rank":74,"type":"地煞","name":"郑天寿"},{"rank":75,"type":"地煞","name":"陶宗旺"},{"rank":76,"type":"地煞","name":"宋清"},{"rank":77,"type":"地煞","name":"乐和"},{"rank":78,"type":"地煞","name":"龚旺"},{"rank":79,"type":"地煞","name":"丁得孙"},{"rank":80,"type":"地煞","name":"穆春"},{"rank":81,"type":"地煞","name":"曹正"},{"rank":82,"type":"地煞","name":"宋万"},{"rank":83,"type":"地煞","name":"杜迁"},{"rank":84,"type":"地煞","name":"薛永"},{"rank":85,"type":"地煞","name":"施恩"},{"rank":86,"type":"地煞","name":"李忠"},{"rank":87,"type":"地煞","name":"周通"},{"rank":88,"type":"地煞","name":"汤隆"},{"rank":89,"type":"地煞","name":"杜兴"},{"rank":90,"type":"地煞","name":"邹渊"},{"rank":91,"type":"地煞","name":"邹润"},{"rank":92,"type":"地煞","name":"朱贵"},{"rank":93,"type":"地煞","name":"朱富"},{"rank":94,"type":"地煞","name":"蔡福"},{"rank":95,"type":"地煞","name":"蔡庆"},{"rank":96,"type":"地煞","name":"李立"},{"rank":97,"type":"地煞","name":"李云"},{"rank":98,"type":"地煞","name":"焦挺"},{"rank":99,"type":"地煞","name":"石勇"},{"rank":100,"type":"地煞","name":"孙新"},{"rank":101,"type":"地煞","name":"顾大嫂"},{"rank":102,"type":"地煞","name":"张青"},{"rank":103,"type":"地煞","name":"孙二娘"},{"rank":104,"type":"地煞","name":"王定六"},{"rank":105,"type":"地煞","name":"郁保四"},{"rank":106,"type":"地煞","name":"白胜"},{"rank":107,"type":"地煞","name":"时迁"},{"rank":108,"type":"地煞","name":"段景住"},{"rank":null,"type":"其他","name":"史文恭"},{"rank":null,"type":"其他","name":"罗真人"},{"rank":null,"type":"其他","name":"高廉"},{"rank":null,"type":"其他","name":"乔道清"},{"rank":null,"type":"其他","name":"丁颜光"},{"rank":null,"type":"其他","name":"石宝"},{"rank":null,"type":"其他","name":"林娘子"},{"rank":null,"type":"其他","name":"花小妹"},{"rank":null,"type":"其他","name":"庞万春"},{"rank":null,"type":"其他","name":"方腊"},{"rank":null,"type":"其他","name":"武大郎"},{"rank":null,"type":"其他","name":"大虫"},{"rank":null,"type":"其他","name":"琼英"},{"rank":null,"type":"其他","name":"厉天闰"},{"rank":null,"type":"其他","name":"李鬼"},{"rank":null,"type":"其他","name":"邓元觉"},{"rank":null,"type":"其他","name":"刘梦龙"},{"rank":null,"type":"其他","name":"张开"},{"rank":null,"type":"其他","name":"包道乙"},{"rank":null,"type":"其他","name":"徐统"},{"rank":null,"type":"其他","name":"司行方"},{"rank":null,"type":"其他","name":"高俅"},{"rank":null,"type":"其他","name":"黄文炳"},{"rank":null,"type":"其他","name":"潘文得"},{"rank":null,"type":"其他","name":"王寅"},{"rank":null,"type":"其他","name":"李师师"},{"rank":null,"type":"其他","name":"赵元奴"},{"rank":null,"type":"其他","name":"李盛"},{"rank":null,"type":"其他","name":"唐三娘"},{"rank":null,"type":"其他","name":"邓龙"},{"rank":null,"type":"其他","name":"裴福"},{"rank":null,"type":"其他","name":"任原"}];
+heroes.push({"rank":null,"type":"神将","name":"神·卢俊义","baseName":"卢俊义"},{"rank":null,"type":"神将","name":"神·公孙胜","baseName":"公孙胜"},{"rank":null,"type":"神将","name":"神·林冲","baseName":"林冲"},{"rank":null,"type":"神将","name":"神·武松","baseName":"武松"},{"rank":null,"type":"神将","name":"神·顾大嫂","baseName":"顾大嫂"},{"rank":null,"type":"神将","name":"神·鲁智深","baseName":"鲁智深"},{"rank":null,"type":"神将","name":"神·扈三娘","baseName":"扈三娘"},{"rank":null,"type":"神将","name":"神·燕青","baseName":"燕青"},{"rank":null,"type":"神将","name":"神·史进","baseName":"史进"},{"rank":null,"type":"神将","name":"神·花荣","baseName":"花荣"},{"rank":null,"type":"神将","name":"神·杨雄","baseName":"杨雄"},{"rank":null,"type":"神将","name":"神·解宝","baseName":"解宝"},{"rank":null,"type":"神将","name":"神·阮小二","baseName":"阮小二"},{"rank":null,"type":"神将","name":"神·张顺","baseName":"张顺"},{"rank":null,"type":"神将","name":"神·呼延灼","baseName":"呼延灼"},{"rank":null,"type":"神将","name":"神·关胜","baseName":"关胜"},{"rank":null,"type":"神将","name":"神·董平","baseName":"董平"},{"rank":null,"type":"神将","name":"神·孙二娘","baseName":"孙二娘"},{"rank":null,"type":"神将","name":"神·吴用","baseName":"吴用"},{"rank":null,"type":"神将","name":"神·李逵","baseName":"李逵"},{"rank":null,"type":"神将","name":"神·柴进","baseName":"柴进"},{"rank":null,"type":"神将","name":"神·张清","baseName":"张清"},{"rank":null,"type":"神将","name":"神·李应","baseName":"李应"});
+heroes.push({"rank":null,"type":"修罗","name":"修罗·晁盖","baseName":"晁盖"},{"rank":null,"type":"修罗","name":"修罗·时迁","baseName":"时迁"},{"rank":null,"type":"修罗","name":"修罗·顾大嫂","baseName":"顾大嫂"},{"rank":null,"type":"修罗","name":"修罗·王英","baseName":"王英"},{"rank":null,"type":"修罗","name":"修罗·孙立","baseName":"孙立"},{"rank":null,"type":"修罗","name":"修罗·吕方","baseName":"吕方"},{"rank":null,"type":"修罗","name":"修罗·黄信","baseName":"黄信"},{"rank":null,"type":"修罗","name":"修罗·孔明","baseName":"孔明"},{"rank":null,"type":"修罗","name":"修罗·萧让","baseName":"萧让"},{"rank":null,"type":"修罗","name":"修罗·孔亮","baseName":"孔亮"},{"rank":null,"type":"修罗","name":"修罗·蒋敬","baseName":"蒋敬"},{"rank":null,"type":"修罗","name":"修罗·朱武","baseName":"朱武"},{"rank":null,"type":"修罗","name":"修罗·邓飞","baseName":"邓飞"},{"rank":null,"type":"修罗","name":"修罗·龚旺","baseName":"龚旺"},{"rank":null,"type":"修罗","name":"修罗·安道全","baseName":"安道全"},{"rank":null,"type":"修罗","name":"修罗·凌振","baseName":"凌振"},{"rank":null,"type":"修罗","name":"修罗·乐和","baseName":"乐和"},{"rank":null,"type":"修罗","name":"修罗·皇甫端","baseName":"皇甫端"},{"rank":null,"type":"修罗","name":"修罗·蔡庆","baseName":"蔡庆"},{"rank":null,"type":"修罗","name":"修罗·蔡福","baseName":"蔡福"},{"rank":null,"type":"修罗","name":"修罗·王定六","baseName":"王定六"},{"rank":null,"type":"修罗","name":"修罗·李云","baseName":"李云"},{"rank":null,"type":"修罗","name":"修罗·朱贵","baseName":"朱贵"},{"rank":null,"type":"修罗","name":"修罗·杜兴","baseName":"杜兴"},{"rank":null,"type":"修罗","name":"修罗·宋万","baseName":"宋万"},{"rank":null,"type":"修罗","name":"修罗·施恩","baseName":"施恩"},{"rank":null,"type":"修罗","name":"修罗·童威","baseName":"童威"},{"rank":null,"type":"修罗","name":"修罗·周通","baseName":"周通"},{"rank":null,"type":"修罗","name":"修罗·扈三娘","baseName":"扈三娘"},{"rank":null,"type":"修罗","name":"修罗·白胜","baseName":"白胜"},{"rank":null,"type":"修罗","name":"修罗·石勇","baseName":"石勇"},{"rank":null,"type":"修罗","name":"修罗·李立","baseName":"李立"},{"rank":null,"type":"修罗","name":"修罗·李忠","baseName":"李忠"},{"rank":null,"type":"修罗","name":"修罗·穆春","baseName":"穆春"},{"rank":null,"type":"修罗","name":"修罗·曹正","baseName":"曹正"},{"rank":null,"type":"修罗","name":"修罗·宣赞","baseName":"宣赞"},{"rank":null,"type":"修罗","name":"修罗·郝思文","baseName":"郝思文"},{"rank":null,"type":"修罗","name":"修罗·韩滔","baseName":"韩滔"},{"rank":null,"type":"修罗","name":"修罗·孙二娘","baseName":"孙二娘"},{"rank":null,"type":"修罗","name":"修罗·单廷珪","baseName":"单廷珪"},{"rank":null,"type":"修罗","name":"修罗·魏定国","baseName":"魏定国"},{"rank":null,"type":"修罗","name":"修罗·裴宣","baseName":"裴宣"},{"rank":null,"type":"修罗","name":"修罗·欧鹏","baseName":"欧鹏"},{"rank":null,"type":"修罗","name":"修罗·燕顺","baseName":"燕顺"},{"rank":null,"type":"修罗","name":"修罗·杨林","baseName":"杨林"},{"rank":null,"type":"修罗","name":"修罗·鲍旭","baseName":"鲍旭"},{"rank":null,"type":"修罗","name":"修罗·郭盛","baseName":"郭盛"},{"rank":null,"type":"修罗","name":"修罗·樊瑞","baseName":"樊瑞"},{"rank":null,"type":"修罗","name":"修罗·项充","baseName":"项充"},{"rank":null,"type":"修罗","name":"修罗·金大坚","baseName":"金大坚"},{"rank":null,"type":"修罗","name":"修罗·李衮","baseName":"李衮"},{"rank":null,"type":"修罗","name":"修罗·童猛","baseName":"童猛"},{"rank":null,"type":"修罗","name":"修罗·孟康","baseName":"孟康"},{"rank":null,"type":"修罗","name":"修罗·郑天寿","baseName":"郑天寿"},{"rank":null,"type":"修罗","name":"修罗·侯健","baseName":"侯健"},{"rank":null,"type":"修罗","name":"修罗·宋清","baseName":"宋清"},{"rank":null,"type":"修罗","name":"修罗·丁得孙","baseName":"丁得孙"},{"rank":null,"type":"修罗","name":"修罗·陶宗旺","baseName":"陶宗旺"},{"rank":null,"type":"修罗","name":"修罗·武松","baseName":"武松"},{"rank":null,"type":"修罗","name":"修罗·焦挺","baseName":"焦挺"},{"rank":null,"type":"修罗","name":"修罗·杨志","baseName":"杨志"},{"rank":null,"type":"修罗","name":"修罗·杜迁","baseName":"杜迁"},{"rank":null,"type":"修罗","name":"修罗·刘唐","baseName":"刘唐"});
+heroes.push({"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·卢俊义","baseName":"卢俊义"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·花荣","baseName":"花荣"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·林冲","baseName":"林冲"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·关胜","baseName":"关胜"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·顾大嫂","baseName":"顾大嫂"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·鲁智深","baseName":"鲁智深"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·李逵","baseName":"李逵"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·武松","baseName":"武松"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·扈三娘","baseName":"扈三娘"},{"rank":null,"type":"涅槃三阶","name":"涅槃三阶神·公孙胜","baseName":"公孙胜"});
+const formations = [{"name": "飞龙阵", "positions": [1, 2, 5, 8, 9]}, {"name": "天覆阵", "positions": [2, 4, 5, 6, 8]}, {"name": "地载阵", "positions": [2, 5, 7, 8, 9]}, {"name": "风扬阵", "positions": [1, 2, 3, 6, 8]}, {"name": "云垂阵", "positions": [1, 3, 6, 8, 9]}, {"name": "虎翼阵", "positions": [1, 3, 5, 7, 9]}, {"name": "鸟翔阵", "positions": [1, 4, 6, 8, 9]}, {"name": "蛇蟠阵", "positions": [3, 4, 5, 6, 9]}, {"name": "长蛇阵", "positions": [1, 4, 7, 8, 9]}];
+
+const unionData = [{"hero":"晁盖","name":"义劫法场","effect":"生命增加12%","targets":["李俊"]},{"hero":"晁盖","name":"豪气干云","effect":"速度增加5%","targets":["柴进"]},{"hero":"晁盖","name":"义释晁盖","effect":"法术防御增加8%","targets":["朱仝"]},{"hero":"晁盖","name":"射杀晁盖","effect":"武力防御增加8%","targets":["史文恭"]},{"hero":"晁盖","name":"七星聚义","effect":"法术攻击增加6%","targets":["吴用"]},{"hero":"卢俊义","name":"龙虎之拳","effect":"武力攻击增加8%","targets":["史文恭"]},{"hero":"卢俊义","name":"师出同门","effect":"生命增加6%","targets":["林冲"]},{"hero":"卢俊义","name":"智赢玉麒麟","effect":"武力防御增加7%","targets":["吴用"]},{"hero":"卢俊义","name":"主仆情深","effect":"速度增加5%","targets":["燕青"]},{"hero":"卢俊义","name":"齐攻宣州","effect":"速度增加5%","targets":["郑天寿"]},{"hero":"卢俊义","name":"麒麟落水","effect":"法术攻击增加7%","targets":["张顺"]},{"hero":"吴用","name":"智赚玉麒麟","effect":"武力防御增加17%","targets":["卢俊义"]},{"hero":"吴用","name":"智取生辰纲","effect":"生命增加7%","targets":["公孙胜"]},{"hero":"吴用","name":"神机妙算","effect":"速度增加35%","targets":["朱武"]},{"hero":"吴用","name":"筹帷双绝","effect":"武力攻击增加17%","targets":["花荣"]},{"hero":"吴用","name":"七星聚义","effect":"法术攻击增加17%","targets":["晁盖"]},{"hero":"吴用","name":"铁牛不要慌","effect":"生命增加30%","targets":["李逵"]},{"hero":"公孙胜","name":"仙风道骨","effect":"武力攻击增加25%","targets":["罗真人"]},{"hero":"公孙胜","name":"斗法破高廉","effect":"速度增加20%","targets":["高廉"]},{"hero":"公孙胜","name":"智取生辰纲","effect":"生命增加30%","targets":["吴用"]},{"hero":"公孙胜","name":"五龙山斗法","effect":"法术攻击增加25%","targets":["乔道清"]},{"hero":"公孙胜","name":"三请公孙","effect":"速度增加20%","targets":["戴宗"]},{"hero":"关胜","name":"美髯长须","effect":"武力攻击增加8%","targets":["朱仝"]},{"hero":"关胜","name":"计赚关胜","effect":"速度增加8%","targets":["呼延灼"]},{"hero":"关胜","name":"会心一击","effect":"生命增加8%","targets":["丁颜光"]},{"hero":"关胜","name":"大刀之义","effect":"武力防御增加6%","targets":["石宝"]},{"hero":"关胜","name":"大名府先锋","effect":"法术攻击增加8%","targets":["宣赞"]},{"hero":"关胜","name":"盖世无双","effect":"速度增加7%","targets":["卢俊义"]},{"hero":"林冲","name":"大闹野猪林","effect":"法术攻击增加6%","targets":["鲁智深"]},{"hero":"林冲","name":"忧愤情深","effect":"法术防御增加6%","targets":["林娘子"]},{"hero":"林冲","name":"师出同门","effect":"速度增加7%","targets":["卢俊义"]},{"hero":"林冲","name":"五虎将","effect":"武力攻击增加6%","targets":["秦明"]},{"hero":"秦明","name":"百年好合","effect":"生命增加12%","targets":["花小妹"]},{"hero":"秦明","name":"好妹夫","effect":"武力防御增加6%","targets":["花荣"]},{"hero":"秦明","name":"五虎将","effect":"武力攻击增加6%","targets":["林冲"]},{"hero":"秦明","name":"梁山勇将","effect":"法术防御增加5%","targets":["徐宁"]},{"hero":"呼延灼","name":"盖世豪侠","effect":"武力防御增加8%","targets":["李俊"]},{"hero":"呼延灼","name":"计赚关胜","effect":"速度增加8%","targets":["关胜"]},{"hero":"呼延灼","name":"呼延副将","effect":"武力攻击增加7%","targets":["彭玘"]},{"hero":"呼延灼","name":"摆阵连环马","effect":"法术攻击增加8%","targets":["徐宁"]},{"hero":"花荣","name":"少年英雄","effect":"武力攻击增加8%","targets":["燕青"]},{"hero":"花荣","name":"兄妹情深","effect":"法术防御增加6%","targets":["花小妹"]},{"hero":"花荣","name":"好妹夫","effect":"武力防御增加6%","targets":["秦明"]},{"hero":"花荣","name":"神箭射手","effect":"法术攻击增加8%","targets":["庞万春"]},{"hero":"花荣","name":"缠斗对影山","effect":"速度增加7%","targets":["郭盛","吕方"]},{"hero":"柴进","name":"豪气干云","effect":"速度增加20%","targets":["晁盖"]},{"hero":"柴进","name":"财务总管","effect":"生命增加25%","targets":["李应"]},{"hero":"柴进","name":"名门之后","effect":"武力攻击增加15%","targets":["杨志"]},{"hero":"柴进","name":"拔刀相助","effect":"法术攻击增加15%","targets":["鲁智深"]},{"hero":"李应","name":"财务总管","effect":"生命增加30%","targets":["柴进"]},{"hero":"李应","name":"钱粮管事","effect":"武力攻击增加25%","targets":["蒋敬"]},{"hero":"李应","name":"三打祝家庄","effect":"速度增加20%","targets":["解宝"]},{"hero":"李应","name":"势同水火","effect":"法术攻击增加25%","targets":["方腊"]},{"hero":"李应","name":"万金一诺","effect":"速度增加20%","targets":["杜兴"]},{"hero":"朱仝","name":"美髯长须","effect":"武力攻击增加6%","targets":["关胜"]},{"hero":"朱仝","name":"义释晁盖","effect":"法术防御增加8%","targets":["晁盖"]},{"hero":"朱仝","name":"梁山好汉","effect":"法术防御增加6%","targets":["徐宁"]},{"hero":"鲁智深","name":"大闹野猪林","effect":"武力攻击增加18%","targets":["林冲"]},{"hero":"鲁智深","name":"火烧瓦罐寺","effect":"生命增加12%","targets":["史进"]},{"hero":"鲁智深","name":"拔刀相助","effect":"武力防御增加8%","targets":["柴进"]},{"hero":"鲁智深","name":"激斗二龙山","effect":"法术攻击增加18%","targets":["杨志"]},{"hero":"鲁智深","name":"攻打青州","effect":"速度增加17%","targets":["呼延灼"]},{"hero":"鲁智深","name":"两位重量级","effect":"生命增加30%","targets":["李逵"]},{"hero":"武松","name":"武家兄弟","effect":"速度增加10%","targets":["武大郎"]},{"hero":"武松","name":"武松打虎","effect":"武力攻击增加17%","targets":["大虫"]},{"hero":"武松","name":"快活林","effect":"武力防御增加17%","targets":["施恩"]},{"hero":"武松","name":"忠肝义胆","effect":"法术防御增加17%","targets":["阮小五"]},{"hero":"武松","name":"大闹青州","effect":"法术攻击增加17%","targets":["孔明"]},{"hero":"武松","name":"共掌二龙","effect":"速度增加20%","targets":["鲁智深","杨志"]},{"hero":"董平","name":"独松关大战","effect":"法术攻击增加10%","targets":["张清"]},{"hero":"董平","name":"长枪勇将","effect":"武力防御增加6%","targets":["徐宁"]},{"hero":"董平","name":"先锋骠骑","effect":"法术防御增加5%","targets":["索超"]},{"hero":"董平","name":"得力副将","effect":"武力攻击增加10%","targets":["邓飞"]},{"hero":"董平","name":"五虎大将","effect":"速度增加20%","targets":["呼延灼","林冲","关胜"]},{"hero":"张清","name":"前世姻缘","effect":"生命增加20%","targets":["琼英"]},{"hero":"张清","name":"独松关大战","effect":"武力攻击增加15%","targets":["董平"]},{"hero":"张清","name":"命丧敌手","effect":"武力防御增加15%","targets":["厉天闰"]},{"hero":"张清","name":"战死南国","effect":"法术攻击增加15%","targets":["杨雄"]},{"hero":"张清","name":"举善荐贤","effect":"速度增加20%","targets":["皇甫端"]},{"hero":"张清","name":"阵门虎骑","effect":"速度增加20%","targets":["丁得孙"]},{"hero":"杨志","name":"马战大名府","effect":"武力攻击增加15%","targets":["索超"]},{"hero":"杨志","name":"名门之后","effect":"武力攻击增加15%","targets":["柴进"]},{"hero":"杨志","name":"激斗二龙山","effect":"武力防御增加20%","targets":["鲁智深","孙二娘"]},{"hero":"杨志","name":"豪情万丈","effect":"速度增加15%","targets":["雷横"]},{"hero":"徐宁","name":"摆阵连环马","effect":"生命增加6%","targets":["呼延灼"]},{"hero":"徐宁","name":"梁山好汉","effect":"法术防御增加6%","targets":["朱仝"]},{"hero":"徐宁","name":"长枪勇将","effect":"武力防御增加6%","targets":["董平"]},{"hero":"徐宁","name":"梁山勇将","effect":"武力攻击增加8%","targets":["秦明"]},{"hero":"徐宁","name":"盗甲归山","effect":"速度增加5%","targets":["时迁"]},{"hero":"索超","name":"马战大名府","effect":"武力攻击增加6%","targets":["杨志"]},{"hero":"索超","name":"先锋骠骑","effect":"法术防御增加5%","targets":["董平"]},{"hero":"索超","name":"忠武先锋","effect":"生命增加6%","targets":["刘唐"]},{"hero":"索超","name":"先锋大步","effect":"武力防御增加6%","targets":["阮小二"]},{"hero":"戴宗","name":"小牢子","effect":"法术防御增加8%","targets":["李逵"]},{"hero":"戴宗","name":"小径逢戴宗","effect":"法术攻击增加6%","targets":["杨林"]},{"hero":"戴宗","name":"三请公孙","effect":"速度增加5%","targets":["公孙胜"]},{"hero":"刘唐","name":"活捉韩滔","effect":"武力防御增加20%","targets":["韩滔"]},{"hero":"刘唐","name":"忠武先锋","effect":"生命增加25%","targets":["索超"]},{"hero":"刘唐","name":"忠武郎","effect":"速度增加15%","targets":["杨雄"]},{"hero":"刘唐","name":"灵官三叠","effect":"武力攻击增加25%","targets":["晁盖","雷横"]},{"hero":"刘唐","name":"铜钱解争","effect":"武力攻击增加15%","targets":["吴用"]},{"hero":"李逵","name":"真假李逵","effect":"武力攻击增加15%","targets":["李鬼"]},{"hero":"李逵","name":"李逵杀四虎","effect":"生命增加20%","targets":["大虫"]},{"hero":"李逵","name":"小牢子","effect":"速度增加20%","targets":["戴宗"]},{"hero":"李逵","name":"步军头领","effect":"法术攻击增加15%","targets":["杨雄"]},{"hero":"史进","name":"火烧瓦罐寺","effect":"生命增加12%","targets":["鲁智深"]},{"hero":"史进","name":"九龙闹罗","effect":"速度增加10%","targets":["阮小七"]},{"hero":"史进","name":"龙争虎斗","effect":"武力攻击增加8%","targets":["雷横"]},{"hero":"史进","name":"彪将先锋","effect":"法术攻击增加8%","targets":["韩滔"]},{"hero":"史进","name":"不打不相识","effect":"武力防御增加6%","targets":["项充"]},{"hero":"穆弘","name":"共霸浔阳江","effect":"法术防御增加8%","targets":["李俊"]},{"hero":"穆弘","name":"浔阳旧识","effect":"法术攻击增加8%","targets":["张横"]},{"hero":"穆弘","name":"各为其主","effect":"法术攻击增加6%","targets":["邓元觉"]},{"hero":"穆弘","name":"肝胆相照","effect":"速度增加5%","targets":["凌振"]},{"hero":"穆弘","name":"大破润州","effect":"速度增加5%","targets":["孔亮"]},{"hero":"穆弘","name":"揭阳双雄","effect":"生命增加8%","targets":["穆春"]},{"hero":"雷横","name":"豪情万丈","effect":"速度增加5%","targets":["杨志"]},{"hero":"雷横","name":"水陆相逢","effect":"武力攻击增加5%","targets":["阮小七"]},{"hero":"雷横","name":"力大无穷","effect":"法术防御增加6%","targets":["阮小二"]},{"hero":"雷横","name":"龙争虎斗","effect":"武力攻击增加6%","targets":["史进"]},{"hero":"李俊","name":"义劫法场","effect":"生命增加12%","targets":["晁盖"]},{"hero":"李俊","name":"盖世豪侠","effect":"武力防御增加8%","targets":["呼延灼"]},{"hero":"李俊","name":"共霸浔阳江","effect":"法术防御增加8%","targets":["穆弘"]},{"hero":"李俊","name":"救死扶伤","effect":"法术攻击增加7%","targets":["安道全"]},{"hero":"李俊","name":"水军同盟","effect":"生命增加8%","targets":["童威"]},{"hero":"阮小二","name":"阮氏三雄","effect":"生命增加15%","targets":["阮小五","阮小七"]},{"hero":"阮小二","name":"力战刘梦龙","effect":"速度增加8%","targets":["刘梦龙"]},{"hero":"阮小二","name":"力大无穷","effect":"武力攻击增加12%","targets":["雷横"]},{"hero":"阮小二","name":"先锋太岁","effect":"法术攻击增加12%","targets":["索超"]},{"hero":"阮小二","name":"一二得四","effect":"速度增加13%","targets":["孙二娘"]},{"hero":"张横","name":"张家兄弟","effect":"法术攻击增加6%","targets":["张顺"]},{"hero":"张横","name":"浔阳旧识","effect":"法术攻击增加8%","targets":["穆弘"]},{"hero":"张横","name":"大将风范","effect":"速度增加5%","targets":["张开"]},{"hero":"张横","name":"天师与船火","effect":"生命增加6%","targets":["包道乙"]},{"hero":"阮小五","name":"阮氏三雄","effect":"生命增加13%","targets":["阮小二","阮小七"]},{"hero":"阮小五","name":"敌我分明","effect":"速度增加5%","targets":["徐统"]},{"hero":"阮小五","name":"水军勇将","effect":"武力攻击增加7%","targets":["司行方"]},{"hero":"阮小五","name":"忠肝义胆","effect":"法术防御增加6%","targets":["武松"]},{"hero":"张顺","name":"张家兄弟","effect":"法术攻击增加9%","targets":["张横"]},{"hero":"张顺","name":"活捉高俅","effect":"武力防御增加6%","targets":["高俅"]},{"hero":"张顺","name":"活捉黄文炳","effect":"生命增加7%","targets":["黄文炳"]},{"hero":"张顺","name":"势不两立","effect":"速度增加6%","targets":["潘文得"]},{"hero":"张顺","name":"江中结缘","effect":"武力攻击增加9%","targets":["王定六"]},{"hero":"张顺","name":"麒麟落水","effect":"法术防御增加6%","targets":["卢俊义"]},{"hero":"阮小七","name":"阮氏三雄","effect":"生命增加13%","targets":["阮小二","阮小五"]},{"hero":"阮小七","name":"水陆相逢","effect":"武力攻击增加5%","targets":["雷横"]},{"hero":"阮小七","name":"九龙闹罗","effect":"速度增加5%","targets":["史进"]},{"hero":"阮小七","name":"三山闹罗","effect":"武力攻击增加6%","targets":["黄信"]},{"hero":"阮小七","name":"西北水寨主","effect":"法术防御增加6%","targets":["童猛"]},{"hero":"杨雄","name":"情同手足","effect":"法术攻击增加8%","targets":["石秀"]},{"hero":"杨雄","name":"步军头领","effect":"武力攻击增加8%","targets":["李逵"]},{"hero":"杨雄","name":"忠武郎","effect":"速度增加8%","targets":["刘唐"]},{"hero":"杨雄","name":"战死南国","effect":"生命增加10%","targets":["张清"]},{"hero":"石秀","name":"情同手足","effect":"武力防御增加6%","targets":["杨雄"]},{"hero":"石秀","name":"视死如归","effect":"生命增加10%","targets":["李衮"]},{"hero":"石秀","name":"天目三郎","effect":"法术防御增加6%","targets":["彭玘"]},{"hero":"石秀","name":"三山三郎","effect":"生命增加6%","targets":["黄信"]},{"hero":"石秀","name":"南征北战","effect":"武力防御增加6%","targets":["时迁"]},{"hero":"解珍","name":"解家兄弟","effect":"法术攻击增加6%","targets":["解宝"]},{"hero":"解珍","name":"我的表姐","effect":"武力防御增加8%","targets":["顾大嫂"]},{"hero":"解珍","name":"毒蛇神医","effect":"法术攻击增加5%","targets":["安道全"]},{"hero":"解珍","name":"两头催命","effect":"速度增加5%","targets":["李立"]},{"hero":"解宝","name":"解家兄弟","effect":"速度增加10%","targets":["解珍"]},{"hero":"解宝","name":"我的表姐姐","effect":"法术攻击增加8%","targets":["顾大嫂"]},{"hero":"解宝","name":"各为其主","effect":"生命增加10%","targets":["王寅"]},{"hero":"解宝","name":"三打祝家庄","effect":"武力攻击增加8%","targets":["李应"]},{"hero":"燕青","name":"少年英雄","effect":"武力攻击增加8%","targets":["花荣"]},{"hero":"燕青","name":"青青子衿","effect":"法术防御增加8%","targets":["李师师"]},{"hero":"燕青","name":"悠悠我心","effect":"生命增加8%","targets":["赵元奴"]},{"hero":"燕青","name":"主仆情深","effect":"速度增加5%","targets":["卢俊义"]},{"hero":"燕青","name":"东京观灯","effect":"法术攻击增加8%","targets":["李逵"]},{"hero":"朱武","name":"鸡头凤尾","effect":"武力防御增加8%","targets":["孙立"]},{"hero":"朱武","name":"都统领","effect":"法术防御增加8%","targets":["裴宣"]},{"hero":"朱武","name":"弃官求道","effect":"生命增加10%","targets":["樊瑞"]},{"hero":"朱武","name":"神机妙算","effect":"速度增加8%","targets":["吴用"]},{"hero":"朱武","name":"智勇双全","effect":"速度增加5%","targets":["史进"]},{"hero":"朱武","name":"十年之约","effect":"速度增加8%","targets":["龚旺"]},{"hero":"黄信","name":"三山闹罗","effect":"武力防御增加6%","targets":["阮小七"]},{"hero":"黄信","name":"三山百胜","effect":"法术防御增加6%","targets":["韩滔"]},{"hero":"黄信","name":"三山三郎","effect":"生命增加6%","targets":["石秀"]},{"hero":"黄信","name":"三山锦毛","effect":"法术攻击增加7%","targets":["燕顺"]},{"hero":"孙立","name":"孙家兄弟","effect":"生命增加8%","targets":["孙新"]},{"hero":"孙立","name":"鸡头凤尾","effect":"速度增加5%","targets":["朱武"]},{"hero":"孙立","name":"卧底祝家庄","effect":"法术攻击增加6%","targets":["萧让"]},{"hero":"孙立","name":"仁贵厨迟","effect":"武力防御增加7%","targets":["李盛"]},{"hero":"宣赞","name":"大名府先锋","effect":"速度增加5%","targets":["关胜"]},{"hero":"宣赞","name":"乱世同袍","effect":"武力攻击增加5%","targets":["郝思文"]},{"hero":"宣赞","name":"空城计退敌","effect":"生命增加8%","targets":["萧让"]},{"hero":"郝思文","name":"乱世同袍","effect":"武力攻击增加5%","targets":["宣赞"]},{"hero":"韩滔","name":"活捉韩滔","effect":"武力防御增加7%","targets":["刘唐"]},{"hero":"韩滔","name":"彪将先锋","effect":"武力攻击增加5%","targets":["史进"]},{"hero":"韩滔","name":"三山百胜","effect":"法术防御增加6%","targets":["黄信"]},{"hero":"韩滔","name":"天目百胜","effect":"生命增加6%","targets":["彭玘"]},{"hero":"彭玘","name":"呼延副将","effect":"武力攻击增加7%","targets":["呼延灼"]},{"hero":"彭玘","name":"团练使","effect":"生命增加7%","targets":["魏定国"]},{"hero":"彭玘","name":"天目百胜","effect":"生命增加6%","targets":["韩滔"]},{"hero":"彭玘","name":"天目三郎","effect":"法术防御增加6%","targets":["石秀"]},{"hero":"单廷珪","name":"水火二将","effect":"法术攻击增加7%","targets":["魏定国"]},{"hero":"单廷珪","name":"义节郎君","effect":"武力防御增加6%","targets":["杨春"]},{"hero":"单廷珪","name":"圣水神算","effect":"生命增加6%","targets":["蒋敬"]},{"hero":"单廷珪","name":"战死方腊","effect":"法术防御增加6%","targets":["唐三娘"]},{"hero":"魏定国","name":"团练使","effect":"生命增加7%","targets":["彭玘"]},{"hero":"魏定国","name":"水火二将","effect":"法术攻击增加7%","targets":["单廷珪"]},{"hero":"萧让","name":"伪造文书","effect":"生命增加10%","targets":["金大坚"]},{"hero":"萧让","name":"诱使上山","effect":"法术防御增加5%","targets":["杜兴"]},{"hero":"萧让","name":"卧底祝家庄","effect":"法术攻击增加6%","targets":["孙立"]},{"hero":"萧让","name":"空城计退敌","effect":"速度增加5%","targets":["宣赞"]},{"hero":"裴宣","name":"武奏郎","effect":"生命增加5%","targets":["樊瑞"]},{"hero":"裴宣","name":"都统领","effect":"法术攻击增加5%","targets":["朱武"]},{"hero":"裴宣","name":"赎闲饮马川","effect":"武力防御增加6%","targets":["杨林"]},{"hero":"裴宣","name":"落草为寇","effect":"武力防御增加6%","targets":["杨春"]},{"hero":"欧鹏","name":"绝处偷天","effect":"武力防御增加8%","targets":["安道全"]},{"hero":"欧鹏","name":"神勇之辈","effect":"生命增加12%","targets":["宋万","焦挺"]},{"hero":"欧鹏","name":"聚义黄门山","effect":"法术防御增加6%","targets":["陶宗旺"]},{"hero":"欧鹏","name":"同进同退","effect":"速度增加12%","targets":["燕顺"]},{"hero":"邓飞","name":"毛头火眼","effect":"武力攻击增加5%","targets":["孔明"]},{"hero":"邓飞","name":"漂洋过海","effect":"法术防御增加6%","targets":["项充"]},{"hero":"邓飞","name":"得力副将","effect":"武力攻击增加5%","targets":["董平"]},{"hero":"邓飞","name":"齐攻祝家庄","effect":"武力攻击增加5%","targets":["王英"]},{"hero":"燕顺","name":"三山锦毛","effect":"武力防御增加8%","targets":["黄信"]},{"hero":"燕顺","name":"毛头锦毛","effect":"法术防御增加6%","targets":["孔明"]},{"hero":"燕顺","name":"落草清风山","effect":"武力防御增加5%","targets":["王英"]},{"hero":"燕顺","name":"同进同退","effect":"速度增加12%","targets":["欧鹏"]},{"hero":"杨林","name":"小径逢戴宗","effect":"法术攻击增加6%","targets":["戴宗"]},{"hero":"杨林","name":"赎闲饮马川","effect":"武力防御增加6%","targets":["裴宣"]},{"hero":"杨林","name":"铁哨头领","effect":"法术防御增加6%","targets":["乐和"]},{"hero":"凌振","name":"肝胆相照","effect":"速度增加5%","targets":["穆弘"]},{"hero":"凌振","name":"归顺梁山","effect":"法术攻击增加5%","targets":["杨春"]},{"hero":"蒋敬","name":"钱粮管事","effect":"法术攻击增加6%","targets":["李应"]},{"hero":"蒋敬","name":"圣水神算","effect":"生命增加6%","targets":["单廷珪"]},{"hero":"蒋敬","name":"花阳神算","effect":"武力防御增加6%","targets":["顾大嫂"]},{"hero":"蒋敬","name":"出林神算","effect":"法术攻击增加5%","targets":["邹润"]},{"hero":"蒋敬","name":"黄门山落草","effect":"速度增加6%","targets":["马麟"]},{"hero":"吕方","name":"武神遗风","effect":"武力攻击增加6%","targets":["郭盛"]},{"hero":"吕方","name":"缠斗对影山","effect":"速度增加7%","targets":["郭盛","花荣"]},{"hero":"郭盛","name":"武神遗风","effect":"武力攻击增加6%","targets":["吕方"]},{"hero":"郭盛","name":"缠斗对影山","effect":"速度增加7%","targets":["吕方","花荣"]},{"hero":"郭盛","name":"仁贵厨迟","effect":"武力防御增加7%","targets":["孙立"]},{"hero":"郭盛","name":"白衣秀士","effect":"武力攻击增加8%","targets":["花荣"]},{"hero":"郭盛","name":"马军骁将","effect":"速度增加20%","targets":["关胜","林冲","董平"]},{"hero":"安道全","name":"绝处偷天","effect":"武力防御增加8%","targets":["欧鹏"]},{"hero":"安道全","name":"救死扶伤","effect":"生命增加7%","targets":["李俊"]},{"hero":"安道全","name":"独角神医","effect":"法术防御增加6%","targets":["邹润"]},{"hero":"安道全","name":"毒蛇神医","effect":"法术攻击增加5%","targets":["解珍"]},{"hero":"安道全","name":"窃取玉灵芝","effect":"法术防御增加6%","targets":["王定六"]},{"hero":"安道全","name":"同乡之情","effect":"生命增加6%","targets":["马麟"]},{"hero":"皇甫端","name":"举善荐贤","effect":"生命增加6%","targets":["张清"]},{"hero":"皇甫端","name":"后勤干将","effect":"生命增加8%","targets":["宋清"]},{"hero":"皇甫端","name":"鼠与兽医","effect":"生命增加8%","targets":["白胜"]},{"hero":"王英","name":"生死与共","effect":"生命增加8%","targets":["扈三娘"]},{"hero":"王英","name":"落草清风山","effect":"武力防御增加5%","targets":["燕顺"]},{"hero":"王英","name":"齐攻祝家庄","effect":"武力攻击增加5%","targets":["邓飞"]},{"hero":"扈三娘","name":"生死与共","effect":"法术攻击增加20%","targets":["王英"]},{"hero":"扈三娘","name":"战死方腊","effect":"法术防御增加20%","targets":["单廷珪"]},{"hero":"扈三娘","name":"花阳神算","effect":"武力攻击增加20%","targets":["蒋敬"]},{"hero":"扈三娘","name":"铁叫花阳","effect":"武力防御增加20%","targets":["乐和"]},{"hero":"扈三娘","name":"梁山三英","effect":"生命增加30%","targets":["孙二娘","顾大嫂"]},{"hero":"扈三娘","name":"雪散琼花","effect":"速度增加25%","targets":["马麟"]},{"hero":"顾大嫂","name":"我的表姐","effect":"武力防御增加8%","targets":["解珍"]},{"hero":"顾大嫂","name":"我的表姐姐","effect":"法术攻击增加8%","targets":["解宝"]},{"hero":"顾大嫂","name":"梁山三英","effect":"生命增加12%","targets":["孙二娘","扈三娘"]},{"hero":"顾大嫂","name":"计入蔡庄","effect":"速度增加5%","targets":["郑天寿"]},{"hero":"顾大嫂","name":"登州眷侣","effect":"武力攻击增加8%","targets":["孙新"]},{"hero":"顾大嫂","name":"计攻杭州","effect":"速度增加15%","targets":["吴用"]},{"hero":"鲍旭","name":"神勇之辈","effect":"武力攻击增加10%","targets":["邓龙","时迁"]},{"hero":"鲍旭","name":"同进同退","effect":"武力防御增加6%","targets":["项充"]},{"hero":"鲍旭","name":"一见如故","effect":"生命增加15%","targets":["李逵"]},{"hero":"樊瑞","name":"神勇之辈","effect":"法术攻击增加4%","targets":["朱富"]},{"hero":"樊瑞","name":"武奕郎","effect":"生命增加5%","targets":["裴宣"]},{"hero":"樊瑞","name":"结伙芒砀山","effect":"速度增加20%","targets":["项充"]},{"hero":"樊瑞","name":"弃官求道","effect":"法术攻击增加6%","targets":["朱武"]},{"hero":"樊瑞","name":"聚义芒砀山","effect":"武力防御增加6%","targets":["李衮"]},{"hero":"樊瑞","name":"能文能武","effect":"武力攻击增加12%","targets":["公孙胜"]},{"hero":"孔明","name":"毛头锦毛","effect":"速度增加5%","targets":["燕顺"]},{"hero":"孔明","name":"毛头火眼","effect":"武力攻击增加5%","targets":["邓飞"]},{"hero":"孔明","name":"大闹青州","effect":"武力攻击增加5%","targets":["武松"]},{"hero":"孔明","name":"孔府二少","effect":"武力防御增加6%","targets":["孔亮"]},{"hero":"孔亮","name":"孔府二少","effect":"武力攻击增加6%","targets":["孔明"]},{"hero":"孔亮","name":"镇守中军","effect":"生命增加8%","targets":["焦挺"]},{"hero":"孔亮","name":"大破润州","effect":"速度增加5%","targets":["穆弘"]},{"hero":"孔亮","name":"相识孔家庄","effect":"速度增加5%","targets":["武松"]},{"hero":"项充","name":"漂洋过海","effect":"法术防御增加6%","targets":["邓飞"]},{"hero":"项充","name":"结伙芒砀山","effect":"速度增加20%","targets":["樊瑞"]},{"hero":"项充","name":"同进同退","effect":"武力防御增加6%","targets":["鲍旭"]},{"hero":"项充","name":"不打不相识","effect":"武力攻击增加6%","targets":["史进"]},{"hero":"项充","name":"蛮牌双先锋","effect":"武力攻击增加6%","targets":["李衮"]},{"hero":"项充","name":"道家斗法","effect":"法术攻击增加12%","targets":["公孙胜"]},{"hero":"李衮","name":"视死如归","effect":"生命增加10%","targets":["石秀"]},{"hero":"李衮","name":"聚义芒砀山","effect":"法术防御增加6%","targets":["樊瑞"]},{"hero":"李衮","name":"蛮牌双先锋","effect":"武力防御增加6%","targets":["项充"]},{"hero":"李衮","name":"夜打曾头市","effect":"武力攻击增加15%","targets":["李逵"]},{"hero":"李衮","name":"攻打东昌府","effect":"速度增加7%","targets":["张清"]},{"hero":"李衮","name":"征战四人组","effect":"速度增加20%","targets":["李逵","鲍旭","项充"]},{"hero":"金大坚","name":"伪造文书","effect":"生命增加10%","targets":["萧让"]},{"hero":"金大坚","name":"判官石匠","effect":"法术攻击增加5%","targets":["李立"]},{"hero":"金大坚","name":"御宝监官","effect":"武力防御增加13%","targets":["皇甫端"]},{"hero":"金大坚","name":"玉箫篆文","effect":"法术防御增加13%","targets":["戴宗"]},{"hero":"金大坚","name":"猪队友","effect":"速度增加8%","targets":["吴用"]},{"hero":"马麟","name":"黄门山落草","effect":"速度增加6%","targets":["蒋敬"]},{"hero":"马麟","name":"雪散琼花","effect":"法术攻击增加6%","targets":["扈三娘"]},{"hero":"马麟","name":"同乡之情","effect":"生命增加6%","targets":["安道全"]},{"hero":"童威","name":"童家兄弟","effect":"生命增加10%","targets":["童猛"]},{"hero":"童威","name":"水军同盟","effect":"法术防御增加8%","targets":["李俊"]},{"hero":"童威","name":"兄弟联盟","effect":"武力防御增加12%","targets":["蒋敬","裴福"]},{"hero":"童威","name":"南征北战","effect":"速度增加15%","targets":["阮小五"]},{"hero":"童猛","name":"童家兄弟","effect":"武力攻击增加5%","targets":["童威"]},{"hero":"童猛","name":"西北水寨主","effect":"速度增加5%","targets":["阮小七"]},{"hero":"童猛","name":"白龙庙英雄","effect":"法术攻击增加15%","targets":["童威","李俊"]},{"hero":"童猛","name":"浔阳江边","effect":"速度增加8%","targets":["张横"]},{"hero":"孟康","name":"梁山好汉","effect":"速度增加6%","targets":["曹正"]},{"hero":"孟康","name":"落草饮马川","effect":"生命增加10%","targets":["裴宣","邓飞"]},{"hero":"孟康","name":"水军头领","effect":"武力攻击增加6%","targets":["童威"]},{"hero":"孟康","name":"江州旧部","effect":"法术攻击增加20%","targets":["李俊"]},{"hero":"侯健","name":"续影一击","effect":"武力防御增加8%","targets":["大虫"]},{"hero":"侯健","name":"亦师亦友","effect":"生命增加8%","targets":["薛永"]},{"hero":"侯健","name":"魂葬大海","effect":"速度增加5%","targets":["段景住"]},{"hero":"侯健","name":"同僚之谊","effect":"速度增加8%","targets":["汤隆"]},{"hero":"侯健","name":"同袍之谊","effect":"法术攻击增加15%","targets":["李逵","张顺"]},{"hero":"陈达","name":"少华山副寨主","effect":"法术防御增加8%","targets":["杨春"]},{"hero":"杨春","name":"少华山副帮主","effect":"法术防御增加8%","targets":["陈达"]},{"hero":"杨春","name":"归顺梁山","effect":"法术攻击增加5%","targets":["凌振"]},{"hero":"杨春","name":"落草为寇","effect":"法术防御增加6%","targets":["裴宣"]},{"hero":"杨春","name":"义节郎君","effect":"武力防御增加6%","targets":["单廷珪"]},{"hero":"张横","name":"张家兄弟","effect":"法术攻击增加6%","targets":["张顺"]},{"hero":"张横","name":"浔阳旧识","effect":"法术攻击增加8%","targets":["穆弘"]},{"hero":"张横","name":"大将风范","effect":"速度增加5%","targets":["张开"]},{"hero":"张横","name":"天师与船火","effect":"生命增加6%","targets":["包道乙"]},{"hero":"郑天寿","name":"计入蔡庄","effect":"速度增加5%","targets":["顾大嫂"]},{"hero":"郑天寿","name":"齐攻宣州","effect":"速度增加5%","targets":["卢俊义"]},{"hero":"郑天寿","name":"清风聚义","effect":"法术攻击增加10%","targets":["王英","燕顺"]},{"hero":"郑天寿","name":"同寨抗敌","effect":"速度增加8%","targets":["花荣"]},{"hero":"陶宗旺","name":"聚义黄门山","effect":"生命增加30%","targets":["欧鹏"]},{"hero":"陶宗旺","name":"监工土木","effect":"武力防御增加25%","targets":["李云"]},{"hero":"陶宗旺","name":"后勤补给","effect":"法术防御增加25%","targets":["汤隆"]},{"hero":"陶宗旺","name":"黄门旧部","effect":"速度增加20%","targets":["欧鹏","蒋敬"]},{"hero":"陶宗旺","name":"黄门旧部","effect":"速度增加20%","targets":["蒋敬","马麟"]},{"hero":"宋清","name":"传信追兄","effect":"速度增加10%","targets":["石勇"]},{"hero":"宋清","name":"后勤干将","effect":"生命增加15%","targets":["皇甫端"]},{"hero":"宋清","name":"兄长之威","effect":"速度增加10%","targets":["孙新"]},{"hero":"宋清","name":"迁怒之怨","effect":"法术攻击增加15%","targets":["李逵"]},{"hero":"乐和","name":"铁哨头领","effect":"法术攻击增加6%","targets":["杨林"]},{"hero":"乐和","name":"铁叫花阳","effect":"生命增加7%","targets":["扈三娘"]},{"hero":"乐和","name":"出林铁叫","effect":"武力防御增加6%","targets":["邹渊"]},{"hero":"乐和","name":"独角铁叫","effect":"法术攻击增加5%","targets":["邹润"]},{"hero":"龚旺","name":"东昌二虎","effect":"生命增加8%","targets":["丁得孙"]},{"hero":"龚旺","name":"十年之约","effect":"速度增加8%","targets":["朱武"]},{"hero":"龚旺","name":"门旗副将","effect":"速度增加8%","targets":["张清"]},{"hero":"龚旺","name":"南征北战","effect":"速度增加15%","targets":["张清","丁得孙"]},{"hero":"丁得孙","name":"东昌二虎","effect":"生命增加20%","targets":["龚旺"]},{"hero":"丁得孙","name":"阵门虎骑","effect":"法术防御增加15%","targets":["张清"]},{"hero":"丁得孙","name":"镇守之谊","effect":"武力攻击增加15%","targets":["张清"]},{"hero":"丁得孙","name":"化敌为友","effect":"速度增加20%","targets":["吕方","郭盛"]},{"hero":"穆春","name":"揭阳双雄","effect":"速度增加5%","targets":["穆弘"]},{"hero":"穆春","name":"监造屋宇","effect":"法术防御增加7%","targets":["李云"]},{"hero":"曹正","name":"投奔二龙山","effect":"法术防御增加7%","targets":["施恩"]},{"hero":"宋万","name":"神勇之辈","effect":"生命增加12%","targets":["欧鹏","焦挺"]},{"hero":"宋万","name":"左右金刚","effect":"生命增加8%","targets":["杜迁"]},{"hero":"宋万","name":"探查穆家庄","effect":"速度增加5%","targets":["朱贵"]},{"hero":"宋万","name":"鬼脸金刚","effect":"法术攻击增加8%","targets":["杜兴"]},{"hero":"杜迁","name":"左右金刚","effect":"生命增加20%","targets":["宋万"]},{"hero":"杜迁","name":"大闹无为军","effect":"速度增加10%","targets":["石勇"]},{"hero":"杜迁","name":"焚契开山","effect":"法术攻击增加15%","targets":["柴进"]},{"hero":"杜迁","name":"危厄首肯","effect":"速度增加15%","targets":["林冲"]},{"hero":"薛永","name":"亦师亦友","effect":"生命增加8%","targets":["侯健"]},{"hero":"李忠","name":"桃花山聚义","effect":"生命增加8%","targets":["周通"]},{"hero":"李忠","name":"三山齐心","effect":"法术攻击增加6%","targets":["张青"]},{"hero":"李忠","name":"皆能伏虎","effect":"速度增加6%","targets":["陈达"]},{"hero":"周通","name":"桃花山聚义","effect":"生命增加8%","targets":["李忠"]},{"hero":"周通","name":"三山聚义","effect":"法术攻击增加5%","targets":["施恩"]},{"hero":"周通","name":"独松关捐躯","effect":"武力防御增加6%","targets":["欧鹏"]},{"hero":"汤隆","name":"后勤补给","effect":"速度增加5%","targets":["陶宗旺"]},{"hero":"杜兴","name":"诱使上山","effect":"法术防御增加5%","targets":["萧让"]},{"hero":"杜兴","name":"鬼脸金刚","effect":"武力攻击增加8%","targets":["宋万"]},{"hero":"邹渊","name":"邹家叔侄","effect":"法术攻击增加4%","targets":["邹润"]},{"hero":"邹渊","name":"出林神算","effect":"法术攻击增加5%","targets":["蒋敬"]},{"hero":"邹渊","name":"出林铁叫","effect":"武力防御增加6%","targets":["乐和"]},{"hero":"邹渊","name":"出林笑面","effect":"生命增加6%","targets":["朱富"]},{"hero":"邹润","name":"邹家叔侄","effect":"法术攻击增加4%","targets":["邹渊"]},{"hero":"邹润","name":"独角铁叫","effect":"法术攻击增加5%","targets":["乐和"]},{"hero":"邹润","name":"独角笑面","effect":"武力防御增加6%","targets":["朱富"]},{"hero":"邹润","name":"独角神医","effect":"法术防御增加6%","targets":["安道全"]},{"hero":"朱贵","name":"朱家兄弟","effect":"速度增加6%","targets":["朱富"]},{"hero":"朱贵","name":"探查穆家庄","effect":"武力攻击增加7%","targets":["宋万"]},{"hero":"朱贵","name":"梁山元老","effect":"法术防御增加7%","targets":["杜迁"]},{"hero":"朱贵","name":"经营奇才","effect":"生命增加8%","targets":["杜兴"]},{"hero":"朱富","name":"神勇之辈","effect":"法术攻击增加4%","targets":["樊瑞"]},{"hero":"朱富","name":"朱家兄弟","effect":"速度增加6%","targets":["朱贵"]},{"hero":"朱富","name":"独角笑面","effect":"武力防御增加6%","targets":["邹润"]},{"hero":"朱富","name":"出林笑面","effect":"生命增加6%","targets":["邹渊"]},{"hero":"朱富","name":"师徒情深","effect":"速度增加5%","targets":["李云"]},{"hero":"施恩","name":"快活林","effect":"武力防御增加8%","targets":["武松"]},{"hero":"施恩","name":"协助二郎","effect":"速度增加7%","targets":["张青"]},{"hero":"施恩","name":"投奔二龙山","effect":"法术防御增加7%","targets":["曹正"]},{"hero":"蔡福","name":"蔡家兄弟","effect":"速度增加15%","targets":["蔡庆"]},{"hero":"蔡福","name":"操刀圣手","effect":"武力防御增加6%","targets":["曹正"]},{"hero":"蔡福","name":"暗中相助","effect":"生命增加15%","targets":["蔡庆","卢俊义"]},{"hero":"蔡庆","name":"蔡家兄弟","effect":"速度增加15%","targets":["蔡福"]},{"hero":"蔡庆","name":"典狱长","effect":"法术防御增加6%","targets":["戴宗"]},{"hero":"蔡庆","name":"暗中相助","effect":"生命增加15%","targets":["蔡福","卢俊义"]},{"hero":"李立","name":"两头催命","effect":"速度增加5%","targets":["解珍"]},{"hero":"李立","name":"判官石匠","effect":"法术攻击增加5%","targets":["金大坚"]},{"hero":"李立","name":"齐管北山","effect":"法术攻击增加6%","targets":["王定六"]},{"hero":"李云","name":"师徒情深","effect":"速度增加5%","targets":["朱富"]},{"hero":"李云","name":"监工土木","effect":"生命增加8%","targets":["陶宗旺"]},{"hero":"李云","name":"监造屋宇","effect":"法术攻击增加7%","targets":["穆春"]},{"hero":"焦挺","name":"摔跤达人","effect":"生命增加15%","targets":["任原"]},{"hero":"焦挺","name":"神勇之辈","effect":"生命增加30%","targets":["欧鹏","宋万"]},{"hero":"焦挺","name":"镇守中军","effect":"生命增加15%","targets":["孔亮"]},{"hero":"焦挺","name":"破阵之战","effect":"速度增加15%","targets":["鲁智深"]},{"hero":"焦挺","name":"凌州解厄","effect":"速度增加25%","targets":["鲍旭","李逵"]},{"hero":"石勇","name":"传信追兄","effect":"生命增加8%","targets":["宋清"]},{"hero":"石勇","name":"大闹无为军","effect":"速度增加5%","targets":["杜迁"]},{"hero":"孙新","name":"孙家兄弟","effect":"生命增加8%","targets":["孙立"]},{"hero":"孙新","name":"兄长之威","effect":"速度增加5%","targets":["宋清"]},{"hero":"孙新","name":"登州眷侣","effect":"法术防御增加7%","targets":["顾大嫂"]},{"hero":"张青","name":"人肉包子铺","effect":"生命增加6%","targets":["孙二娘"]},{"hero":"张青","name":"协助二郎","effect":"速度增加5%","targets":["施恩"]},{"hero":"孙二娘","name":"激斗二龙山","effect":"武力防御增加10%","targets":["鲁智深","杨志"]},{"hero":"孙二娘","name":"人肉包子铺","effect":"法术攻击增加15%","targets":["张青"]},{"hero":"孙二娘","name":"梁山三英","effect":"生命增加18%","targets":["顾大嫂","扈三娘"]},{"hero":"孙二娘","name":"十字坡酒店","effect":"武力攻击增加15%","targets":["武松"]},{"hero":"孙二娘","name":"巧妇瞒天计","effect":"速度增加13%","targets":["吴用"]},{"hero":"孙二娘","name":"二二得四","effect":"速度增加13%","targets":["阮小二"]},{"hero":"王定六","name":"齐管北山","effect":"法术攻击增加6%","targets":["李立"]},{"hero":"王定六","name":"江中结缘","effect":"法术攻击增加6%","targets":["张顺"]},{"hero":"王定六","name":"窃取玉灵芝","effect":"法术防御增加6%","targets":["安道全"]},{"hero":"郁保四","name":"劝降董平","effect":"武力防御增加6%","targets":["王定六"]},{"hero":"郁保四","name":"讨伐田虎","effect":"速度增加5%","targets":["汤隆"]},{"hero":"郁保四","name":"盗劫马匹","effect":"法术防御增加6%","targets":["段景住"]},{"hero":"白胜","name":"鼠与兽医","effect":"生命增加8%","targets":["皇甫端"]},{"hero":"白胜","name":"妙手空空","effect":"速度增加5%","targets":["时迁"]},{"hero":"时迁","name":"神勇之辈","effect":"武力攻击增加10%","targets":["鲍旭","邓龙"]},{"hero":"时迁","name":"南征北战","effect":"武力攻击增加6%","targets":["石秀"]},{"hero":"时迁","name":"盗甲归山","effect":"速度增加5%","targets":["徐宁"]},{"hero":"时迁","name":"智取大名府","effect":"生命增加6%","targets":["吴用"]},{"hero":"时迁","name":"妙手空空","effect":"速度增加5%","targets":["白胜"]},{"hero":"段景住","name":"魂葬大海","effect":"速度增加5%","targets":["侯健"]},{"hero":"段景住","name":"收购宝马","effect":"生命增加8%","targets":["杨林"]},{"hero":"段景住","name":"血战田虎","effect":"法术攻击增加8%","targets":["乐和"]},{"hero":"段景住","name":"盗劫马匹","effect":"法术防御增加6%","targets":["郁保四"]}];
+const state = {
+  formation: formations.find(f=>f.name==="长蛇阵").name,
+  lineups: Object.fromEntries(formations.map(f=>[f.name,{}])),
+  deputy: {},
+  gathering: {},
+  selectedPosition: null,
+  selectedCamp: null,
+  rosterFilter: "全部"
+};
+// 默认打开长蛇阵，但不预置任何武将。
+state.lineups["长蛇阵"] = {};
+const $ = id => document.getElementById(id);
+function baseHeroName(name){if(!name)return "";let value=String(name).trim().replace(/[・･]/g,"·");const prefix=/^(?:涅槃三阶神|涅槃三阶|真|神|修罗)·/;while(prefix.test(value))value=value.replace(prefix,"");return value.trim();}
+function isGodHero(name){return typeof name==="string"&&name.startsWith("神·");}
+function isNirvanaHero(name){return typeof name==="string"&&name.startsWith("涅槃三阶神·");}
+function isCountedGodHero(name){return isGodHero(name)||isNirvanaHero(name);}
+function countGodHeroes(lineup, excludeSlot=null){return Object.entries(lineup||{}).filter(([slot,name])=>slot!==String(excludeSlot)&&isCountedGodHero(name)).length;}
+function countNirvanaHeroes(lineup, excludeSlot=null){return Object.entries(lineup||{}).filter(([slot,name])=>slot!==String(excludeSlot)&&isNirvanaHero(name)).length;}
+function hasNirvanaHero(lineup, excludeSlot=null){return Object.entries(lineup||{}).some(([slot,name])=>slot!==String(excludeSlot)&&isNirvanaHero(name));}
+function hasOrdinaryGodHero(lineup, excludeSlot=null){return Object.entries(lineup||{}).some(([slot,name])=>slot!==String(excludeSlot)&&isGodHero(name));}
+function hasOppositeGodTier(lineup, heroName, excludeSlot=null){
+  const base=baseHeroName(heroName);
+  if(!base||!isCountedGodHero(heroName))return false;
+  return Object.entries(lineup||{}).some(([slot,name])=>slot!==String(excludeSlot)&&name&&baseHeroName(name)===base&&((isNirvanaHero(heroName)&&isGodHero(name))||(isGodHero(heroName)&&isNirvanaHero(name))));
+}
+function violatesGodTierExclusivity(lineup){
+  const entries=Object.entries(lineup||{}).filter(([,name])=>name);
+  return entries.some(([slot,name])=>isCountedGodHero(name)&&hasOppositeGodTier(lineup,name,slot));
+}
+function displayHeroName(name){if(!name)return "";const shown=(isGodHero(name)||String(name).startsWith("修罗·")||String(name).startsWith("涅槃三阶神·"))?String(name):`真·${baseHeroName(name)}`;return shown.replace(/·/g,"・");}
+const currentFormation = () => formations.find(f=>f.name===state.formation);
+// 三个阵营分别维护独立的撤销/重做历史；每个按钮只恢复自身阵营。
+const historyByArea={
+  main:{undo:[],redo:[]},
+  deputy:{undo:[],redo:[]},
+  gathering:{undo:[],redo:[]}
+};
+function snapshotArea(area){
+  if(area==="main")return {formation:state.formation,lineup:JSON.parse(JSON.stringify(state.lineups[state.formation]||{}))};
+  return JSON.parse(JSON.stringify(area==="deputy"?state.deputy:state.gathering));
+}
+function recordUndo(area){
+  if(!historyByArea[area])return;
+  const history=historyByArea[area];
+  history.undo.push(snapshotArea(area));
+  if(history.undo.length>10)history.undo.shift();
+  history.redo.length=0;
+  updateHistoryButtons();
+}
+function restoreArea(area,snap){
+  if(area==="main"){
+    state.formation=snap.formation;
+    state.lineups[state.formation]=JSON.parse(JSON.stringify(snap.lineup));
+    state.selectedPosition=null;
+    state.selectedCamp=null;
+  }else if(area==="deputy"){
+    state.deputy=JSON.parse(JSON.stringify(snap));
+    if(state.selectedCamp?.area===area)state.selectedCamp=null;
+  }else{
+    state.gathering=JSON.parse(JSON.stringify(snap));
+    if(state.selectedCamp?.area===area)state.selectedCamp=null;
+  }
+  $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
+  renderFormations();renderBoard();renderCamps();renderHeroes();
+  updateHistoryButtons();
+}
+function undoAction(area){
+  const history=historyByArea[area];if(!history||!history.undo.length)return;
+  history.redo.push(snapshotArea(area));
+  restoreArea(area,history.undo.pop());
+}
+function redoAction(area){
+  const history=historyByArea[area];if(!history||!history.redo.length)return;
+  history.undo.push(snapshotArea(area));
+  if(history.undo.length>10)history.undo.shift();
+  restoreArea(area,history.redo.pop());
+}
+function updateHistoryButtons(){
+  [["main","undoMain","redoMain"],["deputy","undoDeputy","redoDeputy"],["gathering","undoGathering","redoGathering"]].forEach(([area,undoId,redoId])=>{
+    const h=historyByArea[area],u=$(undoId),r=$(redoId);
+    if(u)u.disabled=!h.undo.length;
+    if(r)r.disabled=!h.redo.length;
+  });
+}
+$("undoMain").addEventListener("click",()=>undoAction("main"));
+$("redoMain").addEventListener("click",()=>redoAction("main"));
+$("undoDeputy").addEventListener("click",()=>undoAction("deputy"));
+$("redoDeputy").addEventListener("click",()=>redoAction("deputy"));
+$("undoGathering").addEventListener("click",()=>undoAction("gathering"));
+$("redoGathering").addEventListener("click",()=>redoAction("gathering"));
+
+function allLineupNames(){
+  const names = new Set();
+  Object.values(state.lineups[state.formation] || {}).forEach(n=>{if(n)names.add(baseHeroName(n))});
+  Object.values(state.deputy || {}).forEach(n=>{if(n)names.add(baseHeroName(n))});
+  Object.values(state.gathering || {}).forEach(n=>{if(n)names.add(baseHeroName(n))});
+  return names;
+}
+function heroUnions(heroName){const base=baseHeroName(heroName);return unionData.filter(u=>baseHeroName(u.hero)===base);}
+function mainLineupNames(){
+  return new Set(Object.values(state.lineups[state.formation] || {}).filter(Boolean).map(baseHeroName));
+}
+function unionMarkup(heroName, showDetails=false, campPerspective=false){
+  if(!heroName)return "";
+  const lookupName=baseHeroName(heroName);
+  const present=allLineupNames();
+  let entries;
+  if(campPerspective){
+    // 副将营/聚义营只展示“主阵武将发起、且当前已点亮”的聚义。
+    // 不展示营位武将自身的全部聚义，也不展示未点亮或与当前营位无关的聚义。
+    const mainNamesForCamp=mainLineupNames();
+    entries=unionData.filter(u=>{
+      // 按武将本名判断；营位武将必须是主阵发起的聚义目标，且该条聚义的所有目标均已上阵。
+      const initiator=baseHeroName(u.hero);
+      const targets=Array.isArray(u.targets)?u.targets.map(baseHeroName):[];
+      return mainNamesForCamp.has(initiator) &&
+        targets.includes(lookupName) &&
+        targets.length>0 &&
+        targets.every(target=>present.has(target)) &&
+        present.has(initiator);
+    });
+    const seen=new Set();
+    entries=entries.filter(u=>{
+      const key=JSON.stringify([baseHeroName(u.hero),u.name,u.effect,u.targets.map(baseHeroName)]);
+      if(seen.has(key))return false;
+      seen.add(key);return true;
+    });
+  }else{
+    entries=heroUnions(lookupName);
+  }
+  if(!entries.length)return "";
+  const mainNames=mainLineupNames();
+  return `<div class="union-list${showDetails?" union-details":""}${campPerspective?" union-camp-details":""}" aria-label="${escapeHtml(displayHeroName(heroName))}聚义列表">`+
+    entries.map(u=>{
+      const active=present.has(baseHeroName(u.hero)) && u.targets.length>0 && u.targets.every(n=>present.has(baseHeroName(n)));
+      const targetText=u.targets.map(baseHeroName).join("、");
+      const detail=`与${targetText||"指定武将"}上阵，${u.effect}`;
+      const title=`${u.name}：${baseHeroName(u.hero)}${detail}${active?"；已激活":"；未激活"}`;
+      let label;
+      if(campPerspective){
+        const highlightName=n=>mainNames.has(n)?`<span class="union-main-name">${escapeHtml(baseHeroName(n))}</span>`:escapeHtml(baseHeroName(n));
+        const highlightedTargets=u.targets.map(highlightName).join("、");
+        label=`${escapeHtml(u.name)}：${highlightName(u.hero)}与${highlightedTargets||"指定武将"}上阵，${escapeHtml(u.effect)}`;
+      }else{
+        if(showDetails){
+          // 主阵聚义描述始终显示完整目标条件，避免目标已在主阵时隐藏目标名称造成描述不完整。
+          const visibleDetail=`：与${u.targets.map(n=>baseHeroName(n)).join("、")}上阵，${u.effect}`;
+          label=escapeHtml(`${u.name}${visibleDetail}`);
+        }else{
+          label=escapeHtml(u.name);
+        }
+      }
+      return `<span class="union-chip ${active?"active":"inactive"}" title="${escapeHtml(title)}">${label}</span>`;
+    }).join("")+ 
+    `</div>`;
+}
+
+function renderFormations(){
+  const root=$("formationList"); root.innerHTML="";
+  formations.forEach(f=>{
+    const b=document.createElement("button");
+    b.className="formation-btn"+(f.name===state.formation?" selected":"");
+    b.textContent=f.name;
+    b.setAttribute("aria-pressed",String(f.name===state.formation));
+    b.addEventListener("click",()=>{
+      if(state.formation!==f.name)recordUndo("main");
+      state.formation=f.name;state.selectedPosition=null;state.selectedCamp=null;
+      $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
+      // 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
+document.addEventListener("dragover",ev=>{if(window.__qqshActiveSlotDrag)ev.preventDefault();});
+document.addEventListener("drop",ev=>{
+  if(!window.__qqshActiveSlotDrag||window.__qqshSlotDropHandled)return;
+  ev.preventDefault();
+  const src=window.__qqshActiveSlotDrag;
+  removeSlotHero(src.area,src.slot,src.formation);
+  window.__qqshSlotDropHandled=true;
+});
+renderFormations();renderBoard();renderCamps();renderHeroes();
+    });
+    root.appendChild(b);
+  });
+}
+
+function lineupForArea(area, formationName=state.formation){
+  if(area==="main") return state.lineups[formationName];
+  if(area==="deputy") return state.deputy;
+  if(area==="gathering") return state.gathering;
+  return null;
+}
+function getActiveUnionKeys(){
+  // 聚义统计只从主阵武将视角计算；目标武将可在主阵、副将营或聚义营。
+  // 返回具体聚义集合，而不是只返回总数，避免“点亮一个、熄灭一个”数量相抵后漏报。
+  const present=allLineupNames();
+  const mainNames=mainLineupNames();
+  return new Set(unionData
+    .filter(u=>mainNames.has(u.hero)&&u.targets.length>0&&u.targets.every(n=>present.has(n)))
+    .map(u=>JSON.stringify([u.hero,u.name,u.targets,u.effect])));
+}
+function showLineupChange(beforeUnions, afterUnions){
+  const lit=[...afterUnions].filter(key=>!beforeUnions.has(key)).length;
+  const extinguished=[...beforeUnions].filter(key=>!afterUnions.has(key)).length;
+  if(!lit&&!extinguished)return;
+  let toast=document.getElementById("lineupChangeToast");
+  if(!toast){toast=document.createElement("div");toast.id="lineupChangeToast";toast.className="lineup-toast";toast.setAttribute("role","status");toast.setAttribute("aria-live","polite");document.body.appendChild(toast);}
+  const parts=[];
+  if(lit)parts.push(`<span class="lit">点亮了${lit}个聚义</span>`);
+  if(extinguished)parts.push(`<span class="extinguished">熄灭了${extinguished}个聚义</span>`);
+  toast.innerHTML=`阵容变更　${parts.join("，")}`;
+  clearTimeout(window.__qqshToastTimer);
+  window.__qqshToastTimer=setTimeout(()=>toast.remove(),4200);
+}
+function showRedToast(message){
+  let toast=document.getElementById("lineupChangeToast");
+  if(!toast){toast=document.createElement("div");toast.id="lineupChangeToast";toast.className="lineup-toast";toast.setAttribute("role","status");toast.setAttribute("aria-live","polite");document.body.appendChild(toast);}
+  toast.innerHTML=`<span class="extinguished">${escapeHtml(message)}</span>`;
+  clearTimeout(window.__qqshToastTimer);
+  window.__qqshToastTimer=setTimeout(()=>toast.remove(),3000);
+}
+function removeSlotHero(area, slot, formation=state.formation){
+  const lineup=lineupForArea(area,formation);
+  if(!lineup||!lineup[slot])return false;
+  const before=getActiveUnionKeys();
+  recordUndo(area);
+  delete lineup[slot];
+  if(area==="main" && state.selectedPosition===Number(slot))state.selectedPosition=null;
+  if(area!=="main" && state.selectedCamp&&state.selectedCamp.area===area&&Number(state.selectedCamp.slot)===Number(slot))state.selectedCamp=null;
+  const after=getActiveUnionKeys();
+  showLineupChange(before,after);
+  $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
+  renderBoard();renderCamps();renderHeroes();
+  return true;
+}
+function swapSlotContents(source, targetArea, targetSlot){
+  const sourceLineup=lineupForArea(source.area, source.formation || state.formation);
+  const targetLineup=lineupForArea(targetArea, state.formation);
+  if(!sourceLineup || !targetLineup) return;
+  if(source.area==="main" && source.formation!==state.formation) return;
+  if(source.area==="main" && !activePosition(source.slot)) return;
+  if(targetArea==="main" && !activePosition(targetSlot)) return;
+  if(source.area===targetArea && Number(source.slot)===Number(targetSlot)) return;
+  const beforeUnionCount=getActiveUnionKeys();
+  const sourceHero=sourceLineup[source.slot];
+  if(!sourceHero) return;
+  const targetHero=targetLineup[targetSlot];
+  if((targetArea==="deputy"||targetArea==="gathering")&&isCountedGodHero(sourceHero)){
+    showRedToast("神将不得上阵副将营或聚义营");return;
+  }
+  if((source.area==="deputy"||source.area==="gathering")&&targetArea==="main"&&targetHero&&isCountedGodHero(targetHero)&&!isCountedGodHero(sourceHero)){
+    // Swapping a non-god into the camp slot is allowed; the god is being moved out to main.
+  }
+  if(targetArea==="main"){
+    const projected={...(state.lineups[state.formation]||{})};
+    if(source.area==="main")delete projected[source.slot];
+    if(targetHero && source.area==="main")projected[source.slot]=targetHero; else if(source.area==="main")delete projected[source.slot];
+    projected[targetSlot]=sourceHero;
+    if(violatesGodTierExclusivity(projected)){showRedToast("涅槃神将与未涅槃神将不能同时上阵");return;}
+    if(countGodHeroes(projected)>3){alert("一个阵型内最多只能上阵三个神将（包含涅槃三阶）。");return;}
+    if(countNirvanaHeroes(projected)>2){alert("一个阵型内最多只能上阵两个涅槃三阶武将。");return;}
+  }
+  recordUndo(source.area);
+  if(targetArea!==source.area)recordUndo(targetArea);
+  if(targetHero) sourceLineup[source.slot]=targetHero; else delete sourceLineup[source.slot];
+  targetLineup[targetSlot]=sourceHero;
+  if(targetArea==="main"){
+    state.selectedPosition=targetSlot;state.selectedCamp=null;
+    $("slotPrompt").textContent=`当前选择：主阵 ${state.formation} · 位置 ${targetSlot} · ${sourceHero}`;
+  }else{
+    state.selectedPosition=null;state.selectedCamp={area:targetArea,slot:targetSlot};
+    $("slotPrompt").textContent=`当前选择：${targetArea==="deputy"?"副将营":"聚义营"} · 位置 ${targetSlot} · ${sourceHero}`;
+  }
+  renderBoard();renderCamps();renderHeroes();
+  showLineupChange(beforeUnionCount,getActiveUnionKeys());
+}
+function enableSlotDrag(sourceButton, area, slot){
+  const lineup=lineupForArea(area);
+  sourceButton.draggable=!!lineup?.[slot];
+  if(!sourceButton.draggable) return;
+  sourceButton.classList.add("slot-draggable");
+  sourceButton.addEventListener("dragstart",ev=>{
+    window.__qqshActiveSlotDrag={area,slot:Number(slot),formation:state.formation};window.__qqshSlotDropHandled=false;
+    ev.dataTransfer.setData("application/x-qqsh-slot",JSON.stringify({area,slot:Number(slot),formation:state.formation}));
+    ev.dataTransfer.effectAllowed="move";
+    document.querySelectorAll(".cell.active,.camp-slot").forEach(el=>el.classList.add("drop-ready"));
+  });
+  sourceButton.addEventListener("dragend",()=>{
+    window.__qqshActiveSlotDrag=null;
+    document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
+  });
+}
+function assignDraggedHero(heroName, area, slot){
+  if(!heroName || !heroes.some(h=>h.name===heroName))return;
+  if((area==="deputy"||area==="gathering")&&isCountedGodHero(heroName)){
+    showRedToast("神将不得上阵副将营或聚义营");return;
+  }
+  let lineup;
+  if(area==="main"){
+    if(!activePosition(slot))return;
+    lineup=state.lineups[state.formation];
+    state.selectedPosition=slot;
+    state.selectedCamp=null;
+    $("slotPrompt").textContent=`当前选择：主阵 ${state.formation} · 位置 ${slot} · ${heroName}`;
+  }else if(area==="deputy" || area==="gathering"){
+    lineup=area==="deputy"?state.deputy:state.gathering;
+    state.selectedPosition=null;
+    state.selectedCamp={area,slot};
+    $("slotPrompt").textContent=`当前选择：${area==="deputy"?"副将营":"聚义营"} · 位置 ${slot} · ${heroName}`;
+  }else{return;}
+  if(area==="main" && hasOppositeGodTier(lineup,heroName,slot)){
+    showRedToast("涅槃神将与未涅槃神将不能同时上阵");return;
+  }
+  if(area==="main" && isCountedGodHero(heroName) && lineup[slot]!==heroName && countGodHeroes(lineup,slot)>=3){
+    alert("一个阵型内最多只能上阵三个神将（包含涅槃三阶）。");return;
+  }
+  if(area==="main" && isNirvanaHero(heroName) && lineup[slot]!==heroName && countNirvanaHeroes(lineup,slot)>=2){
+    alert("一个阵型内最多只能上阵两个涅槃三阶武将。");return;
+  }
+  // Match existing selection behavior: no duplicate hero within the same lineup/camp.
+  const beforeUnionCount=getActiveUnionKeys();
+  if(lineup[slot]!==heroName || Object.keys(lineup).some(pos=>pos!==String(slot)&&lineup[pos]===heroName))recordUndo(area);
+  Object.keys(lineup).forEach(pos=>{if(lineup[pos]===heroName)delete lineup[pos];});
+  lineup[slot]=heroName;
+  
+  renderBoard();renderCamps();renderHeroes();
+  showLineupChange(beforeUnionCount,getActiveUnionKeys());
+}
+function enableHeroDrop(target, area, slot){
+  target.addEventListener("dragover",ev=>{
+    ev.preventDefault();
+    target.classList.add("drop-hover");
+  });
+  target.addEventListener("dragleave",()=>{
+    target.classList.remove("drop-hover");
+  });
+  target.addEventListener("drop",ev=>{
+    ev.preventDefault();
+    target.classList.remove("drop-hover");
+    target.classList.remove("drop-ready");
+    const candidateName=ev.dataTransfer?.getData("application/x-qqsh-union-candidate");
+    if(candidateName){
+      // 聚义候补可拖入主阵、副将营或聚义营。
+      assignDraggedHero(candidateName,area,slot);
+      return;
+    }
+    const slotPayload=ev.dataTransfer?.getData("application/x-qqsh-slot");
+    if(slotPayload){
+      window.__qqshSlotDropHandled=true;
+      try{swapSlotContents(JSON.parse(slotPayload),area,slot);}catch(_e){}
+      return;
+    }
+    const heroName=ev.dataTransfer?.getData("text/plain");
+    if(heroName)assignDraggedHero(heroName,area,slot);
+  });
+}
+
+function renderBoard(){
+  const f=currentFormation(), lineup=state.lineups[f.name];
+  $("boardName").textContent=f.name;
+  $("counter").textContent=`已上阵 ${Object.values(lineup).filter(Boolean).length} / ${f.positions.length}`;
+  const root=$("board");root.innerHTML="";
+  for(let p=1;p<=9;p++){
+    const active=f.positions.includes(p), hero=lineup[p];
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="cell"+(active?" active":"")+(hero?" filled":"")+(active&&!hero?" empty-slot":"")+(active&&state.selectedPosition===p&&!state.selectedCamp?" selected":"");
+    b.disabled=!active;
+    b.setAttribute("aria-label",active?`位置${p}${hero?"，"+hero:"，选择武将"}`:`位置${p}不可上阵`);
+    if(active)b.tabIndex=0;
+    b.innerHTML=active
+      ? `${hero?`<span class="main-remove-hero" role="button" tabindex="0" aria-label="下掉${escapeHtml(displayHeroName(hero))}" title="下掉武将">×</span>`:""}<span class="hero">${hero?escapeHtml(displayHeroName(hero)):""}</span>${hero?unionMarkup(hero,true):""}${hero?"":`<span class="hint hint-ready">点击上阵</span>`}`
+      : `<span class="unavailable-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="12.2" stroke="currentColor" stroke-width="2.6"/><path d="M11.5 11.5L20.5 20.5M20.5 11.5L11.5 20.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span>`;
+    if(active){
+      enableHeroDrop(b,"main",p);if(hero)enableSlotDrag(b,"main",p);
+      const removeBtn=b.querySelector(".main-remove-hero");
+      if(removeBtn){
+        const doRemove=ev=>{ev.preventDefault();ev.stopPropagation();removeSlotHero("main",p,state.formation);};
+        removeBtn.addEventListener("click",doRemove);
+        removeBtn.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" ")doRemove(ev);});
+      }
+    }
+    if(active)b.addEventListener("click",()=>{
+      state.selectedPosition=p;state.selectedCamp=null;
+      $("slotPrompt").textContent=`当前选择：主阵 ${f.name} · 位置 ${p}`+(lineup[p]?` · ${lineup[p]}`:" · 尚未上阵");
+      renderBoard();renderHeroes();
+    });
+    if(p===state.selectedPosition && active)b.style.outline="3px solid #e4bb63";
+    root.appendChild(b);
+  }
+  const hero=lineup[state.selectedPosition];
+  if(state.selectedPosition && !activePosition(state.selectedPosition)){
+    state.selectedPosition=null;
+    $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。"
+  }
+}
+function selectedTargetLineup(){
+  if(state.selectedCamp){return state.selectedCamp.area==="deputy"?state.deputy:state.gathering;}
+  return state.lineups[state.formation];
+}
+function selectedTargetHero(){
+  const lineup=selectedTargetLineup();
+  const slot=state.selectedCamp?state.selectedCamp.slot:state.selectedPosition;
+  return slot==null?null:lineup[slot];
+}
+function renderCamps(){
+  const configs=[
+    {area:"deputy",root:"deputyGrid",lineup:state.deputy,total:7,counter:"deputyCounter",label:"副将营"},
+    {area:"gathering",root:"gatheringGrid",lineup:state.gathering,total:9,counter:"gatheringCounter",label:"聚义营"}
+  ];
+  configs.forEach(cfg=>{
+    const root=$(cfg.root);root.innerHTML="";
+    for(let slot=1;slot<=cfg.total;slot++){
+      const hero=cfg.lineup[slot];
+      const b=document.createElement("button");
+      b.type="button";
+      b.className="camp-slot"+(hero?" filled has-hero":"")+(state.selectedCamp&&state.selectedCamp.area===cfg.area&&state.selectedCamp.slot===slot?" selected":"");
+      b.setAttribute("aria-label",`${cfg.label}位置${slot}${hero?"，"+hero:"，选择武将"}`);
+      b.innerHTML=`${hero?`<span class="camp-remove-hero" role="button" tabindex="0" aria-label="下掉${escapeHtml(displayHeroName(hero))}" title="下掉武将">×</span>`:""}${cfg.area==="deputy"?`<span class="slot-number">${["天枢营","天璇营","天机营","天权营","玉衡营","开阳营","摇光营"][slot-1]}</span>`:""}<span class="slot-name">${hero?escapeHtml(displayHeroName(hero)):"选择武将"}</span>${hero?unionMarkup(hero,false,true):""}`;
+      const removeBtn=b.querySelector(".camp-remove-hero");
+      if(removeBtn){
+        const doRemove=ev=>{ev.preventDefault();ev.stopPropagation();removeSlotHero(cfg.area,slot);};
+        removeBtn.addEventListener("click",doRemove);
+        removeBtn.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" ")doRemove(ev);});
+      }
+      enableHeroDrop(b,cfg.area,slot);
+      if(hero)enableSlotDrag(b,cfg.area,slot);
+      b.addEventListener("click",()=>{
+        state.selectedPosition=null;state.selectedCamp={area:cfg.area,slot};
+        $("slotPrompt").textContent=`当前选择：${cfg.label} · 位置 ${slot}`+(cfg.lineup[slot]?` · ${cfg.lineup[slot]}`:" · 尚未上阵");
+        renderBoard();renderCamps();renderHeroes();
+      });
+      root.appendChild(b);
+    }
+    $(cfg.counter).textContent=`已上阵 ${Object.values(cfg.lineup).filter(Boolean).length} / ${cfg.total}`;
+  });
+}
+function activePosition(p){return currentFormation().positions.includes(p)}
+function renderUnionCandidates(){
+  const root=$("unionCandidateGrid");
+  if(!root)return;
+  root.innerHTML="";
+  // 聚义候补以所有主阵武将为起点逐条计算，不依赖选将列表筛选状态。
+  const mainNames=mainLineupNames();
+  const present=allLineupNames();
+  const heroOrder=new Map(heroes.map((h,i)=>[h.name,i]));
+  const relations=new Map();
+  unionData.forEach(u=>{
+    if(!mainNames.has(baseHeroName(u.hero)))return;
+    const active=u.targets.length>0 && present.has(baseHeroName(u.hero)) && u.targets.every(t=>present.has(baseHeroName(t)));
+    if(active)return;
+    // 已在主阵、副将营或聚义营的目标不重复列为候补；多目标关系逐个保留尚未上阵的目标。
+    u.targets.forEach(target=>{
+      const targetBase=baseHeroName(target);
+      if(present.has(targetBase))return;
+      if(!relations.has(targetBase))relations.set(targetBase,[]);
+      relations.get(targetBase).push(u);
+    });
+  });
+  const candidates=[...relations.keys()].sort((a,b)=>{
+    const ai=heroOrder.has(a)?heroOrder.get(a):Number.MAX_SAFE_INTEGER;
+    const bi=heroOrder.has(b)?heroOrder.get(b):Number.MAX_SAFE_INTEGER;
+    return ai-bi || a.localeCompare(b,"zh-CN");
+  });
+  if(!candidates.length){
+    root.innerHTML='<div class="empty-note" style="grid-column:1/-1;font-size:11px">当前主阵暂无可补入副将营或聚义营的聚义候补武将。</div>';
+    return;
+  }
+  candidates.forEach(name=>{
+    const item=document.createElement("div");
+    item.className="union-candidate-item";
+    item.draggable=heroOrder.has(name);
+    if(item.draggable){
+      item.addEventListener("dragstart",ev=>{
+        ev.dataTransfer.setData("application/x-qqsh-union-candidate",name);
+        ev.dataTransfer.setData("text/plain",name);
+        ev.dataTransfer.effectAllowed="copy";
+        item.classList.add("dragging");
+        document.querySelectorAll(".camp-slot").forEach(el=>el.classList.add("drop-ready"));
+      });
+      item.addEventListener("dragend",()=>{
+        item.classList.remove("dragging");
+        document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
+      });
+    }
+    const chips=relations.get(name).map(u=>{
+      const targetText=u.targets.map(baseHeroName).join("、");
+      const label=`${escapeHtml(u.name)}：${escapeHtml(baseHeroName(u.hero))}与${escapeHtml(targetText)}上阵，${escapeHtml(u.effect)}`;
+      const title=`${u.name}：${baseHeroName(u.hero)}与${targetText}上阵，${u.effect}；未激活`;
+      return `<span class="union-chip inactive" title="${escapeHtml(title)}">${label}</span>`;
+    }).join("");
+    item.innerHTML=`<div class="union-candidate-name">${escapeHtml(displayHeroName(name))}</div><div class="union-list union-camp-details">${chips}</div>`;
+    root.appendChild(item);
+  });
+}
+
+function renderHeroes(){
+  const root=$("heroList"), q=$("search").value.trim().toLowerCase(), type=state.rosterFilter||"全部";
+  root.classList.toggle("nirvana-filter", type==="涅槃三阶");
+  root.classList.toggle("mixed-roster", type==="全部");
+  root.innerHTML="";
+  const lineup=selectedTargetLineup();
+  // 已在当前主阵、副将营或聚义营上阵的同名武将，不再出现在选择名单。
+  const assignedNames=new Set([
+    ...Object.values(state.lineups[state.formation]||{}),
+    ...Object.values(state.deputy||{}),
+    ...Object.values(state.gathering||{})
+  ].filter(Boolean));
+  const selectedSlot=state.selectedCamp?state.selectedCamp.slot:state.selectedPosition;
+  const mainLineup=state.lineups[state.formation]||{};
+  const mainTiersByBase=new Map();
+  Object.entries(mainLineup).forEach(([slot,name])=>{
+    if(slot===String(selectedSlot)||!name||!isCountedGodHero(name))return;
+    const base=baseHeroName(name);
+    const tier=isNirvanaHero(name)?"nirvana":isGodHero(name)?"ordinary":null;
+    if(tier){if(!mainTiersByBase.has(base))mainTiersByBase.set(base,new Set());mainTiersByBase.get(base).add(tier);}
+  });
+  const typeOrder={"涅槃三阶":0,"神将":1,"修罗":2,"其他":3};
+  const otherOrder=h=>h.name==="晁盖"||h.baseName==="晁盖"?0:h.type==="天罡"?1:h.type==="地煞"?2:3;
+  const visible=heroes.filter(h=>!assignedNames.has(h.name)&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("nirvana")&&isGodHero(h.name))&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("ordinary")&&isNirvanaHero(h.name))&&(type==="全部"||h.type===type||(type==="其他"&&(h.type==="天罡"||h.type==="地煞")))&&(h.name.toLowerCase().includes(q)||(h.baseName||"").toLowerCase().includes(q)))
+    .sort((a,b)=>type==="其他"?(otherOrder(a)-otherOrder(b)||(a.rank??9999)-(b.rank??9999)||a.name.localeCompare(b.name,"zh-CN")):(typeOrder[a.type]??4)-(typeOrder[b.type]??4)||(a.rank??9999)-(b.rank??9999)||a.name.localeCompare(b.name,"zh-CN"));
+  visible.forEach(h=>{
+    const b=document.createElement("button");b.className="hero-option"+(type==="全部"&&h.type==="涅槃三阶"?" nirvana-option":"");
+    b.draggable=true;
+    b.addEventListener("dragstart",ev=>{
+      ev.dataTransfer.setData("text/plain",h.name);
+      ev.dataTransfer.effectAllowed="copy";
+      b.classList.add("dragging");
+      document.querySelectorAll(".cell.active,.camp-slot").forEach(el=>el.classList.add("drop-ready"));
+    });
+    b.addEventListener("dragend",()=>{
+      b.classList.remove("dragging");
+      document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
+    });
+    if(selectedSlot!=null&&lineup[selectedSlot]===h.name)b.classList.add("chosen");
+    b.innerHTML=`<strong>${escapeHtml(displayHeroName(h.name))}</strong>`;
+    b.addEventListener("click",()=>{
+      if(selectedSlot==null || (state.selectedCamp==null&&!activePosition(state.selectedPosition))){
+        $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个可上阵位置。";return;
+      }
+      if(!state.selectedCamp && hasOppositeGodTier(lineup,h.name,selectedSlot)){
+        showRedToast("涅槃神将与未涅槃神将不能同时上阵");return;
+      }
+      if(!state.selectedCamp && isCountedGodHero(h.name) && lineup[selectedSlot]!==h.name && countGodHeroes(lineup,selectedSlot)>=3){
+        alert("一个阵型内最多只能上阵三个神将（包含涅槃三阶）。");return;
+      }
+      if(!state.selectedCamp && isNirvanaHero(h.name) && lineup[selectedSlot]!==h.name && countNirvanaHeroes(lineup,selectedSlot)>=2){
+        alert("一个阵型内最多只能上阵两个涅槃三阶武将。");return;
+      }
+      // Prevent duplicate copies within the same formation/camp, while leaving different areas independent.
+      const beforeUnionCount=getActiveUnionKeys();
+      if(lineup[selectedSlot]!==h.name || Object.keys(lineup).some(pos=>pos!==String(selectedSlot)&&lineup[pos]===h.name))recordUndo(state.selectedCamp?state.selectedCamp.area:"main");
+      Object.keys(lineup).forEach(pos=>{if(lineup[pos]===h.name)delete lineup[pos]});
+      lineup[selectedSlot]=h.name;
+      $("slotPrompt").textContent=(state.selectedCamp?`${state.selectedCamp.area==="deputy"?"副将营":"聚义营"} · 位置 ${selectedSlot}`:`主阵 ${state.formation} · 位置 ${selectedSlot}`)+` · ${h.name}`;
+      renderBoard();renderCamps();renderHeroes();
+      showLineupChange(beforeUnionCount,getActiveUnionKeys());
+    });
+    root.appendChild(b);
+  });
+  if(!visible.length)root.innerHTML='<div class="empty-note">没有找到符合条件的武将。</div>';
+  renderUnionCandidates();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+$("search").addEventListener("input",renderHeroes);
+document.querySelectorAll("[data-roster-filter]").forEach(btn=>btn.addEventListener("click",()=>{
+  const chosen=btn.dataset.rosterFilter;
+  state.rosterFilter=state.rosterFilter===chosen?"全部":chosen;
+  document.querySelectorAll("[data-roster-filter]").forEach(b=>b.classList.toggle("active",b.dataset.rosterFilter===state.rosterFilter));
+  renderHeroes();
+}));
+$("clearAll").addEventListener("click",()=>{
+  const beforeUnionCount=getActiveUnionKeys();
+  if(Object.values(state.lineups[state.formation]).some(Boolean))recordUndo("main");
+  state.lineups[state.formation]={};state.selectedPosition=null;state.selectedCamp=null;
+  $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
+  renderBoard();renderCamps();renderHeroes();
+  showLineupChange(beforeUnionCount,getActiveUnionKeys());
+});
+/* v1.2.91：智能补齐按主阵聚义目标分阶段执行，副将营优先修罗，无修罗形态时回退真将。 */
+/* v1.2.96：主阵聚义描述保留完整目标；智能补齐优先补完已部分满足的聚义。 */
+function smartFillCamps(targetArea=null){
+  const main=state.lineups[state.formation]||{};
+  const mainNames=new Set(Object.values(main).filter(Boolean).map(baseHeroName));
+  if(!mainNames.size){showRedToast("请先在主阵上阵武将，再使用智能补齐");return;}
+  const before=getActiveUnionKeys();
+  const deputyBefore=JSON.stringify(state.deputy), gatheringBefore=JSON.stringify(state.gathering);
+  // 阵型对应的智能补齐优先属性。
+  const priorityStatByFormation={
+    "长蛇阵":"速度",
+    "飞龙阵":"武力攻击",
+    "风扬阵":"法术攻击",
+    "云垂阵":"法术防御",
+    "天覆阵":"生命",
+    "地载阵":"武力防御"
+  };
+  const preferredStat=priorityStatByFormation[state.formation]||null;
+  const deputySnapshot=snapshotArea("deputy"), gatheringSnapshot=snapshotArea("gathering");
+  const occupiedBase=()=>new Set([
+    ...Object.values(main),...Object.values(state.deputy),...Object.values(state.gathering)
+  ].filter(Boolean).map(baseHeroName));
+  // 只从当前主阵武将发起的聚义中寻找目标，不使用候补区筛选状态。
+  const unionGoals=()=>unionData.filter(u=>mainNames.has(baseHeroName(u.hero))&&Array.isArray(u.targets)&&u.targets.length>0);
+  const variantsByBase=new Map();
+  heroes.forEach(h=>{
+    const base=baseHeroName(h.name);
+    if(!base)return;
+    if(!variantsByBase.has(base))variantsByBase.set(base,[]);
+    variantsByBase.get(base).push(h);
+  });
+  const availableVariant=(base, preferShura)=>{
+    const variants=variantsByBase.get(base)||[];
+    // 副将营：只要该本名有可用修罗形态，就优先使用修罗；否则回退到原始真将。
+    if(preferShura){const shura=variants.find(h=>h.type==="修罗");if(shura)return shura.name;}
+    const trueHero=variants.find(h=>h.name===base&&(h.type==="天罡"||h.type==="地煞"));
+    if(trueHero)return trueHero.name;
+    const other=variants.find(h=>h.name===base);
+    return other?other.name:null;
+  };
+  const fillArea=(area, capacity, preferShura)=>{
+    const lineup=area==="deputy"?state.deputy:state.gathering;
+    const emptySlots=Array.from({length:capacity},(_,i)=>String(i+1)).filter(slot=>!lineup[slot]);
+    while(emptySlots.length){
+      const present=occupiedBase();
+      const scoreByBase=new Map();
+      unionGoals().forEach(u=>{
+        const missing=[...new Set(u.targets.map(baseHeroName).filter(Boolean))].filter(n=>!present.has(n));
+        if(!missing.length)return;
+        // 优先补缺口较少的聚义；副将营的修罗候选另加优先权。
+        // 先补齐已经部分满足的聚义，避免选中一个目标后却长期漏掉其搭档；阵型属性仍作为优先项。
+        const alreadyPresent=u.targets.length-missing.length;
+        const completionBonus=alreadyPresent>0?1200:0;
+        const effectText=String(u.effect||"");
+        const statBonus=preferredStat&&effectText.includes(preferredStat)?500:0;
+        // 长蛇阵明确将两类防御聚义置于最低优先级，避免其抢占速度聚义。
+        const longSnakeDefensePenalty=state.formation==="长蛇阵"&&/武力防御|法术防御/.test(effectText)?-2000:0;
+        const score=100/missing.length+completionBonus+statBonus+longSnakeDefensePenalty;
+        missing.forEach(base=>{
+          const variant=availableVariant(base,preferShura);
+          if(!variant||isCountedGodHero(variant))return;
+          const isShura=heroes.some(h=>h.name===variant&&h.type==="修罗");
+          const value=score+(preferShura&&isShura?1000:0);
+          scoreByBase.set(base,Math.max(scoreByBase.get(base)||0,value));
+        });
+      });
+      const choices=[...scoreByBase.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],"zh-CN"));
+      if(!choices.length)break;
+      const [base] = choices[0];
+      const variant=availableVariant(base,preferShura);
+      if(!variant||isCountedGodHero(variant)||occupiedBase().has(base)){
+        // 防止无效候选阻塞后续可用候选。
+        scoreByBase.delete(base);
+        const next=choices.find(([candidate])=>{
+          const v=availableVariant(candidate,preferShura);
+          return v&&!isCountedGodHero(v)&&!occupiedBase().has(candidate);
+        });
+        if(!next)break;
+        const slot=emptySlots.shift();
+        lineup[slot]=availableVariant(next[0],preferShura);
+        continue;
+      }
+      const slot=emptySlots.shift();
+      lineup[slot]=variant;
+    }
+  };
+  // 第一阶段：副将营优先放可凑成主阵聚义的修罗；该本名没有修罗形态时才放真将。
+  if(targetArea===null||targetArea==="deputy")fillArea("deputy",7,true);
+  // 聚义营补齐时，排除主阵和副将营已使用的武将本名。
+  if(targetArea===null||targetArea==="gathering")fillArea("gathering",9,false);
+  if(JSON.stringify(state.deputy)===deputyBefore&&JSON.stringify(state.gathering)===gatheringBefore){
+    showRedToast("没有找到可补齐的聚义武将");return;
+  }
+  if(targetArea===null||targetArea==="deputy"){historyByArea.deputy.undo.push(deputySnapshot); if(historyByArea.deputy.undo.length>10)historyByArea.deputy.undo.shift(); historyByArea.deputy.redo.length=0;}
+  if(targetArea===null||targetArea==="gathering"){historyByArea.gathering.undo.push(gatheringSnapshot); if(historyByArea.gathering.undo.length>10)historyByArea.gathering.undo.shift(); historyByArea.gathering.redo.length=0;}
+  updateHistoryButtons();
+  state.selectedCamp=null;
+  state.selectedPosition=null;
+  $("slotPrompt").textContent=`智能补齐完成：${targetArea==="deputy"?"副将营":targetArea==="gathering"?"聚义营":"副将营和聚义营"}已按聚义评分补齐。${preferredStat?`本阵优先属性：${preferredStat}。`:""}`;
+  renderBoard();renderCamps();renderHeroes();
+  showLineupChange(before,getActiveUnionKeys());
+}
+function runSmartFillSafely(targetArea=null){
+  try { smartFillCamps(targetArea); }
+  catch(err) {
+    console.error("智能补齐失败：",err);
+    const label=targetArea==="deputy"?"副将营":targetArea==="gathering"?"聚义营":"副将营和聚义营";
+    showRedToast("智能补齐"+label+"失败，请重试");
+  }
+}
+$('smartFill').addEventListener('click',()=>runSmartFillSafely());
+$('smartFillDeputy').addEventListener('click',()=>runSmartFillSafely("deputy"));
+$('smartFillGathering').addEventListener('click',()=>runSmartFillSafely("gathering"));
+
+function clearCampWithNotice(area){
+  const lineup=area==="deputy"?state.deputy:state.gathering;
+  if(!Object.values(lineup).some(Boolean))return;
+  const before=getActiveUnionKeys();
+  recordUndo(area);
+  if(area==="deputy")state.deputy={};else state.gathering={};
+  if(state.selectedCamp&&state.selectedCamp.area===area)state.selectedCamp=null;
+  showLineupChange(before,getActiveUnionKeys());
+  $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
+  renderBoard();renderCamps();renderHeroes();
+}
+$("clearDeputy").addEventListener("click",()=>clearCampWithNotice("deputy"));
+$("clearGathering").addEventListener("click",()=>clearCampWithNotice("gathering"));
+// 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
+document.addEventListener("dragover",ev=>{if(window.__qqshActiveSlotDrag)ev.preventDefault();});
+document.addEventListener("drop",ev=>{
+  if(!window.__qqshActiveSlotDrag||window.__qqshSlotDropHandled)return;
+  ev.preventDefault();
+  const src=window.__qqshActiveSlotDrag;
+  removeSlotHero(src.area,src.slot,src.formation);
+  window.__qqshSlotDropHandled=true;
+});
+renderFormations();renderBoard();renderCamps();renderHeroes();
+
+/* v1.2.131：生成纵向合并的三阵营九宫格分享图，水印统一为98888 */
+(function(){
+ try {
+ const btn=document.getElementById('sharePlan'); if(!btn)return;
+ const shareImageLightTheme=()=>document.body.classList.contains('light');
+ const W=1000;
+ function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y+h,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+ function fitText(ctx,text,x,y,maxWidth,fontSize,align='center'){let size=fontSize;ctx.font=`bold ${size}px system-ui,"Microsoft YaHei",sans-serif`;while(ctx.measureText(text).width>maxWidth&&size>17){size--;ctx.font=`bold ${size}px system-ui,"Microsoft YaHei",sans-serif`;}ctx.textAlign=align;ctx.fillText(text,x,y);}
+ function watermark(ctx,light,height,deputyY,deputyH){
+   // 水印固定放在副将营右下方的空白区域，斜向显示，不覆盖武将卡片。
+   const color=light?'#555b67':'#ffffff';
+   ctx.save();
+   ctx.globalAlpha=.12;
+   ctx.fillStyle=color;
+   ctx.font='bold 46px system-ui,"Microsoft YaHei",sans-serif';
+   ctx.textAlign='center';
+   ctx.translate(W-155,deputyY+deputyH+31);
+   ctx.rotate(-Math.PI/6);
+   ctx.fillText('98888',0,0);
+   ctx.restore();
+ }
+   function campUnionDescriptions(campNames){
+     const mainNames=mainLineupNames();
+     const present=allLineupNames();
+     return campNames.map(name=>{
+       if(!name||name==='空位')return [];
+       const target=baseHeroName(name);
+       return unionData
+         .filter(u=>mainNames.has(baseHeroName(u.hero))&&u.targets.some(n=>baseHeroName(n)===target)&&u.targets.every(n=>present.has(baseHeroName(n))))
+         .map(u=>`${baseHeroName(u.hero)} +${(String(u.effect).match(/(\\d+(?:\\.\\d+)?%)/)||[])[1]||''}${(String(u.effect).replace(/增加|\\d+(?:\\.\\d+)?%/g,'').trim())}`)
+         .filter(Boolean);
+     });
+   }
+ function renderCombined(){
+   const f=currentFormation();
+   const mainNames=Array.from({length:9},(_,i)=>f.positions.includes(i+1)?normName(state.lineups[f.name][i+1]):'');
+   const deputyNames=Array.from({length:7},(_,i)=>normName(state.deputy[i+1]));
+   const gatheringNames=Array.from({length:9},(_,i)=>normName(state.gathering[i+1]));
+   const deputyDescriptions=campUnionDescriptions(deputyNames);
+   const gatheringDescriptions=campUnionDescriptions(gatheringNames);
+   function wrapDescriptionLines(text,maxChars){
+     const lines=[];let line='',width=0;
+     for(const ch of text){
+       const w=/[\\x00-\\xff]/.test(ch)?0.6:1;
+       if(width+w>maxChars&&line){lines.push(line);line=ch;width=w;}else{line+=ch;width+=w;}
+     }
+     if(line)lines.push(line);
+     return lines;
+   }
+   const maxDescLines=Math.max(1,...[...deputyDescriptions.map(a=>a.flatMap(t=>wrapDescriptionLines(t,11)).length),...gatheringDescriptions.map(a=>a.flatMap(t=>wrapDescriptionLines(t,16)).length)]);
+   const mainCellH=Math.max(125,70+maxDescLines*21), campCellH=mainCellH, titleTop=100, mainTitleY=160, mainGridY=185;
+   const mainGridH=3*mainCellH+2*14, deputyTitleY=mainGridY+mainGridH+58;
+   const deputyGridY=deputyTitleY+25, deputyGridH=2*campCellH+14;
+   const gatheringTitleY=deputyGridY+deputyGridH+58, gatheringGridY=gatheringTitleY+25;
+   const gatheringGridH=3*campCellH+2*14, bottomPad=55;
+   const H=gatheringGridY+gatheringGridH+bottomPad;
+   const exportScale=2;
+   const canvas=document.createElement('canvas');canvas.width=W*exportScale;canvas.height=H*exportScale;const ctx=canvas.getContext('2d');
+   if(!ctx)throw new Error('当前预览环境不支持 Canvas 2D');
+   ctx.scale(exportScale,exportScale);
+   const light=shareImageLightTheme(), bg=light?'#f1f3f7':'#1b2230', panel=light?'#ffffff':'#252c3a', card=light?'#f6e9ce':'#393226', fg=light?'#242936':'#f4f5f7', gold='#d6a84f', muted=light?'#687386':'#aeb7c6';
+   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);ctx.fillStyle=panel;roundRect(ctx,24,24,W-48,H-48,28);ctx.fill();ctx.strokeStyle=gold;ctx.lineWidth=2;ctx.stroke();watermark(ctx,light,H,deputyGridY,deputyGridH);
+   ctx.fillStyle=fg;ctx.font='bold 45px system-ui,"Microsoft YaHei",sans-serif';ctx.fillText('阵容分享方案',58,100);
+   const description=(document.getElementById('formationDescription')?.value||'').trim();
+   const descX=420,descY=54,descW=520,descH=100;
+   ctx.fillStyle=light?'#f7f8fb':'#202633';roundRect(ctx,descX,descY,descW,descH,12);ctx.fill();
+   ctx.strokeStyle=light?'#cbd1dc':'#394253';ctx.lineWidth=1.5;roundRect(ctx,descX,descY,descW,descH,12);ctx.stroke();
+   if(description){
+     ctx.save();ctx.beginPath();ctx.rect(descX+14,descY+10,descW-28,descH-20);ctx.clip();
+     ctx.fillStyle=fg;ctx.font='bold 25px system-ui,"Microsoft YaHei",sans-serif';ctx.textAlign='left';
+     const maxLineWidth=descW-28,lineHeight=32;let line='',lines=[];
+     for(const ch of description){if(ctx.measureText(line+ch).width>maxLineWidth&&line){lines.push(line);line=ch;}else line+=ch;}
+     if(line)lines.push(line);
+     const visibleLines=lines.slice(0,2),totalHeight=visibleLines.length*lineHeight,startY=descY+(descH-totalHeight)/2+24;
+     visibleLines.forEach((item,index)=>ctx.fillText(item,descX+14,startY+index*lineHeight));
+     ctx.restore();
+   }else{
+     ctx.fillStyle=muted;ctx.font='22px system-ui,"Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.fillText('阵型描述',descX+descW/2,descY+descH/2+7);
+   }
+   function sectionTitle(title,y){ctx.fillStyle=gold;ctx.font='bold 34px system-ui,"Microsoft YaHei",sans-serif';ctx.textAlign='left';ctx.fillText(title,58,y);}
+   function drawGrid(names,activePositions,y,cols,rows,cellW,cellH,gapX,gapY,descriptions=null){
+     const totalW=cols*cellW+(cols-1)*gapX, left=(W-totalW)/2;
+     for(let i=0;i<names.length;i++){
+       const x=left+(i%cols)*(cellW+gapX), yy=y+Math.floor(i/cols)*(cellH+gapY), active=!activePositions||activePositions.includes(i+1);
+       ctx.fillStyle=active?card:(light?'#e6e9ef':'#202633');roundRect(ctx,x,yy,cellW,cellH,12);ctx.fill();ctx.strokeStyle=active?gold:(light?'#cbd1dc':'#394253');ctx.lineWidth=1.5;ctx.stroke();
+       if(active){
+         const lines=descriptions&&descriptions[i]?descriptions[i]:[];
+         ctx.fillStyle=fg;
+         if(lines.length){
+           fitText(ctx,names[i]||'空位',x+cellW/2,yy+30,cellW-18,22);
+           // 聚义描述不换行、不截断；白天主题使用深棕金色，夜间主题使用浅金色。
+           ctx.save();
+           ctx.fillStyle=light?'#593800':'#ffdf86';
+           ctx.font='bold 18px SimSun,"宋体",serif';
+           ctx.textAlign='left';
+           lines.forEach((text,j)=>ctx.fillText(text,x+44,yy+61+j*21));
+           ctx.restore();
+           continue;
+         }else{
+           fitText(ctx,names[i]||'空位',x+cellW/2,yy+cellH/2+8,cellW-18,25);
+         }
+       } 
+     }
+   }
+   sectionTitle(f.name,mainTitleY);
+   drawGrid(mainNames,f.positions,mainGridY,3,3,270,mainCellH,18,14);
+   sectionTitle('副将营',deputyTitleY);
+   drawGrid(deputyNames,null,deputyGridY,4,2,205,campCellH,14,14,deputyDescriptions);
+   sectionTitle('聚义营',gatheringTitleY);
+   drawGrid(gatheringNames,null,gatheringGridY,3,3,270,campCellH,18,14,gatheringDescriptions);
+   // 不依赖 canvas.toBlob 回调，兼容部分在线预览容器；预览与分享共用同一张 PNG。
+   const url=canvas.toDataURL('image/png');
+   const base64=url.slice(url.indexOf(',')+1);
+   const binary=atob(base64);
+   const bytes=new Uint8Array(binary.length);
+   for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+   const blob=new Blob([bytes],{type:'image/png'});
+   return Promise.resolve({blob,url,filename:'QQ水浒-阵容分享方案.png'});
+ }
+ function normName(name){return name?displayHeroName(name):'空位';}
+ function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+ // 实时同步预览：监听主阵、副将营、聚义营及阵型标题的 DOM 更新。
+ let previewTimer=0, previewBusy=false, previewAgain=false;
+ async function refreshSharePreview(){
+   if(previewBusy){previewAgain=true;return;}
+   previewBusy=true;
+   try{
+     const im=await renderCombined();
+     const img=document.getElementById('shareCombinedPreview');
+     const caption=document.getElementById('shareCombinedCaption');
+     if(img){img.src=im.url;img.alt='当前阵容方案实时预览';img.style.display='block';}
+     if(caption)caption.textContent='阵容已实时更新 · '+currentFormation().name;
+   }catch(err){
+     console.error('实时更新分享预览失败：',err);
+     const caption=document.getElementById('shareCombinedCaption');
+     if(caption)caption.textContent='预览生成失败，请点击「分享方案」重试';
+   }
+   finally{
+     previewBusy=false;
+     if(previewAgain){previewAgain=false;refreshSharePreview();}
+   }
+ }
+ function queueSharePreview(){if(previewTimer)clearTimeout(previewTimer);previewTimer=setTimeout(()=>{Promise.resolve().then(refreshSharePreview).catch(err=>console.error('预览刷新异常：',err));},120);}
+ document.addEventListener('share-theme-changed',queueSharePreview);
+ const descriptionInput=document.getElementById('formationDescription');
+ if(descriptionInput)descriptionInput.addEventListener('input',queueSharePreview);
+ const previewTargets=['board','boardName','deputyGrid','gatheringGrid'];
+ if(typeof MutationObserver==='function'){
+   const observer=new MutationObserver(queueSharePreview);
+   previewTargets.forEach(id=>{const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true,attributes:true});});
+ }
+ // 页面加载后主动生成一次当前阵容预览；之后阵营 DOM 变化时自动刷新。
+ // 延迟重试用于等待主阵及营地完成首轮渲染，避免初始状态尚未就绪。
+ queueSharePreview();
+ setTimeout(queueSharePreview,350);
+ setTimeout(queueSharePreview,900);
+ btn.addEventListener('click',async()=>{const old=btn.innerHTML;btn.disabled=true;btn.querySelector('span').textContent='正在生成…';try{
+   const f=currentFormation(),im=await renderCombined();document.getElementById('shareCombinedPreview').src=im.url;document.getElementById('shareCombinedPreview').style.display='block';document.getElementById('shareCombinedCaption').textContent='已生成 · '+im.filename;document.getElementById('sharePanel').scrollIntoView({behavior:'smooth',block:'start'});
+   let shared=false;if(navigator.share&&navigator.canShare&&typeof File==='function'){try{const file=new File([im.blob],im.filename,{type:'image/png'});if(navigator.canShare({files:[file]})){await navigator.share({title:'QQ水浒阵容方案',text:`${f.name}阵容方案`,files:[file]});shared=true;}}catch(err){if(err&&err.name==='AbortError')shared=true;}}
+   if(!shared){saveBlob(im.blob,im.filename);document.getElementById('shareCombinedCaption').textContent='图片已生成并尝试下载；可在 QQ 群中发送该图片。';}
+ }catch(err){console.error('生成分享图片失败：',err);const caption=document.getElementById('shareCombinedCaption');if(caption)caption.textContent='分享图片生成失败，阵容编辑不受影响';}finally{btn.disabled=false;btn.innerHTML=old;}});
+ } catch(initErr) {
+   console.error('分享预览模块初始化失败：',initErr);
+   const caption=document.getElementById('shareCombinedCaption');
+   if(caption)caption.textContent='分享预览暂不可用，阵容编辑功能仍可继续使用';
+ }
+})();
+
+/* 昼夜模式与军师页面保持一致：06:00–17:59 白天，18:00–05:59 夜间；可手动切换 */
+(function(){
+  const body=document.body;
+  const button=document.getElementById('themeToggle');
+  if(!button)return;
+  let manualTheme=null;
+  let lastSchedulePeriod='';
+  function scheduledTheme(){const h=new Date().getHours();return h>=6&&h<18?'day':'night';}
+  function periodKey(){const n=new Date();return n.getFullYear()+'-'+n.getMonth()+'-'+n.getDate()+'-'+(n.getHours()>=18?'night':n.getHours()<6?'night':'day');}
+  function apply(theme){
+    const night=theme==='night';
+    body.classList.toggle('dark',night);
+    body.classList.toggle('light',!night);
+    button.setAttribute('aria-pressed',String(night));
+    button.setAttribute('aria-label',night?'切换到白天模式':'切换到夜间模式');
+    const svg=button.querySelector('svg');
+    if(svg)svg.innerHTML=night
+      ?'<path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"></path>'
+      :'<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42-1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>';
+    document.dispatchEvent(new CustomEvent('share-theme-changed'));
+  }
+  function refreshByClock(){const p=periodKey();if(p!==lastSchedulePeriod){lastSchedulePeriod=p;manualTheme=null;}apply(manualTheme||scheduledTheme());}
+  button.addEventListener('click',function(){manualTheme=(body.classList.contains('dark')?'day':'night');apply(manualTheme);});
+  lastSchedulePeriod=periodKey();apply(scheduledTheme());window.setInterval(refreshByClock,30000);
+})();
+
+</script>
+</body>
+</html>
+<!-- v1.2.48：候补区武将名称与聚义描述同排展示 -->
+<!-- v1.2.21: 聚义激活数量仅统计当前主阵武将发起的聚义 -->
+
+<!-- v1.2.22: 聚义变更提示字体在上一版本基础上放大一倍 -->
+<!-- v1.2.24: 点击选将、拖拽上阵、阵位交换和清空主阵均触发聚义变更提示 -->
+<!-- v1.2.24: 通过聚义集合前后差异统计，修复数量相抵导致漏提示的问题 -->
+
