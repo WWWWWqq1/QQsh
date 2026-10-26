@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.3.11</title>
+<title>QQ水浒阵容规划器 v1.3.12</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -2421,11 +2421,11 @@ $("clearSideCamps").addEventListener("click",()=>{
   showLineupChange(before,getActiveUnionKeys());
   renderBoard();renderCamps();renderHeroes();
 });
-/* v1.3.11：更新阵容分享说明，提示复制阵容码后点击链接导入。 */
+/* v1.3.13：更新阵容分享说明文案，避免打开链接后无导入提示。 */
 (function(){
  const output=$("rosterCodeOutput"), input=$("rosterCodeInput"), status=$("rosterCodeStatus");
  if(!output||!input||!status)return;
- const SHARE_PREFIX="这是我在 https://wwwwwqq1.github.io/QQsh/Team_Builder.html 中搭配的QQ水浒阵容，复制阵容码，点击链接可一键导入阵容：";
+ const SHARE_PREFIX="这是我在 https://wwwwwqq1.github.io/QQsh/Team_Builder.html 中搭配的QQ水浒阵容，复制这段文字，点击链接可一键导入阵容：";
  const utf8ToBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
  const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
  function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
@@ -2535,7 +2535,7 @@ $("clearSideCamps").addEventListener("click",()=>{
    }
    return false;
  }
- let lastPromptedCode="",clipboardReadBusy=false;
+ let lastPromptedCode="",clipboardReadBusy=false,clipboardFallbackShown=false;
  document.getElementById("exportRosterCode").addEventListener("click",()=>{
    try{output.value=shareText(makeCode());status.textContent="阵容分享文本已生成，包含说明和短阵容码。";}
    catch(err){console.error(err);status.textContent="导出失败，请重试。";}
@@ -2569,24 +2569,39 @@ $("clearSideCamps").addEventListener("click",()=>{
  });
  // 手动粘贴时也会自动识别并提示；不直接导入，始终由用户确认。
  input.addEventListener("paste",()=>setTimeout(()=>promptImport(input.value,"paste"),0));
- async function checkUserClipboard(){
-   if(clipboardReadBusy||document.visibilityState==="hidden"||!navigator.clipboard||typeof navigator.clipboard.readText!=="function")return;
+ function askForPastedShareText(){
+   if(clipboardFallbackShown||lastPromptedCode)return;
+   clipboardFallbackShown=true;
+   // QQ/部分内置浏览器禁止页面启动时读取剪贴板。此时显式请求用户粘贴，随后仍需确认导入。
+   const pasted=window.prompt("当前浏览器未允许网页直接读取剪贴板。请在下方粘贴刚复制的阵容分享文本："," ");
+   if(pasted&&extractCode(pasted))promptImport(pasted,"paste");
+ }
+ async function checkUserClipboard(fromUserGesture=false){
+   if(clipboardReadBusy||document.visibilityState==="hidden")return;
+   if(!navigator.clipboard||typeof navigator.clipboard.readText!=="function"){
+     if(!fromUserGesture)setTimeout(askForPastedShareText,0);
+     return;
+   }
    clipboardReadBusy=true;
+   let readSucceeded=false;
    try{
      const text=await navigator.clipboard.readText();
+     readSucceeded=true;
      if(text&&extractCode(text))promptImport(text,"clipboard");
+     else if(!fromUserGesture)askForPastedShareText();
    }catch(err){
-     // 浏览器未授权读取剪贴板时不绕过权限；用户仍可在输入框长按粘贴，粘贴后自动提示导入。
+     // 不尝试绕过系统权限；明确提示用户粘贴分享文本，避免页面静默失败。
+     if(!fromUserGesture)setTimeout(askForPastedShareText,0);
    }finally{clipboardReadBusy=false;}
  }
- // 尝试在打开页面、返回编辑器时识别用户剪贴板；若浏览器禁止无手势读取，则由粘贴事件兜底。
- setTimeout(checkUserClipboard,700);
- window.addEventListener("focus",()=>setTimeout(checkUserClipboard,250));
- window.addEventListener("pageshow",()=>setTimeout(checkUserClipboard,250));
+ // 打开页面时先尝试读取用户剪贴板；若浏览器限制读取，则弹出粘贴输入框作为明确兜底。
+ setTimeout(()=>checkUserClipboard(false),700);
+ window.addEventListener("focus",()=>setTimeout(()=>checkUserClipboard(false),250));
+ window.addEventListener("pageshow",()=>setTimeout(()=>checkUserClipboard(false),250));
  // 用户点击导入卡片时再尝试一次，满足部分浏览器对剪贴板读取的用户手势要求。
  const importPanel=document.getElementById("importRosterPanel");
- if(importPanel)importPanel.addEventListener("click",()=>checkUserClipboard());
- document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")setTimeout(checkUserClipboard,250);});
+ if(importPanel)importPanel.addEventListener("click",()=>checkUserClipboard(true));
+ document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")setTimeout(()=>checkUserClipboard(false),250);});
 })();
 
 // 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
