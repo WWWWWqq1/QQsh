@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.2.151</title>
+<title>QQ水浒阵容规划器 v1.3.3</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -1010,6 +1010,268 @@ body.light .share-panel{background:#f6f7fa}
     max-height:none !important;
   }
 }
+
+
+/* v1.2.181：移动端所有卡片外框宽度统一，以“选择阵型”卡片为基准 */
+@media (max-width:760px) {
+  /* 所有一级卡片与“选择阵型”共用同一内容区宽度 */
+  .app > .panel,
+  .app > #importRosterPanel,
+  .app > #exportRosterPanel,
+  .app > #sharePanel,
+  .app > .layout,
+  .app > .camp-layout {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+  /* 主阵、武将选择、副将营、聚义营等内部卡片同步宽度 */
+  .app .panel,
+  .app .layout,
+  .app .layout > section,
+  .app .camp-layout,
+  .app .camp-layout > section,
+  .app .camp-layout > .camp-panel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+}
+
+
+/* v1.3.3：移动端滚动性能优化，避免吸顶选将卡片的 backdrop-filter 持续触发合成 */
+@media (max-width:760px) {
+  .app > #rosterPanel,
+  .app > #rosterPanel.roster-fixed-top {
+    -webkit-backdrop-filter:none !important;
+    backdrop-filter:none !important;
+    background:var(--panel) !important;
+  }
+  body.light .app > #rosterPanel,
+  body.light .app > #rosterPanel.roster-fixed-top {
+    background:#fff !important;
+  }
+  .app > #rosterPanel .hero-list,
+  .app > #rosterPanel .union-candidate-grid {
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+}
+
+</style>
+
+<style id="mobile-layout-v1-2-167">
+/* v1.2.168：移动端布局规则放入 head 内，确保浏览器稳定应用 */
+@media (max-width:760px) {
+  .app > #rosterPanel:not(.roster-collapsed) {
+    height:50vh !important; height:50dvh !important;
+    min-height:0 !important; max-height:50vh !important; max-height:50dvh !important;
+    box-sizing:border-box !important;
+  }
+  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-panel {
+    flex:0 0 40% !important; height:40% !important; min-height:0 !important;
+    max-height:40% !important; overflow:hidden !important; box-sizing:border-box !important;
+  }
+  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-grid {
+    display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    grid-auto-rows:max-content !important; align-content:start !important; overflow-y:auto !important;
+  }
+  .app > #rosterPanel .union-candidate-item { display:flex !important; flex-direction:column !important; align-items:stretch !important; gap:3px !important; padding:4px !important; min-width:0 !important; }
+  .app > #rosterPanel .union-candidate-name { order:0 !important; flex:0 0 auto !important; width:100% !important; font-size:10px !important; line-height:1.2 !important; margin:0 !important; }
+  .app > #rosterPanel .union-candidate-item .union-list { order:1 !important; width:100% !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; gap:2px !important; }
+  .app > #rosterPanel .union-candidate-item .union-chip { display:block !important; width:100% !important; font-size:9px !important; line-height:1.2 !important; padding:2px !important; white-space:normal !important; }
+  .camp-layout .camp-panel .camp-head .section-title { display:none !important; }
+  .camp-layout .camp-panel .camp-head { justify-content:flex-end !important; margin-bottom:3px !important; }
+  .camp-layout .camp-slot { display:flex !important; flex-direction:column !important; justify-content:flex-start !important; align-items:stretch !important; text-align:left !important; gap:2px !important; padding:4px !important; overflow:auto !important; }
+  .camp-layout .camp-slot .slot-name { order:0 !important; display:block !important; text-align:left !important; margin:0 !important; font-size:11px !important; line-height:1.15 !important; }
+  .camp-layout .camp-slot .union-list { order:1 !important; margin-top:1px !important; gap:1px !important; justify-content:flex-start !important; }
+  .camp-layout .camp-slot .union-chip, .board .cell .union-chip { font-size:9px !important; line-height:1.15 !important; padding:1px 2px !important; white-space:normal !important; }
+  .board .cell .union-list { margin-top:2px !important; gap:1px !important; }
+}
+  /* v1.2.168：移动端副将营、聚义营及聚义候补统一采用主阵发起武将+精简效果的展示方式 */
+  @media (max-width:760px) {
+    .camp-layout .camp-slot .slot-name { order:0 !important; }
+    .camp-layout .camp-slot .union-list { order:1 !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; }
+    .camp-layout .camp-slot .union-chip { display:block !important; text-align:left !important; }
+    .app > #rosterPanel .union-candidate-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+    .app > #rosterPanel .union-candidate-item { display:flex !important; flex-direction:column !important; align-items:stretch !important; }
+    .app > #rosterPanel .union-candidate-name { order:0 !important; width:100% !important; }
+    .app > #rosterPanel .union-candidate-item .union-list { order:1 !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; }
+    .app > #rosterPanel .union-candidate-item .union-chip { display:block !important; text-align:left !important; }
+  }
+</style>
+
+
+<style id="mobile-layout-v1-2-169">
+/* v1.2.169：移动端主阵聚义候补名称与聚义效果同一行 */
+@media (max-width:760px) {
+  /* 移动端隐藏副将营内部各营位名称，但保留“副将营”区块标题 */
+  #deputyPanel .camp-head .section-title,
+  .camp-layout .camp-panel:has(#deputyGrid) .camp-head .section-title { display:block !important; visibility:visible !important; }
+  #deputyPanel .camp-head,
+  .camp-layout .camp-panel:has(#deputyGrid) .camp-head { min-height:initial !important; height:auto !important; margin:0 0 5px !important; padding:initial !important; }
+  .app > #rosterPanel .union-candidate-item { display:flex !important; flex-direction:row !important; align-items:center !important; gap:5px !important; padding:4px 5px !important; }
+  .app > #rosterPanel .union-candidate-name { flex:0 0 auto !important; width:auto !important; max-width:42% !important; margin:0 !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }
+  .app > #rosterPanel .union-candidate-item .union-list { flex:1 1 auto !important; min-width:0 !important; width:auto !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; margin:0 !important; gap:2px !important; }
+  .app > #rosterPanel .union-candidate-item .union-chip { width:100% !important; box-sizing:border-box !important; white-space:normal !important; }
+}
+</style>
+
+<style id="v1-2-170-mobile-camp-headings">
+/* v1.2.170：移动端保留“副将营”“聚义营”两个区域标题；只隐藏单个营地内部名称的规则不在此处处理 */
+@media (max-width:760px) {
+  .camp-layout .camp-panel .camp-head .section-title { display:block !important; visibility:visible !important; }
+  .camp-layout .camp-panel .camp-head { justify-content:space-between !important; min-height:initial !important; height:auto !important; margin-bottom:5px !important; padding:initial !important; }
+}
+/* v1.2.173：移动端保留副将营/聚义营标题，仅隐藏副将营各营位名称 */
+/* v1.2.174：修复副将营区块标题被旧规则隐藏的问题 */
+/* v1.2.164：移动端设置——选将卡片占视口高度50%，聚义候补固定占卡片高度40% */
+@media (max-width:760px) {
+  .app > #rosterPanel:not(.roster-collapsed) { height:50vh !important; height:50dvh !important; max-height:50vh !important; max-height:50dvh !important; }
+  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-panel { flex:0 0 40% !important; height:40% !important; min-height:0 !important; max-height:40% !important; overflow:hidden !important; }
+  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; grid-auto-rows:max-content; align-content:start; overflow-y:auto !important; }
+  .app > #rosterPanel .union-candidate-item { display:flex; flex-direction:row !important; align-items:center !important; gap:4px !important; padding:4px !important; min-width:0 !important; }
+  .app > #rosterPanel .union-candidate-name { flex:0 0 auto !important; width:auto !important; max-width:42% !important; font-size:10px !important; margin:0 !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }
+  .app > #rosterPanel .union-candidate-item .union-list { flex:1 1 auto !important; min-width:0 !important; width:auto !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; gap:2px !important; }
+  .app > #rosterPanel .union-candidate-item .union-chip { display:block !important; width:100% !important; min-width:0 !important; font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; white-space:normal !important; overflow-wrap:anywhere !important; }
+  /* 移动端保留“副将营”“聚义营”区块标题，只隐藏副将营每个位置自带的天枢营等营位名称 */
+  .camp-layout .camp-panel .camp-head .section-title { display:block !important; }
+  .camp-layout .camp-panel .camp-head { justify-content:space-between !important; margin-bottom:5px !important; }
+  .camp-layout #deputyGrid .camp-slot .slot-number { display:none !important; }
+  .camp-layout .camp-slot { justify-content:flex-start !important; align-items:stretch !important; text-align:left !important; gap:3px !important; padding:5px 4px !important; overflow:auto !important; }
+  .camp-layout .camp-slot .slot-name { order:0 !important; display:block !important; text-align:left !important; margin:0 !important; font-size:11px !important; line-height:1.2 !important; }
+  .camp-layout .camp-slot .union-list { order:1 !important; margin-top:1px !important; gap:2px !important; justify-content:flex-start !important; }
+  .camp-layout .camp-slot .union-chip { font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; }
+  /* 主阵聚义简化为目标武将与效果，避免重复显示长条件 */
+  .board .cell .union-list { margin-top:2px !important; gap:2px !important; }
+  .board .cell .union-chip { font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; }
+  /* v1.2.174：明确保留“副将营”区块标题；隐藏的仅是每个营位自身名称 */
+  .camp-layout .camp-panel:has(#deputyGrid) > .camp-head > .section-title { display:block !important; visibility:visible !important; }
+}
+
+</style>
+<!-- v1.2.173：移动端主阵聚义精简为目标武将名称 + 属性效果；桌面端说明不变 -->
+
+<style id="mobile-main-actions-order-v1-2-175">
+/* v1.2.180：移动端主阵操作按钮使用六列网格锁定两行，禁止按钮换行或挤落 */
+@media (max-width:760px) {
+  .app .layout > section.panel:first-child .history-actions {
+    display:grid !important;
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    grid-auto-flow:row !important;
+    align-items:stretch !important;
+    gap:6px !important;
+    width:100% !important;
+  }
+  .app .layout > section.panel:first-child .history-actions .action-spacer { display:none !important; }
+  .app .layout > section.panel:first-child #undoMain,
+  .app .layout > section.panel:first-child #redoMain,
+  .app .layout > section.panel:first-child #clearAll {
+    grid-row:1 !important;
+    grid-column:span 2 !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:9px 2px !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    font-size:12px !important;
+    box-sizing:border-box !important;
+  }
+  .app .layout > section.panel:first-child #smartFill,
+  .app .layout > section.panel:first-child #clearSideCamps {
+    grid-row:2 !important;
+    grid-column:span 3 !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:9px 3px !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    font-size:12px !important;
+    box-sizing:border-box !important;
+  }
+}
+/* v1.2.176：移动端副将营、聚义营武将名称置顶并水平居中 */
+@media (max-width:760px) {
+  .camp-slot { align-items:center !important; text-align:center !important; }
+  .camp-slot .slot-name { order:0 !important; align-self:center !important; width:100% !important; text-align:center !important; margin-top:0 !important; }
+  .camp-slot .slot-number { order:1 !important; align-self:center !important; text-align:center !important; }
+  .camp-slot .union-list { width:100% !important; justify-content:center !important; align-self:stretch !important; }
+  .camp-slot .union-camp-details { width:100% !important; }
+}
+
+/* v1.2.179：PC端主体区域卡片宽度统一与“选择阵型”卡片一致 */
+@media (min-width:761px) {
+  .app > #importRosterPanel,
+  .app > .panel:not(#rosterPanel),
+  .app > .camp-layout,
+  .app > #exportRosterPanel,
+  .app > #sharePanel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+  .app > .camp-layout > .camp-panel,
+  .app > .camp-layout > section,
+  .app > .camp-layout > .panel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+}
+
+/* v1.2.178：移动端所有卡片统一使用“选择阵型”卡片的外框宽度 */
+@media (max-width:760px) {
+  .app > #importRosterPanel,
+  .app > .panel:not(#rosterPanel),
+  .app > .layout,
+  .app > .camp-layout,
+  .app > #exportRosterPanel,
+  .app > #sharePanel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+  .app > .layout > section:first-child,
+  .app > .layout > #rosterPanel,
+  .app > .camp-layout > .camp-panel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+}
+
+/* v1.3.2：修复移动端副将营/聚义营卡片额外内缩，外框与“选择阵型”对齐 */
+@media (max-width:760px) {
+  .app > .camp-layout {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    padding:0 !important;
+    box-sizing:border-box !important;
+  }
+  .app > .camp-layout > .camp-panel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1212,6 +1474,7 @@ function heroUnions(heroName){const base=baseHeroName(heroName);return unionData
 function mainLineupNames(){
   return new Set(Object.values(state.lineups[state.formation] || {}).filter(Boolean).map(baseHeroName));
 }
+function compactUnionEffect(effect){return String(effect||"").replace(/增加/g,"+").replace(/\s+/g,"").replace(/\+\+/g,"+");}
 function unionMarkup(heroName, showDetails=false, campPerspective=false){
   if(!heroName)return "";
   const lookupName=baseHeroName(heroName);
@@ -1252,12 +1515,22 @@ function unionMarkup(heroName, showDetails=false, campPerspective=false){
       if(campPerspective){
         const highlightName=n=>mainNames.has(n)?`<span class="union-main-name">${escapeHtml(baseHeroName(n))}</span>`:escapeHtml(baseHeroName(n));
         const highlightedTargets=u.targets.map(highlightName).join("、");
-        label=`${escapeHtml(u.name)}：${highlightName(u.hero)}与${highlightedTargets||"指定武将"}上阵，${escapeHtml(u.effect)}`;
+        if(window.matchMedia && window.matchMedia("(max-width:760px)").matches){
+          // 移动端阵营卡片以“主阵发起武将 + 精简属性效果”显示，例如：柴进 速度+20%
+          label=`${highlightName(u.hero)} ${escapeHtml(compactUnionEffect(u.effect))}`;
+        }else{
+          label=`${escapeHtml(u.name)}：${highlightName(u.hero)}与${highlightedTargets||"指定武将"}上阵，${escapeHtml(u.effect)}`;
+        }
       }else{
         if(showDetails){
-          // 主阵聚义描述始终显示完整目标条件，避免目标已在主阵时隐藏目标名称造成描述不完整。
-          const visibleDetail=`：与${u.targets.map(n=>baseHeroName(n)).join("、")}上阵，${u.effect}`;
-          label=escapeHtml(`${u.name}${visibleDetail}`);
+          if(window.matchMedia && window.matchMedia("(max-width:760px)").matches){
+            // 移动端主阵聚义精简为“聚义目标武将 + 属性效果”，例如：罗真人 武力攻击+25%。
+            label=escapeHtml(`${targetText||"指定武将"} ${compactUnionEffect(u.effect)}`);
+          }else{
+            // 桌面端保留完整聚义条件说明。
+            const visibleDetail=`：与${u.targets.map(n=>baseHeroName(n)).join("、")}上阵，${u.effect}`;
+            label=escapeHtml(`${u.name}${visibleDetail}`);
+          }
         }else{
           if(window.matchMedia && window.matchMedia("(max-width:760px)").matches){
             label=escapeHtml(`${targetText||"指定武将"} ${u.effect}`);
@@ -1713,7 +1986,7 @@ function renderUnionCandidates(){
     const chips=relations.get(name).map(u=>{
       const targetText=u.targets.map(baseHeroName).join("、");
       const label=(window.matchMedia && window.matchMedia("(max-width:760px)").matches)
-        ? `${escapeHtml(targetText)} ${escapeHtml(u.effect)}`
+        ? `${escapeHtml(baseHeroName(u.hero))} ${escapeHtml(compactUnionEffect(u.effect))}`
         : `${escapeHtml(u.name)}：${escapeHtml(baseHeroName(u.hero))}与${escapeHtml(targetText)}上阵，${escapeHtml(u.effect)}`;
       const title=`${u.name}：${baseHeroName(u.hero)}与${targetText}上阵，${u.effect}；未激活`;
       return `<span class="union-chip inactive" title="${escapeHtml(title)}">${label}</span>`;
@@ -2298,12 +2571,13 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
   placeholder.className='roster-sticky-placeholder';
   placeholder.setAttribute('aria-hidden','true');
   panel.parentNode.insertBefore(placeholder,panel);
-  let fixed=false, ticking=false, userHasScrolled=false;
+  let fixed=false, ticking=false, userHasScrolled=false, placeholderDocumentTop=0;
   function mobile(){return window.matchMedia('(max-width:760px)').matches;}
   function setFixed(on){
     if(on===fixed)return;
     if(on){
       const r=panel.getBoundingClientRect();
+      placeholderDocumentTop=window.scrollY+r.top;
       placeholder.style.height=r.height+'px';
       placeholder.classList.add('active');
       panel.style.setProperty('--roster-fixed-left',r.left+'px');
@@ -2322,17 +2596,11 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
   function updateSticky(){
     ticking=false;
     if(!mobile()){setFixed(false);return;}
-    // v1.2.162：初次打开或浏览器恢复滚动位置时，选将卡片保持文档流布局；只有用户主动滚动后才允许吸顶，避免覆盖导入阵容码卡片。
+    // 初次打开或恢复滚动位置时不吸顶；仅用户主动滚动后启用。
     if(!userHasScrolled){setFixed(false);return;}
-    // 固定时用占位元素的原始文档位置判断何时解除吸顶，避免卡片跳动。
-    const anchor=placeholder.getBoundingClientRect();
+    // 吸顶期间只比较滚动位置，不在每一帧重复读取布局或写入样式，减少强制布局与重绘。
     if(fixed){
-      if(anchor.top>=0)setFixed(false);
-      else{
-        const r=placeholder.getBoundingClientRect();
-        panel.style.setProperty('--roster-fixed-left',r.left+'px');
-        panel.style.setProperty('--roster-fixed-width',r.width+'px');
-      }
+      if(window.scrollY<placeholderDocumentTop)setFixed(false);
     }else{
       const r=panel.getBoundingClientRect();
       if(r.top<=0)setFixed(true);
@@ -2383,26 +2651,3 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
 <!-- v1.2.22: 聚义变更提示字体在上一版本基础上放大一倍 -->
 <!-- v1.2.24: 点击选将、拖拽上阵、阵位交换和清空主阵均触发聚义变更提示 -->
 <!-- v1.2.24: 通过聚义集合前后差异统计，修复数量相抵导致漏提示的问题 -->
-
-
-
-/* v1.2.164：移动端设置——选将卡片占视口高度50%，聚义候补固定占卡片高度40% */
-@media (max-width:760px) {
-  .app > #rosterPanel:not(.roster-collapsed) { height:50vh !important; height:50dvh !important; max-height:50vh !important; max-height:50dvh !important; }
-  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-panel { flex:0 0 40% !important; height:40% !important; min-height:0 !important; max-height:40% !important; overflow:hidden !important; }
-  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; grid-auto-rows:max-content; align-content:start; overflow-y:auto !important; }
-  .app > #rosterPanel .union-candidate-item { display:flex; flex-direction:column !important; align-items:stretch !important; gap:3px !important; padding:5px !important; }
-  .app > #rosterPanel .union-candidate-name { flex:0 0 auto !important; width:100% !important; font-size:10px !important; margin:0 !important; }
-  .app > #rosterPanel .union-candidate-item .union-list { width:100% !important; display:flex; flex-direction:column !important; align-items:stretch !important; gap:2px !important; }
-  .app > #rosterPanel .union-candidate-item .union-chip { display:block !important; width:100% !important; font-size:9px !important; line-height:1.25 !important; padding:2px 3px !important; }
-  /* 移动端副将营、聚义营隐藏营名，武将名称置顶，聚义内容紧随其后以争取更多可视空间 */
-  .camp-layout .camp-panel .camp-head .section-title { display:none !important; }
-  .camp-layout .camp-panel .camp-head { justify-content:flex-end !important; margin-bottom:5px !important; }
-  .camp-layout .camp-slot { justify-content:flex-start !important; align-items:stretch !important; text-align:left !important; gap:3px !important; padding:5px 4px !important; overflow:auto !important; }
-  .camp-layout .camp-slot .slot-name { order:0 !important; display:block !important; text-align:left !important; margin:0 !important; font-size:11px !important; line-height:1.2 !important; }
-  .camp-layout .camp-slot .union-list { order:1 !important; margin-top:1px !important; gap:2px !important; justify-content:flex-start !important; }
-  .camp-layout .camp-slot .union-chip { font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; }
-  /* 主阵聚义简化为目标武将与效果，避免重复显示长条件 */
-  .board .cell .union-list { margin-top:2px !important; gap:2px !important; }
-  .board .cell .union-chip { font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; }
-}
