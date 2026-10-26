@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.3.4</title>
+<title>QQ水浒阵容规划器 v1.3.7</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -1142,6 +1142,81 @@ body.light .share-panel{background:#f6f7fa}
   }
 }
 
+
+/* v1.3.6：最终修复营位标题布局，覆盖旧规则 */
+@media (max-width:760px) {
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot:not(.has-hero) {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    padding:6px 4px !important;
+    gap:4px !important;
+    height:auto !important;
+    min-height:78px !important;
+    box-sizing:border-box !important;
+  }
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot:not(.has-hero) > .slot-name {
+    order:0 !important;
+    display:block !important;
+    align-self:center !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    text-align:center !important;
+    line-height:1.25 !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot.has-hero {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    text-align:center !important;
+    padding:8px 4px 6px !important;
+    gap:4px !important;
+    height:auto !important;
+    min-height:100px !important;
+    overflow:visible !important;
+    box-sizing:border-box !important;
+  }
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot.has-hero > .slot-name {
+    order:-2 !important;
+    display:block !important;
+    align-self:center !important;
+    flex:0 0 auto !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:0 12px 0 0 !important;
+    box-sizing:border-box !important;
+    text-align:center !important;
+    line-height:1.25 !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot.has-hero > .slot-number {
+    order:-1 !important;
+    display:block !important;
+    align-self:center !important;
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+  }
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot > .union-list,
+  .app .camp-layout .camp-panel .camp-grid > button.camp-slot > .union-camp-details {
+    order:1 !important;
+    align-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    margin-top:2px !important;
+    box-sizing:border-box !important;
+    justify-content:center !important;
+  }
+}
+
 </style>
 
 <style id="mobile-layout-v1-2-167">
@@ -1352,6 +1427,69 @@ body.light .share-panel{background:#f6f7fa}
     box-sizing:border-box !important;
   }
 }
+
+
+/* v1.3.5：修复移动端营位标题布局被后续旧规则覆盖的问题；副将营、聚义营统一生效 */
+@media (max-width:760px) {
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot:not(.has-hero) {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    padding:6px 4px !important;
+    overflow:hidden !important;
+    gap:4px !important;
+  }
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot:not(.has-hero) > .slot-name {
+    order:0 !important;
+    display:block !important;
+    align-self:center !important;
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+    line-height:1.25 !important;
+    overflow-wrap:anywhere !important;
+  }
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot.has-hero {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    text-align:center !important;
+    padding:27px 4px 6px !important;
+    overflow:hidden !important;
+    gap:4px !important;
+  }
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot.has-hero > .slot-name {
+    order:-2 !important;
+    display:block !important;
+    align-self:center !important;
+    flex:0 0 auto !important;
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+    line-height:1.25 !important;
+    overflow-wrap:anywhere !important;
+  }
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot.has-hero > .slot-number {
+    order:-1 !important;
+    display:block !important;
+    align-self:center !important;
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+  }
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot > .union-list,
+  .app > .camp-layout > .camp-panel .camp-grid > .camp-slot > .union-camp-details {
+    align-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    justify-content:center !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1994,6 +2132,53 @@ function renderCamps(){
       b.className="camp-slot"+(hero?" filled has-hero":"")+(state.selectedCamp&&state.selectedCamp.area===cfg.area&&state.selectedCamp.slot===slot?" selected":"");
       b.setAttribute("aria-label",`${cfg.label}位置${slot}${hero?"，"+hero:"，选择武将"}`);
       b.innerHTML=`${hero?`<span class="camp-remove-hero" role="button" tabindex="0" aria-label="下掉${escapeHtml(displayHeroName(hero))}" title="下掉武将">×</span>`:""}${cfg.area==="deputy"?`<span class="slot-number">${["天枢营","天璇营","天机营","天权营","玉衡营","开阳营","摇光营"][slot-1]}</span>`:""}<span class="slot-name">${hero?escapeHtml(displayHeroName(hero)):"选择武将"}</span>${hero?unionMarkup(hero,false,true):""}`;
+      /* v1.3.6：在生成营位时直接设置移动端布局，避免历史 CSS 规则覆盖 */
+      if (window.matchMedia && window.matchMedia("(max-width:760px)").matches) {
+        const slotName = b.querySelector(".slot-name");
+        const slotNumber = b.querySelector(".slot-number");
+        b.style.boxSizing = "border-box";
+        b.style.display = "flex";
+        b.style.flexDirection = "column";
+        b.style.alignItems = "center";
+        b.style.textAlign = "center";
+        b.style.gap = "4px";
+        b.style.height = "auto";
+        b.style.minHeight = hero ? "100px" : "78px";
+        b.style.justifyContent = hero ? "flex-start" : "center";
+        b.style.padding = hero ? "8px 4px 6px" : "6px 4px";
+        b.style.overflow = "visible";
+        if (slotName) {
+          slotName.style.order = hero ? "-2" : "0";
+          slotName.style.display = "block";
+          slotName.style.alignSelf = "center";
+          slotName.style.flex = "0 0 auto";
+          slotName.style.width = "100%";
+          slotName.style.margin = "0";
+          slotName.style.padding = hero ? "0 12px 0 0" : "0";
+          slotName.style.boxSizing = "border-box";
+          slotName.style.textAlign = "center";
+          slotName.style.lineHeight = "1.25";
+          slotName.style.overflowWrap = "anywhere";
+        }
+        if (slotNumber) {
+          slotNumber.style.order = "-1";
+          slotNumber.style.alignSelf = "center";
+          slotNumber.style.width = "100%";
+          slotNumber.style.textAlign = "center";
+        }
+        const unionList = b.querySelector(".union-list");
+        const unionDetails = b.querySelector(".union-camp-details");
+        [unionList, unionDetails].filter(Boolean).forEach(el => {
+          el.style.order = "1";
+          el.style.alignSelf = "stretch";
+          el.style.width = "100%";
+          el.style.maxWidth = "100%";
+          el.style.minWidth = "0";
+          el.style.boxSizing = "border-box";
+          el.style.justifyContent = "center";
+        });
+      }
+
       const removeBtn=b.querySelector(".camp-remove-hero");
       if(removeBtn){
         const doRemove=ev=>{ev.preventDefault();ev.stopPropagation();removeSlotHero(cfg.area,slot);};
@@ -2492,7 +2677,8 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
      return lines;
    }
    const maxDescLines=Math.max(1,...[...deputyDescriptions.map(a=>a.flatMap(t=>wrapDescriptionLines(t,11)).length),...gatheringDescriptions.map(a=>a.flatMap(t=>wrapDescriptionLines(t,16)).length)]);
-   const mainCellH=Math.max(125,70+maxDescLines*21), campCellH=mainCellH, titleTop=100, mainTitleY=160, mainGridY=185;
+   const shareUnionLineStep=25; // 分享预览中多条聚义描述之间稍微增加间隔
+   const mainCellH=Math.max(125,70+maxDescLines*shareUnionLineStep), campCellH=mainCellH, titleTop=100, mainTitleY=160, mainGridY=185;
    const mainGridH=3*mainCellH+2*14, deputyTitleY=mainGridY+mainGridH+58;
    const deputyGridY=deputyTitleY+25, deputyGridH=2*campCellH+14;
    const gatheringTitleY=deputyGridY+deputyGridH+58, gatheringGridY=gatheringTitleY+25;
@@ -2537,7 +2723,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
            ctx.fillStyle=light?'#593800':'#ffdf86';
            ctx.font='bold 18px SimSun,"宋体",serif';
            ctx.textAlign='left';
-           lines.forEach((text,j)=>ctx.fillText(text,x+44,yy+61+j*21));
+           lines.forEach((text,j)=>ctx.fillText(text,x+44,yy+61+j*shareUnionLineStep));
            ctx.restore();
            continue;
          }else{
