@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.4.12</title>
+<title>QQ水浒阵容规划器 v1.4.14</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -111,12 +111,12 @@ body.light .action-btn.primary{background:#c89b45;color:#211a0e}
 .smart-fill-heading .section-title{margin:0}
 .smart-fill-heading-hint{color:var(--muted);font-size:12px;font-weight:400;line-height:1.4}
 .camp-bulk-actions .smart-fill-exclusions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding:0;font-size:16px;width:100%;box-sizing:border-box;background:transparent;border:0;border-radius:0}
-/* v1.4.12：聚义属性与生效武将筛选区始终并排显示 */
+/* v1.4.14：两个筛选内容各自固定为单独一行，标题与选项同行；窄屏可横向滚动 */
+.camp-bulk-actions .smart-fill-exclusions,
 .camp-bulk-actions .smart-fill-exclusions:not(.effective-heroes),
-.camp-bulk-actions .smart-fill-exclusions.effective-heroes{display:inline-flex;vertical-align:top;width:calc(50% - 5px);max-width:calc(50% - 5px);margin-right:4px;box-sizing:border-box;align-content:flex-start;align-items:flex-start;flex-wrap:wrap;gap:6px}
-.camp-bulk-actions .smart-fill-exclusions.effective-heroes{margin-right:0}
-.camp-bulk-actions .smart-fill-exclusions-title{white-space:normal;flex:0 0 100%;align-self:flex-start}
-.camp-bulk-actions .effective-hero-toggles{width:100%;flex:1 1 100%;}
+.camp-bulk-actions .smart-fill-exclusions.effective-heroes{display:flex;flex-wrap:nowrap;align-items:center;width:100%;max-width:100%;margin-right:0;box-sizing:border-box;gap:6px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding-bottom:2px}
+.camp-bulk-actions .smart-fill-exclusions-title{white-space:nowrap;flex:0 0 auto;align-self:center}
+.camp-bulk-actions .effective-hero-toggles{display:flex;flex:0 0 auto;flex-wrap:nowrap;align-items:center;gap:8px;min-width:max-content;width:auto}
 .smart-fill-exclusions-title{font-weight:700;white-space:nowrap;align-self:center;flex:none}
 .union-stat-toggle,.effective-hero-toggle{display:inline-flex;align-items:center;justify-content:center;text-align:center;vertical-align:middle;box-sizing:border-box;border:1px solid #d3d9e2;background:#e8ebf0;color:#239b57;border-radius:11px;padding:10px 14px;font:inherit;font-size:16px;font-weight:700;line-height:1.35;cursor:pointer;white-space:nowrap;min-width:0;flex:0 0 auto}
 .union-stat-toggle.is-off,.effective-hero-toggle.is-off{border-color:#e0bcbc;background:#f4e7e7;color:#c83d3d}
@@ -1603,6 +1603,48 @@ body.light .share-panel{background:#f6f7fa}
   }
 }
 </style>
+
+<style id="v1-4-14-action-row-and-roster-gap">
+/* v1.4.14：移动端主阵四个常用操作固定同一排；PC端选将卡片与主体保留明确间隔 */
+@media (max-width:760px) {
+  .app .layout > section.panel:first-child .history-actions {
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    grid-auto-flow:row !important;
+    align-items:stretch !important;
+    gap:6px !important;
+    width:100% !important;
+  }
+  .app .layout > section.panel:first-child .history-actions .action-spacer { display:none !important; }
+  .app .layout > section.panel:first-child #undoMain,
+  .app .layout > section.panel:first-child #redoMain,
+  .app .layout > section.panel:first-child #randomMain,
+  .app .layout > section.panel:first-child #clearAll {
+    grid-row:1 !important; grid-column:span 1 !important;
+    width:100% !important; min-width:0 !important; margin:0 !important;
+    padding:9px 1px !important; white-space:nowrap !important;
+    text-align:center !important; font-size:12px !important;
+    box-sizing:border-box !important;
+  }
+  .app .layout > section.panel:first-child #smartFill,
+  .app .layout > section.panel:first-child #clearSideCamps {
+    grid-row:2 !important; grid-column:span 2 !important;
+    width:100% !important; min-width:0 !important; margin:0 !important;
+    padding:9px 3px !important; white-space:nowrap !important;
+    text-align:center !important; font-size:12px !important;
+    box-sizing:border-box !important;
+  }
+}
+@media (min-width:761px) {
+  /* 选将面板右边缘保持原位置，将其宽度缩小18px以形成真实可见间隔 */
+  .app .layout > #rosterPanel {
+    width:calc(var(--planner-roster-width) - 18px) !important;
+    max-width:calc(var(--planner-roster-width) - 18px) !important;
+    right:var(--planner-left) !important; left:auto !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
