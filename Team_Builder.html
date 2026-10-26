@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.3.18</title>
+<title>QQ水浒阵容规划器 v1.4.12</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -100,6 +100,30 @@ body.light .action-btn.primary{background:#c89b45;color:#211a0e}
  .page-footer .theme-toggle{right:145px;bottom:max(12px,env(safe-area-inset-bottom));padding:8px 10px;gap:5px}
 }
 
+
+
+/* v1.4.1：移除筛选行长条背景；独立格子加大圆角，文字水平垂直居中 */
+.camp-bulk-actions{margin-top:16px;margin-bottom:16px;padding:12px 14px}
+.camp-bulk-actions .actions{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.camp-bulk-actions .camp-bulk-actions-footer{margin-top:auto;padding-top:14px}
+.camp-bulk-actions .camp-bulk-actions-footer{justify-content:flex-end}
+.smart-fill-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.smart-fill-heading .section-title{margin:0}
+.smart-fill-heading-hint{color:var(--muted);font-size:12px;font-weight:400;line-height:1.4}
+.camp-bulk-actions .smart-fill-exclusions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding:0;font-size:16px;width:100%;box-sizing:border-box;background:transparent;border:0;border-radius:0}
+/* v1.4.12：聚义属性与生效武将筛选区始终并排显示 */
+.camp-bulk-actions .smart-fill-exclusions:not(.effective-heroes),
+.camp-bulk-actions .smart-fill-exclusions.effective-heroes{display:inline-flex;vertical-align:top;width:calc(50% - 5px);max-width:calc(50% - 5px);margin-right:4px;box-sizing:border-box;align-content:flex-start;align-items:flex-start;flex-wrap:wrap;gap:6px}
+.camp-bulk-actions .smart-fill-exclusions.effective-heroes{margin-right:0}
+.camp-bulk-actions .smart-fill-exclusions-title{white-space:normal;flex:0 0 100%;align-self:flex-start}
+.camp-bulk-actions .effective-hero-toggles{width:100%;flex:1 1 100%;}
+.smart-fill-exclusions-title{font-weight:700;white-space:nowrap;align-self:center;flex:none}
+.union-stat-toggle,.effective-hero-toggle{display:inline-flex;align-items:center;justify-content:center;text-align:center;vertical-align:middle;box-sizing:border-box;border:1px solid #d3d9e2;background:#e8ebf0;color:#239b57;border-radius:11px;padding:10px 14px;font:inherit;font-size:16px;font-weight:700;line-height:1.35;cursor:pointer;white-space:nowrap;min-width:0;flex:0 0 auto}
+.union-stat-toggle.is-off,.effective-hero-toggle.is-off{border-color:#e0bcbc;background:#f4e7e7;color:#c83d3d}
+.effective-heroes{display:flex;flex-wrap:nowrap;align-items:center}
+.effective-hero-toggles{display:flex;flex:1 1 auto;flex-wrap:wrap;align-items:center;gap:8px;min-width:0;width:auto}
+.effective-hero-toggle{flex:0 0 auto;padding:10px 14px;font-size:16px}
+.camp-bulk-actions .smart-fill-exclusions button{min-height:40px}
 
 /* 副将营与聚义营 */
 .camp-layout{width:100%;max-width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
@@ -1217,6 +1241,8 @@ body.light .share-panel{background:#f6f7fa}
   }
 }
 
+/* v1.3.24：智能补齐卡片增加可排除的聚义属性筛选 */
+@media(max-width:560px){.camp-bulk-actions .smart-fill-exclusions{gap:6px;font-size:13px}.union-stat-toggle,.effective-hero-toggle{font-size:13px;padding:8px 4px}.smart-fill-exclusions-title{font-size:13px}.effective-hero-toggles{gap:5px}.effective-hero-toggle{font-size:13px;padding:8px 4px}}
 </style>
 
 <style id="mobile-layout-v1-2-167">
@@ -1557,6 +1583,26 @@ body.light .share-panel{background:#f6f7fa}
   }
 }
 </style>
+
+<style id="pc-published-panel-clearance-v1-3-21">
+/* v1.3.22：发布网页中右侧选将面板固定布局时，确保左侧所有主体卡片预留可见间距 */
+@media (min-width: 761px) {
+  .app > .panel {
+    width: calc(70% - 18px) !important;
+    max-width: calc(70% - 18px) !important;
+    margin-right: 18px !important;
+    box-sizing: border-box !important;
+  }
+  .app .layout {
+    column-gap: 18px !important;
+    gap: 18px !important;
+  }
+  .app .layout > section:first-child {
+    min-width: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1578,7 +1624,7 @@ body.light .share-panel{background:#f6f7fa}
   <section class="panel">
     <div class="board-title"><strong id="boardName">飞龙阵</strong><span class="counter" id="counter">已上阵 0 / 5</span></div>
     <div class="board-wrap"><div id="board" class="board" aria-label="阵型九宫格"></div></div>
-    <div class="actions history-actions"><button class="action-btn" id="undoMain" disabled>撤销</button><button class="action-btn" id="redoMain" disabled>重做</button><span class="action-spacer"></span><button class="action-btn" id="clearAll">清空本阵</button><button class="action-btn" id="clearSideCamps">清空副将营 聚义营</button><button class="action-btn" id="smartFill">智能补齐副将营 聚义营</button></div>
+    <div class="actions history-actions"><button class="action-btn" id="undoMain" disabled>撤销</button><button class="action-btn" id="redoMain" disabled>重做</button><button class="action-btn" id="randomMain">随机上阵</button><span class="action-spacer"></span><button class="action-btn" id="clearAll">清空阵容</button></div>
     
   </section>
   <section class="panel" id="rosterPanel">
@@ -1603,6 +1649,23 @@ body.light .share-panel{background:#f6f7fa}
     </div>
   </section>
 </div>
+<section class="panel camp-bulk-actions" aria-label="智能补齐">
+  <div class="smart-fill-heading"><h2 class="section-title">智能补齐</h2><span class="smart-fill-heading-hint">点击按钮可过滤无需点亮的聚义</span></div>
+  <div class="smart-fill-exclusions" role="group" aria-label="需要点亮的聚义">
+    <span class="smart-fill-exclusions-title">需要点亮的聚义：</span>
+    <button type="button" class="union-stat-toggle is-on" data-stat="速度" aria-pressed="true">速度</button>
+    <button type="button" class="union-stat-toggle is-on" data-stat="武攻" aria-pressed="true">武攻</button>
+    <button type="button" class="union-stat-toggle is-on" data-stat="法攻" aria-pressed="true">法攻</button>
+    <button type="button" class="union-stat-toggle is-on" data-stat="武防" aria-pressed="true">武防</button>
+    <button type="button" class="union-stat-toggle is-on" data-stat="法防" aria-pressed="true">法防</button>
+    <button type="button" class="union-stat-toggle is-on" data-stat="生命" aria-pressed="true">生命</button>
+  </div>
+  <div class="smart-fill-exclusions effective-heroes" role="group" aria-label="生效的武将">
+    <span class="smart-fill-exclusions-title">需要生效的武将：</span>
+    <div id="effectiveHeroToggles" class="effective-hero-toggles"></div>
+  </div>
+  <div class="actions history-actions camp-bulk-actions-footer"><button class="action-btn" id="clearSideCamps">清空副将营 聚义营</button><button class="action-btn" id="smartFill">补齐副将营 聚义营</button></div>
+</section>
 <div class="camp-layout">
   <section class="panel camp-panel">
     <div class="camp-head"><h2 class="section-title"> 副将营</h2><span class="camp-count" id="deputyCounter">已上阵 0 / 7</span></div>
@@ -1672,6 +1735,9 @@ const state = {
 state.lineups["长蛇阵"] = {};
 const $ = id => document.getElementById(id);
 function baseHeroName(name){if(!name)return "";let value=String(name).trim().replace(/[・･]/g,"·");const prefix=/^(?:涅槃三阶神|涅槃三阶|真|神|修罗)·/;while(prefix.test(value))value=value.replace(prefix,"");return value.trim();}
+document.addEventListener("DOMContentLoaded",renderEffectiveHeroToggles);
+// 主阵武将/阵型变更后，同步生效武将按钮列表。
+document.addEventListener("click",event=>{if(event.target.closest("#formationSelect, .formation-btn, .cell, #mainGrid"))setTimeout(renderEffectiveHeroToggles,0);});
 function isGodHero(name){return typeof name==="string"&&name.startsWith("神·");}
 function isNirvanaHero(name){return typeof name==="string"&&name.startsWith("涅槃三阶神·");}
 function isCountedGodHero(name){return isGodHero(name)||isNirvanaHero(name);}
@@ -1745,6 +1811,23 @@ function updateHistoryButtons(){
 }
 $("undoMain").addEventListener("click",()=>undoAction("main"));
 $("redoMain").addEventListener("click",()=>redoAction("main"));
+$("randomMain").addEventListener("click",()=>{
+  const formation=currentFormation();
+  if(!formation)return;
+  const lineup=state.lineups[state.formation]||(state.lineups[state.formation]={});
+  const empty=formation.positions.map(String).filter(slot=>!lineup[slot]);
+  if(!empty.length){showRedToast("当前阵型没有空位可随机上阵");return;}
+  const usedBases=new Set([...Object.values(lineup),...Object.values(state.deputy),...Object.values(state.gathering)].filter(Boolean).map(baseHeroName));
+  const pool=heroes.filter(h=>h&&h.name&&!usedBases.has(baseHeroName(h.name))&&!isGodHero(h.name)&&!isNirvanaHero(h.name));
+  if(!pool.length){showRedToast("没有可随机上阵的武将");return;}
+  recordUndo("main");
+  const shuffled=pool.slice();
+  for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
+  empty.forEach((slot,i)=>{if(shuffled[i])lineup[slot]=shuffled[i].name;});
+  state.selectedPosition=null;state.selectedCamp=null;
+  $("slotPrompt").textContent="随机上阵完成。";
+  renderBoard();renderCamps();renderHeroes();updateHistoryButtons();
+});
 $("undoDeputy").addEventListener("click",()=>undoAction("deputy"));
 $("redoDeputy").addEventListener("click",()=>redoAction("deputy"));
 $("undoGathering").addEventListener("click",()=>undoAction("gathering"));
@@ -1943,6 +2026,14 @@ function enableSlotDrag(sourceButton, area, slot){
   sourceButton.draggable=!!lineup?.[slot];
   if(!sourceButton.draggable) return;
   sourceButton.classList.add("slot-draggable");
+  sourceButton.dataset.slotArea=area;
+  sourceButton.dataset.slotNumber=String(slot);
+  // 移动端原生 HTML5 drag-and-drop 支持不稳定，补充触摸拖动以交换已上阵武将。
+  sourceButton.addEventListener("touchstart",ev=>{
+    if(ev.touches.length!==1)return;
+    const t=ev.touches[0];
+    window.__qqshTouchSlotDrag={area,slot:Number(slot),formation:state.formation,startX:t.clientX,startY:t.clientY,moved:false};
+  },{passive:true});
   sourceButton.addEventListener("dragstart",ev=>{
     window.__qqshActiveSlotDrag={area,slot:Number(slot),formation:state.formation};window.__qqshSlotDropHandled=false;
     ev.dataTransfer.setData("application/x-qqsh-slot",JSON.stringify({area,slot:Number(slot),formation:state.formation}));
@@ -1954,6 +2045,45 @@ function enableSlotDrag(sourceButton, area, slot){
     document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
   });
 }
+// 移动端触摸拖动：从一个已上阵格子拖到另一个主阵/副将营/聚义营格子即可交换。
+if(!window.__qqshTouchSlotHandlersInstalled){
+  window.__qqshTouchSlotHandlersInstalled=true;
+  document.addEventListener("touchmove",ev=>{
+    const drag=window.__qqshTouchSlotDrag;if(!drag||ev.touches.length!==1)return;
+    const t=ev.touches[0];
+    if(Math.abs(t.clientX-drag.startX)+Math.abs(t.clientY-drag.startY)>12){
+      drag.moved=true;
+      if(ev.cancelable)ev.preventDefault();
+      document.querySelectorAll(".drop-hover").forEach(el=>el.classList.remove("drop-hover"));
+      const target=document.elementFromPoint(t.clientX,t.clientY)?.closest(".cell.active, .camp-slot");
+      if(target&&target!==document.querySelector(`[data-slot-area="${drag.area}"][data-slot-number="${drag.slot}"]`))target.classList.add("drop-hover");
+      document.querySelectorAll(".cell.active,.camp-slot").forEach(el=>el.classList.add("drop-ready"));
+    }
+  },{passive:false});
+  document.addEventListener("touchend",ev=>{
+    const drag=window.__qqshTouchSlotDrag;if(!drag)return;
+    window.__qqshTouchSlotDrag=null;
+    document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
+    if(!drag.moved)return;
+    window.__qqshSuppressSlotClickUntil=Date.now()+500;
+    const t=ev.changedTouches&&ev.changedTouches[0];if(!t)return;
+    const target=document.elementFromPoint(t.clientX,t.clientY)?.closest(".cell.active, .camp-slot");if(!target)return;
+    const area=target.dataset.slotArea||(target.classList.contains("cell")?"main":null);
+    const slot=Number(target.dataset.slotNumber||(target.classList.contains("cell")?Array.from(document.querySelectorAll("#board .cell.active")).indexOf(target)+1:0));
+    if(!area||!slot)return;
+    swapSlotContents(drag,area,slot);
+  },{passive:true});
+  document.addEventListener("click",ev=>{
+    if(Date.now()<(window.__qqshSuppressSlotClickUntil||0)&&ev.target.closest(".cell.active, .camp-slot")){
+      ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation();
+    }
+  },true);
+  document.addEventListener("touchcancel",()=>{
+    window.__qqshTouchSlotDrag=null;
+    document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
+  },{passive:true});
+}
+
 function assignDraggedHero(heroName, area, slot){
   if(!heroName || !heroes.some(h=>h.name===heroName))return;
   if((area==="deputy"||area==="gathering")&&isCountedGodHero(heroName)){
@@ -2036,6 +2166,7 @@ function renderBoard(){
       ? `${hero?`<span class="main-remove-hero" role="button" tabindex="0" aria-label="下掉${escapeHtml(displayHeroName(hero))}" title="下掉武将">×</span>`:""}<span class="hero">${hero?escapeHtml(displayHeroName(hero)):""}</span>${hero?unionMarkup(hero,true):""}${hero?"":`<span class="hint hint-ready">点击上阵</span>`}`
       : `<span class="unavailable-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="12.2" stroke="currentColor" stroke-width="2.6"/><path d="M11.5 11.5L20.5 20.5M20.5 11.5L11.5 20.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span>`;
     if(active){
+      b.dataset.slotArea="main";b.dataset.slotNumber=String(p);
       enableHeroDrop(b,"main",p);if(hero)enableSlotDrag(b,"main",p);
       const removeBtn=b.querySelector(".main-remove-hero");
       if(removeBtn){
@@ -2052,6 +2183,8 @@ function renderBoard(){
     if(p===state.selectedPosition && active)b.style.outline="3px solid #e4bb63";
     root.appendChild(b);
   }
+  // 主阵武将变化后立即同步「生效的武将」按钮，仅展示当前已上阵的主阵武将。
+  if(typeof renderEffectiveHeroToggles==="function")renderEffectiveHeroToggles();
   const hero=lineup[state.selectedPosition];
   if(state.selectedPosition && !activePosition(state.selectedPosition)){
     state.selectedPosition=null;
@@ -2169,6 +2302,7 @@ function renderCamps(){
         removeBtn.addEventListener("click",doRemove);
         removeBtn.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" ")doRemove(ev);});
       }
+      b.dataset.slotArea=cfg.area;b.dataset.slotNumber=String(slot);
       enableHeroDrop(b,cfg.area,slot);
       if(hero)enableSlotDrag(b,cfg.area,slot);
       b.addEventListener("click",()=>{
@@ -2193,6 +2327,8 @@ function renderUnionCandidates(){
   const relations=new Map();
   unionData.forEach(u=>{
     if(!mainNames.has(baseHeroName(u.hero)))return;
+    // v1.4.2：被设置为“不需要点亮”的聚义，不再生成聚义候补武将。
+    if(typeof unionMatchesExcludedStats==="function" && unionMatchesExcludedStats(u))return;
     const active=u.targets.length>0 && present.has(baseHeroName(u.hero)) && u.targets.every(t=>present.has(baseHeroName(t)));
     if(active)return;
     // 已在主阵、副将营或聚义营的目标不重复列为候补；多目标关系逐个保留尚未上阵的目标。
@@ -2348,6 +2484,33 @@ $("clearAll").addEventListener("click",()=>{
 /* v1.2.91：智能补齐按主阵聚义目标分阶段执行，副将营优先修罗，无修罗形态时回退真将。 */
 /* v1.2.96：主阵聚义描述保留完整目标；智能补齐优先补完已部分满足的聚义。 */
 /* v1.2.165：除飞龙阵外优先法术攻击聚义；修罗·李衮不享受该优先加权。 */
+/* v1.3.27：生效武将筛选仅对应当前主阵五个武将；关闭时忽略该主阵武将发起的聚义限制。 */
+// v1.3.27：生效武将按钮仅展示当前主阵五个位置，默认全部启用。\n/* v1.3.28：主阵上阵、下阵或更换武将后，实时同步生效武将按钮。 */
+function getExcludedUnionStats(){
+  return [...document.querySelectorAll(".union-stat-toggle.is-off")].map(el=>el.dataset.stat);
+}
+function getInactiveUnionHeroes(){
+  return new Set([...document.querySelectorAll(".effective-hero-toggle.is-off")].map(el=>baseHeroName(el.dataset.hero)));
+}
+function renderEffectiveHeroToggles(){
+  const root=$("effectiveHeroToggles"); if(!root)return;
+  // 生效武将仅取当前阵型主阵的五个位置；按钮名称显示上阵武将完整名称（包含真、神、修罗等前缀）。
+  const main=state.lineups[state.formation]||{};
+  const names=[...new Set(Object.values(main).filter(Boolean).map(name=>String(name).trim()).filter(Boolean))];
+  const previous=new Map([...root.querySelectorAll(".effective-hero-toggle")].map(el=>[String(el.dataset.hero||"").trim(),!el.classList.contains("is-off")]));
+  root.innerHTML=names.map(name=>{const on=previous.has(name)?previous.get(name):true;const fullName=displayHeroName(name).replace(/^涅槃三阶神・/,"神・");return `<button type="button" class="effective-hero-toggle ${on?"is-on":"is-off"}" data-hero="${escapeHtml(name)}" aria-pressed="${on}">${escapeHtml(fullName)}</button>`;}).join("");
+}
+document.addEventListener("click",event=>{
+  const statButton=event.target.closest(".union-stat-toggle");
+  if(statButton){const on=statButton.classList.toggle("is-off")===false;statButton.classList.toggle("is-on",on);statButton.setAttribute("aria-pressed",String(on));return;}
+  const heroButton=event.target.closest(".effective-hero-toggle");
+  if(heroButton){const on=heroButton.classList.toggle("is-off")===false;heroButton.classList.toggle("is-on",on);heroButton.setAttribute("aria-pressed",String(on));}
+});
+function unionMatchesExcludedStats(union){
+  const effect=String(union.effect||"");
+  const aliases={"速度":["速度"],"武攻":["武力攻击","武攻"],"法攻":["法术攻击","法攻"],"武防":["武力防御","武防"],"法防":["法术防御","法防"],"生命":["生命"]};
+  return getExcludedUnionStats().some(stat=>(aliases[stat]||[stat]).some(name=>effect.includes(name)));
+}
 function smartFillCamps(targetArea=null){
   const main=state.lineups[state.formation]||{};
   const mainNames=new Set(Object.values(main).filter(Boolean).map(baseHeroName));
@@ -2369,8 +2532,12 @@ function smartFillCamps(targetArea=null){
   const occupiedBase=()=>new Set([
     ...Object.values(main),...Object.values(state.deputy),...Object.values(state.gathering)
   ].filter(Boolean).map(baseHeroName));
+  // v1.3.25：排除属性同时作用于副将营、聚义营及批量补齐；两个营共用同一组聚义目标过滤规则。
   // 只从当前主阵武将发起的聚义中寻找目标，不使用候补区筛选状态。
-  const unionGoals=()=>unionData.filter(u=>mainNames.has(baseHeroName(u.hero))&&Array.isArray(u.targets)&&u.targets.length>0);
+  // unionGoals 被两个 fillArea 调用共同使用，因此所勾选的排除属性会同时过滤两营候选。
+  const inactiveUnionHeroes=getInactiveUnionHeroes();
+  // 生效的武将只对应主阵五个位置；关闭某位主阵武将后，不再以该武将发起的聚义作为补齐限制。
+  const unionGoals=()=>unionData.filter(u=>mainNames.has(baseHeroName(u.hero))&&!inactiveUnionHeroes.has(baseHeroName(u.hero))&&Array.isArray(u.targets)&&u.targets.length>0&&!unionMatchesExcludedStats(u)).map(u=>({...u,targets:u.targets.map(baseHeroName)}));
   const variantsByBase=new Map();
   heroes.forEach(h=>{
     const base=baseHeroName(h.name);
@@ -2446,7 +2613,8 @@ function smartFillCamps(targetArea=null){
   updateHistoryButtons();
   state.selectedCamp=null;
   state.selectedPosition=null;
-  $("slotPrompt").textContent=`智能补齐完成：${targetArea==="deputy"?"副将营":targetArea==="gathering"?"聚义营":"副将营和聚义营"}已按聚义评分补齐。${preferredStat?`本阵优先属性：${preferredStat}。`:""}`;
+  const excludedStats=getExcludedUnionStats();
+  $("slotPrompt").textContent=`智能补齐完成：${targetArea==="deputy"?"副将营":targetArea==="gathering"?"聚义营":"副将营和聚义营"}已按聚义评分补齐。${preferredStat?`本阵优先属性：${preferredStat}。`:""}${excludedStats.length?`已排除聚义属性：${excludedStats.join("、")}。`:""}`;
   renderBoard();renderCamps();renderHeroes();
   showLineupChange(before,getActiveUnionKeys());
 }
