@@ -58,6 +58,9 @@ input,select{width:100%;min-width:0;background:#151b25;color:var(--text);border:
 .hero-option strong{display:block;overflow-wrap:anywhere}
 .hero-option small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
 .hero-option.chosen{border-color:var(--accent);background:#4a3d29}
+/* v1.2.166：指定神将/修罗优先高亮；存在涅槃形态时仅高亮涅槃形态 */
+.hero-option.priority-highlight{border-color:#e0b34f !important;background:linear-gradient(110deg,#66502a,#3b3428) !important;box-shadow:inset 0 0 0 1px #e0b34f88,0 0 7px #d5a43b35;color:#fff0c4 !important}
+body.light .hero-option.priority-highlight{background:#fff0c7 !important;color:#654711 !important;border-color:#bd8a2e !important}
 .empty-note{color:var(--muted);font-size:13px;line-height:1.6}
 .selected-slot{font-size:13px;color:var(--muted);margin:-5px 0 12px}
 .footer-note{color:var(--muted);font-size:12px;line-height:1.7;margin-top:12px}
@@ -1256,7 +1259,11 @@ function unionMarkup(heroName, showDetails=false, campPerspective=false){
           const visibleDetail=`：与${u.targets.map(n=>baseHeroName(n)).join("、")}上阵，${u.effect}`;
           label=escapeHtml(`${u.name}${visibleDetail}`);
         }else{
-          label=escapeHtml(u.name);
+          if(window.matchMedia && window.matchMedia("(max-width:760px)").matches){
+            label=escapeHtml(`${targetText||"指定武将"} ${u.effect}`);
+          }else{
+            label=escapeHtml(u.name);
+          }
         }
       }
       return `<span class="union-chip ${active?"active":"inactive"}" title="${escapeHtml(title)}">${label}</span>`;
@@ -1705,7 +1712,9 @@ function renderUnionCandidates(){
     }
     const chips=relations.get(name).map(u=>{
       const targetText=u.targets.map(baseHeroName).join("、");
-      const label=`${escapeHtml(u.name)}：${escapeHtml(baseHeroName(u.hero))}与${escapeHtml(targetText)}上阵，${escapeHtml(u.effect)}`;
+      const label=(window.matchMedia && window.matchMedia("(max-width:760px)").matches)
+        ? `${escapeHtml(targetText)} ${escapeHtml(u.effect)}`
+        : `${escapeHtml(u.name)}：${escapeHtml(baseHeroName(u.hero))}与${escapeHtml(targetText)}上阵，${escapeHtml(u.effect)}`;
       const title=`${u.name}：${baseHeroName(u.hero)}与${targetText}上阵，${u.effect}；未激活`;
       return `<span class="union-chip inactive" title="${escapeHtml(title)}">${label}</span>`;
     }).join("");
@@ -1719,6 +1728,9 @@ function renderHeroes(){
   root.classList.toggle("nirvana-filter", type==="涅槃三阶");
   root.classList.toggle("mixed-roster", type==="全部");
   root.innerHTML="";
+  const priorityGodBases=new Set(["张清","柴进","公孙胜","李逵"]);
+  const priorityAsuraBases=new Set(["李衮","焦挺","丁得孙","侯健","燕顺","金大坚"]);
+  const nirvanaBases=new Set(heroes.filter(h=>h.type==="涅槃三阶").map(h=>baseHeroName(h.name)));
   const lineup=selectedTargetLineup();
   // 已在当前主阵、副将营或聚义营上阵的同名武将，不再出现在选择名单。
   const assignedNames=new Set([
@@ -1749,6 +1761,11 @@ function renderHeroes(){
     .sort((a,b)=>(type==="全部"?((h=>h.type==="涅槃三阶"?0:h.type==="神将"?1:h.type==="修罗"?2:3)(a)-(h=>h.type==="涅槃三阶"?0:h.type==="神将"?1:h.type==="修罗"?2:3)(b)):0)||rankByBase(a)-rankByBase(b)||a.name.localeCompare(b.name,"zh-CN"));
   visible.forEach(h=>{
     const b=document.createElement("button");b.className="hero-option"+(type==="全部"&&h.type==="涅槃三阶"?" nirvana-option":"");
+    const base=baseHeroName(h.name);
+    const shouldHighlight=nirvanaBases.has(base)
+      ? isNirvanaHero(h.name) && (priorityGodBases.has(base)||priorityAsuraBases.has(base))
+      : (priorityGodBases.has(base)&&h.type==="神将") || (priorityAsuraBases.has(base)&&h.type==="修罗");
+    if(shouldHighlight)b.classList.add("priority-highlight");
     b.draggable=true;
     b.addEventListener("dragstart",ev=>{
       ev.dataTransfer.setData("text/plain",h.name);
@@ -1808,6 +1825,7 @@ $("clearAll").addEventListener("click",()=>{
 });
 /* v1.2.91：智能补齐按主阵聚义目标分阶段执行，副将营优先修罗，无修罗形态时回退真将。 */
 /* v1.2.96：主阵聚义描述保留完整目标；智能补齐优先补完已部分满足的聚义。 */
+/* v1.2.165：除飞龙阵外优先法术攻击聚义；修罗·李衮不享受该优先加权。 */
 function smartFillCamps(targetArea=null){
   const main=state.lineups[state.formation]||{};
   const mainNames=new Set(Object.values(main).filter(Boolean).map(baseHeroName));
@@ -1816,14 +1834,15 @@ function smartFillCamps(targetArea=null){
   const deputyBefore=JSON.stringify(state.deputy), gatheringBefore=JSON.stringify(state.gathering);
   // 阵型对应的智能补齐优先属性。
   const priorityStatByFormation={
-    "长蛇阵":"速度",
+    "长蛇阵":"法术攻击",
     "飞龙阵":"武力攻击",
     "风扬阵":"法术攻击",
-    "云垂阵":"法术防御",
-    "天覆阵":"生命",
-    "地载阵":"武力防御"
+    "云垂阵":"法术攻击",
+    "天覆阵":"法术攻击",
+    "地载阵":"法术攻击"
   };
-  const preferredStat=priorityStatByFormation[state.formation]||null;
+  // 除飞龙阵外，所有阵型智能补齐均优先法术攻击聚义；飞龙阵保留武力攻击优先。
+  const preferredStat=priorityStatByFormation[state.formation]|| (state.formation==="飞龙阵"?"武力攻击":"法术攻击");
   const deputySnapshot=snapshotArea("deputy"), gatheringSnapshot=snapshotArea("gathering");
   const occupiedBase=()=>new Set([
     ...Object.values(main),...Object.values(state.deputy),...Object.values(state.gathering)
@@ -1868,7 +1887,8 @@ function smartFillCamps(targetArea=null){
           const variant=availableVariant(base,preferShura);
           if(!variant||isCountedGodHero(variant))return;
           const isShura=heroes.some(h=>h.name===variant&&h.type==="修罗");
-          const value=score+(preferShura&&isShura?1000:0);
+          const spellPriorityExcluded=preferredStat==="法术攻击"&&variant==="修罗·李衮";
+          const value=score-(spellPriorityExcluded?statBonus:0)+(preferShura&&isShura?1000:0);
           scoreByBase.set(base,Math.max(scoreByBase.get(base)||0,value));
         });
       });
@@ -2364,3 +2384,25 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
 <!-- v1.2.24: 点击选将、拖拽上阵、阵位交换和清空主阵均触发聚义变更提示 -->
 <!-- v1.2.24: 通过聚义集合前后差异统计，修复数量相抵导致漏提示的问题 -->
 
+
+
+/* v1.2.164：移动端设置——选将卡片占视口高度50%，聚义候补固定占卡片高度40% */
+@media (max-width:760px) {
+  .app > #rosterPanel:not(.roster-collapsed) { height:50vh !important; height:50dvh !important; max-height:50vh !important; max-height:50dvh !important; }
+  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-panel { flex:0 0 40% !important; height:40% !important; min-height:0 !important; max-height:40% !important; overflow:hidden !important; }
+  .app > #rosterPanel:not(.roster-collapsed) .union-candidate-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; grid-auto-rows:max-content; align-content:start; overflow-y:auto !important; }
+  .app > #rosterPanel .union-candidate-item { display:flex; flex-direction:column !important; align-items:stretch !important; gap:3px !important; padding:5px !important; }
+  .app > #rosterPanel .union-candidate-name { flex:0 0 auto !important; width:100% !important; font-size:10px !important; margin:0 !important; }
+  .app > #rosterPanel .union-candidate-item .union-list { width:100% !important; display:flex; flex-direction:column !important; align-items:stretch !important; gap:2px !important; }
+  .app > #rosterPanel .union-candidate-item .union-chip { display:block !important; width:100% !important; font-size:9px !important; line-height:1.25 !important; padding:2px 3px !important; }
+  /* 移动端副将营、聚义营隐藏营名，武将名称置顶，聚义内容紧随其后以争取更多可视空间 */
+  .camp-layout .camp-panel .camp-head .section-title { display:none !important; }
+  .camp-layout .camp-panel .camp-head { justify-content:flex-end !important; margin-bottom:5px !important; }
+  .camp-layout .camp-slot { justify-content:flex-start !important; align-items:stretch !important; text-align:left !important; gap:3px !important; padding:5px 4px !important; overflow:auto !important; }
+  .camp-layout .camp-slot .slot-name { order:0 !important; display:block !important; text-align:left !important; margin:0 !important; font-size:11px !important; line-height:1.2 !important; }
+  .camp-layout .camp-slot .union-list { order:1 !important; margin-top:1px !important; gap:2px !important; justify-content:flex-start !important; }
+  .camp-layout .camp-slot .union-chip { font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; }
+  /* 主阵聚义简化为目标武将与效果，避免重复显示长条件 */
+  .board .cell .union-list { margin-top:2px !important; gap:2px !important; }
+  .board .cell .union-chip { font-size:9px !important; line-height:1.2 !important; padding:2px 3px !important; }
+}
