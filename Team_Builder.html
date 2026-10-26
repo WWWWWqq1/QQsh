@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.4.17</title>
+<title>QQ水浒阵容规划器 v1.4.18</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -1694,7 +1694,7 @@ body.light .share-panel{background:#f6f7fa}
 <section class="panel camp-bulk-actions" aria-label="智能补齐">
   <div class="smart-fill-heading"><h2 class="section-title">智能补齐</h2><span class="smart-fill-heading-hint">点击按钮可过滤无需点亮的聚义</span></div>
   <div class="smart-fill-exclusions" role="group" aria-label="需要点亮的聚义">
-    <span class="smart-fill-exclusions-title">需要点亮的聚义：</span>
+    <span class="smart-fill-exclusions-title">类型：</span>
     <div class="union-stat-toggles">
       <button type="button" class="union-stat-toggle is-on" data-stat="速度" aria-pressed="true">速度</button>
       <button type="button" class="union-stat-toggle is-on" data-stat="武攻" aria-pressed="true">武攻</button>
@@ -1705,7 +1705,7 @@ body.light .share-panel{background:#f6f7fa}
     </div>
   </div>
   <div class="smart-fill-exclusions effective-heroes" role="group" aria-label="生效的武将">
-    <span class="smart-fill-exclusions-title">需要生效的武将：</span>
+    <span class="smart-fill-exclusions-title">武将：</span>
     <div id="effectiveHeroToggles" class="effective-hero-toggles"></div>
   </div>
   <div class="actions history-actions camp-bulk-actions-footer"><button class="action-btn" id="clearSideCamps">清空副将营 聚义营</button><button class="action-btn" id="smartFill">补齐副将营 聚义营</button></div>
@@ -3296,7 +3296,7 @@ body:not(.light) .camp-bulk-actions .camp-bulk-actions-footer .action-btn:hover{
 </style>
 
 <style id="v1-4-17-touch-drag-feedback">
-/* v1.4.17：移动端拖动时阻止页面滚动，并提供跟手卡片与目标位置反馈 */
+/* v1.4.18：移动端拖动时阻止页面滚动，并提供跟手卡片与目标位置反馈 */
 @media (hover:none), (pointer:coarse) {
   .cell.active, .camp-slot.filled, .slot-draggable { touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
   .cell.active.slot-draggable, .camp-slot.slot-draggable { transition: box-shadow .12s ease, outline-color .12s ease; }
