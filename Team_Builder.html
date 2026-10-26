@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.4.14</title>
+<title>QQ水浒阵容规划器 v1.4.16</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -111,7 +111,7 @@ body.light .action-btn.primary{background:#c89b45;color:#211a0e}
 .smart-fill-heading .section-title{margin:0}
 .smart-fill-heading-hint{color:var(--muted);font-size:12px;font-weight:400;line-height:1.4}
 .camp-bulk-actions .smart-fill-exclusions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding:0;font-size:16px;width:100%;box-sizing:border-box;background:transparent;border:0;border-radius:0}
-/* v1.4.14：两个筛选内容各自固定为单独一行，标题与选项同行；窄屏可横向滚动 */
+/* v1.4.15：两组筛选标题与全部选项各自固定单行，内容超宽时组内横向滚动 */
 .camp-bulk-actions .smart-fill-exclusions,
 .camp-bulk-actions .smart-fill-exclusions:not(.effective-heroes),
 .camp-bulk-actions .smart-fill-exclusions.effective-heroes{display:flex;flex-wrap:nowrap;align-items:center;width:100%;max-width:100%;margin-right:0;box-sizing:border-box;gap:6px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding-bottom:2px}
@@ -1695,12 +1695,14 @@ body.light .share-panel{background:#f6f7fa}
   <div class="smart-fill-heading"><h2 class="section-title">智能补齐</h2><span class="smart-fill-heading-hint">点击按钮可过滤无需点亮的聚义</span></div>
   <div class="smart-fill-exclusions" role="group" aria-label="需要点亮的聚义">
     <span class="smart-fill-exclusions-title">需要点亮的聚义：</span>
-    <button type="button" class="union-stat-toggle is-on" data-stat="速度" aria-pressed="true">速度</button>
-    <button type="button" class="union-stat-toggle is-on" data-stat="武攻" aria-pressed="true">武攻</button>
-    <button type="button" class="union-stat-toggle is-on" data-stat="法攻" aria-pressed="true">法攻</button>
-    <button type="button" class="union-stat-toggle is-on" data-stat="武防" aria-pressed="true">武防</button>
-    <button type="button" class="union-stat-toggle is-on" data-stat="法防" aria-pressed="true">法防</button>
-    <button type="button" class="union-stat-toggle is-on" data-stat="生命" aria-pressed="true">生命</button>
+    <div class="union-stat-toggles">
+      <button type="button" class="union-stat-toggle is-on" data-stat="速度" aria-pressed="true">速度</button>
+      <button type="button" class="union-stat-toggle is-on" data-stat="武攻" aria-pressed="true">武攻</button>
+      <button type="button" class="union-stat-toggle is-on" data-stat="法攻" aria-pressed="true">法攻</button>
+      <button type="button" class="union-stat-toggle is-on" data-stat="武防" aria-pressed="true">武防</button>
+      <button type="button" class="union-stat-toggle is-on" data-stat="法防" aria-pressed="true">法防</button>
+      <button type="button" class="union-stat-toggle is-on" data-stat="生命" aria-pressed="true">生命</button>
+    </div>
   </div>
   <div class="smart-fill-exclusions effective-heroes" role="group" aria-label="生效的武将">
     <span class="smart-fill-exclusions-title">需要生效的武将：</span>
@@ -3220,6 +3222,54 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
 
 </style>
 
+
+<style id="v1-4-16-dark-mode-polish">
+/* v1.4.16：优化深色模式下筛选按钮、卡片层次和交互状态 */
+body:not(.light) .camp-bulk-actions .union-stat-toggle,
+body:not(.light) .camp-bulk-actions .effective-hero-toggle{
+  background:#30394a!important;
+  border-color:#4b566b!important;
+  color:#69d39a!important;
+  box-shadow:inset 0 1px 0 #ffffff08;
+}
+body:not(.light) .camp-bulk-actions .union-stat-toggle:hover,
+body:not(.light) .camp-bulk-actions .effective-hero-toggle:hover{
+  background:#394459!important;
+  border-color:#71809a!important;
+}
+body:not(.light) .camp-bulk-actions .union-stat-toggle.is-off,
+body:not(.light) .camp-bulk-actions .effective-hero-toggle.is-off{
+  background:#392d35!important;
+  border-color:#70464e!important;
+  color:#ff9a9a!important;
+}
+body:not(.light) .camp-bulk-actions .union-stat-toggle:focus-visible,
+body:not(.light) .camp-bulk-actions .effective-hero-toggle:focus-visible,
+body:not(.light) .camp-bulk-actions .camp-bulk-actions-footer .action-btn:focus-visible{
+  outline:2px solid #d6a84f!important;
+  outline-offset:2px;
+}
+body:not(.light) .camp-bulk-actions{
+  background:linear-gradient(145deg,rgba(34,41,55,.98),rgba(27,33,45,.98));
+  border-color:#465167;
+  box-shadow:0 8px 22px #0002;
+}
+body:not(.light) .camp-bulk-actions .smart-fill-heading-hint{color:#aebbd0}
+body:not(.light) .camp-bulk-actions .camp-bulk-actions-footer .action-btn{
+  background:#30394a;
+  border-color:#4b566b;
+}
+body:not(.light) .camp-bulk-actions .camp-bulk-actions-footer .action-btn:hover{
+  background:#3a4559;
+  border-color:#697791;
+}
+@media(max-width:560px){
+  body:not(.light) .camp-bulk-actions .union-stat-toggle,
+  body:not(.light) .camp-bulk-actions .effective-hero-toggle{padding:9px 11px;font-size:14px;border-radius:9px}
+  body:not(.light) .camp-bulk-actions .smart-fill-exclusions{scrollbar-width:thin;scrollbar-color:#536078 transparent}
+}
+</style>
+
 </body>
 </html>
 <!-- v1.2.48：候补区武将名称与聚义描述同排展示 -->
@@ -3228,3 +3278,10 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
 <!-- v1.2.22: 聚义变更提示字体在上一版本基础上放大一倍 -->
 <!-- v1.2.24: 点击选将、拖拽上阵、阵位交换和清空主阵均触发聚义变更提示 -->
 <!-- v1.2.24: 通过聚义集合前后差异统计，修复数量相抵导致漏提示的问题 -->
+
+<style id="v1-4-15-single-line-filter-rows">
+/* 两行分别保持单行；空间不足时只在各自行内横向滚动 */
+.camp-bulk-actions .smart-fill-exclusions{display:flex!important;flex-wrap:nowrap!important;white-space:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;align-items:center!important;min-width:0!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+.camp-bulk-actions .union-stat-toggles,.camp-bulk-actions .effective-hero-toggles{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;white-space:nowrap!important;min-width:max-content!important;width:max-content!important;align-items:center!important}
+.camp-bulk-actions .union-stat-toggle,.camp-bulk-actions .effective-hero-toggle{flex:0 0 auto!important;white-space:nowrap!important}
+</style>
