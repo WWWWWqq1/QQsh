@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.4.16</title>
+<title>QQ水浒阵容规划器 v1.4.17</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -2075,8 +2075,8 @@ function enableSlotDrag(sourceButton, area, slot){
   // 移动端原生 HTML5 drag-and-drop 支持不稳定，补充触摸拖动以交换已上阵武将。
   sourceButton.addEventListener("touchstart",ev=>{
     if(ev.touches.length!==1)return;
-    const t=ev.touches[0];
-    window.__qqshTouchSlotDrag={area,slot:Number(slot),formation:state.formation,startX:t.clientX,startY:t.clientY,moved:false};
+    const t=ev.touches[0], rect=sourceButton.getBoundingClientRect();
+    window.__qqshTouchSlotDrag={area,slot:Number(slot),formation:state.formation,startX:t.clientX,startY:t.clientY,lastX:t.clientX,lastY:t.clientY,moved:false,sourceButton,rect};
   },{passive:true});
   sourceButton.addEventListener("dragstart",ev=>{
     window.__qqshActiveSlotDrag={area,slot:Number(slot),formation:state.formation};window.__qqshSlotDropHandled=false;
@@ -2095,18 +2095,26 @@ if(!window.__qqshTouchSlotHandlersInstalled){
   document.addEventListener("touchmove",ev=>{
     const drag=window.__qqshTouchSlotDrag;if(!drag||ev.touches.length!==1)return;
     const t=ev.touches[0];
-    if(Math.abs(t.clientX-drag.startX)+Math.abs(t.clientY-drag.startY)>12){
-      drag.moved=true;
+    if(Math.abs(t.clientX-drag.startX)+Math.abs(t.clientY-drag.startY)>8){
+      drag.moved=true;drag.lastX=t.clientX;drag.lastY=t.clientY;
       if(ev.cancelable)ev.preventDefault();
+      const source=drag.sourceButton;
+      if(source){
+        source.classList.add("touch-slot-dragging");
+        source.style.setProperty("--touch-drag-x",`${t.clientX-drag.startX}px`);
+        source.style.setProperty("--touch-drag-y",`${t.clientY-drag.startY}px`);
+      }
       document.querySelectorAll(".drop-hover").forEach(el=>el.classList.remove("drop-hover"));
-      const target=document.elementFromPoint(t.clientX,t.clientY)?.closest(".cell.active, .camp-slot");
-      if(target&&target!==document.querySelector(`[data-slot-area="${drag.area}"][data-slot-number="${drag.slot}"]`))target.classList.add("drop-hover");
+      const under=document.elementFromPoint(t.clientX,t.clientY);
+      const target=under?.closest(".cell.active, .camp-slot");
+      if(target&&target!==source)target.classList.add("drop-hover");
       document.querySelectorAll(".cell.active,.camp-slot").forEach(el=>el.classList.add("drop-ready"));
     }
   },{passive:false});
   document.addEventListener("touchend",ev=>{
     const drag=window.__qqshTouchSlotDrag;if(!drag)return;
     window.__qqshTouchSlotDrag=null;
+    if(drag.sourceButton){drag.sourceButton.classList.remove("touch-slot-dragging");drag.sourceButton.style.removeProperty("--touch-drag-x");drag.sourceButton.style.removeProperty("--touch-drag-y");}
     document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
     if(!drag.moved)return;
     window.__qqshSuppressSlotClickUntil=Date.now()+500;
@@ -2123,7 +2131,8 @@ if(!window.__qqshTouchSlotHandlersInstalled){
     }
   },true);
   document.addEventListener("touchcancel",()=>{
-    window.__qqshTouchSlotDrag=null;
+    const drag=window.__qqshTouchSlotDrag;window.__qqshTouchSlotDrag=null;
+    if(drag?.sourceButton){drag.sourceButton.classList.remove("touch-slot-dragging");drag.sourceButton.style.removeProperty("--touch-drag-x");drag.sourceButton.style.removeProperty("--touch-drag-y");}
     document.querySelectorAll(".drop-ready,.drop-hover").forEach(el=>el.classList.remove("drop-ready","drop-hover"));
   },{passive:true});
 }
@@ -3284,4 +3293,16 @@ body:not(.light) .camp-bulk-actions .camp-bulk-actions-footer .action-btn:hover{
 .camp-bulk-actions .smart-fill-exclusions{display:flex!important;flex-wrap:nowrap!important;white-space:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;align-items:center!important;min-width:0!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important}
 .camp-bulk-actions .union-stat-toggles,.camp-bulk-actions .effective-hero-toggles{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;white-space:nowrap!important;min-width:max-content!important;width:max-content!important;align-items:center!important}
 .camp-bulk-actions .union-stat-toggle,.camp-bulk-actions .effective-hero-toggle{flex:0 0 auto!important;white-space:nowrap!important}
+</style>
+
+<style id="v1-4-17-touch-drag-feedback">
+/* v1.4.17：移动端拖动时阻止页面滚动，并提供跟手卡片与目标位置反馈 */
+@media (hover:none), (pointer:coarse) {
+  .cell.active, .camp-slot.filled, .slot-draggable { touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+  .cell.active.slot-draggable, .camp-slot.slot-draggable { transition: box-shadow .12s ease, outline-color .12s ease; }
+  .touch-slot-dragging { position:relative !important; z-index:9999 !important; transform:translate(var(--touch-drag-x,0),var(--touch-drag-y,0)) scale(1.045) !important; opacity:.94 !important; box-shadow:0 12px 28px #0008,0 0 0 3px #d9a21b !important; outline:2px solid #f4c34f !important; pointer-events:none !important; }
+  .cell.drop-ready, .camp-slot.drop-ready { outline:2px dashed #e5b842 !important; outline-offset:-4px; animation:qqshDropPulse .8s ease-in-out infinite alternate; }
+  .cell.drop-hover, .camp-slot.drop-hover { background:#4b633e !important; border:2px solid #9edb74 !important; box-shadow:inset 0 0 0 2px #9edb7440,0 0 0 2px #9edb7440 !important; transform:scale(1.025); }
+}
+@keyframes qqshDropPulse { from { outline-color:#d9a21b; } to { outline-color:#ffe18a; } }
 </style>
