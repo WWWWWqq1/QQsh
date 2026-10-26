@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.3.12</title>
+<title>QQ水浒阵容规划器 v1.3.18</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -767,7 +767,7 @@ body.light .union-candidate-item { background:#fff; }
 .share-panel .section-title{margin-bottom:10px}
 .share-theme-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;color:var(--text);font-size:13px}
 .share-theme-row .action-btn{white-space:nowrap}
-.formation-description-label{display:block;margin:0 0 6px;color:var(--text);font-size:13px;font-weight:700}
+.formation-description-row{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;min-width:0}.formation-description-label{display:block;flex:0 0 auto;margin:0;color:var(--text);font-size:15px;font-weight:700;white-space:nowrap}.formation-description-input{display:block;flex:1 1 auto;min-width:0;width:auto;box-sizing:border-box;margin:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font:inherit;outline:none}
 .formation-description-input{display:block;width:100%;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font:inherit;outline:none}
 .formation-description-input:focus{border-color:var(--gold,#d6a84f);box-shadow:0 0 0 2px rgba(214,168,79,.16)}
 
@@ -1490,6 +1490,72 @@ body.light .share-panel{background:#f6f7fa}
   }
 }
 
+/* v1.3.15：移动端聚义营武将名强制单行完整显示，不截断、不使用省略号 */
+@media (max-width:760px) {
+  .app > .camp-layout #gatheringGrid > .camp-slot.has-hero {
+    overflow:visible !important;
+    position:relative !important;
+  }
+  .app > .camp-layout #gatheringGrid > .camp-slot.has-hero > .slot-name {
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    overflow-wrap:normal !important;
+    word-break:keep-all !important;
+    width:max-content !important;
+    max-width:none !important;
+    position:relative !important;
+    z-index:5 !important;
+  }
+}
+
+</style>
+
+<style id="pc-camp-empty-slot-center-v1-3-16">
+/* v1.3.16：PC端副将营、聚义营空营位的“选择武将”文字在格子内水平、垂直居中；移动端保持原样 */
+@media (min-width:761px) {
+  .app > .camp-layout .camp-grid > .camp-slot:not(.has-hero) {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+  }
+  .app > .camp-layout .camp-grid > .camp-slot:not(.has-hero) > .slot-name {
+    display:block !important;
+    align-self:center !important;
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+  }
+}
+</style>
+
+<style id="pc-camp-filled-slot-name-top-center-v1-3-17">
+/* v1.3.17：PC端已上阵营位的天枢营等名称保持置顶并水平居中；空位“选择武将”仍在格内水平、垂直居中 */
+@media (min-width:761px) {
+  .app > .camp-layout .camp-grid > .camp-slot.has-hero > .slot-name {
+    align-self:center !important;
+    width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    text-align:center !important;
+  }
+}
+</style>
+
+
+<style id="pc-published-layout-gap-v1-3-18">
+/* v1.3.18：修复发布页面PC宽屏下主体卡片与选择武将面板间距失效；明确设置列间距，避免两栏贴合 */
+@media (min-width: 761px) {
+  .app .layout {
+    column-gap: 18px !important;
+    gap: 18px !important;
+  }
+  .app .layout > section:first-child {
+    margin-right: 0 !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1559,8 +1625,10 @@ body.light .share-panel{background:#f6f7fa}
 </section>
   <section class="panel share-panel" id="sharePanel">
     <h2 class="section-title"> 分享界面预览</h2>
+    <div class="formation-description-row">
     <label class="formation-description-label" for="formationDescription">阵型描述</label>
     <input id="formationDescription" class="formation-description-input" type="text" maxlength="100" placeholder="输入阵容说明，例如：速度优先，适合先手控制" autocomplete="off">
+  </div>
     <article class="share-preview-card"><img id="shareCombinedPreview" alt="主阵、副将营、聚义营合并分享图片预览"><p id="shareCombinedCaption">修改阵容或描述后自动生成预览</p></article>
   </section>
 </div>
@@ -2421,7 +2489,7 @@ $("clearSideCamps").addEventListener("click",()=>{
   showLineupChange(before,getActiveUnionKeys());
   renderBoard();renderCamps();renderHeroes();
 });
-/* v1.3.13：更新阵容分享说明文案，避免打开链接后无导入提示。 */
+/* v1.3.14：更新阵容分享说明文案，避免打开链接后无导入提示。 */
 (function(){
  const output=$("rosterCodeOutput"), input=$("rosterCodeInput"), status=$("rosterCodeStatus");
  if(!output||!input||!status)return;
@@ -2698,8 +2766,6 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
      const visibleLines=lines.slice(0,2),totalHeight=visibleLines.length*lineHeight,startY=descY+(descH-totalHeight)/2+24;
      visibleLines.forEach((item,index)=>ctx.fillText(item,descX+14,startY+index*lineHeight));
      ctx.restore();
-   }else{
-     ctx.fillStyle=muted;ctx.font='22px system-ui,"Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.fillText('阵型描述',descX+descW/2,descY+descH/2+7);
    }
    function sectionTitle(title,y){ctx.fillStyle=gold;ctx.font='bold 34px system-ui,"Microsoft YaHei",sans-serif';ctx.textAlign='left';ctx.fillText(title,58,y);}
    function drawGrid(names,activePositions,y,cols,rows,cellW,cellH,gapX,gapY,descriptions=null){
@@ -2927,6 +2993,21 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
     flex:0 1 auto !important;
   }
 }
+
+/* v1.3.14：移动端聚义营武将名称强制单行显示，避免名称换行。 */
+@media (max-width:760px) {
+  .app > .camp-layout > .camp-panel .gathering-grid > .camp-slot > .slot-name {
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    overflow-wrap:normal !important;
+    word-break:keep-all !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+}
+
 </style>
 
 </body>
