@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.3.7</title>
+<title>QQ水浒阵容规划器 v1.3.11</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -1500,6 +1500,7 @@ body.light .share-panel{background:#f6f7fa}
 <section class="panel roster-code-card" id="importRosterPanel">
   <h2 class="section-title">导入阵容码</h2>
   <p class="footer-note">导入后将完整替换当前主阵、副将营、聚义营和阵法。</p>
+  <p class="footer-note">打开页面时会尝试识别剪贴板中的阵容码并提示导入；若浏览器不允许自动读取，请长按输入框粘贴，系统会自动提示。</p>
   <textarea id="rosterCodeInput" rows="3" placeholder="粘贴好友发送的阵容码" style="width:100%;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px;font:12px/1.5 ui-monospace,monospace"></textarea>
   <div class="actions"><button type="button" class="action-btn primary" id="importRosterCode">导入阵容码</button></div>
 </section>
@@ -1773,127 +1774,7 @@ function renderFormations(){
       if(state.formation!==f.name)recordUndo("main");
       state.formation=f.name;state.selectedPosition=null;state.selectedCamp=null;
       $("slotPrompt").textContent="请先点击主阵、副将营或聚义营中的一个位置。";
-      /* v1.2.143：阵容码独立卡片布局，完整替换当前主阵、副将营、聚义营及阵法。 */
-(function(){
- const output=$("rosterCodeOutput"), input=$("rosterCodeInput"), status=$("rosterCodeStatus");
- if(!output||!input||!status)return;
- const utf8ToBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
- const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
- function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
- function makeCode(){
-   // TB2 uses numeric indexes and compact arrays, avoiding repeated Chinese hero names and checksum text.
-   const heroIndex=new Map(heroes.map((h,i)=>[h.name,i]));
-   const compactLineup=obj=>Object.entries(obj||{}).filter(([slot,name])=>name&&heroIndex.has(name)).map(([slot,name])=>[+slot,heroIndex.get(name)]);
-   const formationIndex=formations.findIndex(f=>f.name===state.formation);
-   const payload=[2,formationIndex,compactLineup(state.lineups[state.formation]),compactLineup(state.deputy),compactLineup(state.gathering)];
-   return "TB2."+utf8ToBase64Url(JSON.stringify(payload));
- }
- function parseCode(raw){
-   const code=String(raw||"").trim().replace(/\s+/g,"");
-   if(code.startsWith("TB2.")){
-     let packed;try{packed=JSON.parse(base64UrlToUtf8(code.slice(4)));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
-     if(!Array.isArray(packed)||packed[0]!==2||!Number.isInteger(packed[1])||!formations[packed[1]])throw new Error("阵容码版本或阵法无效。");
-     const decodeLineup=(arr,area,capacity,validSlots)=>{
-       if(!Array.isArray(arr))throw new Error(area+"数据格式无效。");
-       const clean={}, seen=new Set();
-       for(const pair of arr){
-         if(!Array.isArray(pair)||pair.length!==2)throw new Error(area+"数据格式无效。");
-         const slot=String(pair[0]), index=pair[1];
-         if(!validSlots.includes(slot)||seen.has(slot))throw new Error(area+"存在无效位置："+slot);
-         if(!Number.isInteger(index)||!heroes[index])throw new Error(area+"包含无效武将编号。");
-         seen.add(slot);clean[slot]=heroes[index].name;
-       }
-       if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
-       return clean;
-     };
-     const formation=formations[packed[1]];
-     return {formation:formation.name,main:decodeLineup(packed[2],"主阵",formation.positions.length,formation.positions.map(String)),deputy:decodeLineup(packed[3],"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:decodeLineup(packed[4],"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
-   }
-   const m=/^TB1\.([A-Za-z0-9_-]+)\.([0-9a-f]{8})$/i.exec(code);
-   if(!m)throw new Error("阵容码格式不正确，或版本不受支持。");
-   if(checksum(m[1])!==m[2].toLowerCase())throw new Error("阵容码校验失败，内容可能不完整或已损坏。");
-   let data;try{data=JSON.parse(base64UrlToUtf8(m[1]));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
-   if(!data||data.v!==1||!formations.some(f=>f.name===data.formation))throw new Error("阵容码版本或阵法无效。");
-   const known=new Set(heroes.map(h=>h.name));
-   const checkLineup=(obj,area,capacity,validSlots)=>{
-     if(!obj||typeof obj!=="object"||Array.isArray(obj))throw new Error(area+"数据格式无效。");
-     const clean={};
-     for(const [slot,name] of Object.entries(obj)){
-       if(!validSlots.includes(String(slot)))throw new Error(area+"存在无效位置："+slot);
-       if(name!==null&&name!==""){
-         if(typeof name!=="string"||!known.has(name))throw new Error(area+"包含当前版本不存在的武将："+String(name));
-         clean[String(slot)]=name;
-       }
-     }
-     if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
-     return clean;
-   };
-   const formation=formations.find(f=>f.name===data.formation);
-   const main=checkLineup(data.main,"主阵",formation.positions.length,formation.positions.map(String));
-   const deputy=checkLineup(data.deputy,"副将营",7,Array.from({length:7},(_,i)=>String(i+1)));
-   const gathering=checkLineup(data.gathering,"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)));
-   return {formation:data.formation,main,deputy,gathering};
- }
- document.getElementById("exportRosterCode").addEventListener("click",()=>{
-   try{output.value=makeCode();status.textContent="阵容码已生成，可复制后发送给好友。";}
-   catch(err){console.error(err);status.textContent="导出失败，请重试。";}
- });
- async function copyTextAutomatically(text){
-   if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
-     try{await navigator.clipboard.writeText(text);return true;}catch(err){/* Continue to the compatibility fallback used by mobile embedded browsers. */}
-   }
-   let temporary=null;
-   try{
-     temporary=document.createElement("textarea");
-     temporary.value=text;
-     temporary.setAttribute("readonly","");
-     temporary.style.position="fixed";
-     temporary.style.left="-9999px";
-     temporary.style.top="0";
-     temporary.style.opacity="0";
-     document.body.appendChild(temporary);
-     temporary.focus({preventScroll:true});
-     temporary.select();
-     temporary.setSelectionRange(0,temporary.value.length);
-     return !!document.execCommand("copy");
-   }catch(err){return false;}
-   finally{if(temporary&&temporary.parentNode)temporary.parentNode.removeChild(temporary);}
- }
- document.getElementById("copyRosterCode").addEventListener("click",async()=>{
-   try{
-     if(!output.value.trim())output.value=makeCode();
-     const copied=await copyTextAutomatically(output.value);
-     status.textContent=copied?"阵容码已自动复制，可直接粘贴发送。":"当前浏览器未允许自动复制，请检查浏览器剪贴板权限后重试。";
-   }catch(err){console.error(err);status.textContent="复制失败，请重试。";}
- });
- document.getElementById("importRosterCode").addEventListener("click",()=>{
-   try{
-     const data=parseCode(input.value);
-     if(!window.confirm("导入将完整替换当前主阵、副将营、聚义营和阵法，确定继续吗？"))return;
-     const before=getActiveUnionKeys();
-     recordUndo("main");recordUndo("deputy");recordUndo("gathering");
-     state.formation=data.formation;
-     state.lineups[state.formation]=data.main;
-     state.deputy=data.deputy;state.gathering=data.gathering;
-     state.selectedPosition=null;state.selectedCamp=null;
-     $("slotPrompt").textContent="阵容码导入成功。请点击任意阵位继续调整。";
-     renderFormations();renderBoard();renderCamps();renderHeroes();
-     showLineupChange(before,getActiveUnionKeys());
-     status.textContent="导入成功：主阵、副将营、聚义营和阵法已完整替换。";
-   }catch(err){status.textContent=err&&err.message?err.message:"导入失败，请检查阵容码。";}
- });
-})();
-
-// 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
-document.addEventListener("dragover",ev=>{if(window.__qqshActiveSlotDrag)ev.preventDefault();});
-document.addEventListener("drop",ev=>{
-  if(!window.__qqshActiveSlotDrag||window.__qqshSlotDropHandled)return;
-  ev.preventDefault();
-  const src=window.__qqshActiveSlotDrag;
-  removeSlotHero(src.area,src.slot,src.formation);
-  window.__qqshSlotDropHandled=true;
-});
-renderFormations();renderBoard();renderCamps();renderHeroes();
+      renderFormations();renderBoard();renderCamps();renderHeroes();
     });
     root.appendChild(b);
   });
@@ -2118,12 +1999,44 @@ function selectedTargetHero(){
   const slot=state.selectedCamp?state.selectedCamp.slot:state.selectedPosition;
   return slot==null?null:lineup[slot];
 }
+function sortCampLineupByHeroOrder(lineup, area){
+  if(!lineup || typeof lineup!=="object") return;
+  const entries=Object.entries(lineup).filter(([,name])=>!!name);
+  if(entries.length<2) return;
+  const rankInfo=name=>{
+    const base=baseHeroName(name);
+    if(base==="晁盖") return {group:0,rank:0};
+    const source=heroes.find(h=>h.name===base && (h.type==="天罡"||h.type==="地煞"));
+    if(source?.type==="天罡") return {group:1,rank:Number(source.rank)||9999};
+    if(source?.type==="地煞") return {group:2,rank:Number(source.rank)||9999};
+    return {group:3,rank:9999};
+  };
+  const sorted=entries.slice().sort((a,b)=>{
+    const ka=rankInfo(a[1]), kb=rankInfo(b[1]);
+    return ka.group-kb.group || ka.rank-kb.rank || Number(a[0])-Number(b[0]);
+  });
+  const changed=sorted.some((entry,i)=>entry[1]!==entries[i][1]) || entries.some(([slot],i)=>Number(slot)!==i+1);
+  if(!changed) return;
+  const selectedHero=state.selectedCamp?.area===area ? lineup[state.selectedCamp.slot] : null;
+  Object.keys(lineup).forEach(slot=>delete lineup[slot]);
+  sorted.forEach(([oldSlot,name],i)=>{lineup[i+1]=name;});
+  if(state.selectedCamp?.area===area){
+    if(selectedHero){
+      const nextSlot=sorted.findIndex(([,name])=>name===selectedHero);
+      if(nextSlot>=0) state.selectedCamp.slot=nextSlot+1;
+    } else if(state.selectedCamp.slot>sorted.length){
+      state.selectedCamp.slot=sorted.length+1;
+    }
+  }
+}
+
 function renderCamps(){
   const configs=[
     {area:"deputy",root:"deputyGrid",lineup:state.deputy,total:7,counter:"deputyCounter",label:"副将营"},
     {area:"gathering",root:"gatheringGrid",lineup:state.gathering,total:9,counter:"gatheringCounter",label:"聚义营"}
   ];
   configs.forEach(cfg=>{
+    sortCampLineupByHeroOrder(cfg.lineup,cfg.area);
     const root=$(cfg.root);root.innerHTML="";
     for(let slot=1;slot<=cfg.total;slot++){
       const hero=cfg.lineup[slot];
@@ -2158,7 +2071,10 @@ function renderCamps(){
           slotName.style.boxSizing = "border-box";
           slotName.style.textAlign = "center";
           slotName.style.lineHeight = "1.25";
-          slotName.style.overflowWrap = "anywhere";
+          slotName.style.whiteSpace = "nowrap";
+          slotName.style.textOverflow = "ellipsis";
+          slotName.style.overflow = "hidden";
+          slotName.style.overflowWrap = "normal";
         }
         if (slotNumber) {
           slotNumber.style.order = "-1";
@@ -2505,32 +2421,65 @@ $("clearSideCamps").addEventListener("click",()=>{
   showLineupChange(before,getActiveUnionKeys());
   renderBoard();renderCamps();renderHeroes();
 });
-/* v1.2.143：阵容码独立卡片布局，完整替换当前主阵、副将营、聚义营及阵法。 */
+/* v1.3.11：更新阵容分享说明，提示复制阵容码后点击链接导入。 */
 (function(){
  const output=$("rosterCodeOutput"), input=$("rosterCodeInput"), status=$("rosterCodeStatus");
  if(!output||!input||!status)return;
+ const SHARE_PREFIX="这是我在 https://wwwwwqq1.github.io/QQsh/Team_Builder.html 中搭配的QQ水浒阵容，复制阵容码，点击链接可一键导入阵容：";
  const utf8ToBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
  const base64UrlToUtf8=text=>decodeURIComponent(escape(atob(text.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-text.length%4)%4))));
  function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,"0");}
+ function extractCode(raw){
+   const text=String(raw||"").trim();
+   const compact=text.match(/R[0-9a-z]+:[0-9a-z.]*:[0-9a-z.]*:[0-9a-z.]*/i);
+   if(compact)return compact[0];
+   const v2=text.match(/TB2\.[A-Za-z0-9_-]+/);
+   if(v2)return v2[0];
+   const v1=text.match(/TB1\.[A-Za-z0-9_-]+\.[0-9a-f]{8}/i);
+   return v1?v1[0]:text.replace(/\s+/g,"");
+ }
  function makeCode(){
-   // TB2 uses numeric indexes and compact arrays, avoiding repeated Chinese hero names and checksum text.
+   // 明文短码：阵法索引 + 三组阵位/武将索引，不加密；每组用点号分隔。
    const heroIndex=new Map(heroes.map((h,i)=>[h.name,i]));
-   const compactLineup=obj=>Object.entries(obj||{}).filter(([slot,name])=>name&&heroIndex.has(name)).map(([slot,name])=>[+slot,heroIndex.get(name)]);
-   const formationIndex=formations.findIndex(f=>f.name===state.formation);
-   const payload=[2,formationIndex,compactLineup(state.lineups[state.formation]),compactLineup(state.deputy),compactLineup(state.gathering)];
-   return "TB2."+utf8ToBase64Url(JSON.stringify(payload));
+   const encodeLineup=obj=>Object.entries(obj||{})
+     .filter(([slot,name])=>name&&heroIndex.has(name))
+     .sort((a,b)=>Number(a[0])-Number(b[0]))
+     .map(([slot,name])=>((Number(slot)-1)*heroes.length+heroIndex.get(name)).toString(36)).join(".");
+   const fi=formations.findIndex(f=>f.name===state.formation);
+   return "R"+Math.max(0,fi).toString(36)+":"+encodeLineup(state.lineups[state.formation])+":"+encodeLineup(state.deputy)+":"+encodeLineup(state.gathering);
  }
  function parseCode(raw){
-   const code=String(raw||"").trim().replace(/\s+/g,"");
+   const code=extractCode(raw);
+   const compact=/^R([0-9a-z]+):([0-9a-z.]*)[:]([0-9a-z.]*)[:]([0-9a-z.]*)$/i.exec(code);
+   if(compact){
+     const fi=parseInt(compact[1],36);
+     if(!Number.isInteger(fi)||!formations[fi]||!heroes.length)throw new Error("阵容码中的阵法编号无效。");
+     const decode=(part,area,capacity,validSlots)=>{
+       const clean={},seen=new Set();
+       if(!part)return clean;
+       for(const token of part.split(".")){
+         if(!token||!/^[0-9a-z]+$/i.test(token))throw new Error(area+"阵容码格式无效。");
+         const packed=parseInt(token,36),slot=Math.floor(packed/heroes.length)+1,index=packed%heroes.length,slotText=String(slot);
+         if(!Number.isSafeInteger(packed)||packed<0||!validSlots.includes(slotText)||seen.has(slotText))throw new Error(area+"包含无效阵位。");
+         if(!heroes[index])throw new Error(area+"包含无效武将编号。");
+         seen.add(slotText);clean[slotText]=heroes[index].name;
+       }
+       if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
+       return clean;
+     };
+     const f=formations[fi];
+     return {formation:f.name,main:decode(compact[2],"主阵",f.positions.length,f.positions.map(String)),deputy:decode(compact[3],"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:decode(compact[4],"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
+   }
+   // 兼容旧版阵容码，旧码仍可导入。
    if(code.startsWith("TB2.")){
      let packed;try{packed=JSON.parse(base64UrlToUtf8(code.slice(4)));}catch(e){throw new Error("无法解析阵容码，请确认复制内容完整。");}
      if(!Array.isArray(packed)||packed[0]!==2||!Number.isInteger(packed[1])||!formations[packed[1]])throw new Error("阵容码版本或阵法无效。");
      const decodeLineup=(arr,area,capacity,validSlots)=>{
        if(!Array.isArray(arr))throw new Error(area+"数据格式无效。");
-       const clean={}, seen=new Set();
+       const clean={},seen=new Set();
        for(const pair of arr){
          if(!Array.isArray(pair)||pair.length!==2)throw new Error(area+"数据格式无效。");
-         const slot=String(pair[0]), index=pair[1];
+         const slot=String(pair[0]),index=pair[1];
          if(!validSlots.includes(slot)||seen.has(slot))throw new Error(area+"存在无效位置："+slot);
          if(!Number.isInteger(index)||!heroes[index])throw new Error(area+"包含无效武将编号。");
          seen.add(slot);clean[slot]=heroes[index].name;
@@ -2538,8 +2487,8 @@ $("clearSideCamps").addEventListener("click",()=>{
        if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
        return clean;
      };
-     const formation=formations[packed[1]];
-     return {formation:formation.name,main:decodeLineup(packed[2],"主阵",formation.positions.length,formation.positions.map(String)),deputy:decodeLineup(packed[3],"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:decodeLineup(packed[4],"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
+     const f=formations[packed[1]];
+     return {formation:f.name,main:decodeLineup(packed[2],"主阵",f.positions.length,f.positions.map(String)),deputy:decodeLineup(packed[3],"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:decodeLineup(packed[4],"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
    }
    const m=/^TB1\.([A-Za-z0-9_-]+)\.([0-9a-f]{8})$/i.exec(code);
    if(!m)throw new Error("阵容码格式不正确，或版本不受支持。");
@@ -2560,60 +2509,84 @@ $("clearSideCamps").addEventListener("click",()=>{
      if(Object.keys(clean).length>capacity)throw new Error(area+"上阵数量超出限制。");
      return clean;
    };
-   const formation=formations.find(f=>f.name===data.formation);
-   const main=checkLineup(data.main,"主阵",formation.positions.length,formation.positions.map(String));
-   const deputy=checkLineup(data.deputy,"副将营",7,Array.from({length:7},(_,i)=>String(i+1)));
-   const gathering=checkLineup(data.gathering,"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)));
-   return {formation:data.formation,main,deputy,gathering};
+   const f=formations.find(f=>f.name===data.formation);
+   if(!f)throw new Error("阵容码中的阵法无效。");
+   return {formation:data.formation,main:checkLineup(data.main,"主阵",f.positions.length,f.positions.map(String)),deputy:checkLineup(data.deputy,"副将营",7,Array.from({length:7},(_,i)=>String(i+1))),gathering:checkLineup(data.gathering,"聚义营",9,Array.from({length:9},(_,i)=>String(i+1)))};
  }
+ function shareText(code){return SHARE_PREFIX+"\n"+code;}
+ function applyImport(data){
+   const before=getActiveUnionKeys();
+   recordUndo("main");recordUndo("deputy");recordUndo("gathering");
+   state.formation=data.formation;state.lineups[state.formation]=data.main;
+   state.deputy=data.deputy;state.gathering=data.gathering;
+   state.selectedPosition=null;state.selectedCamp=null;
+   $("slotPrompt").textContent="阵容码导入成功。请点击任意阵位继续调整。";
+   renderFormations();renderBoard();renderCamps();renderHeroes();
+   showLineupChange(before,getActiveUnionKeys());
+   status.textContent="导入成功：主阵、副将营、聚义营和阵法已完整替换。";
+ }
+ function promptImport(text,source){
+   const code=extractCode(text);
+   if(!code||code===lastPromptedCode)return false;
+   let data;try{data=parseCode(text);}catch(err){return false;}
+   lastPromptedCode=code;
+   if(window.confirm("检测到"+(source==="clipboard"?"剪贴板":"粘贴内容")+"中有QQ水浒阵容码，是否导入？\n导入会替换当前主阵、副将营、聚义营和阵法。")){
+     try{applyImport(data);return true;}catch(err){status.textContent=err&&err.message?err.message:"导入失败，请重试。";}
+   }
+   return false;
+ }
+ let lastPromptedCode="",clipboardReadBusy=false;
  document.getElementById("exportRosterCode").addEventListener("click",()=>{
-   try{output.value=makeCode();status.textContent="阵容码已生成，可复制后发送给好友。";}
+   try{output.value=shareText(makeCode());status.textContent="阵容分享文本已生成，包含说明和短阵容码。";}
    catch(err){console.error(err);status.textContent="导出失败，请重试。";}
  });
  async function copyTextAutomatically(text){
    if(navigator.clipboard&&typeof navigator.clipboard.writeText==="function"){
-     try{await navigator.clipboard.writeText(text);return true;}catch(err){/* Continue to the compatibility fallback used by mobile embedded browsers. */}
+     try{await navigator.clipboard.writeText(text);return true;}catch(err){/* use fallback below */}
    }
    let temporary=null;
    try{
-     temporary=document.createElement("textarea");
-     temporary.value=text;
-     temporary.setAttribute("readonly","");
-     temporary.style.position="fixed";
-     temporary.style.left="-9999px";
-     temporary.style.top="0";
-     temporary.style.opacity="0";
-     document.body.appendChild(temporary);
-     temporary.focus({preventScroll:true});
-     temporary.select();
-     temporary.setSelectionRange(0,temporary.value.length);
+     temporary=document.createElement("textarea");temporary.value=text;temporary.setAttribute("readonly","");
+     temporary.style.position="fixed";temporary.style.left="-9999px";temporary.style.top="0";temporary.style.opacity="0";
+     document.body.appendChild(temporary);temporary.focus({preventScroll:true});temporary.select();temporary.setSelectionRange(0,temporary.value.length);
      return !!document.execCommand("copy");
    }catch(err){return false;}
    finally{if(temporary&&temporary.parentNode)temporary.parentNode.removeChild(temporary);}
  }
  document.getElementById("copyRosterCode").addEventListener("click",async()=>{
    try{
-     if(!output.value.trim())output.value=makeCode();
+     if(!output.value.trim())output.value=shareText(makeCode());
      const copied=await copyTextAutomatically(output.value);
-     status.textContent=copied?"阵容码已自动复制，可直接粘贴发送。":"当前浏览器未允许自动复制，请检查浏览器剪贴板权限后重试。";
+     status.textContent=copied?"阵容分享文本已复制，可直接发送给好友。":"当前浏览器未允许自动复制，请手动复制文本框内容。";
    }catch(err){console.error(err);status.textContent="复制失败，请重试。";}
  });
  document.getElementById("importRosterCode").addEventListener("click",()=>{
    try{
      const data=parseCode(input.value);
      if(!window.confirm("导入将完整替换当前主阵、副将营、聚义营和阵法，确定继续吗？"))return;
-     const before=getActiveUnionKeys();
-     recordUndo("main");recordUndo("deputy");recordUndo("gathering");
-     state.formation=data.formation;
-     state.lineups[state.formation]=data.main;
-     state.deputy=data.deputy;state.gathering=data.gathering;
-     state.selectedPosition=null;state.selectedCamp=null;
-     $("slotPrompt").textContent="阵容码导入成功。请点击任意阵位继续调整。";
-     renderFormations();renderBoard();renderCamps();renderHeroes();
-     showLineupChange(before,getActiveUnionKeys());
-     status.textContent="导入成功：主阵、副将营、聚义营和阵法已完整替换。";
+     applyImport(data);
    }catch(err){status.textContent=err&&err.message?err.message:"导入失败，请检查阵容码。";}
  });
+ // 手动粘贴时也会自动识别并提示；不直接导入，始终由用户确认。
+ input.addEventListener("paste",()=>setTimeout(()=>promptImport(input.value,"paste"),0));
+ async function checkUserClipboard(){
+   if(clipboardReadBusy||document.visibilityState==="hidden"||!navigator.clipboard||typeof navigator.clipboard.readText!=="function")return;
+   clipboardReadBusy=true;
+   try{
+     const text=await navigator.clipboard.readText();
+     if(text&&extractCode(text))promptImport(text,"clipboard");
+   }catch(err){
+     // 浏览器未授权读取剪贴板时不绕过权限；用户仍可在输入框长按粘贴，粘贴后自动提示导入。
+   }finally{clipboardReadBusy=false;}
+ }
+ // 尝试在打开页面、返回编辑器时识别用户剪贴板；若浏览器禁止无手势读取，则由粘贴事件兜底。
+ setTimeout(checkUserClipboard,700);
+ window.addEventListener("focus",()=>setTimeout(checkUserClipboard,250));
+ window.addEventListener("pageshow",()=>setTimeout(checkUserClipboard,250));
+ // 用户点击导入卡片时再尝试一次，满足部分浏览器对剪贴板读取的用户手势要求。
+ const importPanel=document.getElementById("importRosterPanel");
+ if(importPanel)importPanel.addEventListener("click",()=>checkUserClipboard());
+ document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")setTimeout(checkUserClipboard,250);});
 })();
 
 // 将已上阵卡片拖到所有阵位以外，即视为下阵；落在有效阵位时由阵位 drop 处理。
@@ -2648,6 +2621,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
    ctx.fillText('98888',0,0);
    ctx.restore();
  }
+   /* v1.3.9：分享方案聚义效果统一为“武将 属性+百分比”，如“李衮 速度+20%”。 */
    function campUnionDescriptions(campNames){
      const mainNames=mainLineupNames();
      const present=allLineupNames();
@@ -2656,7 +2630,12 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
        const target=baseHeroName(name);
        return unionData
          .filter(u=>mainNames.has(baseHeroName(u.hero))&&u.targets.some(n=>baseHeroName(n)===target)&&u.targets.every(n=>present.has(baseHeroName(n))))
-         .map(u=>`${baseHeroName(u.hero)} +${(String(u.effect).match(/(\\d+(?:\\.\\d+)?%)/)||[])[1]||''}${(String(u.effect).replace(/增加|\\d+(?:\\.\\d+)?%/g,'').trim())}`)
+         .map(u=>{
+           const effect=String(u.effect||'').trim();
+           const match=effect.match(/^(.*?)增加(\d+(?:\.\d+)?%)$/) || effect.match(/^(.*?)(\d+(?:\.\d+)?%)$/);
+           if(!match)return `${baseHeroName(u.hero)} ${effect}`.trim();
+           return `${baseHeroName(u.hero)} ${match[1].trim()}+${match[2]}`.trim();
+         })
          .filter(Boolean);
      });
    }
@@ -2912,6 +2891,29 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
 })();
 
 </script>
+
+<style id="mobile-camp-name-no-wrap-v1-3-9">
+/* v1.3.9：移动端副将营、聚义营武将名称单行完整显示，不使用省略号 */
+@media (max-width:760px) {
+  .app .camp-layout .camp-grid > .camp-slot.has-hero > .slot-name {
+    display:block !important;
+    box-sizing:border-box !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    overflow-wrap:normal !important;
+    word-break:keep-all !important;
+    font-size:clamp(7px, 2.35vw, 10px) !important;
+    letter-spacing:-.35px !important;
+    line-height:1.2 !important;
+    flex:0 1 auto !important;
+  }
+}
+</style>
+
 </body>
 </html>
 <!-- v1.2.48：候补区武将名称与聚义描述同排展示 -->
