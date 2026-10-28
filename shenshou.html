@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v1.1.88</title>
+<title>神兽升级计算器 v1.2.12</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -241,11 +241,11 @@ body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer
 /* v1.1.88：礼包选项卡片统一为参考图样式 */
 .plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
 .plan-option{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;align-items:start;column-gap:8px;row-gap:12px;min-width:0;min-height:130px;padding:16px 14px 13px;border:1.5px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .16s,background .16s,box-shadow .16s}
-.plan-option strong{grid-column:1;grid-row:1;display:block;min-width:0;margin:0;font-size:16px;line-height:1.35;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:keep-all}
-.plan-option .plan-price{grid-column:2;grid-row:1;display:block;margin:0;color:#b77912;font-size:16px;line-height:1.35;font-weight:800;text-align:right;white-space:nowrap}
+.plan-option strong{grid-column:1;grid-row:1;display:block;margin:0;font-size:16px;line-height:1.35;font-weight:750}
+.plan-option .plan-price{grid-column:2;grid-row:1;display:block;margin:0;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#b77912;font-size:16px;line-height:1.35;font-weight:800;text-align:right;white-space:nowrap;align-self:center;justify-self:end}
 .plan-option .plan-pack-stats{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-self:stretch}
-.plan-option .plan-pack-stats span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:5px 2px;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.4;text-align:center;white-space:nowrap}
-.plan-option .plan-pack-stats b{display:block;color:var(--ink);font-size:14px;font-weight:750;white-space:nowrap;overflow-wrap:normal;word-break:keep-all;font-variant-numeric:tabular-nums}
+.plan-option .plan-pack-stats span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:5px 2px;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.4;text-align:center}
+.plan-option .plan-pack-stats b{display:block;color:var(--ink);font-size:14px;font-weight:750;overflow-wrap:anywhere}
 .plan-option.active{border:2px solid #b77912;background:#fff;box-shadow:none}
 .plan-option.active .plan-pack-stats span{background:transparent}
 @media(max-width:760px){.plan-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -543,8 +543,7 @@ section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color
 .all-gifts-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);padding:8px 12px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;white-space:nowrap}
 .all-gifts-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 
-/* 全部方案同屏预览：未展开时也允许在固定高度区域内独立滚动查看卡片 */
-.all-gifts-content{margin-top:16px;max-height:200px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
+.all-gifts-content{margin-top:16px;max-height:200px;overflow:hidden}
 .all-gifts-content.is-expanded{max-height:none;overflow:visible}
 .all-gifts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .all-gift-option{border:1px solid var(--border);border-top:3px solid var(--muted);border-radius:14px;padding:14px;background:var(--panel);min-width:0}
@@ -600,7 +599,7 @@ section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color
 
 .level-data-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .level-data-heading h2{margin:0}
-.level-data-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);padding:8px 12px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;white-space:nowrap}
+.level-data-toggle{flex:0 0 auto;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);font:inherit;font-weight:700;padding:7px 12px;cursor:pointer}
 .level-data-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 
 
@@ -619,28 +618,9 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
 .theme-toggle svg{width:18px;height:18px;flex:none}
 @media(max-width:480px){.theme-toggle{padding:11px 12px;font-size:13px;gap:6px}}
 @media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
-
-
-/* v1.2.0：移动端材料缺口数字保持单行，空间不足时自动缩小字号 */
-@media (max-width: 520px) {
-  .summary:has(#herbNeed) .metric strong {
-    white-space: nowrap !important;
-    overflow-wrap: normal !important;
-    word-break: keep-all !important;
-    font-size: clamp(13px, 4.1vw, 21px) !important;
-    letter-spacing: -0.025em;
-    line-height: 1.2 !important;
-  }
-}
-
-/* v1.2.5：等级数据查询“展开全部”按钮的字体与尺寸同步全部方案同屏预览 */
-/* v1.2.7：同屏预览返利算法、礼包数量与费用统一使用主方案计算规则 */
-
-/* v1.2.9：三种礼包名称必须完整单行显示，不换行、不省略；窄屏自适应缩小标题字号 */
-.plan-option{grid-template-columns:minmax(0,1fr) auto!important;column-gap:5px!important}
-.plan-option strong{min-width:0!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;word-break:keep-all!important;font-size:clamp(11px,2.5vw,15px)!important;letter-spacing:-.02em!important}
-@media(min-width:421px){.plan-option strong{font-size:clamp(12px,1.8vw,15px)!important}}
-@media(max-width:420px){.plan-option{padding-left:9px!important;padding-right:9px!important}.plan-option strong{font-size:13px!important;letter-spacing:-.035em!important}.plan-option .plan-price{font-size:13px!important}}
+</style>
+<style>/* v1.2.12：礼包价格去除外框，并与左侧礼包名称同一行垂直对齐 */
+.plan-option .plan-price{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;align-self:center;justify-self:end}
 </style>
 </head>
 <body>
@@ -928,7 +908,6 @@ function render(skipAllGiftPreview=false){
  const adjustedCosts=costs.map((v,i)=>Math.max(0,v-Math.min(v,consumedClicks*expMaterials[i])));
  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
  const gaps=adjustedCosts.map((v,i)=>Math.max(0,v-stocks[i]));
- currentShenshouMaterialNeeds=gaps.slice();
  const ids=['herb','wood','pill'];
  ids.forEach((id,i)=>{const need=$(id+'Need');if(need)need.textContent=fmt(gaps[i]);const cost=$(id+'Cost');if(cost)cost.textContent=fmt(adjustedCosts[i]);const have=$(id+'Have');if(have)have.textContent=fmt(stocks[i]);const gap=$(id+'Gap');if(gap)gap.textContent=fmt(gaps[i]);});
  const herbPackCount=Math.ceil(gaps[0]/91);
@@ -950,13 +929,15 @@ function render(skipAllGiftPreview=false){
  $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';$('summaryRebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('summaryRebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('summaryRebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
  $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);const noRebateCost=middle/plan.middlePerBig*plan.price;const rebateCost=rebateMiddle/plan.middlePerBig*plan.price;$('rebateSavings').textContent='¥'+Math.max(0,noRebateCost-rebateCost).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
  $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big)+' 大包';$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
- $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');  renderAllGiftPreview(); // 每次主计算更新后同步刷新全部方案预览，避免首次渲染或折叠状态下保留 0 值
+ $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');  if(!skipAllGiftPreview&&document.getElementById('allGiftToggle')?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
 }
 
-// 同屏预览直接使用主计算流程的最新材料缺口，避免读取尚未刷新或格式不同的 DOM 文本而全部显示为 0。
-let currentShenshouMaterialNeeds=[0,0,0];
 function getShenshouMaterialNeeds(){
-  return currentShenshouMaterialNeeds.slice();
+  return [
+    Number(($('herbNeed')?.textContent||'0').replace(/,/g,''))||0,
+    Number(($('woodNeed')?.textContent||'0').replace(/,/g,''))||0,
+    Number(($('pillNeed')?.textContent||'0').replace(/,/g,''))||0
+  ];
 }
 
 let previewSelectedPlan='monthly';
@@ -991,18 +972,13 @@ function renderAllGiftPreview(){
   const fmtAll=n=>Number(n).toLocaleString('en-US');
   const moneyAll=n=>'¥'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
   const modeStats=(p,rebate)=>{
-    // 与上方礼包购买方案使用同一算法：返利按材料缺口的 2/3 计算；
-    // 各类材料包分别向上取整，再计算所需中包/大包；费用按实际中包需求折算，
-    // 展示购买数量则按完整大包向上取整，剩余小包按实际购买容量计算。
-    const purchaseNeeds=need.map(n=>rebate?n*2/3:n);
-    const open=purchaseNeeds.map((n,i)=>Math.ceil(Math.max(0,n)/per[i]));
-    const smallNeed=open.reduce((sum,n)=>sum+n,0);
-    const middleNeed=p.id==='event'?Math.ceil(smallNeed/1200):Math.ceil(smallNeed/80);
-    const qty=p.id==='event'?middleNeed:Math.ceil(middleNeed/p.big);
-    const boughtSmall=p.id==='event'?qty*1200:qty*p.small;
-    const cost=p.id==='event'?middleNeed*p.price:(middleNeed/p.big)*p.price;
-    const remaining=Math.max(0,boughtSmall-smallNeed);
-    return {qty,cost,open,remaining,packs:boughtSmall};
+    const purchaseNeeds=need.map(n=>rebate?Math.ceil(n*3/4):n);
+    const open=purchaseNeeds.map((n,i)=>Math.ceil(n/per[i]));
+    const smallNeed=open.reduce((sum,n)=>sum+Math.max(0,n),0);
+    const qty=Math.ceil(smallNeed/Math.max(1,p.small));
+    const packs=qty*p.small;
+    const remaining=Math.max(0,packs-smallNeed);
+    return {qty,cost:qty*p.price,open,remaining,packs};
   };
   host.innerHTML=plans.map(p=>{
     const normal=modeStats(p,false), rebate=modeStats(p,true);
