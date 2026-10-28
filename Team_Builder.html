@@ -3026,7 +3026,13 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
    const bytes=new Uint8Array(binary.length);
    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
    const blob=new Blob([bytes],{type:'image/png'});
-   return Promise.resolve({blob,url,filename:'QQ水浒-阵容分享方案.png'});
+   const safeDescription=description
+     .replace(/[\\\\/:*?"<>|]/g,'_')
+     .replace(/[\\s\\.]+$/g,'')
+     .trim()
+     .slice(0,100);
+   const filename=(safeDescription||f.name||'阵容分享方案')+'.png';
+   return Promise.resolve({blob,url,filename});
  }
  function normName(name){return name?displayHeroName(name):'空位';}
  function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
