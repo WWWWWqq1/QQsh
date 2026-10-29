@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.1.20</title>
+<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.1.23</title>
 <style>
 :root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002}
 *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s}
@@ -318,15 +318,7 @@ html,body{max-width:100%;overflow-x:hidden!important;}
 <button type="button" class="rebate-plan-option" data-rebate-plan="vip10"><span class="rebate-gift-top"><strong>VIP10礼包</strong><b>¥139.8</b></span><span class="rebate-gift-facts"><span>小包<strong>20,800</strong></span><span>折算黑曜石<strong>26,000</strong></span></span></button>
 <button type="button" class="rebate-plan-option" data-rebate-plan="event"><span class="rebate-gift-top"><strong>限时礼包</strong><b>¥13.8</b></span><span class="rebate-gift-facts"><span>小包<strong>1,500</strong></span><span>折算黑曜石<strong>1,911</strong></span></span></button>
 </div>
-<div class="rebate-params" aria-label="礼包基础参数">
-<div class="rebate-param price-param"><span>价格</span><strong><output id="rcPrice">99</output></strong></div>
-<div class="rebate-param"><span>大包数量</span><strong><output id="rcBig">213</output></strong></div>
-<div class="rebate-param"><span>中包数量</span><strong><output id="rcMiddle">100</output></strong></div>
-<div class="rebate-param"><span>小包数量</span><strong><output id="rcSmall">21,300</output></strong></div>
-<div class="rebate-param"><span>折算黑曜石</span><strong><output id="rcObsidian">26,625</output></strong></div>
-<div class="rebate-param"><span>附加黑曜石</span><strong><output id="rcExtra">0</output></strong></div>
-<div class="rebate-param"><span>云母/乌金兑换黑曜石比例</span><strong><output id="rcRatio">1.25</output></strong></div>
-</div>
+<!-- v2.1.21：移除单次返利上限计算中的礼包基础参数展示区及对应输出节点。 -->
 <div class="table-wrap"><table class="rebate-cap-table" id="rebateCalcTable"><thead><tr><th>项目</th><th>云母石</th><th>乌金石</th><th>金刚石</th><th>黑曜石</th></tr></thead><tbody>
 <tr><th>每包材料数量</th><td><output id="rcMat0">208,000</output></td><td><output id="rcMat1">104,000</output></td><td><output id="rcMat2">52,000</output></td><td><output id="rcMat3">26,000</output></td></tr>
 <tr><th>消耗所得积分</th><td><input class="rebate-input rc-points" type="number" value="3" min="0" step="1"></td><td><input class="rebate-input rc-points" type="number" value="6" min="0" step="1"></td><td><input class="rebate-input rc-points" type="number" value="15" min="0" step="1"></td><td><input class="rebate-input rc-points" type="number" value="25" min="0" step="1"></td></tr>
@@ -484,8 +476,6 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
  function calc(){
   const cfg=configs[selected],price=cfg.price,big=cfg.big,middle=cfg.middle,small=cfg.small,ratio=cfg.ratio,extra=cfg.extra;
   const obsidian=small*ratio+extra;
-  [['Price',price],['Big',big],['Middle',middle],['Small',small],['Obsidian',obsidian],['Extra',extra],['Ratio',ratio]].forEach(([k,v])=>{if(id(k))id(k).textContent=fmt(v)});
-   const extraParam=id('Extra')?.closest('.rebate-param');if(extraParam)extraParam.style.display=selected==='event'?'':'none';
   const mat=[small*10,small*5,small*2.5,obsidian];mat.forEach((v,i)=>{if(id('Mat'+i))id('Mat'+i).textContent=fmt(v)});
   const vals=cls=>Array.from(table.querySelectorAll('.'+cls)).map(el=>Math.max(0,read(el)));
   const points=vals('rc-points'),costpoints=vals('rc-costpoints'),caps=vals('rc-cap'),perc=vals('rc-percent');
@@ -498,7 +488,6 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
   if(id('Saved'))id('Saved').textContent=money(cost/3);
   document.querySelectorAll('[data-rebate-plan]').forEach(btn=>btn.classList.toggle('active',btn.dataset.rebatePlan===selected));
   const heading=document.querySelector('#rebateSelectorCard h2');if(heading)heading.textContent=cfg.name+' · 单次返利上限计算';
-  const hint=document.querySelector('#rebateSelectorCard > .hint');if(hint)hint.textContent='当前方案：'+cfg.name+'。折算黑曜石 = 小包数量 × '+fmt(ratio)+' + 附加黑曜石。';
  }
  document.querySelectorAll('[data-rebate-plan]').forEach(btn=>btn.addEventListener('click',()=>{selected=btn.dataset.rebatePlan;calc()}));
  if(table){table.querySelectorAll('input').forEach(el=>{el.readOnly=true;el.tabIndex=-1;el.addEventListener('input',calc)});}
@@ -572,6 +561,20 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 @media(max-width:520px){#rebateSelectorCard .rebate-plan-select{gap:6px!important}#rebateSelectorCard .rebate-plan-option{padding:8px 5px!important}#rebateSelectorCard .rebate-plan-option.active{padding:7px 4px!important}#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{gap:3px!important}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important}}
 </style>
 
+
+<style>
+/* v2.1.23：单次返利上限计算表格适配容器宽度，禁止横向滚动条 */
+#rebateSelectorCard .table-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important;overflow-y:visible!important;scrollbar-width:none!important}
+#rebateSelectorCard .table-wrap::-webkit-scrollbar{display:none!important}
+#rebateSelectorCard .rebate-cap-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{min-width:0!important;max-width:100%!important;padding:clamp(3px,1vw,10px)!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;box-sizing:border-box!important}
+#rebateSelectorCard .rebate-cap-table th:first-child{width:22%!important}
+#rebateSelectorCard .rebate-cap-table td{width:19.5%!important}
+#rebateSelectorCard .rebate-cap-table input{display:block;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;padding:clamp(3px,1vw,8px)!important;font-size:clamp(9px,2.3vw,14px)!important}
+#rebateSelectorCard .rebate-cap-table output{display:inline-block;max-width:100%;font-size:clamp(9px,2.4vw,14px)!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+@media(max-width:560px){#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{font-size:clamp(8px,2.2vw,11px)!important;padding:3px 2px!important}#rebateSelectorCard .rebate-cap-table th:first-child{width:23%!important}#rebateSelectorCard .rebate-cap-table td{width:19.25%!important}}
+</style>
+
 </body></html>
 <style>
 /* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
@@ -630,6 +633,18 @@ body.rebate-enabled .rebate-discount-item{display:flex}
 </script>
 
 
+<style>
 /* v2.1.19：礼包卡片信息仅展示小包与折算黑曜石，不展示附加黑曜石 */
 .gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 @media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+
+<style>
+/* v2.1.22：单次返利上限计算底部三个汇总指标在所有屏幕宽度下始终同排，无横向滚动 */
+.rebate-cap-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(4px,1.6vw,14px)!important;width:100%;min-width:0;overflow:hidden}
+.rebate-cap-stat{min-width:0!important;max-width:100%;box-sizing:border-box;padding:clamp(7px,1.5vw,16px)!important;gap:clamp(4px,1vw,10px)!important}
+.rebate-cap-stat span{font-size:clamp(8px,1.7vw,13px)!important;line-height:1.25!important;overflow-wrap:anywhere}
+.rebate-cap-stat strong{font-size:clamp(12px,3vw,28px)!important;line-height:1.2!important;overflow-wrap:anywhere;word-break:normal}
+.rebate-cap-stat strong output{white-space:normal!important}
+@media(max-width:380px){.rebate-cap-summary{gap:4px!important}.rebate-cap-stat{padding:7px 5px!important}.rebate-cap-stat span{font-size:8px!important}.rebate-cap-stat strong{font-size:12px!important}}
+</style>
