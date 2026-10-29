@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.4.23</title>
+<title>QQ水浒阵容规划器 v1.4.27</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -1675,14 +1675,15 @@ body:not(.light) .union-chip.filtered-union-chip{background:#482027!important;bo
 body:not(.light) .filtered-union-toggle[aria-pressed="false"]{background:#1f3b2b!important;border-color:#3b9b62!important;color:#9be7b5!important;}
 body:not(.light) .filtered-union-toggle[aria-pressed="true"]{background:#4b2027!important;border-color:#c94c57!important;color:#ffb2b7!important;}
 #resetSmartFilters{white-space:nowrap;}
-.camp-bulk-actions-footer{display:flex!important;flex-wrap:nowrap!important;gap:8px!important;align-items:center!important;}
-.camp-bulk-actions-footer #resetSmartFilters{flex:0 0 auto;}
-.camp-bulk-actions-footer #clearSideCamps,.camp-bulk-actions-footer #smartFill{flex:1 1 0;min-width:0;}
+.camp-bulk-actions-footer{display:flex!important;flex-wrap:nowrap!important;justify-content:flex-end!important;gap:8px!important;align-items:center!important;width:100%!important;}
+.camp-bulk-actions-footer .action-btn{flex:0 0 auto!important;width:auto!important;min-width:max-content!important;}
+.camp-bulk-actions-footer #resetSmartFilters{margin-right:auto!important;}
+.camp-bulk-actions-footer #resetSmartFilters,.camp-bulk-actions-footer #clearSideCamps,.camp-bulk-actions-footer #smartFill{flex:0 0 auto!important;min-width:max-content!important;}
 @media(max-width:560px){
  .camp-bulk-actions .smart-fill-heading-hint{font-size:14px!important;}
  .filtered-union-toggle{font-size:11px!important;padding:6px 7px!important;}
- .camp-bulk-actions-footer{gap:5px!important;}
- .camp-bulk-actions-footer .action-btn{font-size:11px!important;padding:8px 5px!important;}
+ .camp-bulk-actions-footer{gap:5px!important;justify-content:flex-end!important;}
+ .camp-bulk-actions-footer .action-btn{flex:0 0 auto!important;width:auto!important;min-width:max-content!important;font-size:11px!important;padding:8px 5px!important;}
 }
 </style>
 
@@ -3060,7 +3061,7 @@ renderFormations();renderBoard();renderCamps();renderHeroes();
            ctx.fillStyle=light?'#593800':'#ffdf86';
            ctx.font='bold 18px SimSun,"宋体",serif';
            ctx.textAlign='left';
-           lines.forEach((text,j)=>ctx.fillText(text,x+44,yy+61+j*shareUnionLineStep));
+           lines.forEach((text,j)=>ctx.fillText(text,x+30,yy+61+j*shareUnionLineStep));
            ctx.restore();
            continue;
          }else{
