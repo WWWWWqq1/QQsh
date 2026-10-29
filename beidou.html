@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>北斗材料计算器 v1.0.12</title>
+<meta name="theme-color" content="#f7f9fc"><title>北斗材料计算器 v1.0.21</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -18,11 +18,6 @@ body.dark{--bg:#11151d;--panel:#1b2230;--panel2:#222c3d;--text:#f2f4f8;--muted:#
 @media(max-width:560px){main{padding:12px 10px 28px}.hero{padding:17px}.panel{padding:13px}h2{font-size:18px}.fields,.level-boxes,.exp-layout{grid-template-columns:1fr}.result-grid{gap:7px}.result{padding:11px 8px}.result .name{font-size:14px}.result strong{font-size:clamp(19px,5vw,26px)}.level-box{padding:12px}.level-row{grid-template-columns:minmax(0,1fr) 70px}}
 
 .gift-panel{margin-top:16px;position:relative}
-/* v1.0.12 缺失礼包信息提示：放大字体，覆盖礼包购买方案，点击任意位置关闭 */
-.missing-gift-overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:18px;border-radius:18px;background:rgba(31,41,55,.24);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);cursor:pointer}
-.missing-gift-message{max-width:420px;width:100%;padding:22px 20px;border:1px solid rgba(255,255,255,.7);border-radius:16px;background:rgba(255,255,255,.84);box-shadow:0 12px 34px rgba(15,23,42,.16);color:#1b2434;text-align:center;font-weight:750;font-size:clamp(22px,5vw,28px);line-height:1.6;pointer-events:none}
-body.dark .missing-gift-message{background:rgba(27,34,48,.88);border-color:rgba(255,255,255,.16);color:#f2f4f8}
-.missing-gift-message small{display:block;margin-top:5px;font-size:clamp(16px,3.8vw,20px);font-weight:600;opacity:.9}
 
 .gift-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
 .gift-card{display:block;text-align:left;border:1px solid var(--line);border-radius:13px;padding:14px;background:var(--panel2);color:var(--text);cursor:pointer;min-width:0}
@@ -143,26 +138,18 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
 </section>
 
 <section class="panel gift-panel" id="giftPlan">
-  <div class="missing-gift-overlay" id="missingGiftOverlay" role="button" tabindex="0" aria-label="缺失礼包信息提示，点击关闭">
-    <div class="missing-gift-message">缺失礼包信息<small>有数据可提供给作者更新</small></div>
-  </div>
   <div class="gift-heading"><h2>礼包购买方案</h2></div>
-  <p class="muted">北斗共有四种礼包。以下数量、价格及三种材料数值均按你提供的数据录入。</p>
+  <p class="muted">北斗礼包材料数量与价格如下，以下数据均按你提供的数据录入。</p>
   <div class="gift-grid">
     <button type="button" class="gift-card selected" data-gift="monthly">
-      <div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥1</span></div>
-      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
-      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
-    </button>
-    <button type="button" class="gift-card" data-gift="vip10">
-      <div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥1</span></div>
-      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
-      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
+      <div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div>
+      <div class="gift-facts"><span>大包 <b>71</b></span><span>中包 <b>10</b></span><span>小包 <b>710</b></span></div>
+      <div class="gift-facts"><span><b>古魁经 1,050</b></span><span><b>古朴文 450</b></span><span><b>北极令 225</b></span></div>
     </button>
     <button type="button" class="gift-card" data-gift="event">
-      <div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥1</span></div>
-      <div class="gift-facts"><span>大包 <b>1</b></span><span>中包 <b>1</b></span><span>小包 <b>1</b></span></div>
-      <div class="gift-facts"><span>古魁经 <b>1</b></span><span>古朴文 <b>1</b></span><span>北极令 <b>1</b></span></div>
+      <div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥14.3</span></div>
+      <div class="gift-facts"><span>大包 <b>11</b></span><span>中包 <b>5</b></span><span>小包 <b>55</b></span></div>
+      <div class="gift-facts"><span><b>古魁经 1,050</b></span><span><b>古朴文 450</b></span><span><b>北极令 225</b></span></div>
     </button>
     <button type="button" class="gift-card" data-gift="value">
       <div class="gift-top"><strong>越兑越划算</strong><span class="gift-price">¥1</span></div>
@@ -174,10 +161,10 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
   <div class="gift-total">
     <div class="gift-metric-cost"><span>预计费用</span><strong id="giftAmount">—</strong></div>
     <div class="gift-metric-qty"><span>购买礼包数量</span><strong id="giftPurchaseCount">—</strong></div>
-    <div class="gift-metric-material-yang"><span>可获古魁经</span><strong id="openYang">—</strong></div>
-    <div class="gift-metric-material-chang"><span>可获古朴文</span><strong id="openChang">—</strong></div>
-    <div class="gift-metric-material-sheng"><span>可获北极令</span><strong id="openSheng">—</strong></div>
-    <div class="gift-metric-remaining"><span>剩余材料合计</span><strong id="giftRemainingSmall">—</strong></div>
+    <div class="gift-metric-material-yang"><span>古魁经包</span><strong id="openYang">—</strong></div>
+    <div class="gift-metric-material-chang"><span>古朴文包</span><strong id="openChang">—</strong></div>
+    <div class="gift-metric-material-sheng"><span>北极令包</span><strong id="openSheng">—</strong></div>
+    <div class="gift-metric-remaining"><span>剩余小包</span><strong id="giftRemainingSmall">—</strong></div>
   </div>
 </section>
 
@@ -345,10 +332,10 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
 }
 
 
-/* v1.0.10：四种礼包卡片自适应排列 */
+/* v1.0.19：礼包卡片始终自动铺满整行，移除任意礼包均不留空位 */
 .gift-grid{
   display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-columns:repeat(auto-fit,minmax(0,1fr))!important;
   gap:10px!important;
   min-width:0;
 }
@@ -360,7 +347,7 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
 .gift-grid .gift-card *{min-width:0}
 @media(max-width:560px){
   .gift-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-columns:repeat(auto-fit,minmax(0,1fr))!important;
     gap:6px!important;
   }
   .gift-grid>.gift-card{padding:9px 6px!important}
@@ -418,34 +405,32 @@ $('resetLevels').onclick=()=>{for(let i=1;i<=2;i++){$('level'+i).value=20;$('tar
 $('resetExp').onclick=()=>{for(let i=1;i<=2;i++){$('exp'+i).value=0;updateExp(i)}clearResult();$('status').textContent='经验条已重置为 0。'};
 $('tableBody').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?`${v-1}-${v}级`:fmt(v)}</td>`).join('')}</tr>`).join('');
 const giftPlans={
- monthly:{label:'月初礼包',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1},
- vip10:{label:'VIP10礼包',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1},
- event:{label:'限时礼包',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1},
+ monthly:{label:'月初礼包',price:99,big:71,middle:10,small:71*10,yang:1050,chang:450,sheng:225},
+ event:{label:'限时礼包',price:14.3,big:11,middle:5,small:11*5,yang:1050,chang:450,sheng:225},
  value:{label:'越兑越划算',price:1,big:1,middle:1,small:1,yang:1,chang:1,sheng:1}
 };
 let selectedGift='monthly';
-const missingGiftOverlay=document.getElementById('missingGiftOverlay');
-if(missingGiftOverlay){
-  const closeMissingGiftNotice=()=>missingGiftOverlay.remove();
-  missingGiftOverlay.addEventListener('click',closeMissingGiftNotice);
-  missingGiftOverlay.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();closeMissingGiftNotice();}});
-}
 document.querySelectorAll('[data-gift]').forEach(btn=>btn.addEventListener('click',()=>{selectedGift=btn.dataset.gift;document.querySelectorAll('[data-gift]').forEach(b=>b.classList.toggle('selected',b===btn));renderGiftPlan()}));
 function money(v){return '¥'+Number(v||0).toLocaleString('zh-CN',{minimumFractionDigits: v%1?1:0,maximumFractionDigits:2})}
 function getCurrentMaterialNeeds(){return [Number(($('rYang')?.textContent||'0').replace(/,/g,''))||0,Number(($('rChang')?.textContent||'0').replace(/,/g,''))||0,Number(($('rSheng')?.textContent||'0').replace(/,/g,''))||0]}
 function renderGiftPlan(){
- const need=getCurrentMaterialNeeds(), p=giftPlans[selectedGift];
- const yields=[p.yang,p.chang,p.sheng];
- const qty=Math.max(0,...need.map((n,i)=>Math.ceil(n/Math.max(1,yields[i]))));
- const gained=yields.map(v=>v*qty);
- const excess=gained.reduce((sum,v,i)=>sum+Math.max(0,v-need[i]),0);
- $('giftAmount').textContent=money(qty*p.price);
- $('giftPurchaseCount').textContent=fmt(qty)+' 份';
- $('openYang').textContent=fmt(gained[0]);
- $('openChang').textContent=fmt(gained[1]);
- $('openSheng').textContent=fmt(gained[2]);
- $('giftRemainingSmall').textContent=fmt(excess);
- $('giftExplain').textContent=`当前选择：${p.label}。每份礼包按表格数值提供古魁经 ${fmt(p.yang)}、古朴文 ${fmt(p.chang)}、北极令 ${fmt(p.sheng)}；按当前剩余材料需求估算需购买 ${fmt(qty)} 份。`;
+  const need=getCurrentMaterialNeeds(), p=giftPlans[selectedGift];
+  // 每个小包只能三选一。结果区显示分配给三种材料的小包数量。
+  const yields=[p.yang,p.chang,p.sheng].map(v=>Math.max(1,Number(v)||1));
+  const materialPacks=need.map((n,i)=>Math.ceil(n/yields[i]));
+  const requiredSmallPacks=materialPacks.reduce((sum,n)=>sum+n,0);
+  const bundleSize=Math.max(1,Number(p.small)||1);
+  const qty=Math.ceil(requiredSmallPacks/bundleSize);
+  const purchasedSmallPacks=qty*bundleSize;
+  const remainingSmallPacks=Math.max(0,purchasedSmallPacks-requiredSmallPacks);
+  const gained=materialPacks.map((packs,i)=>packs*yields[i]);
+  $('giftAmount').textContent=money(qty*p.price);
+  $('giftPurchaseCount').textContent=fmt(qty)+' 份';
+  $('openYang').textContent=fmt(materialPacks[0]);
+  $('openChang').textContent=fmt(materialPacks[1]);
+  $('openSheng').textContent=fmt(materialPacks[2]);
+  $('giftRemainingSmall').textContent=fmt(remainingSmallPacks);
+  $('giftExplain').textContent=`当前选择：${p.label}。每个小包可自选一种材料：古魁经包可得 ${fmt(yields[0])} 古魁经，古朴文包可得 ${fmt(yields[1])} 古朴文，北极令包可得 ${fmt(yields[2])} 北极令。按当前材料缺口，需分配古魁经包 ${fmt(materialPacks[0])} 个、古朴文包 ${fmt(materialPacks[1])} 个、北极令包 ${fmt(materialPacks[2])} 个，共需 ${fmt(requiredSmallPacks)} 个小包；每份礼包含 ${fmt(bundleSize)} 个小包，需购买 ${fmt(qty)} 份，共获得 ${fmt(purchasedSmallPacks)} 个小包，剩余 ${fmt(remainingSmallPacks)} 个小包。预计获得材料：古魁经 ${fmt(gained[0])}、古朴文 ${fmt(gained[1])}、北极令 ${fmt(gained[2])}。`;
 }
 
 
