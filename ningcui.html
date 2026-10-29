@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head>
-<!-- 凝萃九宫升级计算器 v1.0.39 --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d1422"><title>凝萃九宫升级计算器 v1.0.39</title>
+<!-- 凝萃九宫升级计算器 v1.2.2 --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d1422"><title>凝萃九宫升级计算器 v1.2.2</title>
 <style>
 :root{--bg:#f3f6fb;--card:#fff;--ink:#172033;--muted:#68758b;--line:#d8e0ed;--primary:#2784e8;--soft:#edf4ff;--shadow:0 8px 24px #20304a12}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;transition:background .2s,color .2s}body.dark{--bg:#0d1422;--card:#151f30;--ink:#e8eef8;--muted:#a0aec3;--line:#334258;--soft:#1c2b43;--shadow:0 8px 24px #0003;color-scheme:dark}
@@ -61,7 +61,7 @@
   /* 窄屏：礼包名称与价格同行；小包及三种材料共四张卡片，严格两行两列 */
   .gift-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
   .gift-card{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;padding:7px 5px;border-radius:9px;align-content:start}
-  .gift-top{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-start;flex-direction:row;flex-wrap:nowrap;font-size:12px;gap:4px;margin-bottom:3px;line-height:1.25;min-width:0}
+  .gift-top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;flex-direction:row;flex-wrap:nowrap;font-size:12px;gap:4px;margin-bottom:3px;line-height:1.25;min-width:0}
   .gift-top strong{min-width:0;overflow-wrap:anywhere}
   .gift-price{font-size:12px;flex:none}
   .gift-facts{display:contents;font-size:10px}
@@ -100,8 +100,8 @@
   <div class="gift-grid">
     <button type="button" class="gift-card" data-gift="monthly" aria-pressed="false">
       <div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div>
-      <div class="gift-facts"><span>大包<b>142</b></span><span>中包<b>2</b></span><span>小包<b>284</b></span></div>
-      <div class="gift-materials"><span>不灭将魂<b>58</b></span><span>龙虎巽风<b>29</b></span><span>天心离火<b>12</b></span></div>
+      <div class="gift-facts"><span>大包<b>142</b></span><span>中包<b>2</b></span><span>小包<b>994</b></span></div>
+      <div class="gift-materials"><span>不灭将魂<b>70</b></span><span>龙虎巽风<b>40</b></span><span>天心离火<b>20</b></span></div>
     </button>
     <button type="button" class="gift-card" data-gift="value" aria-pressed="false">
       <div class="gift-top"><strong>越兑越划算</strong><span class="gift-price">¥96</span></div>
@@ -109,7 +109,7 @@
       <div class="gift-materials"><span>不灭将魂<b>58</b></span><span>龙虎巽风<b>29</b></span><span>天心离火<b>12</b></span></div>
     </button>
     <button type="button" class="gift-card" data-gift="limited" aria-pressed="false">
-      <div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥15.8</span></div>
+      <div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥14.3</span></div>
       <div class="gift-facts"><span>大包<b>12</b></span><span>中包<b>7</b></span><span>小包<b>84</b></span></div>
       <div class="gift-materials"><span>不灭将魂<b>70</b></span><span>龙虎巽风<b>40</b></span><span>天心离火<b>20</b></span></div>
     </button>
@@ -202,9 +202,9 @@ $('resetStock').addEventListener('click',()=>{['soulStock','windStock','fireStoc
 
 // 凝萃礼包购买：沿用军师礼包方案逻辑，不启用返利。
 const giftPlans={
- monthly:{label:'月初礼包',price:99,small:284,yield:[58,29,12]},
+ monthly:{label:'月初礼包',price:99,small:994,yield:[70,40,20]},
  value:{label:'越兑越划算',price:96,small:300,yield:[58,29,12]},
- limited:{label:'限时礼包',price:15.8,small:84,yield:[70,40,20]}
+ limited:{label:'限时礼包',price:14.3,small:77,yield:[70,40,20]}
 };
 let selectedGift='monthly';
 function renderGiftPlan(){
