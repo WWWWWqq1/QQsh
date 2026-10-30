@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<meta name="theme-color" content="#f4f6fa">
+<title>QQ水浒 · 礼包配置</title>
+<!-- v2.1.34：JSON导出入口文字居中、去除空格并加强分隔横线 -->
+<style>
+:root{--bg:#f3f5f9;--panel:#fff;--panel2:#f6f8fc;--text:#202938;--muted:#65748b;--line:#d7e0ed;--accent:#b47a16;--blue:#3977c8;--danger:#c33d45;--shadow:0 8px 26px #1c355010}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.wrap{max-width:1200px;margin:auto;padding:22px 16px 60px}
+header{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:16px}
+h1{font-size:25px;margin:0 0 5px}h2{font-size:19px;margin:0}h3{font-size:16px;margin:0}
+.sub{color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:start}
+nav,.content{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+nav{padding:12px;position:sticky;top:12px}nav h3{padding:8px 9px 12px}
+.navbtn{width:100%;text-align:left;padding:10px 11px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--text);margin:2px 0}
+.navbtn.active{background:#f8f0df;border-color:#d7b36d;color:#80530b;font-weight:700}
+.nav-separator{height:2px;background:#aebdd0;margin:12px 2px 10px;border-radius:2px}
+.navbtn small{float:right;color:var(--muted)}
+.export-navbtn{margin-top:0!important;color:var(--blue)!important;font-weight:700!important;text-align:center!important}
+.export-navbtn.active{background:#f8f0df!important;border:1px solid #d7b36d!important;border-radius:10px!important;color:#80530b!important}
+
+.content{padding:18px;min-width:0}
+.export-systems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.export-system{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fff}.export-system strong{font-size:15px}.export-system small{font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:15px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:8px 12px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.btn.danger{color:var(--danger);border-color:#e8b8bb;background:#fff8f8}
+.notice{background:#f5f8fd;border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--muted);font-size:13px;margin-bottom:14px}
+.cards{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.package{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel);min-width:0}
+.package-head{display:flex;gap:8px;align-items:center;margin-bottom:12px}.package-head input{font-weight:700;flex:1;min-width:0}
+.package-head .price{width:105px}
+.fieldgrid{display:grid;grid-template-columns:repeat(var(--field-count,1),minmax(0,1fr));grid-auto-flow:column;gap:5px;align-items:stretch;overflow:hidden;padding-bottom:0;min-width:0}.fieldgrid .field{display:grid;grid-template-rows:auto auto;align-content:start;min-width:0;max-width:100%}.fieldgrid .field label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:22px;font-size:16px;line-height:1.4;margin-bottom:4px}.fieldgrid .field input,.fieldgrid .field textarea,.fieldgrid .field select{min-width:0;width:100%;font-size:16px;line-height:1.4;padding:7px 2px;border-radius:6px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.field{justify-items:stretch}.field label{width:100%;text-align:center;box-sizing:border-box}.field input,.field select,.field textarea{width:100%;box-sizing:border-box;text-align:center;text-align-last:center;padding-left:4px;padding-right:4px}.field input[type="number"]::-webkit-inner-spin-button,.field input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.field input[type="number"]{-moz-appearance:textfield}
+input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 9px;background:white;color:var(--text)}
+.package-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.system-rules{margin-top:18px;border-top:1px solid var(--line);padding-top:15px}
+.system-rules textarea{min-height:82px;resize:vertical}
+.system-meta{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px}
+.system-meta .field{flex:1;min-width:180px}.system-meta .field label{font-size:16px;line-height:1.4}.system-meta .field input,.system-meta .field select,.system-meta .field textarea{font-size:16px;line-height:1.4}
+.empty{padding:28px;text-align:center;color:var(--muted);background:var(--panel2);border:1px dashed var(--line);border-radius:12px}
+.addbar{margin-top:12px}
+.import-panel{margin-top:18px;border-top:1px solid var(--line);padding-top:15px}
+.import-panel textarea{min-height:110px;font-family:ui-monospace,monospace;font-size:12px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#202938;color:white;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow);display:none;z-index:5}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>QQ水浒 · 礼包配置</h1>
+  <div class="sub">集中维护各系统礼包参数与规则说明 · 不改写各原系统购买/返利算法</div>
+</header>
+<div class="layout">
+<nav>
+  <h3>系统列表</h3>
+  <div class="navlist" id="navlist"></div>
+  <div class="nav-separator" aria-hidden="true"></div>
+  <button class="navbtn export-navbtn" id="exportNav" type="button">JSON导出</button>
+</nav>
+<main class="content">
+  <div id="editorView">
+  <div class="toolbar">
+    <div><h2 id="systemTitle">beidou</h2><div class="sub" id="systemSubtitle"></div></div>
+    <div class="actions">
+      <button class="btn" id="addPackage">＋ 添加礼包</button>
+      <button class="btn primary" id="exportJson">导出 JSON</button>
+    </div>
+  </div>
+  <div class="notice">材料产出数量在各礼包卡片内分别配置，不同礼包可设置不同数值。编辑字段会同步更新当前配置。导出的 JSON 可用于替换仓库中的 <b>gift-config.json</b>。本页面不修改各系统原有计算公式。</div>
+  <div class="system-meta">
+    <div class="field"><label>系统标识</label><input id="sysName" readonly></div>
+    <div class="field"><label>配置状态</label><select id="sysStatus"><option value="active">已配置</option><option value="missing">待补充</option></select></div>
+  </div>
+  <div class="cards" id="packageCards"></div>
+  <div class="system-rules">
+    <h3>购买 / 返利规则说明</h3>
+    <textarea id="algorithm" placeholder="填写该系统原有购买或返利规则说明"></textarea>
+    <div class="sub" style="margin-top:6px">这里只维护规则说明，不会将说明文字转换成新的计算算法。</div>
+  </div>
+  <div class="system-rules">
+    <h3>返利参数</h3>
+    <div class="system-meta">
+      <div class="field"><label>启用返利</label><select id="rebateEnabled"><option value="false">否</option><option value="true">是</option></select></div>
+      <div class="field"><label>返利比例</label><input id="rebateRatio" type="number" min="0" step="0.01"></div>
+      <div class="field"><label>返利基数上限</label><input id="rebateCap" type="number" min="0" step="1"></div>
+      <div class="field"><label>返还数量上限</label><input id="rebateReturned" type="number" min="0" step="1"></div>
+    </div>
+  </div>
+  <div class="import-panel">
+    <h3>导入 JSON 配置</h3>
+    <p class="sub">粘贴完整 gift-config.json 内容后导入。导入会替换页面当前内存中的配置。</p>
+    <textarea id="importText" placeholder="在此粘贴 JSON 内容"></textarea>
+    <div class="actions" style="margin-top:8px"><button class="btn" id="importJson">导入 JSON</button><button class="btn" id="resetConfig">恢复初始配置</button></div>
+  </div>
+  </div>
+  <section id="exportView" hidden>
+    <div class="toolbar"><div><h2>JSON导出</h2><div class="sub">仅导出礼包配置，不包含等级表、属性表或升级材料数据</div></div></div>
+    <div class="notice">导出内容包含系统礼包参数、材料产出、购买/返利规则说明及返利参数。数据直接读取当前礼包配置页内存中的最新内容。</div>
+    <h3>全部系统</h3>
+    <div class="actions" style="margin:10px 0 18px"><button class="btn primary" id="exportAllJson">导出全部礼包 JSON</button><button class="btn" id="copyAllJson">复制全部 JSON</button></div>
+    <h3>单个系统</h3>
+    <div class="export-systems" id="exportSystems"></div>
+    <h3 style="margin-top:20px">JSON 预览</h3>
+    <textarea id="exportPreview" spellcheck="false" placeholder="选择导出范围后，这里显示对应 JSON 内容" style="width:100%;min-height:300px;font:12px/1.5 ui-monospace,monospace;resize:vertical"></textarea>
+    <div class="actions" style="margin-top:10px"><button class="btn" id="downloadExportPreview">下载当前预览</button><button class="btn" id="copyExportPreview">复制当前预览</button></div>
+    <div class="sub" id="exportStatus" role="status" aria-live="polite" style="margin-top:10px;min-height:22px"></div>
+  </section>
+</main>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const INITIAL_CONFIG = {"configVersion":"1.0.0","updatedAt":"2026-10-30","description":"QQ水浒礼包配置；集中管理各系统礼包参数与规则说明，不重写各原系统购买/返利算法。北斗礼包按用户最新截图录入。","systems":[{"id":"shenshou","name":"shenshou","status":"active","source":"shenshou(20261030-021456).html","algorithm":"小包打开后灵草×91、灵木×39、灵丹×21三选一；普通礼包每份中包可开80个小包；限时礼包每份大包对应1200个小包。返利按原页面逻辑计算，不在中央配置页改写。","rebate":{"enabled":true,"note":"保留原系统返利模式及计算算法。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":80,"small":17040,"herb":91,"wood":39,"pill":21},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":80,"small":16640,"herb":91,"wood":39,"pill":21},{"id":"event","name":"限时礼包","price":13.8,"big":1,"middle":1,"small":1200,"herb":91,"wood":39,"pill":21}],"materials":[{"key":"herb","name":"灵草","unit":"每小包产出","packageField":"herb"},{"key":"wood","name":"灵木","unit":"每小包产出","packageField":"wood"},{"key":"pill","name":"灵丹","unit":"每小包产出","packageField":"pill"}]},{"id":"shenzhuang","name":"shenzhuang","status":"active","source":"shenzhuang(20261030-021456).html","algorithm":"礼包按小包数量及折算黑曜石数量参与购买计算；返利开关与返利上限计算沿用原页面脚本，不在中央配置页重写。","rebate":{"enabled":true,"note":"原页面包含返利方案选择及返利上限计算表；以原系统算法为准。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":100,"small":21300,"extra":0,"obsidian":26625},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":100,"small":20800,"extra":0,"obsidian":26000},{"id":"event","name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"extra":0,"obsidian":1500}],"materials":[{"key":"obsidian","name":"折算黑曜石","unit":"礼包产出","packageField":"obsidian"}]},{"id":"junshi","name":"junshi","status":"active","source":"junshi(20261030-021452).html","algorithm":"小包兑换阳炎符×35、长生符×15、圣人符×7；按三种材料需求分别向上取整计算开包数后求和，再按所选礼包每份小包数向上取整购买。返利开关按原页面逻辑作用于材料需求；原有返利细则保留在系统页面。","rebate":{"enabled":true,"ratio":0.25,"note":"原页面说明返利方案按材料需求的3/4计算；返利细则以原页面实现为准。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":80,"small":17040,"yang":35,"chang":15,"sheng":7},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":80,"small":16640,"yang":35,"chang":15,"sheng":7},{"id":"event","name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"yang":35,"chang":15,"sheng":7}],"materials":[{"key":"yang","name":"阳炎符","unit":"每小包产出","packageField":"yang"},{"key":"chang","name":"长生符","unit":"每小包产出","packageField":"chang"},{"key":"sheng","name":"圣人符","unit":"每小包产出","packageField":"sheng"}]},{"id":"jitan","name":"jitan","status":"active","source":"jitan(8).html","algorithm":"返利比例1/4；返利基数最多按390000计算，返还量=floor(min(实际需求,390000)*0.25)，净需求=实际需求-返还量；礼包份数=ceil(净需求/每份小包数)。","rebate":{"enabled":true,"ratio":0.25,"eligibleDemandCap":390000,"returnedCap":97500},"packages":[{"id":"monthly","name":"月初礼包","price":99,"small":21300,"unitPrice":215.2},{"id":"vip10","name":"VIP10礼包","price":27.8,"small":8888,"unitPrice":319.7},{"id":"event","name":"限时礼包","price":10.8,"small":1150,"unitPrice":106.5}],"materials":[{"key":"lingwen","name":"灵纹石","unit":"礼包数量","packageField":"small"}]},{"id":"shengxiao","name":"shengxiao","status":"active","source":"shengxiao(4).html","algorithm":"按扣除现有库存后的生肖石缺口，礼包份数=ceil(缺口/每份生肖石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":33,"stones":338,"unitPrice":10.2},{"id":"half","name":"第二个半价礼包","price":39,"stones":219,"unitPrice":5.6},{"id":"vip14","name":"VIP14礼包","price":558.8,"stones":6288,"unitPrice":11.3},{"id":"event","name":"限时礼包","price":26.8,"stones":188,"unitPrice":7.0}],"materials":[{"key":"stones","name":"生肖石","unit":"礼包产出","packageField":"stones"}]},{"id":"xingzuo","name":"xingzuo","status":"active","source":"xingzuo(4).html","algorithm":"按扣除现有库存后的星座石缺口，礼包份数=ceil(缺口/每份星座石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":30,"stones":900,"unitPrice":30},{"id":"vip9","name":"VIP9礼包","price":79.8,"stones":2588,"unitPrice":32.4},{"id":"event","name":"限时礼包","price":11.8,"stones":388,"unitPrice":32.9}],"materials":[{"key":"stones","name":"星座石","unit":"礼包产出","packageField":"stones"}]},{"id":"ningcui","name":"ningcui","status":"active","source":"ningcui(9).html","algorithm":"三种材料需求分别除以对应单包产出并向上取整，合计小包数；礼包份数=ceil(合计小包数/每份小包数)，显示剩余小包。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":14,"small":994,"yield":[70,40,20]},{"id":"value","name":"越兑越划算","price":96,"big":6,"middle":50,"small":300,"yield":[58,29,12]},{"id":"limited","name":"限时礼包","price":14.3,"big":12,"middle":7,"small":77,"yield":[70,40,20]}],"materials":[{"key":"soul","name":"不灭将魂","unit":"每小包产出","yieldIndex":0},{"key":"wind","name":"龙虎巽风","unit":"每小包产出","yieldIndex":1},{"key":"fire","name":"天心离火","unit":"每小包产出","yieldIndex":2}]},{"id":"beidou","name":"beidou","status":"active","source":"用户于2026-10-30提供的北斗礼包页面截图","algorithm":"礼包购买参数按最新截图录入；材料选择与购买计算仍由北斗原系统页面负责。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":10,"small":710,"guikui":1050,"gupu":450,"beiji":225},{"id":"value","name":"越兑越划算","price":1,"big":1,"middle":1,"small":1,"guikui":1,"gupu":1,"beiji":1},{"id":"event","name":"限时礼包","price":14.3,"big":11,"middle":5,"small":55,"guikui":1050,"gupu":450,"beiji":225}],"materials":[{"key":"guikui","name":"古魁经","unit":"礼包产出","packageField":"guikui"},{"key":"gupu","name":"古朴文","unit":"礼包产出","packageField":"gupu"},{"key":"beiji","name":"北极令","unit":"礼包产出","packageField":"beiji"}]}]};
+let config = structuredClone(INITIAL_CONFIG);
+let activeId = config.systems[0]?.id;
+const labels = {shenshou:"神兽",shenzhuang:"神装",junshi:"军师",jitan:"祭坛",shengxiao:"生肖",xingzuo:"星座",ningcui:"凝萃",beidou:"北斗"};
+const fieldLabels = {price:"价格",big:"大包",middle:"中包",small:"小包",guikui:"古魁经",gupu:"古朴文",beiji:"北极令",stones:"材料数量",yang:"阳炎符",chang:"长生符",sheng:"圣人符",obsidian:"折算黑曜石",extra:"附加黑曜石",yield:"产出数量",bigCount:"大包数量",middleCount:"中包数量",smallPerMiddle:"每中包小包数",unitPrice:"单价(个/元)"};
+const $ = id => document.getElementById(id);
+const current = () => config.systems.find(s=>s.id===activeId);
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(msg){const el=$("toast");el.textContent=msg;el.style.display="block";setTimeout(()=>el.style.display="none",1800)}
+function countPackages(){return config.systems.reduce((n,s)=>n+(s.packages||[]).length,0)}
+let currentView="system";
+function renderNav(){
+  $("navlist").innerHTML=config.systems.map(s=>`<button class="navbtn ${currentView==="system"&&s.id===activeId?'active':''}" data-id="${esc(s.id)}">${esc(labels[s.id]||s.name||s.id)}<small>${(s.packages||[]).length}</small></button>`).join("");
+  document.querySelectorAll("#navlist .navbtn").forEach(b=>b.onclick=()=>{activeId=b.dataset.id;currentView="system";render();});
+  $("exportNav").classList.toggle("active",currentView==="export");
+  $("exportNav").onclick=()=>showExportView();
+}
+function fieldInput(key,value,index){
+  const s=current();
+  const material=s.materials?.find(m=>m.packageField===key);
+  const label=material ? material.name : (fieldLabels[key] || key);
+  const val=Array.isArray(value)?JSON.stringify(value):value;
+  return `<div class="field"><label>${esc(label)}</label><input data-field="${esc(key)}" data-index="${index}" value="${esc(val)}" ${typeof value==="number"?"type=number step=any":""} ${(s.id==="shenzhuang"&&key==="obsidian")||((s.id==="shengxiao"||s.id==="xingzuo"||s.id==="jitan")&&key==="unitPrice")?"readonly":""}></div>`;
+}
+function renderPackages(){
+  const s=current();
+  if(!s.packages?.length){$("packageCards").innerHTML='<div class="empty">当前系统尚无礼包配置。点击“添加礼包”录入。</div>';return}
+  $("packageCards").innerHTML=s.packages.map((p,i)=>{
+    const fields=Object.entries(p).filter(([k,v])=>k!=="id"&&k!=="name"&&typeof v!=="object");
+    const arrays=Object.entries(p).filter(([k,v])=>Array.isArray(v) && k!=="yield");
+    return `<section class="package"><div class="package-head"><input data-pname="${i}" value="${esc(p.name||'新礼包')}" aria-label="礼包名称"><button class="btn danger" data-remove="${i}">删除</button></div><div class="fieldgrid">${fields.map(([k,v])=>fieldInput(k,v,i)).join("")}${(p.yield||[]).map((v,j)=>`<div class="field"><label>${esc((s.materials||[]).find(x=>x.yieldIndex===j)?.name||("材料"+(j+1)))}</label><input type="number" step="any" data-yield-index="${j}" data-index="${i}" value="${esc(v)}"></div>`).join("")}${arrays.map(([k,v])=>fieldInput(k,v,i)).join("")}</div><div class="package-foot"><span class="sub">礼包 ${i+1}</span><span class="sub">${esc(p.id||"")}</span></div></section>`
+  }).join("");
+  document.querySelectorAll(".fieldgrid").forEach(grid=>{grid.style.setProperty("--field-count", Math.max(1, grid.children.length));});
+  document.querySelectorAll("[data-pname]").forEach(el=>el.onchange=()=>{s.packages[+el.dataset.pname].name=el.value;renderNav()});
+  document.querySelectorAll("[data-field]").forEach(el=>el.onchange=()=>{
+    const p=s.packages[+el.dataset.index],k=el.dataset.field,old=p[k],raw=el.value;
+    if(Array.isArray(old)){try{p[k]=JSON.parse(raw)}catch{toast("数组格式不正确");el.value=JSON.stringify(old)}}
+    else if(typeof old==="number"){p[k]=raw===""?0:Number(raw);if(!Number.isFinite(p[k]))p[k]=0}
+    else p[k]=raw;
+    if(s.id==="shenzhuang"&&(k==="small"||k==="extra")){
+      p.obsidian=Math.round((Number(p.small)||0)*1.25+(Number(p.extra)||0));
+      renderPackages();
+    }
+    if((s.id==="shengxiao"||s.id==="xingzuo")&&(k==="price"||k==="stones")){
+      const price=Number(p.price)||0, stones=Number(p.stones)||0;
+      p.unitPrice=price>0?Number((stones/price).toFixed(1)):0;
+      renderPackages();
+    }
+    if(s.id==="jitan"&&(k==="price"||k==="small")){
+      const price=Number(p.price)||0, quantity=Number(p.small)||0;
+      p.unitPrice=price>0?Number((quantity/price).toFixed(1)):0;
+      renderPackages();
+    }
+  });
+  document.querySelectorAll("[data-yield-index]").forEach(el=>el.onchange=()=>{
+    const p=s.packages[+el.dataset.index],j=+el.dataset.yieldIndex;p.yield=p.yield||[];p.yield[j]=Number(el.value)||0;
+  });
+  document.querySelectorAll("[data-remove]").forEach(el=>el.onclick=()=>{if(confirm("确定删除这个礼包？")){s.packages.splice(+el.dataset.remove,1);render()}});
+}
+function exportAllData(){return {configVersion:config.configVersion,updatedAt:config.updatedAt,description:config.description,systems:config.systems};}
+function exportDownload(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function setExportPreview(data,filename){const text=JSON.stringify(data,null,2);$("exportPreview").value=text;exportDownload(filename,data);$("exportStatus").textContent="已生成并下载："+filename;}
+function showExportView(){
+  currentView="export";$("editorView").hidden=true;$("exportView").hidden=false;renderNav();
+  $("exportSystems").innerHTML=config.systems.map(s=>`<div class="export-system"><div><strong>${esc(labels[s.id]||s.name||s.id)}</strong><br><small>${(s.packages||[]).length} 个礼包</small></div><button class="btn" data-export-id="${esc(s.id)}">导出 JSON</button></div>`).join("");
+  document.querySelectorAll("[data-export-id]").forEach(b=>b.onclick=()=>{const sys=config.systems.find(x=>x.id===b.dataset.exportId);if(sys)setExportPreview({configVersion:config.configVersion,updatedAt:config.updatedAt,system:sys},`gift-${sys.id}.json`)});
+}
+$("exportAllJson").onclick=()=>setExportPreview(exportAllData(),"gift-config.json");
+$("copyAllJson").onclick=async()=>{const text=JSON.stringify(exportAllData(),null,2);$("exportPreview").value=text;try{await navigator.clipboard.writeText(text);$("exportStatus").textContent="全部礼包 JSON 已复制。"}catch(e){$("exportStatus").textContent="JSON 已显示，请手动复制预览内容。"}};
+$("downloadExportPreview").onclick=()=>{const text=$("exportPreview").value.trim();if(!text){$("exportStatus").textContent="请先选择导出范围。";return}const blob=new Blob([text],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="gift-config-export.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$("exportStatus").textContent="当前预览已下载。"};
+$("copyExportPreview").onclick=async()=>{const text=$("exportPreview").value.trim();if(!text){$("exportStatus").textContent="请先选择导出范围。";return}try{await navigator.clipboard.writeText(text);$("exportStatus").textContent="当前预览已复制。"}catch(e){$("exportStatus").textContent="复制权限不可用，请手动复制预览内容。"}};
+function render(){
+  currentView="system";$("editorView").hidden=false;$("exportView").hidden=true;renderNav();const s=current();if(!s)return;
+  $("systemTitle").textContent=labels[s.id]||s.name||s.id;
+  $("systemSubtitle").textContent=`${(s.packages||[]).length} 个礼包 · 来源：${s.source||"未注明"}`;
+  $("sysName").value=s.id;$("sysStatus").value=s.status||"active";
+  $("algorithm").value=s.algorithm||"";
+  const r=s.rebate||{};$("rebateEnabled").value=String(!!r.enabled);
+  $("rebateRatio").value=r.ratio??"";$("rebateCap").value=r.eligibleDemandCap??"";$("rebateReturned").value=r.returnedCap??"";
+  renderPackages();
+}
+$("sysStatus").onchange=e=>{current().status=e.target.value;renderNav();$("activeCount").textContent=config.systems.filter(x=>x.status==="active").length};
+$("algorithm").onchange=e=>current().algorithm=e.target.value;
+$("rebateEnabled").onchange=e=>{current().rebate=current().rebate||{};current().rebate.enabled=e.target.value==="true"};
+function updateRebate(id,key){$(id).onchange=e=>{const s=current();s.rebate=s.rebate||{};if(e.target.value==="")delete s.rebate[key];else s.rebate[key]=Number(e.target.value)}}
+updateRebate("rebateRatio","ratio");updateRebate("rebateCap","eligibleDemandCap");updateRebate("rebateReturned","returnedCap");
+$("addPackage").onclick=()=>{const s=current();s.packages=s.packages||[];s.packages.push(s.id==="shenzhuang"?{id:"new-"+Date.now(),name:"新礼包",price:0,big:0,middle:0,small:0,extra:0,obsidian:0}:{id:"new-"+Date.now(),name:"新礼包",price:0});render()};
+function download(name,text,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$("exportJson").onclick=()=>{const out=JSON.stringify(config,null,2);download("gift-config.json",out,"application/json;charset=utf-8");$("importText").value=out;toast("已生成 gift-config.json")};
+$("importJson").onclick=()=>{try{const next=JSON.parse($("importText").value);if(!Array.isArray(next.systems))throw Error("缺少 systems 数组");config=next;activeId=config.systems[0]?.id;render();toast("JSON 导入成功")}catch(e){alert("导入失败："+e.message)}};
+$("resetConfig").onclick=()=>{if(confirm("恢复到本页面内置的初始配置？")){config=structuredClone(INITIAL_CONFIG);activeId=config.systems[0]?.id;render();toast("已恢复初始配置")}};
+// 同源页面共享最新礼包配置，导出页优先读取用户最近编辑的内容。
+function saveGiftConfig(){try{localStorage.setItem("qqshGiftConfig",JSON.stringify(config));}catch(e){}}
+document.addEventListener("change",()=>setTimeout(saveGiftConfig,0));
+document.addEventListener("click",()=>setTimeout(saveGiftConfig,0));
+render();
+saveGiftConfig();
+</script>
+</body></html>
