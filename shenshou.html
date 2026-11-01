@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v2.1.11</title>
+<title>神兽升级计算器 v2.1.18</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -676,10 +676,10 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
     </div>
       <div class="actions inventory-actions"><h3 class="stock-overview-title">材料需求总览</h3><button class="action secondary" id="clearStock">重置库存</button></div>
     </div>
-    <div class="summary">
-      <div class="metric"><div class="name">灵草缺口</div><strong id="herbNeed">0</strong><small>扣除库存后</small></div>
-      <div class="metric"><div class="name">灵木缺口</div><strong id="woodNeed">0</strong><small>扣除库存后</small></div>
-      <div class="metric"><div class="name">灵丹缺口</div><strong id="pillNeed">0</strong><small>扣除库存后</small></div>
+    <div class="summary material-need-summary">
+      <div class="metric"><div class="name">灵草</div><strong id="herbNeed">0</strong><small>扣除库存后</small></div>
+      <div class="metric"><div class="name">灵木</div><strong id="woodNeed">0</strong><small>扣除库存后</small></div>
+      <div class="metric"><div class="name">灵丹</div><strong id="pillNeed">0</strong><small>扣除库存后</small></div>
     </div>
   </section>
 </div>
@@ -1266,4 +1266,161 @@ body.dark-theme .rebate-toggle input:checked + .rebate-chip-label {
   border-color: #278b62 !important;
   color: #69d6a0 !important;
 }
+
+/* v2.1.12：浅色主题优化材料需求总览卡片 */
+body:not(.dark-theme) .summary:has(#herbNeed) .metric{
+  border-width:1.5px!important;
+  box-shadow:0 3px 12px rgba(31,55,86,.055)!important;
+}
+body:not(.dark-theme) .summary:has(#herbNeed) .metric:nth-child(1){
+  background:#fff0f0!important;
+  border-color:#eaa6a6!important;
+}
+body:not(.dark-theme) .summary:has(#herbNeed) .metric:nth-child(2){
+  background:#fbf1e8!important;
+  border-color:#d7b18e!important;
+}
+body:not(.dark-theme) .summary:has(#herbNeed) .metric:nth-child(3){
+  background:#eaf8f5!important;
+  border-color:#8fcfc4!important;
+}
+/* 材料名称与数值拉开距离，数字略微收小 */
+.summary:has(#herbNeed) .metric .name{
+  margin-bottom:9px!important;
+}
+.summary:has(#herbNeed) .metric strong{
+  font-size:clamp(20px,2.15vw,27px)!important;
+  margin-top:0!important;
+}
+@media(max-width:520px){
+  .summary:has(#herbNeed) .metric .name{margin-bottom:8px!important}
+  .summary:has(#herbNeed) .metric strong{font-size:clamp(17px,4.6vw,22px)!important}
+}
+
+
+/* v2.1.13：材料需求总览使用独立 class，避免旧版移动浏览器不支持 :has() 导致网格布局失效 */
+.material-need-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:8px!important;
+  box-sizing:border-box!important;
+}
+.material-need-summary>.metric{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  padding:12px 5px!important;
+  text-align:center!important;
+  background:#fff!important;
+  background-color:#fff!important;
+  border:1px solid #e6e9ee!important;
+  border-top:1px solid #e2e6ec!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+.material-need-summary>.metric .name{
+  display:block!important;
+  margin:0 0 8px!important;
+  color:#586273!important;
+  font-size:12px!important;
+  font-weight:650!important;
+  line-height:1.35!important;
+  white-space:nowrap!important;
+}
+.material-need-summary>.metric strong{
+  display:block!important;
+  margin:0!important;
+  font-size:clamp(15px,4.2vw,22px)!important;
+  font-weight:800!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  overflow-wrap:normal!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.material-need-summary>.metric small{display:none!important}
+.material-need-summary>.metric:nth-child(1) .name,
+.material-need-summary>.metric:nth-child(1) strong{color:#c62828!important}
+.material-need-summary>.metric:nth-child(2) .name,
+.material-need-summary>.metric:nth-child(2) strong{color:#79502f!important}
+.material-need-summary>.metric:nth-child(3) .name,
+.material-need-summary>.metric:nth-child(3) strong{color:#087f75!important}
+@media(max-width:520px){
+  .material-need-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .material-need-summary>.metric{padding:11px 2px!important}
+  .material-need-summary>.metric .name{font-size:11px!important;margin-bottom:7px!important}
+  .material-need-summary>.metric strong{font-size:clamp(14px,4.1vw,18px)!important;letter-spacing:-.35px!important}
+}
+
+
+/* v2.1.16：材料需求总览昼夜主题适配 */
+body:not(.dark-theme) .material-need-summary>.metric{
+  background:#f1f3f5!important;
+  background-color:#f1f3f5!important;
+  border:1px solid #dfe3e8!important;
+  border-top:1px solid #dfe3e8!important;
+  box-shadow:none!important;
+}
+body.dark-theme .material-need-summary>.metric{
+  background:#1b2739!important;
+  background-color:#1b2739!important;
+  border:1px solid #334258!important;
+  border-top:1px solid #334258!important;
+  box-shadow:none!important;
+}
+body.dark-theme .material-need-summary>.metric .name{color:#c5cfdd!important}
+body.dark-theme .material-need-summary>.metric:nth-child(1) .name,
+body.dark-theme .material-need-summary>.metric:nth-child(1) strong{color:#ff7777!important}
+body.dark-theme .material-need-summary>.metric:nth-child(2) .name,
+body.dark-theme .material-need-summary>.metric:nth-child(2) strong{color:#e0a878!important}
+body.dark-theme .material-need-summary>.metric:nth-child(3) .name,
+body.dark-theme .material-need-summary>.metric:nth-child(3) strong{color:#45d6c6!important}
+
+
+/* v2.1.17：提高材料卡片昼夜背景规则优先级，覆盖历史 :has() 颜色规则 */
+body:not(.dark-theme) .summary:has(#herbNeed).material-need-summary>.metric:nth-child(1),
+body:not(.dark-theme) .summary:has(#herbNeed).material-need-summary>.metric:nth-child(2),
+body:not(.dark-theme) .summary:has(#herbNeed).material-need-summary>.metric:nth-child(3){
+  background:#f1f3f5!important;
+  background-color:#f1f3f5!important;
+  border-color:#dfe3e8!important;
+  border-top-color:#dfe3e8!important;
+  box-shadow:none!important;
+}
+body.dark-theme .summary:has(#herbNeed).material-need-summary>.metric:nth-child(1),
+body.dark-theme .summary:has(#herbNeed).material-need-summary>.metric:nth-child(2),
+body.dark-theme .summary:has(#herbNeed).material-need-summary>.metric:nth-child(3){
+  background:#1b2739!important;
+  background-color:#1b2739!important;
+  border-color:#334258!important;
+  border-top-color:#334258!important;
+  box-shadow:none!important;
+}
+
+
+/* v2.1.18：材料需求卡片浅灰背景与礼包材料卡片统一 */
+html body:not(.dark-theme) section.card .summary.material-need-summary>.metric:nth-child(1),
+html body:not(.dark-theme) section.card .summary.material-need-summary>.metric:nth-child(2),
+html body:not(.dark-theme) section.card .summary.material-need-summary>.metric:nth-child(3){
+  background:#f0f2f5!important;
+  background-color:#f0f2f5!important;
+  border-color:#e5e8ed!important;
+  border-top-color:#e5e8ed!important;
+  box-shadow:none!important;
+}
+html body.dark-theme section.card .summary.material-need-summary>.metric:nth-child(1),
+html body.dark-theme section.card .summary.material-need-summary>.metric:nth-child(2),
+html body.dark-theme section.card .summary.material-need-summary>.metric:nth-child(3){
+  background:#1b2739!important;
+  background-color:#1b2739!important;
+  border-color:#334258!important;
+  border-top-color:#334258!important;
+  box-shadow:none!important;
+}
+
 </style>
