@@ -1,0 +1,476 @@
+{
+  "configVersion": "1.0.0",
+  "updatedAt": "2026-10-30",
+  "description": "QQ水浒礼包配置；集中管理各系统礼包参数与规则说明，不重写各原系统购买/返利算法。北斗礼包按用户最新截图录入。",
+  "systems": [
+    {
+      "id": "shenshou",
+      "name": "shenshou",
+      "status": "active",
+      "source": "shenshou(20261030-021456).html",
+      "algorithm": "小包打开后灵草×91、灵木×39、灵丹×21三选一；",
+      "rebate": {
+        "enabled": true,
+        "note": "保留原系统返利模式及计算算法。"
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 99,
+          "big": 213,
+          "middle": 80,
+          "small": 17040,
+          "herb": 91,
+          "wood": 39,
+          "pill": 21
+        },
+        {
+          "id": "vip10",
+          "name": "VIP10礼包",
+          "price": 139.8,
+          "big": 208,
+          "middle": 80,
+          "small": 16640,
+          "herb": 91,
+          "wood": 39,
+          "pill": 21
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 9.3,
+          "big": 1,
+          "middle": 1,
+          "small": 960,
+          "herb": 91,
+          "wood": 39,
+          "pill": 21
+        }
+      ],
+      "materials": [
+        {
+          "key": "herb",
+          "name": "灵草",
+          "unit": "每小包产出",
+          "packageField": "herb"
+        },
+        {
+          "key": "wood",
+          "name": "灵木",
+          "unit": "每小包产出",
+          "packageField": "wood"
+        },
+        {
+          "key": "pill",
+          "name": "灵丹",
+          "unit": "每小包产出",
+          "packageField": "pill"
+        }
+      ],
+      "fieldVisibility": {
+        "herb": false,
+        "wood": false,
+        "pill": false
+      }
+    },
+    {
+      "id": "shenzhuang",
+      "name": "shenzhuang",
+      "status": "active",
+      "source": "shenzhuang(20261030-021456).html",
+      "algorithm": "礼包按小包数量及折算黑曜石数量参与购买计算；返利开关与返利上限计算沿用原页面脚本，不在中央配置页重写。",
+      "rebate": {
+        "enabled": true,
+        "note": "原页面包含返利方案选择及返利上限计算表；以原系统算法为准。"
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 99,
+          "big": 213,
+          "middle": 100,
+          "small": 21300,
+          "extra": 0,
+          "obsidian": 26625
+        },
+        {
+          "id": "vip10",
+          "name": "VIP10礼包",
+          "price": 139.8,
+          "big": 208,
+          "middle": 100,
+          "small": 20800,
+          "extra": 0,
+          "obsidian": 26000
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 9.3,
+          "big": 1,
+          "middle": 1,
+          "small": 1200,
+          "extra": 0,
+          "obsidian": 1500
+        }
+      ],
+      "materials": [
+        {
+          "key": "obsidian",
+          "name": "折算黑曜石",
+          "unit": "礼包产出",
+          "packageField": "obsidian"
+        }
+      ],
+      "fieldVisibility": {}
+    },
+    {
+      "id": "junshi",
+      "name": "junshi",
+      "status": "active",
+      "source": "junshi(20261030-021452).html",
+      "algorithm": "小包兑换阳炎符×35、长生符×15、圣人符×7；按三种材料需求分别向上取整计算开包数后求和，再按所选礼包每份小包数向上取整购买。返利开关按原页面逻辑作用于材料需求；原有返利细则保留在系统页面。",
+      "rebate": {
+        "enabled": true,
+        "ratio": 0.25,
+        "note": "原页面说明返利方案按材料需求的3/4计算；返利细则以原页面实现为准。"
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 99,
+          "big": 213,
+          "middle": 80,
+          "small": 17040,
+          "yang": 35,
+          "chang": 15,
+          "sheng": 7
+        },
+        {
+          "id": "vip10",
+          "name": "VIP10礼包",
+          "price": 139.8,
+          "big": 208,
+          "middle": 80,
+          "small": 16640,
+          "yang": 35,
+          "chang": 15,
+          "sheng": 7
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 9.3,
+          "big": 1,
+          "middle": 1,
+          "small": 960,
+          "yang": 35,
+          "chang": 15,
+          "sheng": 7
+        }
+      ],
+      "materials": [
+        {
+          "key": "yang",
+          "name": "阳炎符",
+          "unit": "每小包产出",
+          "packageField": "yang"
+        },
+        {
+          "key": "chang",
+          "name": "长生符",
+          "unit": "每小包产出",
+          "packageField": "chang"
+        },
+        {
+          "key": "sheng",
+          "name": "圣人符",
+          "unit": "每小包产出",
+          "packageField": "sheng"
+        }
+      ],
+      "fieldVisibility": {
+        "yang": false,
+        "chang": false,
+        "sheng": false
+      }
+    },
+    {
+      "id": "jitan",
+      "name": "jitan",
+      "status": "active",
+      "source": "jitan(8).html",
+      "algorithm": "返利比例1/4；返利基数最多按390000计算，返还量=floor(min(实际需求,390000)*0.25)，净需求=实际需求-返还量；礼包份数=ceil(净需求/每份小包数)。",
+      "rebate": {
+        "enabled": true,
+        "ratio": 0.25,
+        "eligibleDemandCap": 390000,
+        "returnedCap": 97500
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 99,
+          "small": 21300,
+          "unitPrice": 215.2
+        },
+        {
+          "id": "vip10",
+          "name": "VIP10礼包",
+          "price": 27.8,
+          "small": 8888,
+          "unitPrice": 319.7
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 6.3,
+          "small": 920,
+          "unitPrice": 146
+        }
+      ],
+      "materials": [
+        {
+          "key": "lingwen",
+          "name": "灵纹石",
+          "unit": "礼包数量",
+          "packageField": "small"
+        }
+      ],
+      "fieldVisibility": {}
+    },
+    {
+      "id": "shengxiao",
+      "name": "shengxiao",
+      "status": "active",
+      "source": "shengxiao(4).html",
+      "algorithm": "按扣除现有库存后的生肖石缺口，礼包份数=ceil(缺口/每份生肖石数量)；不含返利。",
+      "rebate": {
+        "enabled": false
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 33,
+          "stones": 338,
+          "unitPrice": 10.2
+        },
+        {
+          "id": "half",
+          "name": "第二个半价",
+          "price": 39,
+          "stones": 219,
+          "unitPrice": 5.6
+        },
+        {
+          "id": "vip14",
+          "name": "VIP14礼包",
+          "price": 558.8,
+          "stones": 6288,
+          "unitPrice": 11.3
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 6.8,
+          "stones": 55,
+          "unitPrice": 8.1
+        }
+      ],
+      "materials": [
+        {
+          "key": "stones",
+          "name": "生肖石",
+          "unit": "礼包产出",
+          "packageField": "stones"
+        }
+      ],
+      "fieldVisibility": {}
+    },
+    {
+      "id": "xingzuo",
+      "name": "xingzuo",
+      "status": "active",
+      "source": "xingzuo(4).html",
+      "algorithm": "按扣除现有库存后的星座石缺口，礼包份数=ceil(缺口/每份星座石数量)；不含返利。",
+      "rebate": {
+        "enabled": false
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "第二个半价礼包",
+          "price": 30,
+          "stones": 900,
+          "unitPrice": 30
+        },
+        {
+          "id": "vip9",
+          "name": "VIP9礼包",
+          "price": 79.8,
+          "stones": 2588,
+          "unitPrice": 32.4
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 6.8,
+          "stones": 238,
+          "unitPrice": 35
+        }
+      ],
+      "materials": [
+        {
+          "key": "stones",
+          "name": "星座石",
+          "unit": "礼包产出",
+          "packageField": "stones"
+        }
+      ],
+      "fieldVisibility": {}
+    },
+    {
+      "id": "ningcui",
+      "name": "ningcui",
+      "status": "active",
+      "source": "ningcui(9).html",
+      "algorithm": "三种材料需求分别除以对应单包产出并向上取整，合计小包数；礼包份数=ceil(合计小包数/每份小包数)，显示剩余小包。",
+      "rebate": {
+        "enabled": false
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 99,
+          "big": 71,
+          "middle": 14,
+          "small": 994,
+          "yield": [
+            70,
+            40,
+            20
+          ]
+        },
+        {
+          "id": "value",
+          "name": "越兑越划算",
+          "price": 96,
+          "big": 6,
+          "middle": 50,
+          "small": 300,
+          "yield": [
+            58,
+            29,
+            12
+          ]
+        },
+        {
+          "id": "limited",
+          "name": "限时礼包",
+          "price": 14.3,
+          "big": 11,
+          "middle": 7,
+          "small": 77,
+          "yield": [
+            70,
+            40,
+            20
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "key": "soul",
+          "name": "不灭将魂",
+          "unit": "每小包产出",
+          "yieldIndex": 0
+        },
+        {
+          "key": "wind",
+          "name": "龙虎巽风",
+          "unit": "每小包产出",
+          "yieldIndex": 1
+        },
+        {
+          "key": "fire",
+          "name": "天心离火",
+          "unit": "每小包产出",
+          "yieldIndex": 2
+        }
+      ],
+      "fieldVisibility": {}
+    },
+    {
+      "id": "beidou",
+      "name": "beidou",
+      "status": "active",
+      "source": "用户于2026-10-30提供的北斗礼包页面截图",
+      "algorithm": "礼包购买参数按最新截图录入；材料选择与购买计算仍由北斗原系统页面负责。",
+      "rebate": {
+        "enabled": false
+      },
+      "packages": [
+        {
+          "id": "monthly",
+          "name": "月初礼包",
+          "price": 99,
+          "big": 71,
+          "middle": 10,
+          "small": 710,
+          "guikui": 1050,
+          "gupu": 450,
+          "beiji": 225
+        },
+        {
+          "id": "value",
+          "name": "越兑越划算",
+          "price": 1,
+          "big": 1,
+          "middle": 1,
+          "small": 1,
+          "guikui": 1,
+          "gupu": 1,
+          "beiji": 1
+        },
+        {
+          "id": "event",
+          "name": "限时礼包",
+          "price": 14.3,
+          "big": 11,
+          "middle": 5,
+          "small": 55,
+          "guikui": 1050,
+          "gupu": 450,
+          "beiji": 225
+        }
+      ],
+      "materials": [
+        {
+          "key": "guikui",
+          "name": "古魁经",
+          "unit": "礼包产出",
+          "packageField": "guikui"
+        },
+        {
+          "key": "gupu",
+          "name": "古朴文",
+          "unit": "礼包产出",
+          "packageField": "gupu"
+        },
+        {
+          "key": "beiji",
+          "name": "北极令",
+          "unit": "礼包产出",
+          "packageField": "beiji"
+        }
+      ],
+      "fieldVisibility": {}
+    }
+  ]
+}

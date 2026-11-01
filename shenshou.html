@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v1.2.12</title>
+<title>神兽升级计算器 v2.1.11</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -232,6 +232,12 @@ body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer
 .summary .metric:first-child .name,
 .summary .metric:first-child strong{color:var(--ink)!important}
 
+
+/* v2.1.6：开启返利时，返利结果区全部七项指标保持同一行展示 */
+#rebateOnPanel .package-summary{grid-template-columns:repeat(7,minmax(0,1fr));}
+@media(max-width:760px){
+  #rebateOnPanel .package-summary{grid-template-columns:repeat(7,minmax(105px,1fr));overflow-x:auto;padding-bottom:4px;}
+}
 
 /* v1.1.88：隐藏两种返利状态中的「自选包分配」卡片，保留其计算节点供原有逻辑使用 */
 #rebateOffPanel .allocation-detail,
@@ -543,7 +549,7 @@ section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color
 .all-gifts-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);padding:8px 12px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;white-space:nowrap}
 .all-gifts-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 
-.all-gifts-content{margin-top:16px;max-height:200px;overflow:hidden}
+.all-gifts-content{margin-top:16px;max-height:200px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .all-gifts-content.is-expanded{max-height:none;overflow:visible}
 .all-gifts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .all-gift-option{border:1px solid var(--border);border-top:3px solid var(--muted);border-radius:14px;padding:14px;background:var(--panel);min-width:0}
@@ -693,7 +699,7 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
     </label>
 </div>
 
-<p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；限时礼包每个大包可开 1,200 个小包。</p>
+<p class="note gift-package-note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；礼包数据读取中……</p>
   <div class="plan-options" role="group" aria-label="选择礼包方案">
     <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span class="plan-price">¥99</span><span class="plan-pack-stats"><span>大包<b>213</b></span><span>中包<b>80</b></span><span>小包<b>17,040</b></span></span></button>
     <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span class="plan-price">¥139.8</span><span class="plan-pack-stats"><span>大包<b>208</b></span><span>中包<b>80</b></span><span>小包<b>16,640</b></span></span></button>
@@ -720,7 +726,7 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
       <h3>所选方案购买估算</h3>
       <div class="purchase-grid">
         <div class="purchase-card"><span class="purchase-label">预计购买份数</span><span class="purchase-desc" id="purchaseDescription">按每份礼包容量向上取整</span><strong class="purchase-value" id="bundleCount">0 份</strong></div>
-        <div class="purchase-card" id="purchasedMiddleCard"><span class="purchase-label">可开出中包</span><span class="purchase-desc">每个中包可开出 80 小包</span><strong class="purchase-value" id="purchasedMiddle">0 个</strong></div>
+        <div class="purchase-card" id="purchasedMiddleCard"><span class="purchase-label">可开出中包</span><span class="purchase-desc">每份礼包总计可开出 17,040 小包</span><strong class="purchase-value" id="purchasedMiddle">0 个</strong></div>
         <div class="purchase-card"><span class="purchase-label">可开出小包</span><strong class="purchase-value" id="purchasedSmall">0 个</strong></div>
         <div class="purchase-card"><span class="purchase-label">剩余小包</span><strong class="purchase-value" id="leftover">0 个</strong></div>
       </div>
@@ -735,7 +741,7 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
       <span class="rebate-chip-label" data-off-text="返利未开启 · 点击开启" data-on-text="返利已开启 · 点击关闭">返利未开启 · 点击开启</span>
     </label>
 </div>
-<p class="note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；普通礼包每个中包可开 80 个小包；限时礼包每个大包可开 1,200 个小包。按不吃返利所需材料的三分之二估算。</p>
+<p class="note gift-package-note" style="margin-top:-5px;margin-bottom:12px">小包打开后，灵草 ×91、灵木 ×39、灵丹 ×21 三选一；礼包数据读取中……按不吃返利所需材料的三分之二估算。</p>
   <div class="plan-options" role="group" aria-label="选择全吃返利礼包方案">
     <button type="button" class="plan-option active" data-plan="monthly"><strong>月初礼包</strong><span class="plan-price">¥99</span><span class="plan-pack-stats"><span>大包<b>213</b></span><span>中包<b>80</b></span><span>小包<b>17,040</b></span></span></button>
     <button type="button" class="plan-option" data-plan="vip10"><strong>VIP10礼包</strong><span class="plan-price">¥139.8</span><span class="plan-pack-stats"><span>大包<b>208</b></span><span>中包<b>80</b></span><span>小包<b>16,640</b></span></span></button>
@@ -763,7 +769,7 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
       <h3>所选方案购买估算</h3>
       <div class="purchase-grid">
         <div class="purchase-card"><span class="purchase-label">预计购买份数</span><span class="purchase-desc" id="rebatePurchaseDescription">按每份礼包容量向上取整</span><strong class="purchase-value" id="rebateBundleCount">0 份</strong></div>
-        <div class="purchase-card" id="rebatePurchasedMiddleCard"><span class="purchase-label">可开出中包</span><span class="purchase-desc">每个中包可开出 80 小包</span><strong class="purchase-value" id="rebatePurchasedMiddle">0 个</strong></div>
+        <div class="purchase-card" id="rebatePurchasedMiddleCard"><span class="purchase-label">可开出中包</span><span class="purchase-desc">每份礼包总计可开出 17,040 小包</span><strong class="purchase-value" id="rebatePurchasedMiddle">0 个</strong></div>
         <div class="purchase-card"><span class="purchase-label">可开出小包</span><strong class="purchase-value" id="rebatePurchasedSmall">0 个</strong></div>
         <div class="purchase-card"><span class="purchase-label">剩余小包</span><strong class="purchase-value" id="rebateLeftover">0 个</strong></div>
       </div>
@@ -818,15 +824,87 @@ const fmt=n=>Number(n).toLocaleString('en-US');
 const $=id=>document.getElementById(id);
 // 统一读取数值输入；旧版缺少此函数，render() 首次运行便抛出 ReferenceError，导致材料结果始终不更新。
 const nval=id=>{const el=$(id);const n=Number(el && el.value);return Number.isFinite(n)?n:0;};
+// 神兽礼包数据完全以同目录 gift-config.json 为准；内置数据仅用于 JSON 读取失败时维持旧页面可用。
 const giftPlans={
- monthly:{name:'月初礼包',middlePerBig:213,bigCount:80,middleCount:17040,smallPerBig:213*80,price:99},
- vip10:{name:'VIP10礼包',middlePerBig:208,bigCount:80,middleCount:16640,smallPerBig:208*80,price:139.8},
- event:{name:'限时礼包',middlePerBig:1,bigCount:1,middleCount:1,smallPerBig:1200,price:13.8}
+ monthly:{id:'monthly',name:'月初礼包',big:213,middle:80,small:17040,price:99,herb:91,wood:39,pill:21},
+ vip10:{id:'vip10',name:'VIP10礼包',big:208,middle:80,small:16640,price:139.8,herb:91,wood:39,pill:21},
+ event:{id:'event',name:'限时礼包',big:1,middle:1,small:1200,price:13.8,herb:91,wood:39,pill:21}
 };
+let shenshouGiftMaterials=[
+ {key:'herb',name:'灵草',packageField:'herb'},
+ {key:'wood',name:'灵木',packageField:'wood'},
+ {key:'pill',name:'灵丹',packageField:'pill'}
+];
+let shenshouFieldVisibility={price:true,big:true,middle:true,small:true,herb:false,wood:false,pill:false};
+const giftConfigUrl='./gift-config.json';
+const giftFieldLabels={price:'价格',big:'大包',middle:'中包',small:'小包'};
+const giftEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function giftFieldVisible(key){return shenshouFieldVisibility[key]!==false;}
+function renderShenshouGiftButtons(){
+ const html=Object.values(giftPlans).map((plan,index)=>{
+  const fields=[['big','大包',plan.big],['middle','中包',plan.middle],['small','小包',plan.small]];
+  const stats=fields.filter(([key])=>giftFieldVisible(key)).map(([key,label,value])=>`<span>${giftEscape(label)}<b>${Number(value).toLocaleString('en-US')}</b></span>`).join('');
+  const price=giftFieldVisible('price')?`<span class="plan-price">¥${giftEscape(plan.price)}</span>`:'';
+  return `<button type="button" class="plan-option ${plan.id===selectedPlan?'active':''}" data-plan="${giftEscape(plan.id)}"><strong>${giftEscape(plan.name)}</strong>${price}<span class="plan-pack-stats">${stats}</span></button>`;
+ }).join('');
+ document.querySelectorAll('.plan-options').forEach(host=>host.innerHTML=html);
+}
+function updateShenshouGiftMaterialLabels(){
+ const ids=['summaryHerbPacks','summaryWoodPacks','summaryPillPacks','summaryRebateHerbPacks','summaryRebateWoodPacks','summaryRebatePillPacks'];
+ const pairs=[[0,0],[1,1],[2,2],[3,0],[4,1],[5,2]];
+ ids.forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;const material=shenshouGiftMaterials[pairs[i][1]];const label=el.parentElement?.querySelector('.name');if(label&&material)label.textContent=material.name+'包';});
+}
+function updateShenshouGiftNotes(){
+ const plan=giftPlans[selectedPlan]||Object.values(giftPlans)[0];if(!plan)return;
+ const visibleMaterials=shenshouGiftMaterials.filter(m=>giftFieldVisible(m.packageField));
+ const materialText=visibleMaterials.map(m=>`${m.name} ×${Number(plan[m.packageField]??0).toLocaleString('en-US')}`).join('、');
+ const packText=[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>`${Number(plan[key]).toLocaleString('en-US')} 个${label}`);
+ const text=[materialText?`小包打开后，${materialText} 三选一`: '',packText.length?`每份礼包产出：${packText.join('、')}`:''].filter(Boolean).join('；');
+ document.querySelectorAll('.gift-package-note').forEach(el=>el.textContent=text);
+}
+function applyShenshouGiftConfig(config){
+ const system=Array.isArray(config?.systems)?config.systems.find(item=>item?.id==='shenshou'):null;
+ if(!system||!Array.isArray(system.packages)||!system.packages.length)throw new Error('JSON 中未找到神兽礼包配置');
+ const materials=Array.isArray(system.materials)?system.materials:[];
+ const next={};
+ for(const item of system.packages){
+  if(!item||!item.id)continue;
+  const required=['price','big','middle','small'];
+  if(required.some(key=>!Number.isFinite(Number(item[key]))||Number(item[key])<0))continue;
+  const plan={id:String(item.id),name:String(item.name??''),price:Number(item.price),big:Number(item.big),middle:Number(item.middle),small:Number(item.small)};
+  for(const material of materials){
+   const field=material.packageField;
+   if(field&&Object.prototype.hasOwnProperty.call(item,field))plan[field]=Number(item[field]);
+  }
+  next[plan.id]=plan;
+ }
+ if(!Object.keys(next).length)throw new Error('神兽礼包参数无效');
+ Object.keys(giftPlans).forEach(key=>delete giftPlans[key]);
+ Object.assign(giftPlans,next);
+ shenshouGiftMaterials=materials.filter(m=>m&&m.packageField).map(m=>({key:m.key,name:String(m.name??m.key),packageField:m.packageField}));
+ shenshouFieldVisibility={};
+ for(const key of ['price','big','middle','small',...shenshouGiftMaterials.map(m=>m.packageField)])shenshouFieldVisibility[key]=system.fieldVisibility?.[key]!==false;
+ if(!giftPlans[selectedPlan])selectedPlan=Object.keys(giftPlans)[0];
+ if(typeof previewSelectedPlan!=='undefined'&&!giftPlans[previewSelectedPlan])previewSelectedPlan=selectedPlan;
+ renderShenshouGiftButtons();
+ updateShenshouGiftMaterialLabels();
+ updateShenshouGiftNotes();
+ render();
+ if(typeof renderAllGiftPreview==='function')renderAllGiftPreview();
+}
+async function refreshShenshouGiftConfig(){
+ try{const response=await fetch(giftConfigUrl+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);applyShenshouGiftConfig(await response.json());}
+ catch(error){console.warn('神兽礼包 JSON 读取失败，继续使用内置礼包参数：',error);}
+}
+refreshShenshouGiftConfig();
+window.addEventListener('focus',refreshShenshouGiftConfig);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshShenshouGiftConfig();});
+setInterval(refreshShenshouGiftConfig,300000);
 let selectedPlan='monthly';
 function chooseGiftPlan(planId){
  if(!Object.prototype.hasOwnProperty.call(giftPlans,planId))return;
  selectedPlan=planId;
+ updateShenshouGiftNotes();
  document.querySelectorAll('.plan-option').forEach(btn=>btn.classList.toggle('active',btn.dataset.plan===planId));
  render(true);
 }
@@ -910,34 +988,47 @@ function render(skipAllGiftPreview=false){
  const gaps=adjustedCosts.map((v,i)=>Math.max(0,v-stocks[i]));
  const ids=['herb','wood','pill'];
  ids.forEach((id,i)=>{const need=$(id+'Need');if(need)need.textContent=fmt(gaps[i]);const cost=$(id+'Cost');if(cost)cost.textContent=fmt(adjustedCosts[i]);const have=$(id+'Have');if(have)have.textContent=fmt(stocks[i]);const gap=$(id+'Gap');if(gap)gap.textContent=fmt(gaps[i]);});
- const herbPackCount=Math.ceil(gaps[0]/91);
- const woodPackCount=Math.ceil(gaps[1]/39);
- const pillPackCount=Math.ceil(gaps[2]/21);
+ const plan=giftPlans[selectedPlan];
+ const yields=shenshouGiftMaterials.map(m=>Number(plan[m.packageField])||0);
+ if(yields.length!==3||yields.some(v=>v<=0))return;
+ const herbPackCount=Math.ceil(gaps[0]/yields[0]);
+ const woodPackCount=Math.ceil(gaps[1]/yields[1]);
+ const pillPackCount=Math.ceil(gaps[2]/yields[2]);
  const packs=[herbPackCount,woodPackCount,pillPackCount];
  // 自选包总需求 = 灵草包数 + 灵木包数 + 灵丹包数（每类分别向上取整后再相加）。
  const total=herbPackCount+woodPackCount+pillPackCount;
- const plan=giftPlans[selectedPlan],middle=selectedPlan==='event'?Math.ceil(total/1200):Math.ceil(total/80),big=selectedPlan==='event'?middle:Math.ceil(middle/plan.middlePerBig),bundles=middle===0?0:middle/plan.middlePerBig,boughtMiddle=selectedPlan==='event'?big:Math.ceil(bundles)*plan.middlePerBig,boughtSmall=selectedPlan==='event'?boughtMiddle*1200:boughtMiddle*80;
+ // 每份礼包的实际小包总产出以 JSON 的 small 字段为准（例如月初礼包 17,040）。
+ // big / middle 是礼包信息卡展示字段，不再拿它们重复推算礼包购买份数。
+ const big=Math.ceil(total/plan.small),middle=big*plan.middle,boughtMiddle=big*plan.middle,boughtSmall=big*plan.small;
  $('herbPacks').textContent=fmt(packs[0])+' 个';$('woodPacks').textContent=fmt(packs[1])+' 个';$('pillPacks').textContent=fmt(packs[2])+' 个';$('summaryHerbPacks').textContent=fmt(packs[0])+' 个';$('summaryWoodPacks').textContent=fmt(packs[1])+' 个';$('summaryPillPacks').textContent=fmt(packs[2])+' 个';
- // 全吃返利：按原始材料缺口的 2/3 计算，分别向上取整到各类自选小包。
- const rebateGaps=gaps.map(v=>v*2/3);
- const rebatePacks=rebateGaps.map((v,i)=>Math.ceil(v/[91,39,21][i]));
+ // 返利顺序：先扣除已有经验条抵扣（adjustedCosts），再按总需求的 2/3 折算，最后扣除已有材料库存。
+ // 保留 2/3 折算产生的小数，直到按每类材料产出计算包数时再分别向上取整。
+ const rebateGaps=adjustedCosts.map((v,i)=>Math.max(0,v*2/3-stocks[i]));
+ const rebatePacks=rebateGaps.map((v,i)=>Math.ceil(v/yields[i]));
  const rebateTotal=rebatePacks.reduce((sum,v)=>sum+v,0);
- const rebateMiddle=selectedPlan==='event'?Math.ceil(rebateTotal/1200):Math.ceil(rebateTotal/80);
- const rebateBig=selectedPlan==='event'?rebateMiddle:Math.ceil(rebateMiddle/plan.middlePerBig);
- const rebateBoughtMiddle=selectedPlan==='event'?rebateBig:rebateBig*plan.middlePerBig;
- const rebateBoughtSmall=selectedPlan==='event'?rebateBoughtMiddle*1200:rebateBoughtMiddle*80;
+ // 返利购买份数同样直接按 JSON small（每份礼包实际小包总产出）向上取整。
+ const rebateBig=Math.ceil(rebateTotal/plan.small);
+ const rebateMiddle=rebateBig*plan.middle;
+ const rebateBoughtMiddle=rebateBig*plan.middle;
+ const rebateBoughtSmall=rebateBig*plan.small;
  $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';$('summaryRebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('summaryRebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('summaryRebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
- $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display=selectedPlan==='event'?'none':'';$('rebatePurchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('rebateBigPacks').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCount').textContent=fmt(rebateBig)+' 大包';$('rebateBundleCost').textContent='¥'+(rebateMiddle/plan.middlePerBig*plan.price).toFixed(2);const noRebateCost=middle/plan.middlePerBig*plan.price;const rebateCost=rebateMiddle/plan.middlePerBig*plan.price;$('rebateSavings').textContent='¥'+Math.max(0,noRebateCost-rebateCost).toFixed(2);$('rebatePurchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('rebatePurchasedMiddle').textContent=fmt(selectedPlan==='event'?rebateBig:rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
- $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display=selectedPlan==='event'?'none':'';$('purchasedMiddleCard').style.display=selectedPlan==='event'?'none':'';$('bigPacks').textContent=fmt(big)+' 大包';$('bundleCount').textContent=fmt(big)+' 大包';$('bundleCost').textContent='¥'+(middle/plan.middlePerBig*plan.price).toFixed(2);$('purchaseDescription').textContent=selectedPlan==='event'?'每个大包可开 1,200 个小包':'每个大包可开出 '+fmt(plan.middlePerBig)+' 中包';$('purchasedMiddle').textContent=fmt(selectedPlan==='event'?big:boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
+ $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display='';$('rebatePurchasedMiddleCard').style.display='';$('rebateBigPacks').textContent=fmt(rebateBig)+'个';$('rebateBundleCount').textContent=fmt(rebateBig)+'个';$('rebateBundleCost').textContent='¥'+(rebateBig*plan.price).toFixed(2);const noRebateCost=big*plan.price;const rebateCost=rebateBig*plan.price;$('rebateSavings').textContent='¥'+Math.max(0,noRebateCost-rebateCost).toFixed(2);$('rebatePurchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('rebatePurchasedMiddle').textContent=fmt(rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
+ $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display='';$('purchasedMiddleCard').style.display='';$('bigPacks').textContent=fmt(big)+'个';$('bundleCount').textContent=fmt(big)+'个';$('bundleCost').textContent='¥'+(big*plan.price).toFixed(2);$('purchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('purchasedMiddle').textContent=fmt(boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
  $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');  if(!skipAllGiftPreview&&document.getElementById('allGiftToggle')?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
 }
 
 function getShenshouMaterialNeeds(){
-  return [
-    Number(($('herbNeed')?.textContent||'0').replace(/,/g,''))||0,
-    Number(($('woodNeed')?.textContent||'0').replace(/,/g,''))||0,
-    Number(($('pillNeed')?.textContent||'0').replace(/,/g,''))||0
-  ];
+  // 直接复用主计算器的等级、经验抵扣和库存扣减规则，避免从尚未刷新完成的 DOM 文本读取到 0。
+  const a=getLevel('fromLevel',1), b=Math.max(a,getLevel('toLevel',20));
+  const costs=[0,1,2].map(i=>{let sum=0;for(let level=a;level<b;level++)sum+=Number(raw[level]?.[i])||0;return sum;});
+  const expState=renderExp();
+  const consumedClicks=expState.gain>0?Math.floor(Math.min(expState.rawNum,expState.den)/expState.gain):0;
+  const materialIndex=Math.min(a,79);
+  const expMaterials=[Number(expData.herb[materialIndex])||0,Number(expData.wood[materialIndex])||0,Number(expData.pill[materialIndex])||0];
+  const adjusted=costs.map((v,i)=>Math.max(0,v-Math.min(v,consumedClicks*expMaterials[i])));
+  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
+  // 返回已扣经验条后的总材料需求（尚未扣库存），供普通/返利两种模式各自按正确顺序扣库存。
+  return adjusted;
 }
 
 let previewSelectedPlan='monthly';
@@ -963,31 +1054,30 @@ if(allGiftToggle&&allGiftContent){
 function renderAllGiftPreview(){
   const host=document.getElementById('allGiftGrid');
   if(!host)return;
-  const need=getShenshouMaterialNeeds(), per=[91,39,21];
-  const plans=[
-    {id:'monthly',label:'月初礼包',price:99,big:213,mid:80,small:17040},
-    {id:'vip10',label:'VIP10礼包',price:139.8,big:208,mid:80,small:16640},
-    {id:'event',label:'限时礼包',price:13.8,big:1,mid:1,small:1200}
-  ];
+  const need=getShenshouMaterialNeeds();
+  const plans=Object.values(giftPlans).map(p=>({id:p.id,label:p.name,price:p.price,big:p.big,mid:p.middle,small:p.small,yield:shenshouGiftMaterials.map(m=>Number(p[m.packageField])||0)}));
   const fmtAll=n=>Number(n).toLocaleString('en-US');
   const moneyAll=n=>'¥'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
   const modeStats=(p,rebate)=>{
-    const purchaseNeeds=need.map(n=>rebate?Math.ceil(n*3/4):n);
-    const open=purchaseNeeds.map((n,i)=>Math.ceil(n/per[i]));
+    // 与上方主计算器完全一致：先扣经验条；返利模式再乘 2/3；最后扣库存；各类材料包数分别向上取整。
+    const purchaseNeeds=need.map((n,i)=>Math.max(0,(rebate?n*2/3:n)-stocks[i]));
+    const open=purchaseNeeds.map((n,i)=>Math.ceil(n/Math.max(1,p.yield[i]||0)));
     const smallNeed=open.reduce((sum,n)=>sum+Math.max(0,n),0);
-    const qty=Math.ceil(smallNeed/Math.max(1,p.small));
-    const packs=qty*p.small;
-    const remaining=Math.max(0,packs-smallNeed);
-    return {qty,cost:qty*p.price,open,remaining,packs};
+    const qty=p.small>0?Math.ceil(smallNeed/p.small):0;
+    const boughtMiddle=qty*p.mid;
+    const boughtSmall=qty*p.small;
+    const remaining=Math.max(0,boughtSmall-smallNeed);
+    return {qty,cost:qty*p.price,open,remaining,packs:boughtSmall,middle:boughtMiddle,smallNeed};
   };
   host.innerHTML=plans.map(p=>{
     const normal=modeStats(p,false), rebate=modeStats(p,true);
     const chosen=previewSelectedPlan===p.id;
     const stat=(label,value)=>`<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
-    const mode=(label,stats,isRebate)=>`<div class="all-gift-mode ${isRebate?'rebate':'normal'}"><div class="all-gift-mode-title">${label}</div><div class="mode-cost">${moneyAll(stats.cost)}</div>${stat('购买礼包数量',fmtAll(stats.qty))}${stat('灵草包数',fmtAll(stats.open[0])+' 包')}${stat('灵木包数',fmtAll(stats.open[1])+' 包')}${stat('灵丹包数',fmtAll(stats.open[2])+' 包')}${stat('剩余小包数量',fmtAll(stats.remaining)+' 个')}</div>`;
+    const mode=(label,stats,isRebate)=>`<div class="all-gift-mode ${isRebate?'rebate':'normal'}"><div class="all-gift-mode-title">${label}</div><div class="mode-cost">${moneyAll(stats.cost)}</div>${stat('购买礼包数量',fmtAll(stats.qty)+'个')}${stat('可开出中包',fmtAll(stats.middle)+' 个')}${stat('可开出小包',fmtAll(stats.packs)+' 个')}${shenshouGiftMaterials.map((m,i)=>stat(giftEscape(m.name)+'包数',fmtAll(stats.open[i])+' 包')).join('')}${stat('剩余小包数量',fmtAll(stats.remaining)+' 个')}</div>`;
     return `<article class="all-gift-option ${chosen?'selected':''}" data-plan="${p.id}" role="button" tabindex="0" aria-pressed="${chosen}" aria-label="选择${p.label}">
-      <section class="all-gift-info-card"><div class="all-gift-top"><h3>${p.label}</h3><span class="all-gift-price">${moneyAll(p.price)}</span></div>
-        <div class="all-gift-pack-info"><div><span>大包</span><b>${fmtAll(p.big)}</b></div><div><span>中包</span><b>${fmtAll(p.mid)}</b></div><div><span>小包</span><b>${fmtAll(p.small)}</b></div></div>
+      <section class="all-gift-info-card"><div class="all-gift-top"><h3>${giftEscape(p.label)}</h3>${giftFieldVisible('price')?`<span class="all-gift-price">${moneyAll(p.price)}</span>`:''}</div>
+        <div class="all-gift-pack-info">${[['big','大包',p.big],['middle','中包',p.mid],['small','小包',p.small]].filter(([key])=>giftFieldVisible(key)).map(([key,label,value])=>`<div><span>${label}</span><b>${fmtAll(value)}</b></div>`).join('')}</div>
       </section>
       <section class="all-gift-compare-card"><h4>不返利 / 返利对比</h4><div class="all-gift-compare-grid">${mode('不返利',normal,false)}${mode('返利',rebate,true)}</div></section>
     </article>`;
@@ -1019,7 +1109,7 @@ if(allGiftGrid){
  });
 }
 function renderTable(){$('levelRows').innerHTML=raw.slice(39).map((r,i)=>`<tr><td>${i+40}</td>${r.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}
-document.querySelectorAll('.plan-option').forEach(btn=>btn.addEventListener('click',()=>chooseGiftPlan(btn.dataset.plan)));
+document.addEventListener('click',event=>{const btn=event.target.closest('.plan-option[data-plan]');if(btn)chooseGiftPlan(btn.dataset.plan);});
 document.querySelectorAll('.beast').forEach(btn=>btn.addEventListener('click',()=>{selectedBeast=btn.dataset.beast;applyBeastTheme();document.querySelectorAll('.beast').forEach(b=>b.classList.toggle('active',b===btn));render()}));
 ['fromLevel','toLevel'].forEach(id=>$(id).addEventListener('input',()=>{
  let level=Math.max(1,Math.min(80,Math.floor(Number($(id).value)||1)));
@@ -1075,6 +1165,7 @@ if(levelDataToggle&&levelDataContent&&levelDataTableWrap){
 }
 </script>
 
+<!-- v2.1.11：购买份数及剩余小包统一按 JSON small 字段的每份礼包总产出计算 -->
 </body>
 </html>
 <style>
