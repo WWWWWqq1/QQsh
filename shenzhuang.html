@@ -278,6 +278,64 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
 @media(max-width:700px){#gears.gears{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}#gears .gear{padding:4px 2px!important;gap:3px!important;border-radius:8px!important}#gears .gear .gear-art{width:100%!important;max-width:none!important}#gears .gear strong{font-size:clamp(8px,2.4vw,12px)!important;letter-spacing:0!important}}
 @media(max-width:360px){#gears.gears{gap:2px!important}#gears .gear{padding:3px 1px!important}#gears .gear strong{font-size:8px!important}}
 
+
+/* v2.1.2：返利参数卡片内容居中，礼包选择卡片与购买方案数据同步展示 */
+#rebateSelectorCard .rebate-params .rebate-param{
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
+#rebateSelectorCard .rebate-params .rebate-param>span,
+#rebateSelectorCard .rebate-params .rebate-param>strong{
+  width:100%!important;
+  text-align:center!important;
+  justify-content:center!important;
+}
+#rebateSelectorCard .rebate-plan-select{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  justify-items:stretch!important;
+}
+#rebateSelectorCard .rebate-plan-option{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+#rebateSelectorCard .rebate-gift-top{
+  width:100%!important;
+  justify-content:center!important;
+  flex-wrap:wrap!important;
+  text-align:center!important;
+}
+#rebateSelectorCard .rebate-gift-top>strong,
+#rebateSelectorCard .rebate-gift-top>b{
+  text-align:center!important;
+}
+#rebateSelectorCard .rebate-gift-facts{
+  width:100%!important;
+}
+#rebateSelectorCard .rebate-gift-facts>span{
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
+@media(max-width:520px){
+  #rebateSelectorCard .rebate-plan-select{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  #rebateSelectorCard .rebate-plan-option{padding:8px 3px!important}
+  #rebateSelectorCard .rebate-plan-option.active{padding:7px 2px!important}
+}
+
 </style>
 <style>
 /* v2.1.14：返利开关切换时，汇总字段始终在同一行铺满容器，不产生横向滚动 */
@@ -393,12 +451,7 @@ const rows=[
 const fmt=n=>Number(n).toLocaleString('en-US');const $=id=>document.getElementById(id);
 function theme(){const saved=localStorage.getItem('shenzhuang-theme');if(saved==='light')document.body.classList.add('light-theme');else if(saved==='dark')document.body.classList.remove('light-theme');else{const h=new Date().getHours();document.body.classList.toggle('light-theme',h>=6&&h<18)}}theme();const themeToggle=$('themeToggle');if(themeToggle){const syncThemeLabel=()=>{const light=document.body.classList.contains('light-theme');themeToggle.innerHTML=light?'<span aria-hidden="true">🌙</span><span>切换昼夜</span>':'<span aria-hidden="true">☀️</span><span>切换昼夜</span>';};syncThemeLabel();themeToggle.addEventListener('click',()=>{const light=document.body.classList.toggle('light-theme');localStorage.setItem('shenzhuang-theme',light?'light':'dark');syncThemeLabel();});}
 function renderTable(){ $('dataRows').innerHTML=rows.map(r=>'<tr>'+r.map((v,i)=>`<td>${fmt(v)}</td>`).join('')+'</tr>').join('')}
-const giftPlans={
- monthly:{name:'月初礼包',price:99,big:213,middle:100,small:21300,extra:0,obsidian:26625},
- vip10:{name:'VIP10礼包',price:139.8,big:208,middle:100,small:20800,extra:0,obsidian:26000},
- event:{name:'限时礼包',price:9.3,big:1,middle:1,small:1200,extra:0,obsidian:1500}
-};
-let selectedPlan='monthly';
+const giftPlans={"monthly":{"name":"月初礼包","price":99,"big":213,"middle":100,"small":21300,"extra":0,"obsidian":26625},"vip10":{"name":"VIP10礼包","price":139.8,"big":208,"middle":100,"small":20800,"extra":0,"obsidian":26000},"event":{"name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"extra":0,"obsidian":1500}}; let selectedPlan='monthly';
 function renderExp(a){
  const raw=Math.max(0,Math.floor(Number($('currentExp').value)||0));
  const row=rows[Math.min(79,Math.max(0,a-1))]||rows[0];
@@ -585,6 +638,88 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 @media(max-width:560px){#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{font-size:clamp(8px,2.2vw,11px)!important;padding:3px 2px!important}#rebateSelectorCard .rebate-cap-table th:first-child{width:23%!important}#rebateSelectorCard .rebate-cap-table td{width:19.25%!important}}
 </style>
 
+
+<script id="shenzhuang-gift-config-loader">
+(function(){
+  const fallback = JSON.parse(JSON.stringify(giftPlans));
+  const fmtGift = n => Number(n||0).toLocaleString('zh-CN');
+  function applyGiftConfig(system){
+    if(!system || !Array.isArray(system.packages)) return false;
+    const byId = Object.fromEntries(system.packages.map(p=>[p.id,p]));
+    for(const id of Object.keys(giftPlans)){
+      const p=byId[id];
+      document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{
+        card.hidden = !p;
+      });
+      if(!p) continue;
+      giftPlans[id] = {
+        ...giftPlans[id],
+        name: p.name ?? giftPlans[id].name,
+        price: Number(p.price ?? giftPlans[id].price),
+        big: Number(p.big ?? giftPlans[id].big),
+        middle: Number(p.middle ?? giftPlans[id].middle),
+        small: Number(p.small ?? giftPlans[id].small),
+        extra: Number(p.extra ?? giftPlans[id].extra ?? 0),
+        obsidian: Number(p.obsidian ?? giftPlans[id].obsidian)
+      };
+      document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{
+        const name=card.querySelector('.gift-top strong');
+        const price=card.querySelector('.gift-price');
+        const facts=card.querySelectorAll('.gift-facts span');
+        if(name) name.textContent=giftPlans[id].name;
+        if(price) price.textContent='¥'+giftPlans[id].price.toLocaleString('zh-CN',{maximumFractionDigits:2});
+        if(facts[0]){
+          const b=facts[0].querySelector('b');
+          if(b) b.textContent=fmtGift(giftPlans[id].small);
+        }
+        if(facts[1]){
+          const b=facts[1].querySelector('b');
+          if(b) b.textContent=fmtGift(giftPlans[id].obsidian);
+        }
+      });
+      document.querySelectorAll('.rebate-plan-option[data-rebate-plan="'+id+'"]').forEach(card=>{
+        const name=card.querySelector('.rebate-gift-top strong');
+        const price=card.querySelector('.rebate-gift-top b');
+        const facts=card.querySelectorAll('.rebate-gift-facts>span');
+        if(name) name.textContent=giftPlans[id].name;
+        if(price) price.textContent='¥'+giftPlans[id].price.toLocaleString('zh-CN',{maximumFractionDigits:2});
+        if(facts[0]){
+          const value=facts[0].querySelector('strong');
+          if(value) value.textContent=fmtGift(giftPlans[id].small);
+        }
+        if(facts[1]){
+          const value=facts[1].querySelector('strong');
+          if(value) value.textContent=fmtGift(giftPlans[id].obsidian);
+        }
+      });
+    }
+    document.querySelectorAll('#giftGrid,#rebateGiftGrid').forEach(grid=>{
+      const visibleCount=grid.querySelectorAll('.gift-card:not([hidden])').length;
+      if(visibleCount>0) grid.style.gridTemplateColumns='repeat('+visibleCount+',minmax(0,1fr))';
+    });
+    if(typeof update==='function') update();
+    return true;
+  }
+  async function loadGiftConfig(){
+    try{
+      const response=await fetch('./gift-config.json?t='+Date.now(),{cache:'no-store'});
+      if(!response.ok) throw new Error('HTTP '+response.status);
+      const data=await response.json();
+      const system=(data.systems||[]).find(x=>x.id==='shenzhuang');
+      if(!applyGiftConfig(system)) throw new Error('配置中未找到有效的神装礼包数据');
+    }catch(error){
+      Object.assign(giftPlans,JSON.parse(JSON.stringify(fallback)));
+      if(typeof update==='function') update();
+      console.warn('[神装] 礼包配置读取失败，使用内置默认数据：',error);
+    }
+  }
+  loadGiftConfig();
+  window.addEventListener('focus',loadGiftConfig);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden) loadGiftConfig();});
+  window.setInterval(loadGiftConfig,5*60*1000);
+})();
+</script>
+
 </body></html>
 <style>
 /* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
@@ -674,4 +809,39 @@ body.rebate-enabled .rebate-discount-item{display:flex}
 <style>
 /* v2.1.29：移动端性能优化 */
 @media(max-width:700px){.card{contain-intrinsic-size:auto 360px}.gear,.progress div,.home-return,.theme-toggle{transition:none!important}.home-return,.theme-toggle{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+
+/* v2.1.3：材料需求总览各指标卡片内容水平居中 */
+.summary .metric{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
+.summary .metric>span,
+.summary .metric>strong{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+}
+
+
+/* v2.1.4：修复深色主题下返利礼包选中卡片仍使用浅色主题配色的问题 */
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
+  background:color-mix(in srgb,var(--primary) 16%,var(--panel))!important;
+  color:var(--ink)!important;
+  border:2px solid var(--primary)!important;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 13%,transparent)!important;
+}
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top strong,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span{
+  color:var(--ink)!important;
+}
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top>b,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span>strong{
+  color:var(--primary)!important;
+}
+
 </style>
