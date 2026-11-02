@@ -344,9 +344,9 @@ body[data-altar="5"]{--altar-tone:#7052a0}
 <section class="panel"><div class="section-head"><div><h2>属性变化</h2><p id="attrCaption">展示初始等级与目标等级的三项属性及增量</p></div></div><div class="attr-card attr-comparison"><div class="attr-title" id="comparisonTitle">金祭坛 · 60级 → 70级</div><div class="attr-table-wrap"><table class="attr-table"><thead><tr><th>属性</th><th>起始值</th><th>目标值</th><th>增加值</th></tr></thead><tbody id="comparisonAttrs"></tbody></table></div></div><div class="rebate-wrap" id="altarRebate">
 <div class="rebate-heading"><h3>礼包购买方案</h3><button type="button" class="rebate-toggle off" id="rebateToggle" aria-pressed="false">返利未开启 · 点击开启</button><p>返利比例为 1/4：返还需求的 1/4，实际消耗为需求的 3/4。返利计算临界点为 390,000 个需求，超过部分不再返利；对应实际返利上限为 97,500 个。</p></div>
 <div class="rebate-packages" id="rebatePackages">
-<button type="button" class="rebate-package selected" data-package="0" aria-pressed="true"><span class="rebate-package-top"><span class="rebate-package-name">月初礼包</span><span class="rebate-price">¥99</span></span><span class="rebate-details"><span>大包 <b>213</b></span><span>小包 <b>21,300</b></span></span></button>
-<button type="button" class="rebate-package" data-package="1" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">VIP10礼包</span><span class="rebate-price">¥27.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>8,888</b></span></span></button>
-<button type="button" class="rebate-package" data-package="2" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">限时礼包</span><span class="rebate-price">¥10.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>1,150</b></span></span></button>
+<button type="button" class="rebate-package selected" data-package="0" aria-pressed="true"><span class="rebate-package-top"><span class="rebate-package-name">月初礼包</span><span class="rebate-price">¥99</span></span><span class="rebate-details"><span>大包 <b>213</b></span><span>小包 <b>21,300</b></span><span>单价(个/元) <b>215.2</b></span></span></button>
+<button type="button" class="rebate-package" data-package="1" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">VIP10礼包</span><span class="rebate-price">¥27.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>8,888</b></span><span>单价(个/元) <b>319.7</b></span></span></button>
+<button type="button" class="rebate-package" data-package="2" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">限时礼包</span><span class="rebate-price">¥10.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>1,150</b></span><span>单价(个/元) <b>106.5</b></span></span></button>
 </div>
 <div class="rebate-summary" id="rebateSummary">当前选择：月初礼包。按返利后的净需求计算购买数量。</div>
 <div class="rebate-stats">
@@ -441,11 +441,43 @@ function initDataFilters(){
  $('resetDataFilter').addEventListener('click',()=>{dataSelected=null;dataExpanded=false;$('upgradeDataWrap').classList.add('collapsed');$('upgradeDataWrap').classList.remove('expanded');$('toggleDataTable').textContent='展开';$('toggleDataTable').setAttribute('aria-expanded','false');syncTable();requestAnimationFrame(()=>positionDataAtLevel60())});
  $('toggleDataTable').addEventListener('click',()=>{dataExpanded=!dataExpanded;$('upgradeDataWrap').classList.toggle('expanded',dataExpanded);$('upgradeDataWrap').classList.toggle('collapsed',!dataExpanded);$('toggleDataTable').textContent=dataExpanded?'收起':'展开';$('toggleDataTable').setAttribute('aria-expanded',String(dataExpanded));if(dataExpanded&&!dataTableBuilt)renderDataTable();else syncTable();if(dataExpanded)requestAnimationFrame(positionDataAtLevel60)});
 }
-const ALTAR_PACKAGES=[{name:'月初礼包',price:99,big:213,small:21300},{name:'VIP10礼包',price:27.8,big:1,small:8888},{name:'限时礼包',price:10.8,big:1,small:1150}];
+// 礼包中央配置：内置数据用于首屏与 JSON 加载失败时的回退；计算公式仍沿用祭坛原有算法。
+const ALTAR_PACKAGES=[{id:'monthly',name:'月初礼包',price:99,big:213,small:21300,unitPrice:215.2},{id:'vip10',name:'VIP10礼包',price:27.8,big:1,small:8888,unitPrice:319.7},{id:'event',name:'活动大厅限时礼包',price:10.8,big:1,small:1150,unitPrice:106.5}];
+let rebateRatio=0.25,rebateEligibleDemandCap=390000,rebateReturnedCap=97500;
 let selectedRebatePackage=0,rebateEnabled=false;
+function applyAltarGiftConfig(config){
+ const system=Array.isArray(config?.systems)?config.systems.find(x=>x.id==='jitan'):null;
+ if(!system||!Array.isArray(system.packages)||!system.packages.length)return false;
+ const next=system.packages.map(p=>{const price=Number(p.price),small=Number(p.small);const configuredUnitPrice=Number(p.unitPrice);return {id:p.id,name:String(p.name||''),price,big:Number(p.big||0),small,unitPrice:Number.isFinite(configuredUnitPrice)&&configuredUnitPrice>0?configuredUnitPrice:(price>0&&small>0?small/price:0)};});
+ if(next.length!==3||next.some(p=>!p.name||!Number.isFinite(p.price)||!Number.isFinite(p.small)||p.small<=0))return false;
+ ALTAR_PACKAGES.splice(0,ALTAR_PACKAGES.length,...next);
+ const rebate=system.rebate||{};
+ if(Number.isFinite(Number(rebate.ratio)))rebateRatio=Number(rebate.ratio);
+ if(Number.isFinite(Number(rebate.eligibleDemandCap)))rebateEligibleDemandCap=Number(rebate.eligibleDemandCap);
+ if(Number.isFinite(Number(rebate.returnedCap)))rebateReturnedCap=Number(rebate.returnedCap);
+ document.querySelectorAll('.rebate-package[data-package]').forEach((btn,i)=>{
+  const p=ALTAR_PACKAGES[i];if(!p)return;
+  const name=btn.querySelector('.rebate-package-name'),price=btn.querySelector('.rebate-price'),details=btn.querySelectorAll('.rebate-details b');
+  if(name)name.textContent=p.name;
+  if(price)price.textContent='¥'+p.price.toLocaleString('en-US',{maximumFractionDigits:2});
+  if(details[0])details[0].textContent=Number(p.big).toLocaleString('en-US');
+  if(details[1])details[1].textContent=Number(p.small).toLocaleString('en-US');
+  if(details[2])details[2].textContent=Number(p.unitPrice||0).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+ });
+ selectedRebatePackage=Math.min(selectedRebatePackage,ALTAR_PACKAGES.length-1);
+ return true;
+}
+async function loadAltarGiftConfig(){
+ try{
+  const response=await fetch('./gift-config.json?t='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  const config=await response.json();
+  if(applyAltarGiftConfig(config))render();
+ }catch(error){console.warn('祭坛礼包配置读取失败，继续使用 HTML 内置默认数据。',error)}
+}
 function updateRebate(actual){
- const eligible=Math.min(Math.max(0,actual),390000);
- const returned=rebateEnabled?Math.floor(eligible*0.25):0;
+ const eligible=Math.min(Math.max(0,actual),rebateEligibleDemandCap);
+ const returned=rebateEnabled?Math.min(rebateReturnedCap,Math.floor(eligible*rebateRatio)):0;
  const netNeed=Math.max(0,actual-returned);
  const pack=ALTAR_PACKAGES[selectedRebatePackage];
  const count=netNeed===0?0:Math.ceil(netNeed/pack.small);
@@ -469,6 +501,11 @@ let floor=cumulative(s),ceil=s<maxLevel?cumulative(s+1):floor,range=Math.max(1,c
 let startVals=row(s).attrs[selected],endVals=row(t).attrs[selected];$('comparisonTitle').textContent=`${names[selected]}祭坛 · ${s}级 → ${t}级`;$('comparisonAttrs').innerHTML=startVals.map((v,j)=>{let end=endVals[j],diff=end-v,cls=diff>0?'':diff<0?'down':'same',d=diff>0?`+${fmt(diff)}`:fmt(diff);return `<tr><td>${attrNames[selected][j]}</td><td>${fmt(v)}</td><td>${fmt(end)}</td><td><span class="change ${cls}">${d}</span></td></tr>`}).join('');$('attrCaption').textContent=`${names[selected]}祭坛：${s} 级 → ${t} 级，展示三项属性的起始值、目标值与增加值。`;
 }
 $('startLevel').addEventListener('input',()=>{let s=+$('startLevel').value;$('startLevelNumber').value=s;if(+$('targetLevel').value<=s){let t=Math.min(maxLevel,s+1);$('targetLevel').value=String(t);$('targetLevelNumber').value=t} $('targetLevel').min=String(Math.min(maxLevel,s+1));$('targetLevelNumber').min=String(Math.min(maxLevel,s+1));$('currentExp').value=cumulative(s);render()});$('targetLevel').addEventListener('input',()=>{if($('targetLevelNumber'))$('targetLevelNumber').value=$('targetLevel').value;render()});$('startLevelNumber').addEventListener('change',()=>{let v=Math.max(1,Math.min(90,Math.floor(+$('startLevelNumber').value||1)));$('startLevel').value=v;if(+$('targetLevel').value<v)$('targetLevel').value=v;$('currentExp').value=cumulative(v);render()});$('targetLevelNumber').addEventListener('change',()=>{let v=Math.max(1,Math.min(90,Math.floor(+$('targetLevelNumber').value||1)));$('targetLevel').min=String(Math.min(maxLevel,+$('startLevel').value+1));$('targetLevelNumber').min=$('targetLevel').min;$('targetLevel').value=Math.min(maxLevel,Math.max(v,+$('startLevel').value+1));$('targetLevelNumber').value=$('targetLevel').value;render()});$('resetLevels').addEventListener('click',()=>{$('startLevel').value=60;$('targetLevel').value=70;$('targetLevel').min=61;$('startLevelNumber').value=60;$('targetLevelNumber').value=70;$('targetLevelNumber').min=61;$('currentExp').value=cumulative(60);render()});$('resetExp').addEventListener('click',()=>{let base=cumulative(+$('startLevel').value);$('currentExp').value=base;$('currentExpSlider').value=base;render()});$('resetStockInventory').addEventListener('click',()=>{ $('stockStones').value='0'; $('stockSlider').value='0'; let base=cumulative(+$('startLevel').value); $('currentExp').value=base; $('currentExpSlider').value=base; render(); });$('currentExp').addEventListener('change',()=>{let min=+$('currentExp').min||0,max=+$('currentExp').max||min,base=min,raw=+$('currentExp').value||base;let v=Math.max(base,Math.min(max,base+Math.round((raw-base)/10)*10));$('currentExp').value=v;$('currentExpSlider').value=v;render()});$('currentExp').addEventListener('input',()=>{let min=+$('currentExp').min||0,max=+$('currentExp').max||min,raw=$('currentExp').value;if(raw==='')return;let v=Math.max(min,Math.min(max,min+Math.floor((+raw-min)/10)*10));$('currentExpSlider').value=v;render()});$('currentExpSlider').addEventListener('input',()=>{$('currentExp').value=$('currentExpSlider').value;render()});$('stockStones').addEventListener('input',()=>{let v=Math.max(0,Math.floor(+$('stockStones').value||0));$('stockStones').value=v;$('stockSlider').value=Math.min(+$('stockSlider').max,v);render()});$('stockSlider').addEventListener('input',()=>{$('stockStones').value=$('stockSlider').value;render()});function applyTheme(mode){let root=document.documentElement;root.dataset.theme=mode;let meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=mode==='light'?'#f1f3f7':'#10131b';$('themeBtn').textContent=mode==='dark'?'☀️ 切换昼夜':'🌙 切换昼夜'}let manualTheme=false;function autoTheme(){if(manualTheme)return;let d=new Date(),mins=d.getHours()*60+d.getMinutes();applyTheme(mins>=360&&mins<1080?'light':'dark')} $('themeBtn').addEventListener('click',()=>{manualTheme=true;applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')});populateSelects();autoTheme();buildAltars();initDataFilters();render();
+// 初始化、重新聚焦、切回前台及每 5 分钟同步中央礼包配置。
+loadAltarGiftConfig();
+window.addEventListener('focus',loadAltarGiftConfig);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadAltarGiftConfig()});
+setInterval(loadAltarGiftConfig,300000);
 
 </script>
 
