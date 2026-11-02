@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<title>QQ水浒阵容规划器 v1.4.27</title>
+<title>QQ水浒阵容规划器 v1.4.28</title>
 <style>
 :root{--bg:#151923;--panel:#202633;--panel2:#282f3e;--text:#f4f5f7;--muted:#aeb7c6;--accent:#d6a84f;--line:#454e60;--active:#bfc1c4;--activeText:#17191d;--empty:#303847;--danger:#d86b67}
 *{box-sizing:border-box;max-width:100%}
@@ -2492,16 +2492,23 @@ function renderHeroes(){
   const nirvanaBases=new Set(heroes.filter(h=>h.type==="涅槃三阶").map(h=>baseHeroName(h.name)));
   const lineup=selectedTargetLineup();
   // 已在当前主阵、副将营或聚义营上阵的同名武将，不再出现在选择名单。
-  const assignedNames=new Set([
-    ...Object.values(state.lineups[state.formation]||{}),
-    ...Object.values(state.deputy||{}),
-    ...Object.values(state.gathering||{})
-  ].filter(Boolean));
   const selectedSlot=state.selectedCamp?state.selectedCamp.slot:state.selectedPosition;
+  // 跨阵营按武将本名识别占用状态：真·黄信与修罗·黄信属于同一武将。
+  // 当前正在编辑的位置不参与占用判断，允许在该位置切换同一武将的形态。
+  const assignedNames=new Set();
+  Object.entries(state.lineups[state.formation]||{}).forEach(([slot,name])=>{
+    if(name && !(state.selectedCamp==null && slot===String(selectedSlot))) assignedNames.add(baseHeroName(name));
+  });
+  Object.entries(state.deputy||{}).forEach(([slot,name])=>{
+    if(name && !(state.selectedCamp?.area==="deputy" && slot===String(selectedSlot))) assignedNames.add(baseHeroName(name));
+  });
+  Object.entries(state.gathering||{}).forEach(([slot,name])=>{
+    if(name && !(state.selectedCamp?.area==="gathering" && slot===String(selectedSlot))) assignedNames.add(baseHeroName(name));
+  });
   const mainLineup=state.lineups[state.formation]||{};
   const mainTiersByBase=new Map();
   Object.entries(mainLineup).forEach(([slot,name])=>{
-    if(slot===String(selectedSlot)||!name||!isCountedGodHero(name))return;
+    if((state.selectedCamp==null && slot===String(selectedSlot))||!name||!isCountedGodHero(name))return;
     const base=baseHeroName(name);
     const tier=isNirvanaHero(name)?"nirvana":isGodHero(name)?"ordinary":null;
     if(tier){if(!mainTiersByBase.has(base))mainTiersByBase.set(base,new Set());mainTiersByBase.get(base).add(tier);}
@@ -2516,7 +2523,7 @@ function renderHeroes(){
   baseRank.set("晁盖",1);
   const rankByBase=h=>baseRank.get(baseHeroName(h.name))??9999;
   const otherOrder=h=>h.name==="晁盖"||baseHeroName(h.name)==="晁盖"?0:h.type==="天罡"?1:h.type==="地煞"?2:3;
-  const visible=heroes.filter(h=>!assignedNames.has(h.name)&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("nirvana")&&isGodHero(h.name))&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("ordinary")&&isNirvanaHero(h.name))&&(type==="全部"||h.type===type||(type==="其他"&&h.type!=="涅槃三阶"&&h.type!=="神将"&&h.type!=="修罗"))&&(h.name.toLowerCase().includes(q)||(h.baseName||"").toLowerCase().includes(q)))
+  const visible=heroes.filter(h=>!assignedNames.has(baseHeroName(h.name))&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("nirvana")&&isGodHero(h.name))&&!(mainTiersByBase.get(baseHeroName(h.name))?.has("ordinary")&&isNirvanaHero(h.name))&&(type==="全部"||h.type===type||(type==="其他"&&h.type!=="涅槃三阶"&&h.type!=="神将"&&h.type!=="修罗"))&&(h.name.toLowerCase().includes(q)||(h.baseName||"").toLowerCase().includes(q)))
     .sort((a,b)=>(type==="全部"?((h=>h.type==="涅槃三阶"?0:h.type==="神将"?1:h.type==="修罗"?2:3)(a)-(h=>h.type==="涅槃三阶"?0:h.type==="神将"?1:h.type==="修罗"?2:3)(b)):0)||rankByBase(a)-rankByBase(b)||a.name.localeCompare(b.name,"zh-CN"));
   visible.forEach(h=>{
     const b=document.createElement("button");b.className="hero-option"+(type==="全部"&&h.type==="涅槃三阶"?" nirvana-option":"");
@@ -2553,8 +2560,9 @@ function renderHeroes(){
       }
       // Prevent duplicate copies within the same formation/camp, while leaving different areas independent.
       const beforeUnionCount=getActiveUnionKeys();
-      if(lineup[selectedSlot]!==h.name || Object.keys(lineup).some(pos=>pos!==String(selectedSlot)&&lineup[pos]===h.name))recordUndo(state.selectedCamp?state.selectedCamp.area:"main");
-      Object.keys(lineup).forEach(pos=>{if(lineup[pos]===h.name)delete lineup[pos]});
+      if(lineup[selectedSlot]!==h.name || Object.keys(lineup).some(pos=>pos!==String(selectedSlot)&&lineup[pos]&&baseHeroName(lineup[pos])===baseHeroName(h.name)))recordUndo(state.selectedCamp?state.selectedCamp.area:"main");
+      // 同一阵营内按本名去重，避免真将与修罗形态同时占用两个位置。
+      Object.keys(lineup).forEach(pos=>{if(pos!==String(selectedSlot)&&lineup[pos]&&baseHeroName(lineup[pos])===baseHeroName(h.name))delete lineup[pos]});
       lineup[selectedSlot]=h.name;
       $("slotPrompt").textContent=(state.selectedCamp?`${state.selectedCamp.area==="deputy"?"副将营":"聚义营"} · 位置 ${selectedSlot}`:`主阵 ${state.formation} · 位置 ${selectedSlot}`)+` · ${h.name}`;
       renderBoard();renderCamps();renderHeroes();

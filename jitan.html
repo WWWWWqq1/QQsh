@@ -344,18 +344,18 @@ body[data-altar="5"]{--altar-tone:#7052a0}
 <section class="panel"><div class="section-head"><div><h2>属性变化</h2><p id="attrCaption">展示初始等级与目标等级的三项属性及增量</p></div></div><div class="attr-card attr-comparison"><div class="attr-title" id="comparisonTitle">金祭坛 · 60级 → 70级</div><div class="attr-table-wrap"><table class="attr-table"><thead><tr><th>属性</th><th>起始值</th><th>目标值</th><th>增加值</th></tr></thead><tbody id="comparisonAttrs"></tbody></table></div></div><div class="rebate-wrap" id="altarRebate">
 <div class="rebate-heading"><h3>礼包购买方案</h3><button type="button" class="rebate-toggle off" id="rebateToggle" aria-pressed="false">返利未开启 · 点击开启</button><p>返利比例为 1/4：返还需求的 1/4，实际消耗为需求的 3/4。返利计算临界点为 390,000 个需求，超过部分不再返利；对应实际返利上限为 97,500 个。</p></div>
 <div class="rebate-packages" id="rebatePackages">
-<button type="button" class="rebate-package selected" data-package="0" aria-pressed="true"><span class="rebate-package-top"><span class="rebate-package-name">月初礼包</span><span class="rebate-price">¥99</span></span><span class="rebate-details"><span>大包 <b>213</b></span><span>小包 <b>21,300</b></span><span>单价(个/元) <b>215.2</b></span></span></button>
-<button type="button" class="rebate-package" data-package="1" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">VIP10礼包</span><span class="rebate-price">¥27.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>8,888</b></span><span>单价(个/元) <b>319.7</b></span></span></button>
-<button type="button" class="rebate-package" data-package="2" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">限时礼包</span><span class="rebate-price">¥10.8</span></span><span class="rebate-details"><span>大包 <b>1</b></span><span>小包 <b>1,150</b></span><span>单价(个/元) <b>106.5</b></span></span></button>
+<button type="button" class="rebate-package selected" data-package="0" aria-pressed="true"><span class="rebate-package-top"><span class="rebate-package-name">月初礼包</span><span class="rebate-price">¥99</span></span><span class="rebate-details"><span>灵纹石 <b>21,300</b></span><span>单价(个/元) <b>215.2</b></span></span></button>
+<button type="button" class="rebate-package" data-package="1" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">VIP10礼包</span><span class="rebate-price">¥27.8</span></span><span class="rebate-details"><span>灵纹石 <b>8,888</b></span><span>单价(个/元) <b>319.7</b></span></span></button>
+<button type="button" class="rebate-package" data-package="2" aria-pressed="false"><span class="rebate-package-top"><span class="rebate-package-name">限时礼包</span><span class="rebate-price">¥6.3</span></span><span class="rebate-details"><span>灵纹石 <b>920</b></span><span>单价(个/元) <b>146.0</b></span></span></button>
 </div>
 <div class="rebate-summary" id="rebateSummary">当前选择：月初礼包。按返利后的净需求计算购买数量。</div>
 <div class="rebate-stats">
-<div class="rebate-stat rebate-cost"><span>预计费用</span><strong id="rebateCost">¥0</strong><small>按所选礼包单价计算</small></div>
-<div class="rebate-stat rebate-count"><span>购买礼包数量</span><strong id="rebatePackageCount">0 份</strong><small>向上取整，确保材料够用</small></div>
+<div class="rebate-stat rebate-cost"><span>预计费用</span><strong id="rebateCost">¥0</strong><small>按礼包价格计算</small></div>
+<div class="rebate-stat rebate-count"><span>购买礼包数量</span><strong id="rebatePackageCount">0 个</strong><small>向上取整，确保材料够用</small></div>
 <div class="rebate-stat"><span>返还灵纹石</span><strong id="rebateReturned">0</strong><small>最多 97,500 个</small></div>
 <div class="rebate-stat"><span>返利后需求</span><strong id="rebateNetNeed">0</strong><small>返还需求的 1/4</small></div>
-<div class="rebate-stat"><span>所购礼包小包总量</span><strong id="rebatePackageStones">0</strong><small>按所选礼包小包数量计算</small></div>
-<div class="rebate-stat"><span>剩余小包数量</span><strong id="rebateSurplus">0</strong><small>购买总量减返利后需求</small></div>
+<div class="rebate-stat"><span>礼包可开出灵纹石总量</span><strong id="rebatePackageStones">0</strong><small>按所选礼包灵纹石数量计算</small></div>
+<div class="rebate-stat"><span>剩余灵纹石</span><strong id="rebateSurplus">0</strong><small>礼包开出总量减返利后需求</small></div>
 </div>
 </div></section>
 <section class="panel"><div class="section-head"><div><h2>升级数据查询</h2><p>默认显示等级数据，表格高度为500像素；点击展开显示全部等级数据。默认展示全部祭坛属性，可左右滚动；选择祭坛后仅显示该祭坛的三项属性，点击重置恢复全部属性。</p></div></div><div class="data-filter-bar" id="dataFilterBar"><div class="stone-filter" id="stoneFilter" role="group" aria-label="选择灵纹石种类"></div><button type="button" class="secondary data-action" id="resetDataFilter">重置</button><button type="button" class="secondary data-action" id="toggleDataTable" aria-expanded="false">展开</button></div><div class="table-wrap upgrade-data-wrap collapsed" id="upgradeDataWrap"><table class="upgrade-data-table"><thead id="detailHead"></thead><tbody id="detailRows"></tbody></table></div></section>
@@ -442,14 +442,26 @@ function initDataFilters(){
  $('toggleDataTable').addEventListener('click',()=>{dataExpanded=!dataExpanded;$('upgradeDataWrap').classList.toggle('expanded',dataExpanded);$('upgradeDataWrap').classList.toggle('collapsed',!dataExpanded);$('toggleDataTable').textContent=dataExpanded?'收起':'展开';$('toggleDataTable').setAttribute('aria-expanded',String(dataExpanded));if(dataExpanded&&!dataTableBuilt)renderDataTable();else syncTable();if(dataExpanded)requestAnimationFrame(positionDataAtLevel60)});
 }
 // 礼包中央配置：内置数据用于首屏与 JSON 加载失败时的回退；计算公式仍沿用祭坛原有算法。
-const ALTAR_PACKAGES=[{id:'monthly',name:'月初礼包',price:99,big:213,small:21300,unitPrice:215.2},{id:'vip10',name:'VIP10礼包',price:27.8,big:1,small:8888,unitPrice:319.7},{id:'event',name:'活动大厅限时礼包',price:10.8,big:1,small:1150,unitPrice:106.5}];
+const ALTAR_PACKAGES=[{id:'monthly',name:'月初礼包',price:99,lingwen:21300,unitPrice:215.2},{id:'vip10',name:'VIP10礼包',price:27.8,lingwen:8888,unitPrice:319.7},{id:'event',name:'限时礼包',price:6.3,lingwen:920,unitPrice:146}];
 let rebateRatio=0.25,rebateEligibleDemandCap=390000,rebateReturnedCap=97500;
 let selectedRebatePackage=0,rebateEnabled=false;
 function applyAltarGiftConfig(config){
  const system=Array.isArray(config?.systems)?config.systems.find(x=>x.id==='jitan'):null;
  if(!system||!Array.isArray(system.packages)||!system.packages.length)return false;
- const next=system.packages.map(p=>{const price=Number(p.price),small=Number(p.small);const configuredUnitPrice=Number(p.unitPrice);return {id:p.id,name:String(p.name||''),price,big:Number(p.big||0),small,unitPrice:Number.isFinite(configuredUnitPrice)&&configuredUnitPrice>0?configuredUnitPrice:(price>0&&small>0?small/price:0)};});
- if(next.length!==3||next.some(p=>!p.name||!Number.isFinite(p.price)||!Number.isFinite(p.small)||p.small<=0))return false;
+ // 以配置管理页中“灵纹石”材料定义为唯一数据映射依据：
+ // packageField 指向礼包卡片里被标记为“灵纹石”的字段；兼容字段改名为 lingwen 的新旧配置。
+ const lingwenMaterial=Array.isArray(system.materials)
+  ?system.materials.find(m=>m.name==='灵纹石'||m.key==='lingwen')
+  :null;
+ const lingwenField=lingwenMaterial?.packageField||lingwenMaterial?.key||'lingwen';
+ const next=system.packages.map(p=>{
+  const price=Number(p.price);
+  const rawLingwen=p[lingwenField]??p.lingwen??(lingwenField!=='small'?p.small:undefined);
+  const lingwen=Number(rawLingwen);
+  const configuredUnitPrice=Number(p.unitPrice);
+  return {id:p.id,name:String(p.name||''),price,lingwen,unitPrice:Number.isFinite(configuredUnitPrice)&&configuredUnitPrice>0?configuredUnitPrice:(price>0&&lingwen>0?lingwen/price:0)};
+ });
+ if(next.length!==3||next.some(p=>!p.name||!Number.isFinite(p.price)||!Number.isFinite(p.lingwen)||p.lingwen<=0))return false;
  ALTAR_PACKAGES.splice(0,ALTAR_PACKAGES.length,...next);
  const rebate=system.rebate||{};
  if(Number.isFinite(Number(rebate.ratio)))rebateRatio=Number(rebate.ratio);
@@ -460,9 +472,8 @@ function applyAltarGiftConfig(config){
   const name=btn.querySelector('.rebate-package-name'),price=btn.querySelector('.rebate-price'),details=btn.querySelectorAll('.rebate-details b');
   if(name)name.textContent=p.name;
   if(price)price.textContent='¥'+p.price.toLocaleString('en-US',{maximumFractionDigits:2});
-  if(details[0])details[0].textContent=Number(p.big).toLocaleString('en-US');
-  if(details[1])details[1].textContent=Number(p.small).toLocaleString('en-US');
-  if(details[2])details[2].textContent=Number(p.unitPrice||0).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+  if(details[0])details[0].textContent=Number(p.lingwen).toLocaleString('en-US');
+  if(details[1])details[1].textContent=Number(p.unitPrice||0).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
  });
  selectedRebatePackage=Math.min(selectedRebatePackage,ALTAR_PACKAGES.length-1);
  return true;
@@ -480,16 +491,16 @@ function updateRebate(actual){
  const returned=rebateEnabled?Math.min(rebateReturnedCap,Math.floor(eligible*rebateRatio)):0;
  const netNeed=Math.max(0,actual-returned);
  const pack=ALTAR_PACKAGES[selectedRebatePackage];
- const count=netNeed===0?0:Math.ceil(netNeed/pack.small);
- const packStones=count*pack.small;
+ const count=netNeed===0?0:Math.ceil(netNeed/pack.lingwen);
+ const packStones=count*pack.lingwen;
  const cost=count*pack.price;
  $('rebateReturned').textContent=fmt(returned);
  $('rebateNetNeed').textContent=fmt(netNeed);
- $('rebatePackageCount').textContent=`${fmt(count)} 份`;
+ $('rebatePackageCount').textContent=`${fmt(count)} 个`;
  $('rebateCost').textContent='¥'+cost.toLocaleString('en-US',{minimumFractionDigits:cost%1?1:0,maximumFractionDigits:2});
  $('rebatePackageStones').textContent=fmt(packStones);
  $('rebateSurplus').textContent=fmt(Math.max(0,packStones-netNeed));
- $('rebateSummary').textContent=`当前选择：${pack.name}。${rebateEnabled?`本次需求 ${fmt(actual)} 个，返还 ${fmt(returned)} 个，返利后还需准备 ${fmt(netNeed)} 个小包灵纹石。`:`返利已关闭，本次按完整需求 ${fmt(actual)} 个计算。`}`;
+ $('rebateSummary').textContent=`当前选择：${pack.name}。${rebateEnabled?`本次需求 ${fmt(actual)} 个，返还 ${fmt(returned)} 个，返利后还需准备 ${fmt(netNeed)} 个灵纹石。`:`返利已关闭，本次按完整需求 ${fmt(actual)} 个计算。`}`;
  $('rebateToggle').textContent=rebateEnabled?'返利已开启 · 点击关闭':'返利未开启 · 点击开启';
  $('rebateToggle').classList.toggle('off',!rebateEnabled);$('rebateToggle').setAttribute('aria-pressed',String(rebateEnabled));
  $('altarRebate').classList.toggle('rebate-enabled',rebateEnabled);
