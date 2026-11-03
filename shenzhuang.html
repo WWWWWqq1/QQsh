@@ -361,6 +361,12 @@ html,body{max-width:100%;overflow-x:hidden!important;}
 .rebate-cap-stat span,.rebate-cap-stat strong{color:var(--ink)!important;text-align:center;}
 </style>
 
+
+<style id="gift-data-source-style">
+/* 仅数字内容标红；汉字、字段名称、礼包名称及其他文字完全继承原样式 */
+body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
+</style>
+
 </head>
 <body><div class="floating-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜主题" title="切换昼夜主题"><span aria-hidden="true">☀️</span><span>切换昼夜</span></button><a class="home-return" href="index.html" aria-label="返回首页" title="返回首页">
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -405,6 +411,14 @@ html,body{max-width:100%;overflow-x:hidden!important;}
 <section class="card"><h2>升级数据查询</h2><p class="hint">共用升级表字段：等级、云母石、乌金石、金刚石、黑曜石、增长、经验条、各材料次需、换算黑曜石。</p><div class="table-wrap"><table><thead><tr><th>等级</th><th>云母石</th><th>乌金石</th><th>金刚石</th><th>黑曜石</th><th>增长</th><th>经验条</th><th>云母石次需</th><th>乌金石次需</th><th>金刚石次需</th><th>黑曜石次需</th><th>换算黑曜石</th></tr></thead><tbody id="dataRows"></tbody></table></div></section>
 <footer>@WWWWWqq1</footer></div>
 <script>
+function setGiftDataSource(source){
+  if(!document.body.classList.contains('gift-data-source-initialized')){document.body.classList.add('gift-data-source-initialized','gift-data-fallback');}
+  document.body.classList.toggle('gift-data-fallback',source==='fallback');
+  document.body.classList.toggle('gift-data-json',source==='json');
+}
+/* 页面初始显示 HTML 内置礼包数据；JSON 加载成功后切换为正常颜色 */
+document.body.classList.add('gift-data-source-initialized','gift-data-fallback');
+
 const gearNames=['雪饮狂刀','乾坤护甲','九天龙盔','逐日宝驹'];let selectedGear=gearNames[0];
 // 完整录入用户提供的 1–80 级升级材料表。
 const rows=[
@@ -642,62 +656,50 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 <script id="shenzhuang-gift-config-loader">
 (function(){
   const fallback = JSON.parse(JSON.stringify(giftPlans));
+  let shenzhuangFieldVisibility={};
   const fmtGift = n => Number(n||0).toLocaleString('zh-CN');
   function applyGiftConfig(system){
-    if(!system || !Array.isArray(system.packages)) return false;
-    const byId = Object.fromEntries(system.packages.map(p=>[p.id,p]));
+    if(!system || !Array.isArray(system.packages) || !system.packages.length) return false;
+    const byId=Object.fromEntries(system.packages.filter(p=>p&&p.id).map(p=>[p.id,p]));
+    shenzhuangFieldVisibility=system.fieldVisibility||{};
     for(const id of Object.keys(giftPlans)){
       const p=byId[id];
+      document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{card.hidden=!p;});
+      if(!p)continue;
+      const old=giftPlans[id]||{};
+      giftPlans[id]={...old,...p,
+        price:Number(p.price??old.price??0),big:Number(p.big??old.big??0),
+        middle:Number(p.middle??old.middle??0),small:Number(p.small??old.small??0),
+        extra:Number(p.extra??old.extra??0),obsidian:Number(p.obsidian??old.obsidian??0)};
+      const data=giftPlans[id];
       document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{
-        card.hidden = !p;
-      });
-      if(!p) continue;
-      giftPlans[id] = {
-        ...giftPlans[id],
-        name: p.name ?? giftPlans[id].name,
-        price: Number(p.price ?? giftPlans[id].price),
-        big: Number(p.big ?? giftPlans[id].big),
-        middle: Number(p.middle ?? giftPlans[id].middle),
-        small: Number(p.small ?? giftPlans[id].small),
-        extra: Number(p.extra ?? giftPlans[id].extra ?? 0),
-        obsidian: Number(p.obsidian ?? giftPlans[id].obsidian)
-      };
-      document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{
-        const name=card.querySelector('.gift-top strong');
-        const price=card.querySelector('.gift-price');
-        const facts=card.querySelectorAll('.gift-facts span');
-        if(name) name.textContent=giftPlans[id].name;
-        if(price) price.textContent='¥'+giftPlans[id].price.toLocaleString('zh-CN',{maximumFractionDigits:2});
-        if(facts[0]){
-          const b=facts[0].querySelector('b');
-          if(b) b.textContent=fmtGift(giftPlans[id].small);
-        }
-        if(facts[1]){
-          const b=facts[1].querySelector('b');
-          if(b) b.textContent=fmtGift(giftPlans[id].obsidian);
+        const name=card.querySelector('.gift-top strong'),price=card.querySelector('.gift-price');
+        if(name)name.textContent=data.name||old.name||id;
+        if(price){price.textContent='¥'+data.price.toLocaleString('zh-CN',{maximumFractionDigits:2});price.hidden=shenzhuangFieldVisibility.price===false;}
+        const facts=card.querySelector('.gift-facts');
+        if(facts){
+          const labels={big:'大包',middle:'中包',small:'小包',extra:'附加黑曜石',obsidian:'折算黑曜石'};
+          facts.innerHTML=Object.entries(labels).filter(([key])=>data[key]!==undefined&&shenzhuangFieldVisibility[key]!==false)
+            .map(([key,label])=>`<span>${label} <b>${fmtGift(data[key]||0)}</b></span>`).join('');
         }
       });
       document.querySelectorAll('.rebate-plan-option[data-rebate-plan="'+id+'"]').forEach(card=>{
-        const name=card.querySelector('.rebate-gift-top strong');
-        const price=card.querySelector('.rebate-gift-top b');
-        const facts=card.querySelectorAll('.rebate-gift-facts>span');
-        if(name) name.textContent=giftPlans[id].name;
-        if(price) price.textContent='¥'+giftPlans[id].price.toLocaleString('zh-CN',{maximumFractionDigits:2});
-        if(facts[0]){
-          const value=facts[0].querySelector('strong');
-          if(value) value.textContent=fmtGift(giftPlans[id].small);
-        }
-        if(facts[1]){
-          const value=facts[1].querySelector('strong');
-          if(value) value.textContent=fmtGift(giftPlans[id].obsidian);
+        const name=card.querySelector('.rebate-gift-top strong'),price=card.querySelector('.rebate-gift-top b');
+        if(name)name.textContent=data.name||old.name||id;
+        if(price){price.textContent='¥'+data.price.toLocaleString('zh-CN',{maximumFractionDigits:2});price.closest('.rebate-gift-top')?.toggleAttribute('hidden',shenzhuangFieldVisibility.price===false);}
+        const facts=card.querySelector('.rebate-gift-facts');
+        if(facts){
+          const labels={big:'大包',middle:'中包',small:'小包',extra:'附加黑曜石',obsidian:'折算黑曜石'};
+          facts.innerHTML=Object.entries(labels).filter(([key])=>data[key]!==undefined&&shenzhuangFieldVisibility[key]!==false)
+            .map(([key,label])=>`<span>${label} <strong>${fmtGift(data[key]||0)}</strong></span>`).join('');
         }
       });
     }
     document.querySelectorAll('#giftGrid,#rebateGiftGrid').forEach(grid=>{
       const visibleCount=grid.querySelectorAll('.gift-card:not([hidden])').length;
-      if(visibleCount>0) grid.style.gridTemplateColumns='repeat('+visibleCount+',minmax(0,1fr))';
+      if(visibleCount>0)grid.style.gridTemplateColumns='repeat('+visibleCount+',minmax(0,1fr))';
     });
-    if(typeof update==='function') update();
+    if(typeof update==='function')update();
     return true;
   }
   async function loadGiftConfig(){
@@ -707,7 +709,9 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
       const data=await response.json();
       const system=(data.systems||[]).find(x=>x.id==='shenzhuang');
       if(!applyGiftConfig(system)) throw new Error('配置中未找到有效的神装礼包数据');
+      setGiftDataSource('json');
     }catch(error){
+      setGiftDataSource('fallback');
       Object.assign(giftPlans,JSON.parse(JSON.stringify(fallback)));
       if(typeof update==='function') update();
       console.warn('[神装] 礼包配置读取失败，使用内置默认数据：',error);
@@ -717,6 +721,50 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
   window.addEventListener('focus',loadGiftConfig);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) loadGiftConfig();});
   window.setInterval(loadGiftConfig,5*60*1000);
+})();
+</script>
+
+
+<script id="gift-data-numeric-only">
+(function(){
+  const giftCardSelector = '.plan-option,.gift-card,.package-option,.rebate-plan-option,.all-gift-option,.gift-plan,.gift-package,.gift-card-item';
+  const numericOnly = /^[¥￥$]?\s*-?[\d,]+(?:\.\d+)?\s*(?:个|枚|块|元)?$/;
+  function markNumericText(root){
+    if(!root || root.nodeType!==1) return;
+    const cards=[];
+    if(root.matches && root.matches(giftCardSelector)) cards.push(root);
+    if(root.querySelectorAll) cards.push(...root.querySelectorAll(giftCardSelector));
+    cards.forEach(card=>{
+      const walker=document.createTreeWalker(card,NodeFilter.SHOW_TEXT);
+      const nodes=[];
+      while(walker.nextNode()){
+        const node=walker.currentNode;
+        if(node.parentElement && node.parentElement.closest('.gift-data-number')) continue;
+        const value=node.nodeValue.trim();
+        if(value && numericOnly.test(value)) nodes.push(node);
+      }
+      nodes.forEach(node=>{
+        const span=document.createElement('span');
+        span.className='gift-data-number';
+        node.parentNode.insertBefore(span,node);
+        span.appendChild(node);
+      });
+    });
+  }
+  function start(){
+    markNumericText(document.body);
+    const observer=new MutationObserver(records=>{
+      records.forEach(record=>{
+        record.addedNodes.forEach(node=>{
+          if(node.nodeType===1) markNumericText(node);
+          else if(node.nodeType===3 && node.parentElement) markNumericText(node.parentElement);
+        });
+      });
+    });
+    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
 })();
 </script>
 

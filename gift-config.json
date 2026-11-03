@@ -124,7 +124,10 @@
           "packageField": "obsidian"
         }
       ],
-      "fieldVisibility": {}
+      "fieldVisibility": {
+        "big": false,
+        "middle": false
+      }
     },
     {
       "id": "junshi",
@@ -430,13 +433,13 @@
         {
           "id": "value",
           "name": "越兑越划算",
-          "price": 1,
-          "big": 1,
-          "middle": 1,
-          "small": 1,
-          "guikui": 1,
-          "gupu": 1,
-          "beiji": 1
+          "price": 96,
+          "big": 6,
+          "middle": 60,
+          "small": 360,
+          "guikui": 1050,
+          "gupu": 450,
+          "beiji": 225
         },
         {
           "id": "event",

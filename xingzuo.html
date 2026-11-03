@@ -189,7 +189,13 @@ body{padding-bottom:72px}
 
 /* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
 .panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
-</style></head>
+</style>
+<style id="gift-data-source-style">
+/* 仅数字内容标红；汉字、字段名称、礼包名称及其他文字完全继承原样式 */
+body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
+</style>
+
+</head>
 <body><main class="wrap">
 <header class="head"><div><div class="eyebrow">MATERIAL PLANNER</div><h1>星座材料计算器</h1><div class="subtitle">按目标等级估算星座石与技能升级消耗</div></div></header>
 <div class="layout">
@@ -205,6 +211,14 @@ body{padding-bottom:72px}
 <section class="panel wide upgrade-data-panel"><div class="section-head"><div><h2>升级数据查询</h2><p>输入等级可快速定位对应消耗；展开后查看 1–60 级完整数据。</p></div><div class="zodiac-data-controls"><button type="button" class="zodiac-data-action" id="resetUpgradeQuery">重置</button><button type="button" class="zodiac-data-action" id="toggleUpgradeTable" aria-expanded="false">展开</button></div></div><div class="upgrade-query-result" id="upgradeQueryResult" aria-live="polite"></div><div class="zodiac-upgrade-table-wrap collapsed" id="upgradeDataWrap"><table class="breakdown upgrade-query-table"><colgroup><col style="width:18%"><col style="width:24%"><col style="width:28%"><col style="width:30%"></colgroup><thead><tr><th>升入等级</th><th>所需星座石</th><th>升阶消耗星座石</th><th>累计消耗星座石</th></tr></thead><tbody id="upgradeTable"></tbody></table></div><p class="note">数据表示从上一级升入该等级所需的星座石数量。</p></section>
 </div><div class="footer">@wwwwwqq1</div></main><div class="float-actions"><button class="float-action" id="themeBtn" type="button">☀️ 切换昼夜</button><a class="float-action" href="index.html" aria-label="返回主页">⌂ 返回主页</a></div>
 <script>
+function setGiftDataSource(source){
+  if(!document.body.classList.contains('gift-data-source-initialized')){document.body.classList.add('gift-data-source-initialized','gift-data-fallback');}
+  document.body.classList.toggle('gift-data-fallback',source==='fallback');
+  document.body.classList.toggle('gift-data-json',source==='json');
+}
+/* 页面初始显示 HTML 内置礼包数据；JSON 加载成功后切换为正常颜色 */
+document.body.classList.add('gift-data-source-initialized','gift-data-fallback');
+
 const costs=[22,24,26,29,32,36,40,44,48,52,60,70,80,90,100,110,130,150,170,190,230,270,310,360,410,460,510,560,610,700,770,840,910,980,1050,1120,1190,1260,1330,1430,1520,1610,1700,1790,1880,1990,2140,2300,2510,2760,3040,3340,3680,4050,4450,4940,5480,6080,6750,7500];
 const groups={'降速':['白羊','摩羯','天秤','巨蟹'],'减攻':['天蝎','水瓶','射手','金牛'],'减防':['狮子','处女','双子','双鱼']};
 const zodiacMeta={'白羊':{symbol:'🐏',color:'#e86b52'},'金牛':{symbol:'🐂',color:'#65a66f'},'双子':{symbol:'👯',color:'#d7a642'},'巨蟹':{symbol:'🦀',color:'#76a9e8'},'狮子':{symbol:'🦁',color:'#e7a13c'},'处女':{symbol:'🌾',color:'#78b58a'},'天秤':{symbol:'⚖️',color:'#d77f9e'},'天蝎':{symbol:'🦂',color:'#b477d1'},'射手':{symbol:'🏹',color:'#7b9be8'},'摩羯':{symbol:'🐐',color:'#a5a7b0'},'水瓶':{symbol:'🌊',color:'#55b7c9'},'双鱼':{symbol:'🐟',color:'#7d8ee6'}};
@@ -224,7 +238,7 @@ function updateSkillMilestone(target){const el=$('skillTargetMilestone'),num=$('
 function updateCurrentSkillMilestone(starts){const el=$('skillCurrentMilestone');if(!el)return;const lowest=Math.min(...starts),step=stepFor(lowest),info=stepInfo(step);el.textContent=`${lowest}级-${step}阶-${activeGroup}${info.effect}`;}
 
 
-const DEFAULT_CONSTELLATION_SYSTEM={"id":"xingzuo","name":"xingzuo","status":"active","source":"xingzuo(4).html","algorithm":"按扣除现有库存后的星座石缺口，礼包份数=ceil(缺口/每份星座石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":30,"stones":900,"unitPrice":30},{"id":"vip9","name":"VIP9礼包","price":79.8,"stones":2588,"unitPrice":32.4},{"id":"event","name":"限时礼包","price":6.8,"stones":238,"unitPrice":35}],"materials":[{"key":"stones","name":"星座石","unit":"礼包产出","packageField":"stones"}]};
+const DEFAULT_CONSTELLATION_SYSTEM={"id":"xingzuo","name":"xingzuo","status":"active","source":"xingzuo(4).html","algorithm":"按扣除现有库存后的星座石缺口，礼包份数=ceil(缺口/每份星座石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"第二个半价礼包","price":30,"stones":900,"unitPrice":30},{"id":"vip9","name":"VIP9礼包","price":79.8,"stones":2588,"unitPrice":32.4},{"id":"event","name":"限时礼包","price":11.8,"stones":388,"unitPrice":32.9}],"materials":[{"key":"stones","name":"星座石","unit":"礼包产出","packageField":"stones"}]};
 let constellationGiftSystem=JSON.parse(JSON.stringify(DEFAULT_CONSTELLATION_SYSTEM));
 let CONSTELLATION_PACKAGES=constellationGiftSystem.packages||[];
 let selectedConstellationPackage=0;
@@ -303,7 +317,8 @@ async function loadConstellationGiftConfig(){
     const response=await fetch('./gift-config.json?t='+Date.now(),{cache:'no-store'});
     if(!response.ok)throw new Error('HTTP '+response.status);
     applyConstellationGiftConfig(await response.json());
-  }catch(error){console.warn('[星座礼包配置] 读取中央配置失败，继续使用页面内置默认礼包。',error);}
+    setGiftDataSource('json');
+  }catch(error){setGiftDataSource('fallback');console.warn('[星座礼包配置] 读取中央配置失败，继续使用页面内置默认礼包。',error);}
 }
 renderPackageOptions();
 loadConstellationGiftConfig();
@@ -324,4 +339,48 @@ function renderUpgradeQuery(){const tbody=$('upgradeTable');let cumulativeLevel=
 $('resetUpgradeQuery').addEventListener('click',()=>{upgradeTableExpanded=false;$('upgradeDataWrap').classList.add('collapsed');$('upgradeDataWrap').classList.remove('expanded');$('toggleUpgradeTable').textContent='展开';$('toggleUpgradeTable').setAttribute('aria-expanded','false');renderUpgradeQuery()});
 $('toggleUpgradeTable').addEventListener('click',()=>{upgradeTableExpanded=!upgradeTableExpanded;$('upgradeDataWrap').classList.toggle('expanded',upgradeTableExpanded);$('upgradeDataWrap').classList.toggle('collapsed',!upgradeTableExpanded);$('toggleUpgradeTable').textContent=upgradeTableExpanded?'收起':'展开';$('toggleUpgradeTable').setAttribute('aria-expanded',String(upgradeTableExpanded))});
 renderUpgradeQuery();function applyTheme(theme){document.documentElement.dataset.theme=theme;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=theme==='light'?'#f1f3f7':'#101827';$('themeBtn').textContent=theme==='dark'?'☀️ 切换昼夜':'🌙 切换昼夜'}const now=new Date(),mins=now.getHours()*60+now.getMinutes();applyTheme(mins>=360&&mins<1080?'light':'dark');$('themeBtn').addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));fillConstellations();calculate();
-</script></body></html>
+</script>
+<script id="gift-data-numeric-only">
+(function(){
+  const giftCardSelector = '.plan-option,.gift-card,.package-option,.rebate-plan-option,.all-gift-option,.gift-plan,.gift-package,.gift-card-item';
+  const numericOnly = /^[¥￥$]?\s*-?[\d,]+(?:\.\d+)?\s*(?:个|枚|块|元)?$/;
+  function markNumericText(root){
+    if(!root || root.nodeType!==1) return;
+    const cards=[];
+    if(root.matches && root.matches(giftCardSelector)) cards.push(root);
+    if(root.querySelectorAll) cards.push(...root.querySelectorAll(giftCardSelector));
+    cards.forEach(card=>{
+      const walker=document.createTreeWalker(card,NodeFilter.SHOW_TEXT);
+      const nodes=[];
+      while(walker.nextNode()){
+        const node=walker.currentNode;
+        if(node.parentElement && node.parentElement.closest('.gift-data-number')) continue;
+        const value=node.nodeValue.trim();
+        if(value && numericOnly.test(value)) nodes.push(node);
+      }
+      nodes.forEach(node=>{
+        const span=document.createElement('span');
+        span.className='gift-data-number';
+        node.parentNode.insertBefore(span,node);
+        span.appendChild(node);
+      });
+    });
+  }
+  function start(){
+    markNumericText(document.body);
+    const observer=new MutationObserver(records=>{
+      records.forEach(record=>{
+        record.addedNodes.forEach(node=>{
+          if(node.nodeType===1) markNumericText(node);
+          else if(node.nodeType===3 && node.parentElement) markNumericText(node.parentElement);
+        });
+      });
+    });
+    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+})();
+</script>
+
+</body></html>
