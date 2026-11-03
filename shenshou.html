@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v2.1.18</title>
+<title>神兽升级计算器 v2.1.19</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -632,6 +632,59 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
 <style id="gift-data-source-style">
 /* 仅数字内容标红；汉字、字段名称、礼包名称及其他文字完全继承原样式 */
 body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
+</style>
+
+
+<style id="mobile-gift-card-no-wrap-v2-1-19">
+/* v2.1.19：移动端礼包卡片字段/数值禁止换行或省略；返利开关下方指标卡片每行固定三张 */
+@media(max-width:760px){
+  /* 月初/VIP/限时礼包卡片：字段名称、价格及材料数量完整单行显示 */
+  .plan-options{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .plan-option{min-width:0!important;overflow:visible!important}
+  .plan-option strong,
+  .plan-option .plan-price,
+  .plan-option .plan-pack-stats span,
+  .plan-option .plan-pack-stats b{
+    white-space:nowrap!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    text-overflow:clip!important;
+    overflow:visible!important;
+  }
+  .plan-option strong{font-size:clamp(9px,2.8vw,12px)!important}
+  .plan-option .plan-price{font-size:clamp(9px,2.8vw,12px)!important}
+  .plan-option .plan-pack-stats{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:2px!important}
+  .plan-option .plan-pack-stats span{font-size:clamp(8px,2.35vw,10px)!important}
+  .plan-option .plan-pack-stats b{font-size:clamp(9px,2.55vw,11px)!important}
+
+  /* 是否开启返利下方的指标卡片：每排严格三张，不横向滚动、不折成两列 */
+  #rebateOffPanel .package-summary,
+  #rebateOnPanel .package-summary{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+    overflow:visible!important;
+  }
+  #rebateOffPanel .package-summary .metric,
+  #rebateOnPanel .package-summary .metric{
+    min-width:0!important;
+    padding:8px 3px!important;
+  }
+  #rebateOffPanel .package-summary .metric .name,
+  #rebateOnPanel .package-summary .metric .name,
+  #rebateOffPanel .package-summary .metric strong,
+  #rebateOnPanel .package-summary .metric strong{
+    white-space:nowrap!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    text-overflow:clip!important;
+    overflow:visible!important;
+  }
+  #rebateOffPanel .package-summary .metric .name,
+  #rebateOnPanel .package-summary .metric .name{font-size:clamp(9px,2.6vw,12px)!important}
+  #rebateOffPanel .package-summary .metric strong,
+  #rebateOnPanel .package-summary .metric strong{font-size:clamp(11px,3.2vw,16px)!important}
+}
 </style>
 
 </head>
