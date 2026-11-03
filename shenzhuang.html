@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.1.29</title>
+<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.2.3</title>
 <style>
 :root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002}
 *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s}
@@ -377,8 +377,8 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 <section class="card"><h2>等级选择</h2><p class="hint">拖动滑块选择当前等级和目标等级，实时计算四种神装的升级材料需求。</p><div class="levels"><div class="field"><label for="fromLevel">当前等级</label><div class="slider-row"><input id="fromLevel" max="80" min="1" type="range" value="30"/><input id="fromLevelNumber" class="level-number" type="number" min="1" max="80" step="1" value="30" aria-label="直接输入当前等级"></div><div class="ends"><span>1 级</span><span>80 级</span></div></div><div class="field"><label for="toLevel">目标等级</label><div class="slider-row"><input id="toLevel" max="80" min="1" type="range" value="45"/><input id="toLevelNumber" class="level-number" type="number" min="1" max="80" step="1" value="45" aria-label="直接输入目标等级"></div><div class="ends"><span>1 级</span><span>80 级</span></div></div></div><div class="exp-panel"><h3>现有经验条</h3><div class="exp-halves"><div class="exp-half"><label for="currentExp">当前等级已获得经验</label><input id="currentExp" type="number" min="0" step="1" value="0" /><input id="currentExpSlider" class="exp-range" aria-label="拖动调整当前经验" type="range" min="0" max="100" value="0" /><div class="exp-range-ends"><span>0</span><span id="expSliderMax">100</span></div></div><div class="exp-half"><div class="exp-caption"><span id="expFraction">0 / 0</span><span id="expPercent">0%</span></div><div class="exp-bar"><div id="expBarFill"></div></div><div class="exp-caption"><span>本级经验上限</span><span id="expDenominator">0</span></div></div></div><p class="hint" style="margin:8px 0 0">经验会按当前等级的“增长”与四种材料“次需”折算，抵扣本级已完成的升级消耗。</p></div><div class="actions"><button class="secondary" id="resetLevels">重置等级</button><button class="secondary" id="resetExp">重置经验条</button></div></section>
 <section class="card"><h2>已有材料库存</h2><p class="hint">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p><div class="stock-grid"><div class="stock"><label for="micaStock">云母石库存</label><input id="micaStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="micaStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整云母石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="goldStock">乌金石库存</label><input id="goldStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="goldStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整乌金石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="diamondStock">金刚石库存</label><input id="diamondStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="diamondStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整金刚石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="obsidianStock">黑曜石库存</label><input id="obsidianStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="obsidianStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整黑曜石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div></div><div class="stock-summary-heading"><h2>材料需求总览</h2><button class="secondary" id="resetStock">重置库存</button></div><div class="summary"><div class="metric gold" id="micaDemandMetric"><span>云母石</span><strong id="needMica">待计算</strong></div><div class="metric gold"><span>乌金石</span><strong id="needGold">待计算</strong></div><div class="metric gold"><span>金刚石</span><strong id="needDiamond">待计算</strong></div><div class="metric gold"><span>黑曜石</span><strong id="needObsidian">待计算</strong></div><div class="metric gold"><span>折算黑曜石</span><strong id="needConvertedObsidian">待计算</strong></div></div><div class="progress"><div id="levelProgress"></div></div><p class="hint" id="progressText" style="margin:10px 0 0">等级进度：1 / 80</p></section>
 
-<section class="card gift-purchase-card" id="giftPurchaseCard"><div class="gift-card-heading"><h2 id="giftModeHeading">礼包购买方案</h2><button type="button" class="rebate-toggle" id="rebateToggle" aria-pressed="false"><span class="rebate-toggle-dot"></span><span id="rebateToggleText">返利未开启 · 点击开启</span></button></div><p class="hint">礼包开出的小包可获得乌金石，按乌金石 ÷ 4 折算为黑曜石；附加为礼包额外赠送的黑曜石。点击卡片选择方案，自动计算所需购买数量和总价。</p><div class="gift-mode no-rebate-mode" id="noRebateMode"><div class="gift-grid" id="giftGrid"><button class="gift-card active" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><span>小包 <b>21,300</b></span><span class="gift-convert">折算黑曜石 <b>26,625</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button class="gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><span>小包 <b>20,800</b></span><span class="gift-convert">折算黑曜石 <b>26,000</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button class="gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><span>小包 <b>1,200</b></span><span class="gift-convert">折算黑曜石 <b>1,500</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div></div>
-<div class="gift-mode rebate-mode" id="rebateGiftMode" hidden><div class="gift-grid" id="rebateGiftGrid"><button class="gift-card active rebate-gift-card" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><span>小包 <b>21,300</b></span><span class="gift-convert">折算黑曜石 <b>26,625</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><span>小包 <b>20,800</b></span><span class="gift-convert">折算黑曜石 <b>26,000</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10RebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10RebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10RebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><span>小包 <b>1,200</b></span><span class="gift-convert">折算黑曜石 <b>1,500</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRebateRemaining">0</b></div></div></button></div></div><div class="gift-summary-row" id="giftSummaryRow" aria-label="礼包实际购买及材料数量汇总">
+<section class="card gift-purchase-card" id="giftPurchaseCard"><div class="gift-card-heading"><h2 id="giftModeHeading">礼包购买方案</h2><button type="button" class="rebate-toggle" id="rebateToggle" aria-pressed="false"><span class="rebate-toggle-dot"></span><span id="rebateToggleText">返利未开启 · 点击开启</span></button></div><p class="hint">礼包开出的小包可获得乌金石，按乌金石 ÷ 4 折算为黑曜石；附加为礼包额外赠送的黑曜石。点击卡片选择方案，自动计算所需购买数量和总价。</p><div class="gift-mode no-rebate-mode" id="noRebateMode"><div class="gift-grid" id="giftGrid"><button class="gift-card active" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><span>小包 <b>21,300</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,625</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button class="gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><span>小包 <b>20,800</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,000</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button class="gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><span>小包 <b>1,200</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>1,500</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div></div>
+<div class="gift-mode rebate-mode" id="rebateGiftMode" hidden><div class="gift-grid" id="rebateGiftGrid"><button class="gift-card active rebate-gift-card" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><span>小包 <b>21,300</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,625</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><span>小包 <b>20,800</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,000</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10RebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10RebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10RebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><span>小包 <b>1,200</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>1,500</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRebateRemaining">0</b></div></div></button></div></div><div class="gift-summary-row" id="giftSummaryRow" aria-label="礼包实际购买及材料数量汇总">
 <div class="gift-summary-item"><span>预计费用</span><strong id="summaryCost">0</strong></div>
 <div class="gift-summary-item"><span>购买礼包数量</span><strong id="summaryCount">0</strong></div>
 
@@ -598,7 +598,6 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
 <style>
 /* v2.1.17：礼包卡片仅用高亮表示选中；精简礼包信息；汇总费用/数量按返利状态着色 */
 .gift-card.active::before{content:none!important;display:none!important}
-.gift-card .gift-extra-field{display:none!important}
 .gift-card .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 .gift-card .gift-facts .gift-convert{grid-column:auto!important}
 .gift-summary-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;width:100%!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
@@ -679,7 +678,7 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
         const facts=card.querySelector('.gift-facts');
         if(facts){
           const labels={big:'大包',middle:'中包',small:'小包',extra:'附加黑曜石',obsidian:'折算黑曜石'};
-          facts.innerHTML=Object.entries(labels).filter(([key])=>data[key]!==undefined&&shenzhuangFieldVisibility[key]!==false)
+          facts.innerHTML=Object.entries(labels).filter(([key])=>['small','extra','obsidian'].includes(key)&&data[key]!==undefined&&(key==='extra'||shenzhuangFieldVisibility[key]!==false))
             .map(([key,label])=>`<span>${label} <b>${fmtGift(data[key]||0)}</b></span>`).join('');
         }
       });
@@ -690,7 +689,7 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
         const facts=card.querySelector('.rebate-gift-facts');
         if(facts){
           const labels={big:'大包',middle:'中包',small:'小包',extra:'附加黑曜石',obsidian:'折算黑曜石'};
-          facts.innerHTML=Object.entries(labels).filter(([key])=>data[key]!==undefined&&shenzhuangFieldVisibility[key]!==false)
+          facts.innerHTML=Object.entries(labels).filter(([key])=>['small','extra','obsidian'].includes(key)&&data[key]!==undefined&&(key==='extra'||shenzhuangFieldVisibility[key]!==false))
             .map(([key,label])=>`<span>${label} <strong>${fmtGift(data[key]||0)}</strong></span>`).join('');
         }
       });
@@ -768,7 +767,112 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 })();
 </script>
 
-</body></html>
+
+<style>
+/* v2.2.1：礼包卡片及返利选择卡片固定展示小包、附加黑曜石、折算黑曜石三项 */
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
+.gift-grid .gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;white-space:nowrap!important;box-sizing:border-box!important}
+#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}
+#rebateSelectorCard .rebate-gift-facts>span{min-width:0!important;white-space:nowrap!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 2px!important;font-size:clamp(8px,2.1vw,11px)!important}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.4vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important}}
+</style>
+
+
+
+
+<style>
+/* v2.2.3：礼包选中状态仅高亮边框，不改变卡片及内部结果区背景 */
+.gift-grid .gift-card.active{
+  border:2px solid var(--primary)!important;
+  padding:13px!important;
+  background:var(--panel)!important;
+  box-shadow:none!important;
+}
+.gift-grid .gift-card.active .gift-result{
+  border-color:var(--line)!important;
+  background:var(--card)!important;
+}
+.gift-grid .gift-card.active::before{content:none!important;display:none!important}
+</style>
+
+
+<style>
+/* v2.2.4：礼包字段在小卡片内全部居中；礼包汇总卡片加高并放大数值 */
+.gift-grid .gift-facts>span,
+#rebateSelectorCard .rebate-gift-facts>span{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  min-height:68px!important;
+  padding:10px 5px!important;
+  box-sizing:border-box!important;
+}
+.gift-grid .gift-facts>span *,
+#rebateSelectorCard .rebate-gift-facts>span *{
+  width:100%!important;
+  text-align:center!important;
+  float:none!important;
+}
+.gift-grid .gift-facts>span b,
+#rebateSelectorCard .rebate-gift-facts>span>strong{
+  display:block!important;
+  font-size:clamp(14px,1.5vw,18px)!important;
+  line-height:1.25!important;
+  margin:4px 0 0!important;
+}
+.gift-summary-item{
+  min-height:76px!important;
+  padding:13px 8px!important;
+  gap:8px!important;
+  box-sizing:border-box!important;
+}
+.gift-summary-item strong{
+  font-size:clamp(19px,2vw,25px)!important;
+  line-height:1.2!important;
+}
+@media(max-width:760px){
+  .gift-grid .gift-facts>span,
+  #rebateSelectorCard .rebate-gift-facts>span{min-height:62px!important;padding:8px 3px!important}
+  .gift-grid .gift-facts>span b,
+  #rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(12px,3vw,16px)!important}
+  .gift-summary-item{min-height:72px!important;padding:10px 4px!important}
+  .gift-summary-item strong{font-size:clamp(17px,4vw,22px)!important}
+}
+</style>
+
+
+
+
+<style id="v2-2-7-gift-summary-number-size">
+/* v2.2.7：礼包汇总数字统一调整为24px */
+#giftSummaryRow .gift-summary-item strong,
+body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+.gift-summary-row#giftSummaryRow .gift-summary-item strong{
+    font-size:24px!important;
+  line-height:1.12!important;
+  font-weight:900!important;
+}
+@media(max-width:760px){
+  #giftSummaryRow .gift-summary-item strong,
+  body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+  .gift-summary-row#giftSummaryRow .gift-summary-item strong{
+    font-size:24px!important;
+    line-height:1.12!important;
+  }
+}
+@media(max-width:360px){
+  #giftSummaryRow .gift-summary-item strong,
+  body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+  .gift-summary-row#giftSummaryRow .gift-summary-item strong{
+    font-size:24px!important;
+  }
+}
+</style>
+</body>
+<!-- 当前版本：v2.2.7 -->
+</html>
 <style>
 /* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
 .rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 4px;align-items:stretch}
@@ -831,6 +935,12 @@ body.rebate-enabled .rebate-discount-item{display:flex}
 .gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 @media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
+<style>
+/* v2.2.1：礼包卡片内三项数据均显示并固定一排 */
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
+.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 3px!important}}
+</style>
 
 <style>
 /* v2.1.22：单次返利上限计算底部三个汇总指标在所有屏幕宽度下始终同排，无横向滚动 */
@@ -855,7 +965,7 @@ body.rebate-enabled .rebate-discount-item{display:flex}
 </style>
 
 <style>
-/* v2.1.29：移动端性能优化 */
+/* v2.2.2：补齐附加黑曜石小卡片，并强制三项同排展示 */
 @media(max-width:700px){.card{contain-intrinsic-size:auto 360px}.gear,.progress div,.home-return,.theme-toggle{transition:none!important}.home-return,.theme-toggle{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
 
 /* v2.1.3：材料需求总览各指标卡片内容水平居中 */
@@ -892,4 +1002,13 @@ body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gi
   color:var(--primary)!important;
 }
 
+</style>
+
+<style>
+/* v2.2.2：礼包卡片实际补回附加黑曜石小卡片；三项始终三列同排 */
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
+.gift-grid .gift-facts>.gift-extra-field{display:flex!important;visibility:visible!important;opacity:1!important}
+.gift-grid .gift-facts>.gift-convert{display:flex!important;grid-column:auto!important}
+.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>.gift-extra-field{display:flex!important}}
 </style>
