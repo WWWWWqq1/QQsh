@@ -1,11 +1,11 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
+<!DOCTYPE html>
+<!-- saved from url=(0034)file:///D:/Github/gift-config.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=1200, initial-scale=1">
 <meta name="theme-color" content="#f4f6fa">
-<title>QQ水浒 · 礼包配置</title>
-<!-- v2.1.34：JSON导出入口文字居中、去除空格并加强分隔横线 -->
+<title>QQ水浒 · 礼包配置 v2.2.5</title>
+<!-- v2.1.41：礼包字段展示复选框移至对应数值输入框下方 -->
 <style>
 :root{--bg:#f3f5f9;--panel:#fff;--panel2:#f6f8fc;--text:#202938;--muted:#65748b;--line:#d7e0ed;--accent:#b47a16;--blue:#3977c8;--danger:#c33d45;--shadow:0 8px 26px #1c355010}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -34,13 +34,13 @@ nav{padding:12px;position:sticky;top:12px}nav h3{padding:8px 9px 12px}
 .notice{background:#f5f8fd;border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--muted);font-size:13px;margin-bottom:14px}
 .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 .package{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel);min-width:0}
-.package-head{display:flex;gap:8px;align-items:center;margin-bottom:12px}.package-head input{font-weight:700;flex:1;min-width:0}
+.package-head{display:flex;gap:8px;align-items:center;margin-bottom:12px;min-width:0}.package-index{flex:none;color:var(--muted);font-size:13px;white-space:nowrap}.package-head input{font-weight:700;flex:1;min-width:0}.package-code{flex:none;color:var(--muted);font-size:12px;white-space:nowrap;padding:0 4px}
 .package-head .price{width:105px}
-.fieldgrid{display:grid;grid-template-columns:repeat(var(--field-count,1),minmax(0,1fr));grid-auto-flow:column;gap:5px;align-items:stretch;overflow:hidden;padding-bottom:0;min-width:0}.fieldgrid .field{display:grid;grid-template-rows:auto auto;align-content:start;min-width:0;max-width:100%}.fieldgrid .field label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:22px;font-size:16px;line-height:1.4;margin-bottom:4px}.fieldgrid .field input,.fieldgrid .field textarea,.fieldgrid .field select{min-width:0;width:100%;font-size:16px;line-height:1.4;padding:7px 2px;border-radius:6px}
-.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.fieldgrid{display:grid;grid-template-columns:repeat(var(--field-count,1),minmax(0,1fr));grid-auto-flow:column;gap:5px;align-items:stretch;overflow:hidden;padding-bottom:0;min-width:0}.fieldgrid .field{display:grid;grid-template-rows:auto auto auto;align-content:start;min-width:0;max-width:100%}.fieldgrid .field label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:22px;font-size:16px;line-height:1.4;margin-bottom:4px}.fieldgrid .field input,.fieldgrid .field textarea,.fieldgrid .field select{min-width:0;width:100%;font-size:16px;line-height:1.4;padding:7px 2px;border-radius:6px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}.field-top{display:flex;align-items:center;justify-content:center;min-height:22px;margin-bottom:4px}.field-top>label{margin:0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.field-visible{display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px!important;color:var(--muted);white-space:nowrap;cursor:pointer;margin:5px 0 0!important}.field-visible input{width:12px;height:12px;margin:0;padding:0}
 .field{justify-items:stretch}.field label{width:100%;text-align:center;box-sizing:border-box}.field input,.field select,.field textarea{width:100%;box-sizing:border-box;text-align:center;text-align-last:center;padding-left:4px;padding-right:4px}.field input[type="number"]::-webkit-inner-spin-button,.field input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.field input[type="number"]{-moz-appearance:textfield}
 input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;padding:8px 9px;background:white;color:var(--text)}
-.package-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.package-foot{display:none}
 .system-rules{margin-top:18px;border-top:1px solid var(--line);padding-top:15px}
 .system-rules textarea{min-height:82px;resize:vertical}
 .system-meta{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px}
@@ -61,25 +61,25 @@ input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);border
 <div class="layout">
 <nav>
   <h3>系统列表</h3>
-  <div class="navlist" id="navlist"></div>
+  <div class="navlist" id="navlist"><button class="navbtn " data-id="shenshou">神兽<small>3</small></button><button class="navbtn " data-id="shenzhuang">神装<small>3</small></button><button class="navbtn " data-id="junshi">军师<small>3</small></button><button class="navbtn " data-id="jitan">祭坛<small>3</small></button><button class="navbtn " data-id="shengxiao">生肖<small>4</small></button><button class="navbtn " data-id="xingzuo">星座<small>3</small></button><button class="navbtn " data-id="ningcui">凝萃<small>3</small></button><button class="navbtn active" data-id="beidou">北斗<small>3</small></button></div>
   <div class="nav-separator" aria-hidden="true"></div>
   <button class="navbtn export-navbtn" id="exportNav" type="button">JSON导出</button>
 </nav>
 <main class="content">
   <div id="editorView">
   <div class="toolbar">
-    <div><h2 id="systemTitle">beidou</h2><div class="sub" id="systemSubtitle"></div></div>
+    <div><h2 id="systemTitle">北斗</h2></div>
     <div class="actions">
       <button class="btn" id="addPackage">＋ 添加礼包</button>
       <button class="btn primary" id="exportJson">导出 JSON</button>
     </div>
   </div>
-  <div class="notice">材料产出数量在各礼包卡片内分别配置，不同礼包可设置不同数值。编辑字段会同步更新当前配置。导出的 JSON 可用于替换仓库中的 <b>gift-config.json</b>。本页面不修改各系统原有计算公式。</div>
+  <div class="notice">材料产出数量在各礼包卡片内分别配置，不同礼包可设置不同数值。每个字段可单独勾选“展示”，默认全部展示；取消勾选后，该字段不在对应系统页面的礼包信息中显示，但仍保留在 JSON 配置中。编辑字段会同步更新当前配置。导出的 JSON 可用于替换仓库中的 <b>gift-config.json</b>。本页面不修改各系统原有计算公式。</div>
   <div class="system-meta">
-    <div class="field"><label>系统标识</label><input id="sysName" readonly></div>
+    <div class="field"><label>系统标识</label><input id="sysName" readonly=""></div>
     <div class="field"><label>配置状态</label><select id="sysStatus"><option value="active">已配置</option><option value="missing">待补充</option></select></div>
   </div>
-  <div class="cards" id="packageCards"></div>
+  <div class="cards" id="packageCards"><section class="package"><div class="package-head"><span class="package-index">礼包 1</span><input data-pname="0" value="月初礼包" aria-label="礼包名称"><span class="package-code">monthly</span><button class="btn danger" data-remove="0">删除</button></div><div class="fieldgrid" style="--field-count: 7;"><div class="field"><div class="field-top"><label title="价格">价格</label></div><input data-field="price" data-index="0" value="99" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="price" checked="">展示</label></div><div class="field"><div class="field-top"><label title="大包">大包</label></div><input data-field="big" data-index="0" value="71" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="big" checked="">展示</label></div><div class="field"><div class="field-top"><label title="中包">中包</label></div><input data-field="middle" data-index="0" value="10" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="middle" checked="">展示</label></div><div class="field"><div class="field-top"><label title="小包">小包</label></div><input data-field="small" data-index="0" value="710" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="small" checked="">展示</label></div><div class="field"><div class="field-top"><label title="古魁经">古魁经</label></div><input data-field="guikui" data-index="0" value="1050" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="guikui" checked="">展示</label></div><div class="field"><div class="field-top"><label title="古朴文">古朴文</label></div><input data-field="gupu" data-index="0" value="450" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="gupu" checked="">展示</label></div><div class="field"><div class="field-top"><label title="北极令">北极令</label></div><input data-field="beiji" data-index="0" value="225" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="beiji" checked="">展示</label></div></div></section><section class="package"><div class="package-head"><span class="package-index">礼包 2</span><input data-pname="1" value="越兑越划算" aria-label="礼包名称"><span class="package-code">value</span><button class="btn danger" data-remove="1">删除</button></div><div class="fieldgrid" style="--field-count: 7;"><div class="field"><div class="field-top"><label title="价格">价格</label></div><input data-field="price" data-index="1" value="96" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="price" checked="">展示</label></div><div class="field"><div class="field-top"><label title="大包">大包</label></div><input data-field="big" data-index="1" value="6" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="big" checked="">展示</label></div><div class="field"><div class="field-top"><label title="中包">中包</label></div><input data-field="middle" data-index="1" value="60" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="middle" checked="">展示</label></div><div class="field"><div class="field-top"><label title="小包">小包</label></div><input data-field="small" data-index="1" value="360" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="small" checked="">展示</label></div><div class="field"><div class="field-top"><label title="古魁经">古魁经</label></div><input data-field="guikui" data-index="1" value="1050" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="guikui" checked="">展示</label></div><div class="field"><div class="field-top"><label title="古朴文">古朴文</label></div><input data-field="gupu" data-index="1" value="450" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="gupu" checked="">展示</label></div><div class="field"><div class="field-top"><label title="北极令">北极令</label></div><input data-field="beiji" data-index="1" value="225" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="beiji" checked="">展示</label></div></div></section><section class="package"><div class="package-head"><span class="package-index">礼包 3</span><input data-pname="2" value="限时礼包" aria-label="礼包名称"><span class="package-code">event</span><button class="btn danger" data-remove="2">删除</button></div><div class="fieldgrid" style="--field-count: 7;"><div class="field"><div class="field-top"><label title="价格">价格</label></div><input data-field="price" data-index="2" value="14.3" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="price" checked="">展示</label></div><div class="field"><div class="field-top"><label title="大包">大包</label></div><input data-field="big" data-index="2" value="11" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="big" checked="">展示</label></div><div class="field"><div class="field-top"><label title="中包">中包</label></div><input data-field="middle" data-index="2" value="5" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="middle" checked="">展示</label></div><div class="field"><div class="field-top"><label title="小包">小包</label></div><input data-field="small" data-index="2" value="55" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="small" checked="">展示</label></div><div class="field"><div class="field-top"><label title="古魁经">古魁经</label></div><input data-field="guikui" data-index="2" value="1050" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="guikui" checked="">展示</label></div><div class="field"><div class="field-top"><label title="古朴文">古朴文</label></div><input data-field="gupu" data-index="2" value="450" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="gupu" checked="">展示</label></div><div class="field"><div class="field-top"><label title="北极令">北极令</label></div><input data-field="beiji" data-index="2" value="225" type="number" step="any"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="beiji" checked="">展示</label></div></div></section></div>
   <div class="system-rules">
     <h3>购买 / 返利规则说明</h3>
     <textarea id="algorithm" placeholder="填写该系统原有购买或返利规则说明"></textarea>
@@ -101,25 +101,39 @@ input,textarea,select{width:100%;min-width:0;border:1px solid var(--line);border
     <div class="actions" style="margin-top:8px"><button class="btn" id="importJson">导入 JSON</button><button class="btn" id="resetConfig">恢复初始配置</button></div>
   </div>
   </div>
-  <section id="exportView" hidden>
+  <section id="exportView" hidden="">
     <div class="toolbar"><div><h2>JSON导出</h2><div class="sub">仅导出礼包配置，不包含等级表、属性表或升级材料数据</div></div></div>
     <div class="notice">导出内容包含系统礼包参数、材料产出、购买/返利规则说明及返利参数。数据直接读取当前礼包配置页内存中的最新内容。</div>
     <h3>全部系统</h3>
     <div class="actions" style="margin:10px 0 18px"><button class="btn primary" id="exportAllJson">导出全部礼包 JSON</button><button class="btn" id="copyAllJson">复制全部 JSON</button></div>
     <h3>单个系统</h3>
-    <div class="export-systems" id="exportSystems"></div>
+    <div class="export-systems" id="exportSystems"><div class="export-system"><div><strong>神兽</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="shenshou">导出 JSON</button></div><div class="export-system"><div><strong>神装</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="shenzhuang">导出 JSON</button></div><div class="export-system"><div><strong>军师</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="junshi">导出 JSON</button></div><div class="export-system"><div><strong>祭坛</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="jitan">导出 JSON</button></div><div class="export-system"><div><strong>生肖</strong><br><small>4 个礼包</small></div><button class="btn" data-export-id="shengxiao">导出 JSON</button></div><div class="export-system"><div><strong>星座</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="xingzuo">导出 JSON</button></div><div class="export-system"><div><strong>凝萃</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="ningcui">导出 JSON</button></div><div class="export-system"><div><strong>北斗</strong><br><small>3 个礼包</small></div><button class="btn" data-export-id="beidou">导出 JSON</button></div></div>
     <h3 style="margin-top:20px">JSON 预览</h3>
     <textarea id="exportPreview" spellcheck="false" placeholder="选择导出范围后，这里显示对应 JSON 内容" style="width:100%;min-height:300px;font:12px/1.5 ui-monospace,monospace;resize:vertical"></textarea>
     <div class="actions" style="margin-top:10px"><button class="btn" id="downloadExportPreview">下载当前预览</button><button class="btn" id="copyExportPreview">复制当前预览</button></div>
-    <div class="sub" id="exportStatus" role="status" aria-live="polite" style="margin-top:10px;min-height:22px"></div>
+    <div class="sub" id="exportStatus" role="status" aria-live="polite" style="margin-top:10px;min-height:22px">已生成并下载：gift-config.json</div>
   </section>
 </main>
 </div>
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const INITIAL_CONFIG = {"configVersion":"1.0.0","updatedAt":"2026-10-30","description":"QQ水浒礼包配置；集中管理各系统礼包参数与规则说明，不重写各原系统购买/返利算法。北斗礼包按用户最新截图录入。","systems":[{"id":"shenshou","name":"shenshou","status":"active","source":"shenshou(20261030-021456).html","algorithm":"小包打开后灵草×91、灵木×39、灵丹×21三选一；普通礼包每份中包可开80个小包；限时礼包每份大包对应1200个小包。返利按原页面逻辑计算，不在中央配置页改写。","rebate":{"enabled":true,"note":"保留原系统返利模式及计算算法。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":80,"small":17040,"herb":91,"wood":39,"pill":21},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":80,"small":16640,"herb":91,"wood":39,"pill":21},{"id":"event","name":"限时礼包","price":13.8,"big":1,"middle":1,"small":1200,"herb":91,"wood":39,"pill":21}],"materials":[{"key":"herb","name":"灵草","unit":"每小包产出","packageField":"herb"},{"key":"wood","name":"灵木","unit":"每小包产出","packageField":"wood"},{"key":"pill","name":"灵丹","unit":"每小包产出","packageField":"pill"}]},{"id":"shenzhuang","name":"shenzhuang","status":"active","source":"shenzhuang(20261030-021456).html","algorithm":"礼包按小包数量及折算黑曜石数量参与购买计算；返利开关与返利上限计算沿用原页面脚本，不在中央配置页重写。","rebate":{"enabled":true,"note":"原页面包含返利方案选择及返利上限计算表；以原系统算法为准。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":100,"small":21300,"extra":0,"obsidian":26625},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":100,"small":20800,"extra":0,"obsidian":26000},{"id":"event","name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"extra":0,"obsidian":1500}],"materials":[{"key":"obsidian","name":"折算黑曜石","unit":"礼包产出","packageField":"obsidian"}]},{"id":"junshi","name":"junshi","status":"active","source":"junshi(20261030-021452).html","algorithm":"小包兑换阳炎符×35、长生符×15、圣人符×7；按三种材料需求分别向上取整计算开包数后求和，再按所选礼包每份小包数向上取整购买。返利开关按原页面逻辑作用于材料需求；原有返利细则保留在系统页面。","rebate":{"enabled":true,"ratio":0.25,"note":"原页面说明返利方案按材料需求的3/4计算；返利细则以原页面实现为准。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":80,"small":17040,"yang":35,"chang":15,"sheng":7},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":80,"small":16640,"yang":35,"chang":15,"sheng":7},{"id":"event","name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"yang":35,"chang":15,"sheng":7}],"materials":[{"key":"yang","name":"阳炎符","unit":"每小包产出","packageField":"yang"},{"key":"chang","name":"长生符","unit":"每小包产出","packageField":"chang"},{"key":"sheng","name":"圣人符","unit":"每小包产出","packageField":"sheng"}]},{"id":"jitan","name":"jitan","status":"active","source":"jitan(8).html","algorithm":"返利比例1/4；返利基数最多按390000计算，返还量=floor(min(实际需求,390000)*0.25)，净需求=实际需求-返还量；礼包份数=ceil(净需求/每份小包数)。","rebate":{"enabled":true,"ratio":0.25,"eligibleDemandCap":390000,"returnedCap":97500},"packages":[{"id":"monthly","name":"月初礼包","price":99,"small":21300,"unitPrice":215.2},{"id":"vip10","name":"VIP10礼包","price":27.8,"small":8888,"unitPrice":319.7},{"id":"event","name":"限时礼包","price":10.8,"small":1150,"unitPrice":106.5}],"materials":[{"key":"lingwen","name":"灵纹石","unit":"礼包数量","packageField":"small"}]},{"id":"shengxiao","name":"shengxiao","status":"active","source":"shengxiao(4).html","algorithm":"按扣除现有库存后的生肖石缺口，礼包份数=ceil(缺口/每份生肖石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":33,"stones":338,"unitPrice":10.2},{"id":"half","name":"第二个半价礼包","price":39,"stones":219,"unitPrice":5.6},{"id":"vip14","name":"VIP14礼包","price":558.8,"stones":6288,"unitPrice":11.3},{"id":"event","name":"限时礼包","price":26.8,"stones":188,"unitPrice":7.0}],"materials":[{"key":"stones","name":"生肖石","unit":"礼包产出","packageField":"stones"}]},{"id":"xingzuo","name":"xingzuo","status":"active","source":"xingzuo(4).html","algorithm":"按扣除现有库存后的星座石缺口，礼包份数=ceil(缺口/每份星座石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":30,"stones":900,"unitPrice":30},{"id":"vip9","name":"VIP9礼包","price":79.8,"stones":2588,"unitPrice":32.4},{"id":"event","name":"限时礼包","price":11.8,"stones":388,"unitPrice":32.9}],"materials":[{"key":"stones","name":"星座石","unit":"礼包产出","packageField":"stones"}]},{"id":"ningcui","name":"ningcui","status":"active","source":"ningcui(9).html","algorithm":"三种材料需求分别除以对应单包产出并向上取整，合计小包数；礼包份数=ceil(合计小包数/每份小包数)，显示剩余小包。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":14,"small":994,"yield":[70,40,20]},{"id":"value","name":"越兑越划算","price":96,"big":6,"middle":50,"small":300,"yield":[58,29,12]},{"id":"limited","name":"限时礼包","price":14.3,"big":12,"middle":7,"small":77,"yield":[70,40,20]}],"materials":[{"key":"soul","name":"不灭将魂","unit":"每小包产出","yieldIndex":0},{"key":"wind","name":"龙虎巽风","unit":"每小包产出","yieldIndex":1},{"key":"fire","name":"天心离火","unit":"每小包产出","yieldIndex":2}]},{"id":"beidou","name":"beidou","status":"active","source":"用户于2026-10-30提供的北斗礼包页面截图","algorithm":"礼包购买参数按最新截图录入；材料选择与购买计算仍由北斗原系统页面负责。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":10,"small":710,"guikui":1050,"gupu":450,"beiji":225},{"id":"value","name":"越兑越划算","price":1,"big":1,"middle":1,"small":1,"guikui":1,"gupu":1,"beiji":1},{"id":"event","name":"限时礼包","price":14.3,"big":11,"middle":5,"small":55,"guikui":1050,"gupu":450,"beiji":225}],"materials":[{"key":"guikui","name":"古魁经","unit":"礼包产出","packageField":"guikui"},{"key":"gupu","name":"古朴文","unit":"礼包产出","packageField":"gupu"},{"key":"beiji","name":"北极令","unit":"礼包产出","packageField":"beiji"}]}]};
+const INITIAL_CONFIG = {"configVersion":"1.0.0","updatedAt":"2026-10-30","description":"QQ水浒礼包配置；集中管理各系统礼包参数与规则说明，不重写各原系统购买/返利算法。北斗礼包按用户最新截图录入。","systems":[{"id":"shenshou","name":"shenshou","status":"active","source":"shenshou(20261030-021456).html","algorithm":"小包打开后灵草×91、灵木×39、灵丹×21三选一；普通礼包每份中包可开80个小包；限时礼包每份大包对应1200个小包。返利按原页面逻辑计算，不在中央配置页改写。","rebate":{"enabled":true,"note":"保留原系统返利模式及计算算法。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":80,"small":17040,"herb":91,"wood":39,"pill":21},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":80,"small":16640,"herb":91,"wood":39,"pill":21},{"id":"event","name":"限时礼包","price":13.8,"big":1,"middle":1,"small":1200,"herb":91,"wood":39,"pill":21}],"materials":[{"key":"herb","name":"灵草","unit":"每小包产出","packageField":"herb"},{"key":"wood","name":"灵木","unit":"每小包产出","packageField":"wood"},{"key":"pill","name":"灵丹","unit":"每小包产出","packageField":"pill"}]},{"id":"shenzhuang","name":"shenzhuang","status":"active","source":"shenzhuang(20261030-021456).html","algorithm":"礼包按小包数量及折算黑曜石数量参与购买计算；返利开关与返利上限计算沿用原页面脚本，不在中央配置页重写。","rebate":{"enabled":true,"note":"原页面包含返利方案选择及返利上限计算表；以原系统算法为准。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":100,"small":21300,"extra":0,"obsidian":26625},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":100,"small":20800,"extra":0,"obsidian":26000},{"id":"event","name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"extra":0,"obsidian":1500}],"materials":[{"key":"obsidian","name":"折算黑曜石","unit":"礼包产出","packageField":"obsidian"}]},{"id":"junshi","name":"junshi","status":"active","source":"junshi(20261030-021452).html","algorithm":"小包兑换阳炎符×35、长生符×15、圣人符×7；按三种材料需求分别向上取整计算开包数后求和，再按所选礼包每份小包数向上取整购买。返利开关按原页面逻辑作用于材料需求；原有返利细则保留在系统页面。","rebate":{"enabled":true,"ratio":0.25,"note":"原页面说明返利方案按材料需求的3/4计算；返利细则以原页面实现为准。"},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":213,"middle":80,"small":17040,"yang":35,"chang":15,"sheng":7},{"id":"vip10","name":"VIP10礼包","price":139.8,"big":208,"middle":80,"small":16640,"yang":35,"chang":15,"sheng":7},{"id":"event","name":"限时礼包","price":9.3,"big":1,"middle":1,"small":1200,"yang":35,"chang":15,"sheng":7}],"materials":[{"key":"yang","name":"阳炎符","unit":"每小包产出","packageField":"yang"},{"key":"chang","name":"长生符","unit":"每小包产出","packageField":"chang"},{"key":"sheng","name":"圣人符","unit":"每小包产出","packageField":"sheng"}]},{"id":"jitan","name":"jitan","status":"active","source":"jitan(8).html","algorithm":"返利比例1/4；返利基数最多按390000计算，返还量=floor(min(实际需求,390000)*0.25)，净需求=实际需求-返还量；礼包份数=ceil(净需求/每份小包数)。","rebate":{"enabled":true,"ratio":0.25,"eligibleDemandCap":390000,"returnedCap":97500},"packages":[{"id":"monthly","name":"月初礼包","price":99,"small":21300,"unitPrice":215.2},{"id":"vip10","name":"VIP10礼包","price":27.8,"small":8888,"unitPrice":319.7},{"id":"event","name":"限时礼包","price":10.8,"small":1150,"unitPrice":106.5}],"materials":[{"key":"lingwen","name":"灵纹石","unit":"礼包数量","packageField":"small"}]},{"id":"shengxiao","name":"shengxiao","status":"active","source":"shengxiao(4).html","algorithm":"按扣除现有库存后的生肖石缺口，礼包份数=ceil(缺口/每份生肖石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":33,"stones":338,"unitPrice":10.2},{"id":"half","name":"第二个半价礼包","price":39,"stones":219,"unitPrice":5.6},{"id":"vip14","name":"VIP14礼包","price":558.8,"stones":6288,"unitPrice":11.3},{"id":"event","name":"限时礼包","price":26.8,"stones":188,"unitPrice":7.0}],"materials":[{"key":"stones","name":"生肖石","unit":"礼包产出","packageField":"stones"}]},{"id":"xingzuo","name":"xingzuo","status":"active","source":"xingzuo(4).html","algorithm":"按扣除现有库存后的星座石缺口，礼包份数=ceil(缺口/每份星座石数量)；不含返利。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"第二个半价礼包","price":30,"stones":900,"unitPrice":30},{"id":"vip9","name":"VIP9礼包","price":79.8,"stones":2588,"unitPrice":32.4},{"id":"event","name":"限时礼包","price":11.8,"stones":388,"unitPrice":32.9}],"materials":[{"key":"stones","name":"星座石","unit":"礼包产出","packageField":"stones"}]},{"id":"ningcui","name":"ningcui","status":"active","source":"ningcui(9).html","algorithm":"三种材料需求分别除以对应单包产出并向上取整，合计小包数；礼包份数=ceil(合计小包数/每份小包数)，显示剩余小包。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":14,"small":994,"yield":[70,40,20]},{"id":"value","name":"越兑越划算","price":96,"big":6,"middle":50,"small":300,"yield":[58,29,12]},{"id":"limited","name":"限时礼包","price":14.3,"big":12,"middle":7,"small":77,"yield":[70,40,20]}],"materials":[{"key":"soul","name":"不灭将魂","unit":"每小包产出","yieldIndex":0},{"key":"wind","name":"龙虎巽风","unit":"每小包产出","yieldIndex":1},{"key":"fire","name":"天心离火","unit":"每小包产出","yieldIndex":2}]},{"id":"beidou","name":"beidou","status":"active","source":"用户于2026-10-30提供的北斗礼包页面截图","algorithm":"礼包购买参数按最新截图录入；材料选择与购买计算仍由北斗原系统页面负责。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":10,"small":710,"guikui":1050,"gupu":450,"beiji":225},{"id":"value","name":"越兑越划算","price":1,"big":1,"middle":1,"small":1,"guikui":1,"gupu":1,"beiji":1},{"id":"event","name":"限时礼包","price":14.3,"big":11,"middle":5,"small":55,"guikui":1050,"gupu":450,"beiji":225}],"materials":[{"key":"guikui","name":"古魁经","unit":"礼包产出","packageField":"guikui"},{"key":"gupu","name":"古朴文","unit":"礼包产出","packageField":"gupu"},{"key":"beiji","name":"北极令","unit":"礼包产出","packageField":"beiji"}]}]};
+// 启动时优先恢复本浏览器此前保存的配置；无有效保存数据时才使用内置初始配置。
 let config = structuredClone(INITIAL_CONFIG);
+try {
+  const saved = localStorage.getItem("qqshGiftConfig");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    if (parsed && Array.isArray(parsed.systems) && parsed.systems.length) config = parsed;
+  }
+} catch (e) {
+  console.warn("读取本地礼包配置失败，将使用内置初始配置。", e);
+}
+// 星座原“月初礼包”按最新要求更名，兼容浏览器中已保存的旧配置。
+const xingzuoConfig=config.systems.find(x=>x.id==="xingzuo");
+const xingzuoMonthly=xingzuoConfig?.packages?.find(p=>p.id==="monthly");
+if(xingzuoMonthly) xingzuoMonthly.name="第二个半价礼包";
 let activeId = config.systems[0]?.id;
 const labels = {shenshou:"神兽",shenzhuang:"神装",junshi:"军师",jitan:"祭坛",shengxiao:"生肖",xingzuo:"星座",ningcui:"凝萃",beidou:"北斗"};
 const fieldLabels = {price:"价格",big:"大包",middle:"中包",small:"小包",guikui:"古魁经",gupu:"古朴文",beiji:"北极令",stones:"材料数量",yang:"阳炎符",chang:"长生符",sheng:"圣人符",obsidian:"折算黑曜石",extra:"附加黑曜石",yield:"产出数量",bigCount:"大包数量",middleCount:"中包数量",smallPerMiddle:"每中包小包数",unitPrice:"单价(个/元)"};
@@ -138,27 +152,87 @@ function renderNav(){
 function fieldInput(key,value,index){
   const s=current();
   const material=s.materials?.find(m=>m.packageField===key);
-  const label=material ? material.name : (fieldLabels[key] || key);
+  const label=(s.id==="shenzhuang"&&key==="extra")?"附加":(material ? material.name : (fieldLabels[key] || key));
   const val=Array.isArray(value)?JSON.stringify(value):value;
-  return `<div class="field"><label>${esc(label)}</label><input data-field="${esc(key)}" data-index="${index}" value="${esc(val)}" ${typeof value==="number"?"type=number step=any":""} ${(s.id==="shenzhuang"&&key==="obsidian")||((s.id==="shengxiao"||s.id==="xingzuo"||s.id==="jitan")&&key==="unitPrice")?"readonly":""}></div>`;
+  const visible=(s.fieldVisibility?.[key]!==false);
+  return `<div class="field"><div class="field-top"><label title="${esc(label)}">${esc(label)}</label></div><input data-field="${esc(key)}" data-index="${index}" value="${esc(val)}" ${typeof value==="number"?"type=number step=any":""} ${(s.id==="shenzhuang"&&key==="obsidian")||((s.id==="shengxiao"||s.id==="xingzuo"||s.id==="jitan")&&key==="unitPrice")?"readonly":""}><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="${esc(key)}" ${visible?"checked":""}>展示</label></div>`;
+}
+function translatePackageId(name, fallbackIndex=0){
+  const raw=String(name||"").trim();
+  const exact={
+    "月初礼包":"monthly","第二个半价礼包":"half","第二份半价礼包":"half",
+    "半价礼包":"half","VIP9礼包":"vip9","VIP10礼包":"vip10","VIP14礼包":"vip14",
+    "限时礼包":"event","活动礼包":"event","活动大厅限时礼包":"event",
+    "越兑越划算":"value","新礼包":"new_package"
+  };
+  if(exact[raw]) return exact[raw];
+  let id=raw.toLowerCase()
+    .replace(/vip\s*(\d+)/g,"vip$1")
+    .replace(/第二个半价|第二份半价|半价/g,"half")
+    .replace(/月初|月度|每月/g,"monthly")
+    .replace(/限时|活动/g,"event")
+    .replace(/越兑越划算|超值|划算/g,"value")
+    .replace(/礼包/g,"package")
+    .replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+  if(!id || !/[a-z]/.test(id)) id=`package_${fallbackIndex+1}`;
+  return id;
+}
+function makeUniquePackageId(name, index, system){
+  const base=translatePackageId(name,index);
+  const used=(system.packages||[]).filter((p,i)=>i!==index).map(p=>p.id);
+  if(!used.includes(base)) return base;
+  let n=2; while(used.includes(`${base}_${n}`)) n++;
+  return `${base}_${n}`;
+}
+function applyDefaultFieldVisibility(){
+  for(const sys of config.systems||[]){
+    sys.fieldVisibility=sys.fieldVisibility||{};
+    if(sys.id==="shenshou") for(const key of ["herb","wood","pill"]) if(!(key in sys.fieldVisibility)) sys.fieldVisibility[key]=false;
+    if(sys.id==="junshi") for(const key of ["yang","chang","sheng"]) if(!(key in sys.fieldVisibility)) sys.fieldVisibility[key]=false;
+  }
+}
+applyDefaultFieldVisibility();
+function syncShenzhuangObsidian(){
+  const s=config.systems?.find(x=>x.id==="shenzhuang");
+  if(!s)return;
+  (s.packages||[]).forEach(p=>{
+    p.obsidian=(Number(p.small)||0)*1.25+(Number(p.extra)||0);
+  });
 }
 function renderPackages(){
   const s=current();
+  if(s?.id==="shenzhuang") syncShenzhuangObsidian();
   if(!s.packages?.length){$("packageCards").innerHTML='<div class="empty">当前系统尚无礼包配置。点击“添加礼包”录入。</div>';return}
   $("packageCards").innerHTML=s.packages.map((p,i)=>{
     const fields=Object.entries(p).filter(([k,v])=>k!=="id"&&k!=="name"&&typeof v!=="object");
     const arrays=Object.entries(p).filter(([k,v])=>Array.isArray(v) && k!=="yield");
-    return `<section class="package"><div class="package-head"><input data-pname="${i}" value="${esc(p.name||'新礼包')}" aria-label="礼包名称"><button class="btn danger" data-remove="${i}">删除</button></div><div class="fieldgrid">${fields.map(([k,v])=>fieldInput(k,v,i)).join("")}${(p.yield||[]).map((v,j)=>`<div class="field"><label>${esc((s.materials||[]).find(x=>x.yieldIndex===j)?.name||("材料"+(j+1)))}</label><input type="number" step="any" data-yield-index="${j}" data-index="${i}" value="${esc(v)}"></div>`).join("")}${arrays.map(([k,v])=>fieldInput(k,v,i)).join("")}</div><div class="package-foot"><span class="sub">礼包 ${i+1}</span><span class="sub">${esc(p.id||"")}</span></div></section>`
+    return `<section class="package"><div class="package-head"><span class="package-index">礼包 ${i+1}</span><input data-pname="${i}" value="${esc(p.name||'新礼包')}" aria-label="礼包名称"><span class="package-code">${esc(p.id||"")}</span><button class="btn danger" data-remove="${i}">删除</button></div><div class="fieldgrid">${fields.map(([k,v])=>fieldInput(k,v,i)).join("")}${(p.yield||[]).map((v,j)=>{const key=`yield:${j}`,label=(s.materials||[]).find(x=>x.yieldIndex===j)?.name||("材料"+(j+1)),visible=s.fieldVisibility?.[key]!==false;return `<div class="field"><div class="field-top"><label title="${esc(label)}">${esc(label)}</label></div><input type="number" step="any" data-yield-index="${j}" data-index="${i}" value="${esc(v)}"><label class="field-visible" title="勾选后在对应系统的礼包信息中展示"><input type="checkbox" data-visible-field="${esc(key)}" ${visible?"checked":""}>展示</label></div>`}).join("")}${arrays.map(([k,v])=>fieldInput(k,v,i)).join("")}</div></section>`
   }).join("");
   document.querySelectorAll(".fieldgrid").forEach(grid=>{grid.style.setProperty("--field-count", Math.max(1, grid.children.length));});
-  document.querySelectorAll("[data-pname]").forEach(el=>el.onchange=()=>{s.packages[+el.dataset.pname].name=el.value;renderNav()});
+  document.querySelectorAll("[data-visible-field]").forEach(el=>el.onchange=()=>{
+    s.fieldVisibility=s.fieldVisibility||{};
+    const key=el.dataset.visibleField;
+    s.fieldVisibility[key]=!!el.checked;
+    saveGiftConfig();
+    document.querySelectorAll(`[data-visible-field="${CSS.escape(key)}"]`).forEach(x=>{x.checked=el.checked;});
+  });
+  document.querySelectorAll("[data-pname]").forEach(el=>{
+    const updateName=()=>{s.packages[+el.dataset.pname].name=el.value;saveGiftConfig();};
+    el.oninput=updateName;
+    el.onchange=()=>{
+      const index=+el.dataset.pname;
+      updateName();
+      s.packages[index].id=makeUniquePackageId(el.value,index,s);
+      renderPackages();renderNav();saveGiftConfig();
+    };
+  });
   document.querySelectorAll("[data-field]").forEach(el=>el.onchange=()=>{
     const p=s.packages[+el.dataset.index],k=el.dataset.field,old=p[k],raw=el.value;
     if(Array.isArray(old)){try{p[k]=JSON.parse(raw)}catch{toast("数组格式不正确");el.value=JSON.stringify(old)}}
     else if(typeof old==="number"){p[k]=raw===""?0:Number(raw);if(!Number.isFinite(p[k]))p[k]=0}
     else p[k]=raw;
     if(s.id==="shenzhuang"&&(k==="small"||k==="extra")){
-      p.obsidian=Math.round((Number(p.small)||0)*1.25+(Number(p.extra)||0));
+      p.obsidian=(Number(p.small)||0)*1.25+(Number(p.extra)||0);
       renderPackages();
     }
     if((s.id==="shengxiao"||s.id==="xingzuo")&&(k==="price"||k==="stones")){
@@ -177,13 +251,13 @@ function renderPackages(){
   });
   document.querySelectorAll("[data-remove]").forEach(el=>el.onclick=()=>{if(confirm("确定删除这个礼包？")){s.packages.splice(+el.dataset.remove,1);render()}});
 }
-function exportAllData(){return {configVersion:config.configVersion,updatedAt:config.updatedAt,description:config.description,systems:config.systems};}
+function exportAllData(){syncShenzhuangObsidian();return {configVersion:config.configVersion,updatedAt:config.updatedAt,description:config.description,systems:config.systems};}
 function exportDownload(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function setExportPreview(data,filename){const text=JSON.stringify(data,null,2);$("exportPreview").value=text;exportDownload(filename,data);$("exportStatus").textContent="已生成并下载："+filename;}
 function showExportView(){
   currentView="export";$("editorView").hidden=true;$("exportView").hidden=false;renderNav();
   $("exportSystems").innerHTML=config.systems.map(s=>`<div class="export-system"><div><strong>${esc(labels[s.id]||s.name||s.id)}</strong><br><small>${(s.packages||[]).length} 个礼包</small></div><button class="btn" data-export-id="${esc(s.id)}">导出 JSON</button></div>`).join("");
-  document.querySelectorAll("[data-export-id]").forEach(b=>b.onclick=()=>{const sys=config.systems.find(x=>x.id===b.dataset.exportId);if(sys)setExportPreview({configVersion:config.configVersion,updatedAt:config.updatedAt,system:sys},`gift-${sys.id}.json`)});
+  document.querySelectorAll("[data-export-id]").forEach(b=>b.onclick=()=>{const sys=config.systems.find(x=>x.id===b.dataset.exportId);if(sys){syncShenzhuangObsidian();setExportPreview({configVersion:config.configVersion,updatedAt:config.updatedAt,system:sys},`gift-${sys.id}.json`)}});
 }
 $("exportAllJson").onclick=()=>setExportPreview(exportAllData(),"gift-config.json");
 $("copyAllJson").onclick=async()=>{const text=JSON.stringify(exportAllData(),null,2);$("exportPreview").value=text;try{await navigator.clipboard.writeText(text);$("exportStatus").textContent="全部礼包 JSON 已复制。"}catch(e){$("exportStatus").textContent="JSON 已显示，请手动复制预览内容。"}};
@@ -192,7 +266,6 @@ $("copyExportPreview").onclick=async()=>{const text=$("exportPreview").value.tri
 function render(){
   currentView="system";$("editorView").hidden=false;$("exportView").hidden=true;renderNav();const s=current();if(!s)return;
   $("systemTitle").textContent=labels[s.id]||s.name||s.id;
-  $("systemSubtitle").textContent=`${(s.packages||[]).length} 个礼包 · 来源：${s.source||"未注明"}`;
   $("sysName").value=s.id;$("sysStatus").value=s.status||"active";
   $("algorithm").value=s.algorithm||"";
   const r=s.rebate||{};$("rebateEnabled").value=String(!!r.enabled);
@@ -204,16 +277,45 @@ $("algorithm").onchange=e=>current().algorithm=e.target.value;
 $("rebateEnabled").onchange=e=>{current().rebate=current().rebate||{};current().rebate.enabled=e.target.value==="true"};
 function updateRebate(id,key){$(id).onchange=e=>{const s=current();s.rebate=s.rebate||{};if(e.target.value==="")delete s.rebate[key];else s.rebate[key]=Number(e.target.value)}}
 updateRebate("rebateRatio","ratio");updateRebate("rebateCap","eligibleDemandCap");updateRebate("rebateReturned","returnedCap");
-$("addPackage").onclick=()=>{const s=current();s.packages=s.packages||[];s.packages.push(s.id==="shenzhuang"?{id:"new-"+Date.now(),name:"新礼包",price:0,big:0,middle:0,small:0,extra:0,obsidian:0}:{id:"new-"+Date.now(),name:"新礼包",price:0});render()};
+$("addPackage").onclick=()=>{
+  const s=current();s.packages=s.packages||[];
+  // 以当前系统已有礼包为模板，完整继承字段结构；数值清零，名称可自行编辑。
+  const template=s.packages.find(p=>p&&typeof p==="object")||{};
+  const fresh={};
+  for(const [key,value] of Object.entries(template)){
+    if(key==="id") fresh.id="new-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);
+    else if(key==="name") fresh.name="新礼包";
+    else if(typeof value==="number") fresh[key]=0;
+    else if(Array.isArray(value)) fresh[key]=value.map(v=>typeof v==="number"?0:v);
+    else if(typeof value==="string") fresh[key]="";
+    else if(value&&typeof value==="object") fresh[key]=structuredClone(value);
+    else fresh[key]=value;
+  }
+  if(!fresh.id)fresh.id="new-"+Date.now();
+  if(!("name" in fresh))fresh.name="新礼包";
+  if(!("price" in fresh))fresh.price=0;
+  s.packages.push(fresh);saveGiftConfig();render();
+};
 function download(name,text,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 $("exportJson").onclick=()=>{const out=JSON.stringify(config,null,2);download("gift-config.json",out,"application/json;charset=utf-8");$("importText").value=out;toast("已生成 gift-config.json")};
 $("importJson").onclick=()=>{try{const next=JSON.parse($("importText").value);if(!Array.isArray(next.systems))throw Error("缺少 systems 数组");config=next;activeId=config.systems[0]?.id;render();toast("JSON 导入成功")}catch(e){alert("导入失败："+e.message)}};
 $("resetConfig").onclick=()=>{if(confirm("恢复到本页面内置的初始配置？")){config=structuredClone(INITIAL_CONFIG);activeId=config.systems[0]?.id;render();toast("已恢复初始配置")}};
 // 同源页面共享最新礼包配置，导出页优先读取用户最近编辑的内容。
-function saveGiftConfig(){try{localStorage.setItem("qqshGiftConfig",JSON.stringify(config));}catch(e){}}
+function saveGiftConfig(){
+  try {
+    localStorage.setItem("qqshGiftConfig", JSON.stringify(config));
+    return true;
+  } catch(e) {
+    console.warn("保存本地礼包配置失败。", e);
+    return false;
+  }
+}
 document.addEventListener("change",()=>setTimeout(saveGiftConfig,0));
 document.addEventListener("click",()=>setTimeout(saveGiftConfig,0));
+window.addEventListener("pagehide", saveGiftConfig);
+window.addEventListener("beforeunload", saveGiftConfig);
 render();
+// 仅在没有历史保存数据时写入初始配置，避免覆盖用户已有修改。
 saveGiftConfig();
 </script>
 </body></html>

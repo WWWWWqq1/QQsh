@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.2.3</title>
+<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.4.13</title>
 <style>
 :root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002}
 *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s}
@@ -232,7 +232,7 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
 @media(max-width:560px){.gift-result{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:9px 7px}.gift-result .purchase-count,.gift-result .purchase-total,.gift-result .remaining-obsidian{font-size:11px}.gift-result .purchase-count b,.gift-result .purchase-total b,.gift-result .remaining-obsidian b{font-size:14px}.gift-result .remaining-obsidian{padding-left:5px}}
 @media(max-width:760px){.gift-facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.gift-facts span{padding:7px 3px;font-size:11px}.gift-facts b,.gift-facts .gift-convert b{font-size:13px}}
 
-/* VIP10礼包不展示附加黑曜石字段 */
+/* VIP10礼包不展示附加字段 */
 .gift-card[data-plan="vip10"] .gift-extra{display:none!important}
 
 /* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
@@ -248,7 +248,7 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
 #rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
 
 
-/* v2.1.10：礼包购买方案仅显示小包、折算黑曜石、附加黑曜石，三项固定横排 */
+/* v2.1.10：礼包购买方案仅显示小包、折算黑曜石、附加，三项固定横排 */
 .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;min-width:0}
 .gift-facts>span{min-width:0;white-space:nowrap;overflow:visible;text-overflow:clip;padding:8px 2px!important;text-align:center;font-size:clamp(9px,1.1vw,12px)!important}
 .gift-facts>span b{display:block;white-space:nowrap;overflow:visible;text-overflow:clip;font-size:clamp(11px,1.25vw,15px)!important;overflow-wrap:normal!important;word-break:keep-all!important}
@@ -367,6 +367,750 @@ html,body{max-width:100%;overflow-x:hidden!important;}
 body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </style>
 
+
+<style>
+/* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
+.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 4px;align-items:stretch}
+.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:10px;min-width:0;min-height:98px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--card) 88%,var(--panel));box-shadow:inset 3px 0 0 color-mix(in srgb,var(--primary) 68%,transparent)}
+.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);font-weight:600}
+.rebate-cap-stat strong{display:block;min-width:0;font-size:clamp(22px,2vw,28px);line-height:1.2;color:var(--primary);font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.rebate-cap-stat strong output{display:inline;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;white-space:normal}
+@media(max-width:620px){.rebate-cap-summary{grid-template-columns:1fr;gap:9px}.rebate-cap-stat{min-height:0;padding:13px 15px;gap:6px}.rebate-cap-stat strong{font-size:22px}}
+
+/* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
+#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
+#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
+#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
+
+</style>
+<style>
+/* v2.1.3：云母石隐藏后，剩余材料指标自动铺满整行 */
+#micaDemandMetric[hidden]{display:none!important}
+.summary{width:100%;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:560px){.summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.metric{padding:10px}.metric span{font-size:12px}.metric strong{font-size:clamp(13px,3.5vw,20px)}}
+@media(max-width:700px){.stock-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
+#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
+#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
+#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
+
+</style>
+<style>
+/* v2.1.12：汇总栏移除大包/中包，增加附加总计及返利优惠金额 */
+.gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;overflow-x:auto;align-items:stretch}
+.gift-summary-item{min-width:0}
+.gift-summary-item span{white-space:nowrap}
+.gift-summary-item strong{white-space:nowrap;overflow-wrap:normal}
+.rebate-discount-item{display:none}
+body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+body.rebate-enabled .rebate-discount-item{display:flex}
+@media(max-width:760px){.gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(105px,1fr))!important;overflow-x:auto;scrollbar-width:thin}.gift-summary-item{padding:8px 4px}.gift-summary-item span{font-size:11px!important}.gift-summary-item strong{font-size:14px!important}}
+</style>
+<style>
+/* v2.1.16：材料需求总览标题行增加重置库存按钮，沿用重置等级按钮样式 */
+.stock-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;margin-bottom:12px;min-width:0}
+.stock-summary-heading h2{margin:0!important;min-width:0}
+.stock-summary-heading #resetStock{flex:0 0 auto;white-space:nowrap}
+@media(max-width:420px){.stock-summary-heading{gap:8px}.stock-summary-heading h2{font-size:17px}.stock-summary-heading #resetStock{padding:9px 11px;font-size:13px}}
+</style>
+<style>
+/* v2.1.19：礼包卡片信息仅展示小包与折算黑曜石，不展示附加 */
+.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+<style>
+/* v2.2.1：礼包卡片内三项数据均显示并固定一排 */
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
+.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 3px!important}}
+</style>
+<style>
+/* v2.1.22：单次返利上限计算底部三个汇总指标在所有屏幕宽度下始终同排，无横向滚动 */
+.rebate-cap-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(4px,1.6vw,14px)!important;width:100%;min-width:0;overflow:hidden}
+.rebate-cap-stat{min-width:0!important;max-width:100%;box-sizing:border-box;padding:clamp(7px,1.5vw,16px)!important;gap:clamp(4px,1vw,10px)!important}
+.rebate-cap-stat span{font-size:clamp(8px,1.7vw,13px)!important;line-height:1.25!important;overflow-wrap:anywhere}
+.rebate-cap-stat strong{font-size:clamp(12px,3vw,28px)!important;line-height:1.2!important;overflow-wrap:anywhere;word-break:normal}
+.rebate-cap-stat strong output{white-space:normal!important}
+@media(max-width:380px){.rebate-cap-summary{gap:4px!important}.rebate-cap-stat{padding:7px 5px!important}.rebate-cap-stat span{font-size:8px!important}.rebate-cap-stat strong{font-size:12px!important}}
+
+/* 移动端：升级数据查询表格横向滚动时固定第一列（等级） */
+@media(max-width:700px){
+  .table-wrap table{border-collapse:separate;border-spacing:0;}
+  .table-wrap th:first-child,.table-wrap td:first-child{
+    position:sticky;left:0;text-align:center;
+    background:var(--panel);z-index:3;
+    box-shadow:1px 0 0 var(--line);
+  }
+  .table-wrap tbody td:first-child{background:var(--card);}
+  .table-wrap thead th:first-child{top:0;z-index:5;background:var(--panel);}
+}
+</style>
+<style>
+/* v2.2.2：补齐附加小卡片，并强制三项同排展示 */
+@media(max-width:700px){.card{contain-intrinsic-size:auto 360px}.gear,.progress div,.home-return,.theme-toggle{transition:none!important}.home-return,.theme-toggle{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+
+/* v2.1.3：材料需求总览各指标卡片内容水平居中 */
+.summary .metric{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
+.summary .metric>span,
+.summary .metric>strong{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+}
+
+
+/* v2.1.4：修复深色主题下返利礼包选中卡片仍使用浅色主题配色的问题 */
+
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top strong,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span{
+  color:var(--ink)!important;
+}
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top>b,
+body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span>strong{
+  color:var(--primary)!important;
+}
+
+</style>
+<style>
+/* v2.2.2：礼包卡片实际补回附加小卡片；三项始终三列同排 */
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
+.gift-grid .gift-facts>.gift-extra-field{display:flex!important;visibility:visible!important;opacity:1!important}
+.gift-grid .gift-facts>.gift-convert{display:flex!important;grid-column:auto!important}
+.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>.gift-extra-field{display:flex!important}}
+</style>
+
+<style id="v2-3-9-flat-gift-fields">
+/* v2.3.10：礼包信息字段取消独立小卡片，仅保留文字与数值 */
+.gift-grid .gift-facts>span,
+#rebateSelectorCard .rebate-gift-facts>span{
+  min-height:0!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+}
+.gift-grid .gift-facts,
+#rebateSelectorCard .rebate-gift-facts{
+  align-items:center!important;
+  gap:8px!important;
+}
+.gift-grid .gift-facts .gift-convert,
+.gift-grid .gift-facts .gift-extra-field{
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.gift-grid .gift-facts>span b,
+#rebateSelectorCard .rebate-gift-facts>span>strong{
+  width:auto!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  text-align:center!important;
+}
+@media(max-width:760px){
+  .gift-grid .gift-facts,
+  #rebateSelectorCard .rebate-gift-facts{gap:5px!important}
+}
+</style>
+
+
+<style id="v2-3-10-mobile-summary-no-wrap">
+/* v2.3.10：折算黑曜石标签仅在移动端分两行；汇总卡片数值禁止换行 */
+.obsidian-label-break{display:inline}
+.gift-summary-row .gift-summary-item span,
+.gift-summary-row .gift-summary-item strong{
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+.gift-summary-row .gift-summary-item strong{
+  display:block!important;
+  max-width:100%!important;
+  font-size:24px!important;
+  letter-spacing:normal!important;
+}
+@media(max-width:760px){
+  body.rebate-enabled #giftSummaryRow .gift-summary-item strong{
+    font-size:16px!important;
+  }
+}
+</style>
+
+
+<style>
+/* v2.1.17：礼包卡片仅用高亮表示选中；精简礼包信息；汇总费用/数量按返利状态着色 */
+.gift-card.active::before{content:none!important;display:none!important}
+.gift-card .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.gift-card .gift-facts .gift-convert{grid-column:auto!important}
+.gift-summary-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;width:100%!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
+.gift-summary-item{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.gift-summary-item span{white-space:normal!important;overflow-wrap:anywhere!important}
+.gift-summary-item strong{white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+/* 未开启返利：费用、购买数量使用红色提示 */
+.gift-summary-item:nth-child(1),.gift-summary-item:nth-child(2){border-color:#e05252!important;background:color-mix(in srgb,#e05252 10%,var(--card))!important}
+.gift-summary-item:nth-child(1) strong,.gift-summary-item:nth-child(2) strong{color:#d93636!important}
+/* 开启返利：费用、购买数量与节省金额使用绿色提示 */
+body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+body.rebate-enabled .gift-summary-item:nth-child(1),body.rebate-enabled .gift-summary-item:nth-child(2),body.rebate-enabled .gift-summary-item.rebate-discount-item{border-color:#2f9e62!important;background:color-mix(in srgb,#2f9e62 11%,var(--card))!important}
+body.rebate-enabled .gift-summary-item:nth-child(1) strong,body.rebate-enabled .gift-summary-item:nth-child(2) strong,body.rebate-enabled .gift-summary-item.rebate-discount-item strong{color:#21864d!important}
+body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!important}
+@media(max-width:760px){
+ .gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;padding:6px!important;overflow:hidden!important}
+ body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+ .gift-summary-item{padding:7px 2px!important;gap:4px!important}
+ .gift-summary-item span{font-size:clamp(8px,2.1vw,11px)!important;line-height:1.25!important}
+ .gift-summary-item strong{font-size:clamp(10px,2.7vw,14px)!important;line-height:1.2!important}
+}
+@media(max-width:360px){.gift-summary-row,body.rebate-enabled .gift-summary-row{gap:2px!important;padding:4px!important}.gift-summary-item{padding:6px 1px!important}.gift-summary-item span{font-size:8px!important}.gift-summary-item strong{font-size:10px!important}}
+</style>
+<style>
+/* v2.1.20：单次返利上限计算的礼包选择卡片，与礼包购买方案卡片样式同步 */
+#rebateSelectorCard .rebate-plan-select{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(5px,1vw,10px)!important;align-items:stretch!important;margin:12px 0 16px!important}
+#rebateSelectorCard .rebate-plan-option{display:block!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;padding:10px 8px!important;text-align:left!important;white-space:normal!important;overflow:visible!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel)!important;color:var(--ink)!important;font:inherit!important;box-shadow:none!important}
+
+#rebateSelectorCard .rebate-gift-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;padding:0 0 7px!important;margin:0 0 7px!important;border-bottom:1px solid var(--line)!important;white-space:nowrap!important}
+#rebateSelectorCard .rebate-gift-top>strong{min-width:0!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;font-weight:750!important;white-space:nowrap!important}
+#rebateSelectorCard .rebate-gift-top>b{flex:0 0 auto!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;color:#a96b00!important;white-space:nowrap!important}
+#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important}
+#rebateSelectorCard .rebate-gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:7px 2px!important;border-radius:8px!important;background:var(--card)!important;color:var(--muted)!important;font-size:clamp(9px,.9vw,12px)!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important}
+#rebateSelectorCard .rebate-gift-facts>span>strong{display:block!important;max-width:100%!important;color:var(--ink)!important;font-size:clamp(10px,1vw,14px)!important;line-height:1.2!important;font-weight:800!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important}
+@media(max-width:520px){#rebateSelectorCard .rebate-plan-select{gap:6px!important}#rebateSelectorCard .rebate-plan-option{padding:8px 5px!important}#rebateSelectorCard .rebate-plan-option.active{padding:7px 4px!important}#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{gap:3px!important}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important}}
+</style>
+<style>
+/* v2.1.23：单次返利上限计算表格适配容器宽度，禁止横向滚动条 */
+#rebateSelectorCard .table-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important;overflow-y:visible!important;scrollbar-width:none!important}
+#rebateSelectorCard .table-wrap::-webkit-scrollbar{display:none!important}
+#rebateSelectorCard .rebate-cap-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{min-width:0!important;max-width:100%!important;padding:clamp(3px,1vw,10px)!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;box-sizing:border-box!important}
+#rebateSelectorCard .rebate-cap-table th:first-child{width:22%!important}
+#rebateSelectorCard .rebate-cap-table td{width:19.5%!important}
+#rebateSelectorCard .rebate-cap-table input{display:block;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;padding:clamp(3px,1vw,8px)!important;font-size:clamp(9px,2.3vw,14px)!important}
+#rebateSelectorCard .rebate-cap-table output{display:inline-block;max-width:100%;font-size:clamp(9px,2.4vw,14px)!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+@media(max-width:560px){#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{font-size:clamp(8px,2.2vw,11px)!important;padding:3px 2px!important}#rebateSelectorCard .rebate-cap-table th:first-child{width:23%!important}#rebateSelectorCard .rebate-cap-table td{width:19.25%!important}}
+</style>
+<style>
+/* v2.2.1：礼包卡片及返利选择卡片固定展示小包、附加、折算黑曜石三项 */
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
+.gift-grid .gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;white-space:nowrap!important;box-sizing:border-box!important}
+#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}
+#rebateSelectorCard .rebate-gift-facts>span{min-width:0!important;white-space:nowrap!important}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 2px!important;font-size:clamp(8px,2.1vw,11px)!important}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.4vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important}}
+</style>
+<style>
+/* v2.2.3：礼包选中状态仅高亮边框，不改变卡片及内部结果区背景 */
+.gift-grid .gift-card.active{
+  border:2px solid var(--primary)!important;
+  padding:13px!important;
+  background:var(--panel)!important;
+  box-shadow:none!important;
+}
+.gift-grid .gift-card.active .gift-result{
+  border-color:var(--line)!important;
+  background:var(--card)!important;
+}
+.gift-grid .gift-card.active::before{content:none!important;display:none!important}
+</style>
+<style>
+/* v2.2.4：礼包字段在小卡片内全部居中；礼包汇总卡片加高并放大数值 */
+.gift-grid .gift-facts>span,
+#rebateSelectorCard .rebate-gift-facts>span{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  min-height:68px!important;
+  padding:10px 5px!important;
+  box-sizing:border-box!important;
+}
+.gift-grid .gift-facts>span *,
+#rebateSelectorCard .rebate-gift-facts>span *{
+  width:100%!important;
+  text-align:center!important;
+  float:none!important;
+}
+.gift-grid .gift-facts>span b,
+#rebateSelectorCard .rebate-gift-facts>span>strong{
+  display:block!important;
+  font-size:clamp(14px,1.5vw,18px)!important;
+  line-height:1.25!important;
+  margin:4px 0 0!important;
+}
+.gift-summary-item{
+  min-height:76px!important;
+  padding:13px 8px!important;
+  gap:8px!important;
+  box-sizing:border-box!important;
+}
+.gift-summary-item strong{
+  font-size:clamp(19px,2vw,25px)!important;
+  line-height:1.2!important;
+}
+@media(max-width:760px){
+  .gift-grid .gift-facts>span,
+  #rebateSelectorCard .rebate-gift-facts>span{min-height:62px!important;padding:8px 3px!important}
+  .gift-grid .gift-facts>span b,
+  #rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(12px,3vw,16px)!important}
+  .gift-summary-item{min-height:72px!important;padding:10px 4px!important}
+  .gift-summary-item strong{font-size:clamp(17px,4vw,22px)!important}
+}
+</style>
+<style id="v2-2-7-gift-summary-number-size">
+/* v2.2.7：礼包汇总数字统一调整为24px */
+#giftSummaryRow .gift-summary-item strong,
+body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+.gift-summary-row#giftSummaryRow .gift-summary-item strong{
+    font-size:24px!important;
+  line-height:1.12!important;
+  font-weight:900!important;
+}
+@media(max-width:760px){
+  #giftSummaryRow .gift-summary-item strong,
+  body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+  .gift-summary-row#giftSummaryRow .gift-summary-item strong{
+    font-size:24px!important;
+    line-height:1.12!important;
+  }
+}
+@media(max-width:360px){
+  #giftSummaryRow .gift-summary-item strong,
+  body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+  .gift-summary-row#giftSummaryRow .gift-summary-item strong{
+    font-size:24px!important;
+  }
+}
+</style>
+
+
+<style id="v2-3-13-summary-font-fixed">
+/* v2.3.13：汇总卡片数字在返利开关两种状态下统一固定为16px */
+html body #giftSummaryRow .gift-summary-item strong,
+html body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
+html body #giftSummaryRow.gift-summary-row .gift-summary-item strong,
+html body.rebate-enabled #giftSummaryRow.gift-summary-row .gift-summary-item strong{
+  font-size:16px!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+}
+</style>
+
+
+<style id="v2-3-20-gift-ui-rebuilt">
+/* 礼包信息区重写：字段名称与数值分成独立水平行，三列位置一一对应 */
+.gift-grid .gift-facts{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:5px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:12px 0!important;
+  padding:0!important;
+}
+.gift-grid .gift-facts-labels,
+.gift-grid .gift-facts-values{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.55fr) minmax(0,1.2fr)!important;
+  align-items:center!important;
+  justify-items:center!important;
+  gap:2px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:0!important;
+  margin:0!important;
+}
+.gift-grid .gift-facts-labels>span{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:2.5em!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--muted)!important;
+  font-size:clamp(8px,2.1vw,11px)!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  white-space:normal!important;
+  word-break:keep-all!important;
+  box-sizing:border-box!important;
+}
+.gift-grid .gift-facts-labels .obsidian-label-break{display:inline!important}
+.gift-grid .gift-facts-values>b{
+  display:block!important;
+  justify-self:center!important;
+  align-self:center!important;
+  width:max-content!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#ef332c!important;
+  font-size:clamp(9px,2.25vw,12px)!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  font-variant-numeric:tabular-nums!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:380px){
+  .gift-grid .gift-facts-labels,
+  .gift-grid .gift-facts-values{
+    grid-template-columns:minmax(0,1.2fr) minmax(0,.5fr) minmax(0,1.2fr)!important;
+    gap:1px!important;
+  }
+  .gift-grid .gift-facts-labels>span{font-size:8px!important}
+  .gift-grid .gift-facts-values>b{font-size:9px!important;letter-spacing:-.25px!important}
+}
+</style>
+
+
+<style id="v2-4-6-rebate-package-sync">
+/* v2.4.6：返利礼包卡片与上方礼包卡片共用三字段 DOM、数据与布局 */
+html body #rebateSelectorCard .rebate-plan-option,
+html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option{
+  background:var(--panel)!important;
+  color:var(--ink)!important;
+  box-shadow:none!important;
+}
+html body #rebateSelectorCard .rebate-plan-option.active,
+html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
+  background:var(--panel)!important;
+  color:var(--ink)!important;
+  border:2px solid #b77908!important;
+  box-shadow:0 0 0 1px #b7790820!important;
+}
+#rebateSelectorCard .rebate-plan-option.active .rebate-gift-top,
+#rebateSelectorCard .rebate-plan-option.active .rebate-gift-top strong,
+#rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts{
+  color:var(--ink)!important;
+}
+#rebateSelectorCard .rebate-gift-facts{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:5px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#rebateSelectorCard .rebate-gift-facts .gift-facts-labels,
+#rebateSelectorCard .rebate-gift-facts .gift-facts-values{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:center!important;
+  justify-items:center!important;
+  gap:2px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#rebateSelectorCard .rebate-gift-facts .gift-facts-labels>span{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:2.5em!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--muted)!important;
+  font-size:clamp(8px,2.1vw,11px)!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow:visible!important;
+  max-width:none!important;
+}
+#rebateSelectorCard .rebate-gift-facts .obsidian-label-break{display:inline!important}
+#rebateSelectorCard .rebate-gift-facts .gift-facts-values>b{
+  display:block!important;
+  justify-self:center!important;
+  width:max-content!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#ef332c!important;
+  font-size:clamp(9px,2.25vw,12px)!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  font-variant-numeric:tabular-nums!important;
+}
+</style>
+
+
+<style id="v2-4-8-gift-columns-and-price">
+/* v2.4.9：名称行与数值行严格共用等宽三列；礼包价格红色 */
+.gift-grid .gift-facts-labels,
+.gift-grid .gift-facts-values,
+#rebateSelectorCard .rebate-gift-facts .gift-facts-labels,
+#rebateSelectorCard .rebate-gift-facts .gift-facts-values{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:center!important;
+  justify-items:stretch!important;
+  gap:2px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+.gift-grid .gift-facts-labels>span,
+#rebateSelectorCard .rebate-gift-facts .gift-facts-labels>span{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+}
+.gift-grid .gift-facts-labels>span:last-child,
+#rebateSelectorCard .rebate-gift-facts .gift-facts-labels>span:last-child{
+  font-size:clamp(8px,2.1vw,11px)!important;
+  letter-spacing:-.35px!important;
+}
+.gift-grid .gift-facts-values>b,
+#rebateSelectorCard .rebate-gift-facts .gift-facts-values>b{
+  justify-self:center!important;
+  align-self:center!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  font-variant-numeric:tabular-nums!important;
+}
+</style>
+
+
+<style id="v2-4-10-rebate-cards-use-gift-card-ui">
+/* 返利区直接复用上方礼包购买方案卡片样式，不再维护第二套字段 UI */
+#rebateSelectorCard .rebate-plan-select{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:clamp(5px,1vw,10px)!important;
+  align-items:stretch!important;
+}
+#rebateSelectorCard .rebate-plan-option.gift-card{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  padding:14px!important;
+  border:1px solid var(--line)!important;
+  border-top:1px solid var(--line)!important;
+  border-radius:13px!important;
+  background:var(--panel)!important;
+  color:var(--ink)!important;
+  box-shadow:none!important;
+  font:inherit!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  transform:none!important;
+}
+#rebateSelectorCard .rebate-plan-option.gift-card.active{
+  border:2px solid var(--primary)!important;
+  padding:13px!important;
+  background:var(--panel)!important;
+  color:var(--ink)!important;
+  box-shadow:none!important;
+}
+#rebateSelectorCard .rebate-plan-option.gift-card:before{content:none!important;display:none!important}
+#rebateSelectorCard .rebate-plan-option .gift-top{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:6px!important;
+  padding:0 0 7px!important;
+  margin:0 0 7px!important;
+  border-bottom:1px solid var(--line)!important;
+}
+#rebateSelectorCard .rebate-plan-option .gift-top strong{
+  min-width:0!important;
+  font-size:clamp(10px,1.15vw,16px)!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  color:var(--ink)!important;
+}
+#rebateSelectorCard .rebate-plan-option .gift-top .gift-price{
+  justify-self:end!important;
+  font-size:clamp(12px,1.35vw,20px)!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  white-space:nowrap!important;
+}
+#rebateSelectorCard .rebate-plan-option .gift-facts{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:5px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#rebateSelectorCard .rebate-plan-option .gift-facts-labels,
+#rebateSelectorCard .rebate-plan-option .gift-facts-values{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:center!important;
+  justify-items:center!important;
+  gap:2px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#rebateSelectorCard .rebate-plan-option .gift-facts-labels>span{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--muted)!important;
+  font-size:clamp(8px,2.1vw,11px)!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#rebateSelectorCard .rebate-plan-option .gift-facts-values>b{
+  display:block!important;
+  justify-self:center!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#ef332c!important;
+  font-size:clamp(9px,2.25vw,12px)!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  font-variant-numeric:tabular-nums!important;
+}
+@media(max-width:420px){
+  #rebateSelectorCard .rebate-plan-option.gift-card{padding:8px 6px!important}
+  #rebateSelectorCard .rebate-plan-option.gift-card.active{padding:7px 5px!important}
+  #rebateSelectorCard .rebate-plan-option .gift-top strong{font-size:12px!important}
+  #rebateSelectorCard .rebate-plan-option .gift-top .gift-price{font-size:13px!important}
+  #rebateSelectorCard .rebate-plan-option .gift-facts-labels>span{font-size:8px!important}
+  #rebateSelectorCard .rebate-plan-option .gift-facts-values>b{font-size:10px!important}
+}
+
+/* 价格颜色遵循中央 JSON 状态：本地回退红色，JSON 成功恢复主题色 */
+body.gift-data-fallback #rebateSelectorCard .gift-price{color:#d93025!important}
+body.gift-data-json #rebateSelectorCard .gift-price{color:var(--primary)!important}
+</style>
+
+
+<style id="v2-4-10-rebate-table-flat-values">
+/* 返利计算表：移除数值 output 的独立小卡片外观，仅保留表格单元格内容 */
+#rebateSelectorCard .rebate-cap-table td output,
+#rebateSelectorCard .rebate-cap-table td output[id]{
+  display:inline!important;
+  min-width:0!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:inherit;
+  font:inherit!important;
+  line-height:inherit!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#rebateSelectorCard .rebate-cap-table tr:nth-last-child(-n+3) td output{
+  color:#16803d!important;
+  font-weight:800!important;
+}
+</style>
+
+
+<style id="v2-4-13-rebate-summary-gold-text">
+/* 三个返利汇总卡片的标题与数值统一使用参考图中的金棕色 */
+.rebate-cap-summary .rebate-cap-stat,
+.rebate-cap-summary .rebate-cap-stat span,
+.rebate-cap-summary .rebate-cap-stat strong,
+.rebate-cap-summary .rebate-cap-stat strong output{
+  color:#9a6a13!important;
+}
+</style>
+
 </head>
 <body><div class="floating-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜主题" title="切换昼夜主题"><span aria-hidden="true">☀️</span><span>切换昼夜</span></button><a class="home-return" href="index.html" aria-label="返回首页" title="返回首页">
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -377,8 +1121,8 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 <section class="card"><h2>等级选择</h2><p class="hint">拖动滑块选择当前等级和目标等级，实时计算四种神装的升级材料需求。</p><div class="levels"><div class="field"><label for="fromLevel">当前等级</label><div class="slider-row"><input id="fromLevel" max="80" min="1" type="range" value="30"/><input id="fromLevelNumber" class="level-number" type="number" min="1" max="80" step="1" value="30" aria-label="直接输入当前等级"></div><div class="ends"><span>1 级</span><span>80 级</span></div></div><div class="field"><label for="toLevel">目标等级</label><div class="slider-row"><input id="toLevel" max="80" min="1" type="range" value="45"/><input id="toLevelNumber" class="level-number" type="number" min="1" max="80" step="1" value="45" aria-label="直接输入目标等级"></div><div class="ends"><span>1 级</span><span>80 级</span></div></div></div><div class="exp-panel"><h3>现有经验条</h3><div class="exp-halves"><div class="exp-half"><label for="currentExp">当前等级已获得经验</label><input id="currentExp" type="number" min="0" step="1" value="0" /><input id="currentExpSlider" class="exp-range" aria-label="拖动调整当前经验" type="range" min="0" max="100" value="0" /><div class="exp-range-ends"><span>0</span><span id="expSliderMax">100</span></div></div><div class="exp-half"><div class="exp-caption"><span id="expFraction">0 / 0</span><span id="expPercent">0%</span></div><div class="exp-bar"><div id="expBarFill"></div></div><div class="exp-caption"><span>本级经验上限</span><span id="expDenominator">0</span></div></div></div><p class="hint" style="margin:8px 0 0">经验会按当前等级的“增长”与四种材料“次需”折算，抵扣本级已完成的升级消耗。</p></div><div class="actions"><button class="secondary" id="resetLevels">重置等级</button><button class="secondary" id="resetExp">重置经验条</button></div></section>
 <section class="card"><h2>已有材料库存</h2><p class="hint">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p><div class="stock-grid"><div class="stock"><label for="micaStock">云母石库存</label><input id="micaStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="micaStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整云母石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="goldStock">乌金石库存</label><input id="goldStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="goldStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整乌金石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="diamondStock">金刚石库存</label><input id="diamondStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="diamondStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整金刚石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="obsidianStock">黑曜石库存</label><input id="obsidianStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="obsidianStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整黑曜石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div></div><div class="stock-summary-heading"><h2>材料需求总览</h2><button class="secondary" id="resetStock">重置库存</button></div><div class="summary"><div class="metric gold" id="micaDemandMetric"><span>云母石</span><strong id="needMica">待计算</strong></div><div class="metric gold"><span>乌金石</span><strong id="needGold">待计算</strong></div><div class="metric gold"><span>金刚石</span><strong id="needDiamond">待计算</strong></div><div class="metric gold"><span>黑曜石</span><strong id="needObsidian">待计算</strong></div><div class="metric gold"><span>折算黑曜石</span><strong id="needConvertedObsidian">待计算</strong></div></div><div class="progress"><div id="levelProgress"></div></div><p class="hint" id="progressText" style="margin:10px 0 0">等级进度：1 / 80</p></section>
 
-<section class="card gift-purchase-card" id="giftPurchaseCard"><div class="gift-card-heading"><h2 id="giftModeHeading">礼包购买方案</h2><button type="button" class="rebate-toggle" id="rebateToggle" aria-pressed="false"><span class="rebate-toggle-dot"></span><span id="rebateToggleText">返利未开启 · 点击开启</span></button></div><p class="hint">礼包开出的小包可获得乌金石，按乌金石 ÷ 4 折算为黑曜石；附加为礼包额外赠送的黑曜石。点击卡片选择方案，自动计算所需购买数量和总价。</p><div class="gift-mode no-rebate-mode" id="noRebateMode"><div class="gift-grid" id="giftGrid"><button class="gift-card active" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><span>小包 <b>21,300</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,625</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button class="gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><span>小包 <b>20,800</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,000</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button class="gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><span>小包 <b>1,200</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>1,500</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div></div>
-<div class="gift-mode rebate-mode" id="rebateGiftMode" hidden><div class="gift-grid" id="rebateGiftGrid"><button class="gift-card active rebate-gift-card" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><span>小包 <b>21,300</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,625</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><span>小包 <b>20,800</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>26,000</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10RebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10RebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10RebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><span>小包 <b>1,200</b></span><span class="gift-extra-field">附加黑曜石 <b>0</b></span><span class="gift-convert">折算黑曜石 <b>1,500</b></span></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRebateRemaining">0</b></div></div></button></div></div><div class="gift-summary-row" id="giftSummaryRow" aria-label="礼包实际购买及材料数量汇总">
+<section class="card gift-purchase-card" id="giftPurchaseCard"><div class="gift-card-heading"><h2 id="giftModeHeading">礼包购买方案</h2><button type="button" class="rebate-toggle" id="rebateToggle" aria-pressed="false"><span class="rebate-toggle-dot"></span><span id="rebateToggleText">返利未开启 · 点击开启</span></button></div><p class="hint">礼包开出的小包可获得乌金石，按乌金石 ÷ 4 折算为黑曜石；附加为礼包额外赠送的黑曜石。点击卡片选择方案，自动计算所需购买数量和总价。</p><div class="gift-mode no-rebate-mode" id="noRebateMode"><div class="gift-grid" id="giftGrid"><button class="gift-card active" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button class="gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button class="gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div></div>
+<div class="gift-mode rebate-mode" id="rebateGiftMode" hidden><div class="gift-grid" id="rebateGiftGrid"><button class="gift-card active rebate-gift-card" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10RebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10RebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10RebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRebateRemaining">0</b></div></div></button></div></div><div class="gift-summary-row" id="giftSummaryRow" aria-label="礼包实际购买及材料数量汇总">
 <div class="gift-summary-item"><span>预计费用</span><strong id="summaryCost">0</strong></div>
 <div class="gift-summary-item"><span>购买礼包数量</span><strong id="summaryCount">0</strong></div>
 
@@ -388,9 +1132,9 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </div></section>
 <section class="card rebate-cap-card" id="rebateSelectorCard"><h2>单次返利上限计算</h2><p class="hint">选择礼包后，下方参数、材料数量、返利消耗及购买成本会同步切换。</p>
 <div class="rebate-plan-select" role="group" aria-label="选择返利计算礼包">
-<button type="button" class="rebate-plan-option active" data-rebate-plan="monthly"><span class="rebate-gift-top"><strong>月初礼包</strong><b>¥99</b></span><span class="rebate-gift-facts"><span>小包<strong>21,300</strong></span><span>折算黑曜石<strong>26,625</strong></span></span></button>
-<button type="button" class="rebate-plan-option" data-rebate-plan="vip10"><span class="rebate-gift-top"><strong>VIP10礼包</strong><b>¥139.8</b></span><span class="rebate-gift-facts"><span>小包<strong>20,800</strong></span><span>折算黑曜石<strong>26,000</strong></span></span></button>
-<button type="button" class="rebate-plan-option" data-rebate-plan="event"><span class="rebate-gift-top"><strong>限时礼包</strong><b>¥9.3</b></span><span class="rebate-gift-facts"><span>小包<strong>1,200</strong></span><span>折算黑曜石<strong>1,500</strong></span></span></button>
+<button type="button" class="gift-card rebate-plan-option active" data-plan="monthly" data-rebate-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div></button>
+<button type="button" class="gift-card rebate-plan-option" data-plan="vip10" data-rebate-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div></button>
+<button type="button" class="gift-card rebate-plan-option" data-plan="event" data-rebate-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div></button>
 </div>
 <!-- v2.1.21：移除单次返利上限计算中的礼包基础参数展示区及对应输出节点。 -->
 <div class="table-wrap"><table class="rebate-cap-table" id="rebateCalcTable"><thead><tr><th>项目</th><th>云母石</th><th>乌金石</th><th>金刚石</th><th>黑曜石</th></tr></thead><tbody>
@@ -403,8 +1147,8 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 <tr><th>吃满所需限时包</th><td><output id="rcPacks0">15.625</output></td><td><output id="rcPacks1">21.5625</output></td><td><output id="rcPacks2">13.5</output></td><td><output id="rcPacks3">12.6</output></td></tr>
 </tbody></table></div>
 <div class="rebate-cap-summary" aria-label="返利计算汇总">
-<div class="rebate-cap-stat"><span>合计限时包（向上取整）</span><strong><output id="rcTotalPacks">64</output></strong></div>
-<div class="rebate-cap-stat"><span>吃满所需元子</span><strong><output id="rcTotalCost">¥8,947.2</output></strong></div>
+<div class="rebate-cap-stat"><span>合计限时包</span><strong><output id="rcTotalPacks">64</output></strong></div>
+<div class="rebate-cap-stat"><span>吃满所需</span><strong><output id="rcTotalCost">¥8,947.2</output></strong></div>
 <div class="rebate-cap-stat"><span>节省金额</span><strong><output id="rcSaved">¥2,982.4</output></strong></div>
 </div>
 </section>
@@ -524,7 +1268,7 @@ function syncGiftSummary(){
  const remaining=remEl?.textContent||'0';
  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
  set('summaryCost',cost.replace(/[¥￥]/g,''));set('summaryCount',count);
- // 获得黑曜石按礼包内黑曜石总量计算：折算黑曜石 + 附加黑曜石。
+ // 获得黑曜石按礼包内黑曜石总量计算：折算黑曜石 + 附加。
  set('summaryExtra',fmt(count*(p.obsidian||0)));set('summaryRemaining',remaining);
  const normalCostEl=document.getElementById(selectedPlan+'Cost');
  const normalCost=Number((normalCostEl?.textContent||'0').replace(/[^0-9.]/g,''))||0;
@@ -532,7 +1276,7 @@ function syncGiftSummary(){
  const discount=Math.max(0,normalCost-currentCost);
  set('summaryDiscount',discount.toLocaleString('zh-CN',{minimumFractionDigits:0,maximumFractionDigits:2}));
 }
-document.querySelectorAll('.gear').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.gear').forEach(b=>b.classList.toggle('active',b===btn));selectedGear=btn.dataset.gear;update()}));document.querySelectorAll('.gift-card').forEach(btn=>btn.addEventListener('click',()=>{selectedPlan=btn.dataset.plan;update()}));['micaStock','goldStock','diamondStock','obsidianStock'].forEach(id=>{const num=$(id),range=$(id+'Slider');num.addEventListener('input',()=>{num.value=Math.min(500000,Math.max(0,Number(num.value)||0));range.value=num.value;update()});range.addEventListener('input',()=>{num.value=range.value;update()});});['fromLevel','toLevel','currentExp','currentExpSlider'].forEach(id=>$(id).addEventListener('input',()=>{if(id==='currentExpSlider')$('currentExp').value=$('currentExpSlider').value;else if(id==='currentExp')$('currentExpSlider').value=$('currentExp').value;update()}));
+document.querySelectorAll('.gear').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.gear').forEach(b=>b.classList.toggle('active',b===btn));selectedGear=btn.dataset.gear;update()}));document.querySelectorAll('#giftGrid .gift-card,#rebateGiftGrid .gift-card').forEach(btn=>btn.addEventListener('click',()=>{selectedPlan=btn.dataset.plan;update()}));['micaStock','goldStock','diamondStock','obsidianStock'].forEach(id=>{const num=$(id),range=$(id+'Slider');num.addEventListener('input',()=>{num.value=Math.min(500000,Math.max(0,Number(num.value)||0));range.value=num.value;update()});range.addEventListener('input',()=>{num.value=range.value;update()});});['fromLevel','toLevel','currentExp','currentExpSlider'].forEach(id=>$(id).addEventListener('input',()=>{if(id==='currentExpSlider')$('currentExp').value=$('currentExpSlider').value;else if(id==='currentExp')$('currentExpSlider').value=$('currentExp').value;update()}));
 $('fromLevelNumber').addEventListener('change',()=>{$('fromLevel').value=Math.max(1,Math.min(80,Math.round(Number($('fromLevelNumber').value)||1)));update()});
 $('toLevelNumber').addEventListener('change',()=>{$('toLevel').value=Math.max(Number($('fromLevel').value)||1,Math.min(80,Math.round(Number($('toLevelNumber').value)||1)));update()});
 $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLevel').value=45;update()});$('resetExp').addEventListener('click',()=>{$('currentExp').value=0;update()});renderTable();update();
@@ -560,7 +1304,7 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
   const packs=actual.map((v,i)=>{const per=mat[i]*(points[i]||0)/(costpoints[i]||Infinity);return per>0?v/per:0});
   packs.forEach((v,i)=>{const el=id('Packs'+i);if(el)el.textContent=Number.isFinite(v)?v.toLocaleString('zh-CN',{minimumFractionDigits:1,maximumFractionDigits:1}):'—'});
   const raw=packs.reduce((a,b)=>a+b,0),total=Math.ceil(raw-1e-10),cost=total*price;
-  if(id('TotalPacks'))id('TotalPacks').textContent=fmt(total)+' 份';
+  if(id('TotalPacks'))id('TotalPacks').textContent=fmt(total)+' 个';
   if(id('TotalCost'))id('TotalCost').textContent=money(cost);
   if(id('Saved'))id('Saved').textContent=money(cost/3);
   document.querySelectorAll('[data-rebate-plan]').forEach(btn=>btn.classList.toggle('active',btn.dataset.rebatePlan===selected));
@@ -595,61 +1339,13 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
 })();
 </script><!-- v2.1.16：移除汇总数值单位并增加重置库存按钮 -->
 
-<style>
-/* v2.1.17：礼包卡片仅用高亮表示选中；精简礼包信息；汇总费用/数量按返利状态着色 */
-.gift-card.active::before{content:none!important;display:none!important}
-.gift-card .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-.gift-card .gift-facts .gift-convert{grid-column:auto!important}
-.gift-summary-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;width:100%!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
-.gift-summary-item{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
-.gift-summary-item span{white-space:normal!important;overflow-wrap:anywhere!important}
-.gift-summary-item strong{white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important}
-/* 未开启返利：费用、购买数量使用红色提示 */
-.gift-summary-item:nth-child(1),.gift-summary-item:nth-child(2){border-color:#e05252!important;background:color-mix(in srgb,#e05252 10%,var(--card))!important}
-.gift-summary-item:nth-child(1) strong,.gift-summary-item:nth-child(2) strong{color:#d93636!important}
-/* 开启返利：费用、购买数量与节省金额使用绿色提示 */
-body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important}
-body.rebate-enabled .gift-summary-item:nth-child(1),body.rebate-enabled .gift-summary-item:nth-child(2),body.rebate-enabled .gift-summary-item.rebate-discount-item{border-color:#2f9e62!important;background:color-mix(in srgb,#2f9e62 11%,var(--card))!important}
-body.rebate-enabled .gift-summary-item:nth-child(1) strong,body.rebate-enabled .gift-summary-item:nth-child(2) strong,body.rebate-enabled .gift-summary-item.rebate-discount-item strong{color:#21864d!important}
-body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!important}
-@media(max-width:760px){
- .gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;padding:6px!important;overflow:hidden!important}
- body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important}
- .gift-summary-item{padding:7px 2px!important;gap:4px!important}
- .gift-summary-item span{font-size:clamp(8px,2.1vw,11px)!important;line-height:1.25!important}
- .gift-summary-item strong{font-size:clamp(10px,2.7vw,14px)!important;line-height:1.2!important}
-}
-@media(max-width:360px){.gift-summary-row,body.rebate-enabled .gift-summary-row{gap:2px!important;padding:4px!important}.gift-summary-item{padding:6px 1px!important}.gift-summary-item span{font-size:8px!important}.gift-summary-item strong{font-size:10px!important}}
-</style>
 
 
-<style>
-/* v2.1.20：单次返利上限计算的礼包选择卡片，与礼包购买方案卡片样式同步 */
-#rebateSelectorCard .rebate-plan-select{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(5px,1vw,10px)!important;align-items:stretch!important;margin:12px 0 16px!important}
-#rebateSelectorCard .rebate-plan-option{display:block!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;padding:10px 8px!important;text-align:left!important;white-space:normal!important;overflow:visible!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel)!important;color:var(--ink)!important;font:inherit!important;box-shadow:none!important}
-#rebateSelectorCard .rebate-plan-option.active{border:2px solid #b77908!important;padding:9px 7px!important;background:#fff5df!important;color:#273246!important;box-shadow:0 0 0 1px #b7790820!important}
-#rebateSelectorCard .rebate-gift-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;padding:0 0 7px!important;margin:0 0 7px!important;border-bottom:1px solid var(--line)!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-top>strong{min-width:0!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;font-weight:750!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-top>b{flex:0 0 auto!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;color:#a96b00!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important}
-#rebateSelectorCard .rebate-gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:7px 2px!important;border-radius:8px!important;background:var(--card)!important;color:var(--muted)!important;font-size:clamp(9px,.9vw,12px)!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-facts>span>strong{display:block!important;max-width:100%!important;color:var(--ink)!important;font-size:clamp(10px,1vw,14px)!important;line-height:1.2!important;font-weight:800!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important}
-@media(max-width:520px){#rebateSelectorCard .rebate-plan-select{gap:6px!important}#rebateSelectorCard .rebate-plan-option{padding:8px 5px!important}#rebateSelectorCard .rebate-plan-option.active{padding:7px 4px!important}#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{gap:3px!important}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important}}
-</style>
 
 
-<style>
-/* v2.1.23：单次返利上限计算表格适配容器宽度，禁止横向滚动条 */
-#rebateSelectorCard .table-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important;overflow-y:visible!important;scrollbar-width:none!important}
-#rebateSelectorCard .table-wrap::-webkit-scrollbar{display:none!important}
-#rebateSelectorCard .rebate-cap-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
-#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{min-width:0!important;max-width:100%!important;padding:clamp(3px,1vw,10px)!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;box-sizing:border-box!important}
-#rebateSelectorCard .rebate-cap-table th:first-child{width:22%!important}
-#rebateSelectorCard .rebate-cap-table td{width:19.5%!important}
-#rebateSelectorCard .rebate-cap-table input{display:block;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;padding:clamp(3px,1vw,8px)!important;font-size:clamp(9px,2.3vw,14px)!important}
-#rebateSelectorCard .rebate-cap-table output{display:inline-block;max-width:100%;font-size:clamp(9px,2.4vw,14px)!important;overflow-wrap:anywhere!important;word-break:break-word!important}
-@media(max-width:560px){#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{font-size:clamp(8px,2.2vw,11px)!important;padding:3px 2px!important}#rebateSelectorCard .rebate-cap-table th:first-child{width:23%!important}#rebateSelectorCard .rebate-cap-table td{width:19.25%!important}}
-</style>
+
+
+
 
 
 <script id="shenzhuang-gift-config-loader">
@@ -657,6 +1353,12 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
   const fallback = JSON.parse(JSON.stringify(giftPlans));
   let shenzhuangFieldVisibility={};
   const fmtGift = n => Number(n||0).toLocaleString('zh-CN');
+  function renderGiftFacts(data){
+    const labels={small:'小包',extra:'附加',obsidian:'折算黑曜石'};
+    const fields=Object.entries(labels).filter(([key])=>data[key]!==undefined&&(key==='extra'||shenzhuangFieldVisibility[key]!==false));
+    const label=(key,text)=>key==='obsidian'?'折算黑曜石':text;
+    return `<div class="gift-facts-labels">${fields.map(([key,text])=>`<span>${label(key,text)}</span>`).join('')}</div><div class="gift-facts-values">${fields.map(([key])=>`<b>${fmtGift(data[key]||0)}</b>`).join('')}</div>`;
+  }
   function applyGiftConfig(system){
     if(!system || !Array.isArray(system.packages) || !system.packages.length) return false;
     const byId=Object.fromEntries(system.packages.filter(p=>p&&p.id).map(p=>[p.id,p]));
@@ -669,29 +1371,22 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
       giftPlans[id]={...old,...p,
         price:Number(p.price??old.price??0),big:Number(p.big??old.big??0),
         middle:Number(p.middle??old.middle??0),small:Number(p.small??old.small??0),
-        extra:Number(p.extra??old.extra??0),obsidian:Number(p.obsidian??old.obsidian??0)};
+        extra:Number(p.extra??old.extra??0),
+        obsidian:Number(p.small??old.small??0)*1.25+Number(p.extra??old.extra??0)};
       const data=giftPlans[id];
       document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{
         const name=card.querySelector('.gift-top strong'),price=card.querySelector('.gift-price');
         if(name)name.textContent=data.name||old.name||id;
         if(price){price.textContent='¥'+data.price.toLocaleString('zh-CN',{maximumFractionDigits:2});price.hidden=shenzhuangFieldVisibility.price===false;}
         const facts=card.querySelector('.gift-facts');
-        if(facts){
-          const labels={big:'大包',middle:'中包',small:'小包',extra:'附加黑曜石',obsidian:'折算黑曜石'};
-          facts.innerHTML=Object.entries(labels).filter(([key])=>['small','extra','obsidian'].includes(key)&&data[key]!==undefined&&(key==='extra'||shenzhuangFieldVisibility[key]!==false))
-            .map(([key,label])=>`<span>${label} <b>${fmtGift(data[key]||0)}</b></span>`).join('');
-        }
+        if(facts) facts.innerHTML=renderGiftFacts(data);
       });
       document.querySelectorAll('.rebate-plan-option[data-rebate-plan="'+id+'"]').forEach(card=>{
-        const name=card.querySelector('.rebate-gift-top strong'),price=card.querySelector('.rebate-gift-top b');
+        const name=card.querySelector('.gift-top strong'),price=card.querySelector('.gift-price');
         if(name)name.textContent=data.name||old.name||id;
-        if(price){price.textContent='¥'+data.price.toLocaleString('zh-CN',{maximumFractionDigits:2});price.closest('.rebate-gift-top')?.toggleAttribute('hidden',shenzhuangFieldVisibility.price===false);}
-        const facts=card.querySelector('.rebate-gift-facts');
-        if(facts){
-          const labels={big:'大包',middle:'中包',small:'小包',extra:'附加黑曜石',obsidian:'折算黑曜石'};
-          facts.innerHTML=Object.entries(labels).filter(([key])=>['small','extra','obsidian'].includes(key)&&data[key]!==undefined&&(key==='extra'||shenzhuangFieldVisibility[key]!==false))
-            .map(([key,label])=>`<span>${label} <strong>${fmtGift(data[key]||0)}</strong></span>`).join('');
-        }
+        if(price){price.textContent='¥'+data.price.toLocaleString('zh-CN',{maximumFractionDigits:2});price.closest('.gift-top')?.toggleAttribute('hidden',shenzhuangFieldVisibility.price===false);}
+        const facts=card.querySelector('.gift-facts');
+        if(facts) facts.innerHTML=renderGiftFacts(data);
       });
     }
     document.querySelectorAll('#giftGrid,#rebateGiftGrid').forEach(grid=>{
@@ -712,6 +1407,26 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
     }catch(error){
       setGiftDataSource('fallback');
       Object.assign(giftPlans,JSON.parse(JSON.stringify(fallback)));
+      /* JSON 配置不可用时，也必须把内置礼包数据渲染到上方和返利两处卡片 */
+      Object.keys(giftPlans).forEach(id=>{
+        const data=giftPlans[id];
+        document.querySelectorAll('.gift-card[data-plan="'+id+'"]').forEach(card=>{
+          const name=card.querySelector('.gift-top strong');
+          const price=card.querySelector('.gift-price');
+          if(name) name.textContent=data.name||id;
+          if(price) price.textContent='¥'+Number(data.price||0).toLocaleString('zh-CN',{maximumFractionDigits:2});
+          const facts=card.querySelector('.gift-facts');
+          if(facts) facts.innerHTML=renderGiftFacts(data);
+        });
+        document.querySelectorAll('.rebate-plan-option[data-rebate-plan="'+id+'"]').forEach(card=>{
+          const name=card.querySelector('.gift-top strong');
+          const price=card.querySelector('.gift-price');
+          if(name) name.textContent=data.name||id;
+          if(price) price.textContent='¥'+Number(data.price||0).toLocaleString('zh-CN',{maximumFractionDigits:2});
+          const facts=card.querySelector('.gift-facts');
+          if(facts) facts.innerHTML=renderGiftFacts(data);
+        });
+      });
       if(typeof update==='function') update();
       console.warn('[神装] 礼包配置读取失败，使用内置默认数据：',error);
     }
@@ -768,247 +1483,20 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 </script>
 
 
-<style>
-/* v2.2.1：礼包卡片及返利选择卡片固定展示小包、附加黑曜石、折算黑曜石三项 */
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
-.gift-grid .gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;white-space:nowrap!important;box-sizing:border-box!important}
-#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}
-#rebateSelectorCard .rebate-gift-facts>span{min-width:0!important;white-space:nowrap!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 2px!important;font-size:clamp(8px,2.1vw,11px)!important}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.4vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important}}
-</style>
 
 
 
 
-<style>
-/* v2.2.3：礼包选中状态仅高亮边框，不改变卡片及内部结果区背景 */
-.gift-grid .gift-card.active{
-  border:2px solid var(--primary)!important;
-  padding:13px!important;
-  background:var(--panel)!important;
-  box-shadow:none!important;
-}
-.gift-grid .gift-card.active .gift-result{
-  border-color:var(--line)!important;
-  background:var(--card)!important;
-}
-.gift-grid .gift-card.active::before{content:none!important;display:none!important}
-</style>
-
-
-<style>
-/* v2.2.4：礼包字段在小卡片内全部居中；礼包汇总卡片加高并放大数值 */
-.gift-grid .gift-facts>span,
-#rebateSelectorCard .rebate-gift-facts>span{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-  text-align:center!important;
-  min-height:68px!important;
-  padding:10px 5px!important;
-  box-sizing:border-box!important;
-}
-.gift-grid .gift-facts>span *,
-#rebateSelectorCard .rebate-gift-facts>span *{
-  width:100%!important;
-  text-align:center!important;
-  float:none!important;
-}
-.gift-grid .gift-facts>span b,
-#rebateSelectorCard .rebate-gift-facts>span>strong{
-  display:block!important;
-  font-size:clamp(14px,1.5vw,18px)!important;
-  line-height:1.25!important;
-  margin:4px 0 0!important;
-}
-.gift-summary-item{
-  min-height:76px!important;
-  padding:13px 8px!important;
-  gap:8px!important;
-  box-sizing:border-box!important;
-}
-.gift-summary-item strong{
-  font-size:clamp(19px,2vw,25px)!important;
-  line-height:1.2!important;
-}
-@media(max-width:760px){
-  .gift-grid .gift-facts>span,
-  #rebateSelectorCard .rebate-gift-facts>span{min-height:62px!important;padding:8px 3px!important}
-  .gift-grid .gift-facts>span b,
-  #rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(12px,3vw,16px)!important}
-  .gift-summary-item{min-height:72px!important;padding:10px 4px!important}
-  .gift-summary-item strong{font-size:clamp(17px,4vw,22px)!important}
-}
-</style>
 
 
 
 
-<style id="v2-2-7-gift-summary-number-size">
-/* v2.2.7：礼包汇总数字统一调整为24px */
-#giftSummaryRow .gift-summary-item strong,
-body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
-.gift-summary-row#giftSummaryRow .gift-summary-item strong{
-    font-size:24px!important;
-  line-height:1.12!important;
-  font-weight:900!important;
-}
-@media(max-width:760px){
-  #giftSummaryRow .gift-summary-item strong,
-  body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
-  .gift-summary-row#giftSummaryRow .gift-summary-item strong{
-    font-size:24px!important;
-    line-height:1.12!important;
-  }
-}
-@media(max-width:360px){
-  #giftSummaryRow .gift-summary-item strong,
-  body.rebate-enabled #giftSummaryRow .gift-summary-item strong,
-  .gift-summary-row#giftSummaryRow .gift-summary-item strong{
-    font-size:24px!important;
-  }
-}
-</style>
+
+
+
+
+
+
 </body>
-<!-- 当前版本：v2.2.7 -->
+<!-- 当前版本：v2.4.0 -->
 </html>
-<style>
-/* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
-.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 4px;align-items:stretch}
-.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:10px;min-width:0;min-height:98px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--card) 88%,var(--panel));box-shadow:inset 3px 0 0 color-mix(in srgb,var(--primary) 68%,transparent)}
-.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);font-weight:600}
-.rebate-cap-stat strong{display:block;min-width:0;font-size:clamp(22px,2vw,28px);line-height:1.2;color:var(--primary);font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.rebate-cap-stat strong output{display:inline;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;white-space:normal}
-@media(max-width:620px){.rebate-cap-summary{grid-template-columns:1fr;gap:9px}.rebate-cap-stat{min-height:0;padding:13px 15px;gap:6px}.rebate-cap-stat strong{font-size:22px}}
-
-/* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
-
-</style>
-
-<style>
-/* v2.1.3：云母石隐藏后，剩余材料指标自动铺满整行 */
-#micaDemandMetric[hidden]{display:none!important}
-.summary{width:100%;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr))}
-@media(max-width:560px){.summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.metric{padding:10px}.metric span{font-size:12px}.metric strong{font-size:clamp(13px,3.5vw,20px)}}
-@media(max-width:700px){.stock-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-/* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
-
-</style>
-
-<style>
-/* v2.1.12：汇总栏移除大包/中包，增加附加黑曜石总计及返利优惠金额 */
-.gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;overflow-x:auto;align-items:stretch}
-.gift-summary-item{min-width:0}
-.gift-summary-item span{white-space:nowrap}
-.gift-summary-item strong{white-space:nowrap;overflow-wrap:normal}
-.rebate-discount-item{display:none}
-body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(0,1fr))!important}
-body.rebate-enabled .rebate-discount-item{display:flex}
-@media(max-width:760px){.gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(105px,1fr))!important;overflow-x:auto;scrollbar-width:thin}.gift-summary-item{padding:8px 4px}.gift-summary-item span{font-size:11px!important}.gift-summary-item strong{font-size:14px!important}}
-</style>
-
-
-<style>
-/* v2.1.16：材料需求总览标题行增加重置库存按钮，沿用重置等级按钮样式 */
-.stock-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;margin-bottom:12px;min-width:0}
-.stock-summary-heading h2{margin:0!important;min-width:0}
-.stock-summary-heading #resetStock{flex:0 0 auto;white-space:nowrap}
-@media(max-width:420px){.stock-summary-heading{gap:8px}.stock-summary-heading h2{font-size:17px}.stock-summary-heading #resetStock{padding:9px 11px;font-size:13px}}
-</style>
-<script>
-// v2.1.16：一键将四种材料库存及滑块重置为 0，并刷新材料需求
-(()=>{const btn=document.getElementById('resetStock');if(!btn)return;btn.addEventListener('click',()=>{['micaStock','goldStock','diamondStock','obsidianStock'].forEach(id=>{const input=document.getElementById(id);const slider=document.getElementById(id+'Slider');if(input)input.value=0;if(slider)slider.value=0;});if(typeof update==='function')update();});})();
-</script>
-
-
-<style>
-/* v2.1.19：礼包卡片信息仅展示小包与折算黑曜石，不展示附加黑曜石 */
-.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-</style>
-<style>
-/* v2.2.1：礼包卡片内三项数据均显示并固定一排 */
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
-.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 3px!important}}
-</style>
-
-<style>
-/* v2.1.22：单次返利上限计算底部三个汇总指标在所有屏幕宽度下始终同排，无横向滚动 */
-.rebate-cap-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(4px,1.6vw,14px)!important;width:100%;min-width:0;overflow:hidden}
-.rebate-cap-stat{min-width:0!important;max-width:100%;box-sizing:border-box;padding:clamp(7px,1.5vw,16px)!important;gap:clamp(4px,1vw,10px)!important}
-.rebate-cap-stat span{font-size:clamp(8px,1.7vw,13px)!important;line-height:1.25!important;overflow-wrap:anywhere}
-.rebate-cap-stat strong{font-size:clamp(12px,3vw,28px)!important;line-height:1.2!important;overflow-wrap:anywhere;word-break:normal}
-.rebate-cap-stat strong output{white-space:normal!important}
-@media(max-width:380px){.rebate-cap-summary{gap:4px!important}.rebate-cap-stat{padding:7px 5px!important}.rebate-cap-stat span{font-size:8px!important}.rebate-cap-stat strong{font-size:12px!important}}
-
-/* 移动端：升级数据查询表格横向滚动时固定第一列（等级） */
-@media(max-width:700px){
-  .table-wrap table{border-collapse:separate;border-spacing:0;}
-  .table-wrap th:first-child,.table-wrap td:first-child{
-    position:sticky;left:0;text-align:center;
-    background:var(--panel);z-index:3;
-    box-shadow:1px 0 0 var(--line);
-  }
-  .table-wrap tbody td:first-child{background:var(--card);}
-  .table-wrap thead th:first-child{top:0;z-index:5;background:var(--panel);}
-}
-</style>
-
-<style>
-/* v2.2.2：补齐附加黑曜石小卡片，并强制三项同排展示 */
-@media(max-width:700px){.card{contain-intrinsic-size:auto 360px}.gear,.progress div,.home-return,.theme-toggle{transition:none!important}.home-return,.theme-toggle{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
-
-/* v2.1.3：材料需求总览各指标卡片内容水平居中 */
-.summary .metric{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-  text-align:center!important;
-}
-.summary .metric>span,
-.summary .metric>strong{
-  display:block!important;
-  width:100%!important;
-  text-align:center!important;
-}
-
-
-/* v2.1.4：修复深色主题下返利礼包选中卡片仍使用浅色主题配色的问题 */
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
-  background:color-mix(in srgb,var(--primary) 16%,var(--panel))!important;
-  color:var(--ink)!important;
-  border:2px solid var(--primary)!important;
-  box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 13%,transparent)!important;
-}
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top strong,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span{
-  color:var(--ink)!important;
-}
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top>b,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span>strong{
-  color:var(--primary)!important;
-}
-
-</style>
-
-<style>
-/* v2.2.2：礼包卡片实际补回附加黑曜石小卡片；三项始终三列同排 */
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
-.gift-grid .gift-facts>.gift-extra-field{display:flex!important;visibility:visible!important;opacity:1!important}
-.gift-grid .gift-facts>.gift-convert{display:flex!important;grid-column:auto!important}
-.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>.gift-extra-field{display:flex!important}}
-</style>
