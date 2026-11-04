@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v2.1.21</title>
+<title>神兽升级计算器 v2.1.47</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -625,7 +625,7 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
 @media(max-width:480px){.theme-toggle{padding:11px 12px;font-size:13px;gap:6px}}
 @media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
 
-/* v2.1.20：礼包名称与价格严格同排对齐；所有费用金额显示整数 */
+/* v2.1.22：恢复礼包价格及费用金额的小数显示 */
 .plan-option{
   grid-template-columns:minmax(0,1fr) auto!important;
   grid-template-rows: minmax(24px,auto) 1fr!important;
@@ -741,6 +741,52 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 @media(max-width:760px){#allGiftPreview .all-gifts-heading small{display:none!important}}
 </style>
 
+<!-- v2.1.22：金额按原始精度显示，整数不附带 .00，小数保留实际位数 -->
+
+<style id="all-gift-compare-refinement-v2-1-23">
+/* v2.1.23：同屏预览材料数量统一使用“个”；对比标签置于各自色块正上方 */
+.all-gift-compare-heading{display:grid;grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);align-items:center;text-align:center;margin:0 0 6px;font-size:14px;font-weight:800;line-height:1.35}
+.all-gift-compare-heading span:first-child{color:#dc4545}
+.all-gift-compare-heading span:last-child{color:#16a765}
+.all-gift-compare-heading i{font-style:normal;color:var(--text);font-weight:800}
+.all-gift-compare-card>h4{display:none}
+.all-gift-mode .all-gift-stat span,.all-gift-mode .all-gift-stat b{font-size:14px!important;line-height:1.4!important}
+.all-gift-mode .all-gift-stat b{font-weight:800}
+.all-gift-mode .all-gift-stat span{font-weight:600}
+@media(max-width:560px){.all-gift-compare-heading{font-size:14px}.all-gift-mode .all-gift-stat span,.all-gift-mode .all-gift-stat b{font-size:13px!important}}
+</style>
+
+<style id="all-gift-preview-module-v2-1-46">
+/* 同屏预览模块：保持现有布局，只明确金额字号和原有颜色。 */
+#allGiftPreview #allGiftGrid .all-gift-mode .mode-cost{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+  gap:2px;margin:0 0 6px;padding:0;height:auto;min-height:0;
+}
+#allGiftPreview #allGiftGrid .all-gift-mode .all-gift-cost-label{
+  display:block;font-size:13px;line-height:1.35;font-weight:700;color:var(--muted);
+}
+#allGiftPreview #allGiftGrid .all-gift-mode .all-gift-cost-amount{
+  display:block;flex:none;font-size:20px!important;line-height:1.2;font-weight:900;
+  margin:0;padding:0;white-space:nowrap;transform:none;zoom:1;
+}
+#allGiftPreview #allGiftGrid .all-gift-mode.normal .all-gift-cost-amount,
+#allGiftPreview #allGiftGrid .all-gift-mode.normal .all-gift-stat b{
+  color:#dc4545!important;-webkit-text-fill-color:#dc4545!important;
+}
+#allGiftPreview #allGiftGrid .all-gift-mode.rebate .all-gift-cost-amount,
+#allGiftPreview #allGiftGrid .all-gift-mode.rebate .all-gift-stat b{
+  color:#16a765!important;-webkit-text-fill-color:#16a765!important;
+}
+</style>
+
+<style id="all-gift-cost-size-v2-1-47">
+/* 同屏预览预计费用金额调整为20px；其余UI保持不变 */
+#allGiftPreview .all-gift-cost-amount{
+  font-size:20px!important;
+  line-height:1.2!important;
+}
+</style>
+
 </head>
 <body>
 <div class="floating-actions">
@@ -819,7 +865,7 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
     <button type="button" class="plan-option" data-plan="event"><strong>限时礼包</strong><span class="plan-price">¥13.8</span><span class="plan-pack-stats"><span>大包<b>1</b></span><span>中包<b>1</b></span><span>小包<b>1,200</b></span></span></button>
   </div>
   <div class="summary package-summary">
-    <div class="metric status-metric status-red fee-metric"><div class="name">预计费用</div><strong id="bundleCost">¥0.00</strong></div>
+    <div class="metric status-metric status-red fee-metric"><div class="name">预计费用</div><strong id="bundleCost">¥0</strong></div>
     <div class="metric status-metric status-red"><div class="name">购买礼包数量</div><strong id="bigPacks">0</strong></div>
     <div class="metric"><div class="name">灵草包</div><strong id="summaryHerbPacks">0 个</strong></div>
     <div class="metric"><div class="name">灵木包</div><strong id="summaryWoodPacks">0 个</strong></div>
@@ -861,13 +907,13 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
     <button type="button" class="plan-option" data-plan="event"><strong>限时礼包</strong><span class="plan-price">¥13.8</span><span class="plan-pack-stats"><span>大包<b>1</b></span><span>中包<b>1</b></span><span>小包<b>1,200</b></span></span></button>
   </div>
   <div class="summary package-summary">
-    <div class="metric status-metric status-green fee-metric"><div class="name">预计费用</div><strong id="rebateBundleCost">¥0.00</strong></div>
+    <div class="metric status-metric status-green fee-metric"><div class="name">预计费用</div><strong id="rebateBundleCost">¥0</strong></div>
     <div class="metric status-metric status-green"><div class="name">购买礼包数量</div><strong id="rebateBigPacks">0</strong></div>
     <div class="metric"><div class="name">灵草包</div><strong id="summaryRebateHerbPacks">0 个</strong></div>
     <div class="metric"><div class="name">灵木包</div><strong id="summaryRebateWoodPacks">0 个</strong></div>
     <div class="metric"><div class="name">灵丹包</div><strong id="summaryRebatePillPacks">0 个</strong></div>
     <div class="metric status-metric status-green"><div class="name">剩余小包数量</div><strong id="summaryRebateLeftover">0 个</strong></div>
-    <div class="metric status-metric status-green"><div class="name">节省金额</div><strong id="rebateSavings">¥0.00</strong></div>
+    <div class="metric status-metric status-green"><div class="name">节省金额</div><strong id="rebateSavings">¥0</strong></div>
   </div>
   <div class="pack-columns" style="margin-top:14px">
     <div class="pack-detail allocation-detail">
@@ -966,7 +1012,7 @@ function renderShenshouGiftButtons(){
   const fields=[['big','大包',plan.big],['middle','中包',plan.middle],['small','小包',plan.small],
    ...shenshouGiftMaterials.map(m=>[m.packageField,m.name,plan[m.packageField]])];
   const stats=fields.filter(([key])=>giftFieldVisible(key)&&plan[key]!==undefined).map(([key,label,value])=>`<span>${giftEscape(label)}<b>${Number(value).toLocaleString('en-US')}</b></span>`).join('');
-  const price=giftFieldVisible('price')?`<span class="plan-price">¥${Math.round(Number(plan.price)||0).toLocaleString('en-US')}</span>`:'';
+  const price=giftFieldVisible('price')?`<span class="plan-price">¥${(Number(plan.price)||0).toLocaleString('en-US',{maximumFractionDigits:2})}</span>`:'';
   return `<button type="button" class="plan-option ${plan.id===selectedPlan?'active':''}" data-plan="${giftEscape(plan.id)}"><strong>${giftEscape(plan.name)}</strong>${price}<span class="plan-pack-stats">${stats}</span></button>`;
  }).join('');
  document.querySelectorAll('.plan-options').forEach(host=>host.innerHTML=html);
@@ -1139,8 +1185,8 @@ function render(skipAllGiftPreview=false){
  const rebateBoughtMiddle=rebateBig*plan.middle;
  const rebateBoughtSmall=rebateBig*plan.small;
  $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';$('summaryRebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('summaryRebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('summaryRebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
- $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display='';$('rebatePurchasedMiddleCard').style.display='';$('rebateBigPacks').textContent=fmt(rebateBig)+'个';$('rebateBundleCount').textContent=fmt(rebateBig)+'个';$('rebateBundleCost').textContent='¥'+Math.round(rebateBig*plan.price).toLocaleString('en-US');const noRebateCost=big*plan.price;const rebateCost=rebateBig*plan.price;$('rebateSavings').textContent='¥'+Math.round(Math.max(0,noRebateCost-rebateCost)).toLocaleString('en-US');$('rebatePurchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('rebatePurchasedMiddle').textContent=fmt(rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
- $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display='';$('purchasedMiddleCard').style.display='';$('bigPacks').textContent=fmt(big)+'个';$('bundleCount').textContent=fmt(big)+'个';$('bundleCost').textContent='¥'+Math.round(big*plan.price).toLocaleString('en-US');$('purchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('purchasedMiddle').textContent=fmt(boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
+ $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display='';$('rebatePurchasedMiddleCard').style.display='';$('rebateBigPacks').textContent=fmt(rebateBig)+'个';$('rebateBundleCount').textContent=fmt(rebateBig)+'个';$('rebateBundleCost').textContent='¥'+(rebateBig*plan.price).toLocaleString('en-US',{maximumFractionDigits:2});const noRebateCost=big*plan.price;const rebateCost=rebateBig*plan.price;$('rebateSavings').textContent='¥'+Math.max(0,noRebateCost-rebateCost).toLocaleString('en-US',{maximumFractionDigits:2});$('rebatePurchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('rebatePurchasedMiddle').textContent=fmt(rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
+ $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display='';$('purchasedMiddleCard').style.display='';$('bigPacks').textContent=fmt(big)+'个';$('bundleCount').textContent=fmt(big)+'个';$('bundleCost').textContent='¥'+(big*plan.price).toLocaleString('en-US',{maximumFractionDigits:2});$('purchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('purchasedMiddle').textContent=fmt(boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
  $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');  if(!skipAllGiftPreview&&document.getElementById('allGiftToggle')?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
 }
 
@@ -1182,31 +1228,56 @@ function renderAllGiftPreview(){
   const host=document.getElementById('allGiftGrid');
   if(!host)return;
   const need=getShenshouMaterialNeeds();
-  const plans=Object.values(giftPlans).map(p=>({id:p.id,label:p.name,price:p.price,big:p.big,mid:p.middle,small:p.small,yield:shenshouGiftMaterials.map(m=>Number(p[m.packageField])||0)}));
-  const fmtAll=n=>Number(n).toLocaleString('en-US');
-  const moneyAll=n=>'¥'+Math.round(Number(n)||0).toLocaleString('en-US');
-  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
-  const modeStats=(p,rebate)=>{
-    // 与上方主计算器完全一致：先扣经验条；返利模式再乘 2/3；最后扣库存；各类材料包数分别向上取整。
-    const purchaseNeeds=need.map((n,i)=>Math.max(0,(rebate?n*2/3:n)-stocks[i]));
-    const open=purchaseNeeds.map((n,i)=>Math.ceil(n/Math.max(1,p.yield[i]||0)));
-    const smallNeed=open.reduce((sum,n)=>sum+Math.max(0,n),0);
-    const qty=p.small>0?Math.ceil(smallNeed/p.small):0;
-    const boughtMiddle=qty*p.mid;
-    const boughtSmall=qty*p.small;
-    const remaining=Math.max(0,boughtSmall-smallNeed);
-    return {qty,cost:qty*p.price,open,remaining,packs:boughtSmall,middle:boughtMiddle,smallNeed};
+  const plans=Object.values(giftPlans).map(p=>({
+    id:p.id,label:p.name,price:p.price,big:p.big,mid:p.middle,small:p.small,
+    yield:shenshouGiftMaterials.map(m=>Number(p[m.packageField])||0)
+  }));
+  const formatCount=value=>Number(value).toLocaleString('en-US');
+  const formatMoney=value=>'¥'+(Number(value)||0).toLocaleString('en-US',{maximumFractionDigits:2});
+  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(value=>Math.max(0,value));
+  const calculateMode=(plan,withRebate)=>{
+    const required=need.map((value,index)=>Math.max(0,(withRebate?value*2/3:value)-stocks[index]));
+    const opened=required.map((value,index)=>Math.ceil(value/Math.max(1,plan.yield[index]||0)));
+    const openedTotal=opened.reduce((sum,value)=>sum+Math.max(0,value),0);
+    const quantity=plan.small>0?Math.ceil(openedTotal/plan.small):0;
+    const purchasedSmall=quantity*plan.small;
+    return {
+      quantity,
+      cost:quantity*plan.price,
+      opened,
+      remaining:Math.max(0,purchasedSmall-openedTotal),
+      packs:purchasedSmall
+    };
   };
-  host.innerHTML=plans.map(p=>{
-    const normal=modeStats(p,false), rebate=modeStats(p,true);
-    const chosen=previewSelectedPlan===p.id;
-    const stat=(label,value)=>`<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
-    const mode=(label,stats,isRebate)=>`<div class="all-gift-mode ${isRebate?'rebate':'normal'}"><div class="all-gift-mode-title">${label}</div><div class="mode-cost">${moneyAll(stats.cost)}</div>${stat('购买礼包数量',fmtAll(stats.qty)+'个')}${stat('可开出小包',fmtAll(stats.packs)+' 个')}${shenshouGiftMaterials.map((m,i)=>stat(giftEscape(m.name)+'包数',fmtAll(stats.open[i])+' 包')).join('')}${stat('剩余小包数量',fmtAll(stats.remaining)+' 个')}</div>`;
-    return `<article class="all-gift-option ${chosen?'selected':''}" data-plan="${p.id}" role="button" tabindex="0" aria-pressed="${chosen}" aria-label="选择${p.label}">
-      <section class="all-gift-info-card"><div class="all-gift-top"><h3>${giftEscape(p.label)}</h3>${giftFieldVisible('price')?`<span class="all-gift-price">${moneyAll(p.price)}</span>`:''}</div>
-        <div class="all-gift-pack-info">${[['big','大包',p.big],['middle','中包',p.mid],['small','小包',p.small]].filter(([key])=>giftFieldVisible(key)).map(([key,label,value])=>`<div><span>${label}</span><b>${fmtAll(value)}</b></div>`).join('')}</div>
+  const renderStat=(label,value)=>`<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
+  const renderMode=(stats,isRebate)=>{
+    const modeClass=isRebate?'rebate':'normal';
+    return `<div class="all-gift-mode ${modeClass}">
+      <div class="mode-cost">
+        <span class="all-gift-cost-label">预计费用</span>
+        <b class="all-gift-cost-amount">${formatMoney(stats.cost)}</b>
+      </div>
+      ${renderStat('购买礼包数量',formatCount(stats.quantity)+'个')}
+      ${renderStat('可开出小包',formatCount(stats.packs)+' 个')}
+      ${shenshouGiftMaterials.map((material,index)=>renderStat(giftEscape(material.name)+'包数',formatCount(stats.opened[index])+' 个')).join('')}
+      ${renderStat('剩余小包数量',formatCount(stats.remaining)+' 个')}
+    </div>`;
+  };
+  host.innerHTML=plans.map(plan=>{
+    const normal=calculateMode(plan,false);
+    const rebate=calculateMode(plan,true);
+    const selected=previewSelectedPlan===plan.id;
+    const packageFields=[['big','大包',plan.big],['middle','中包',plan.mid],['small','小包',plan.small]]
+      .filter(([key])=>giftFieldVisible(key));
+    return `<article class="all-gift-option ${selected?'selected':''}" data-plan="${plan.id}" role="button" tabindex="0" aria-pressed="${selected}" aria-label="选择${giftEscape(plan.label)}">
+      <section class="all-gift-info-card">
+        <div class="all-gift-top"><h3>${giftEscape(plan.label)}</h3>${giftFieldVisible('price')?`<span class="all-gift-price">${formatMoney(plan.price)}</span>`:''}</div>
+        <div class="all-gift-pack-info">${packageFields.map(([,label,value])=>`<div><span>${label}</span><b>${formatCount(value)}</b></div>`).join('')}</div>
       </section>
-      <section class="all-gift-compare-card"><h4>不返利 / 返利对比</h4><div class="all-gift-compare-grid">${mode('不返利',normal,false)}${mode('返利',rebate,true)}</div></section>
+      <section class="all-gift-compare-card">
+        <div class="all-gift-compare-heading"><span>不返利</span><i>/</i><span>返利</span></div>
+        <div class="all-gift-compare-grid">${renderMode(normal,false)}${renderMode(rebate,true)}</div>
+      </section>
     </article>`;
   }).join('');
 }
@@ -1308,7 +1379,7 @@ if(levelDataToggle&&levelDataContent&&levelDataTableWrap){
       const nodes=[];
       while(walker.nextNode()){
         const node=walker.currentNode;
-        if(node.parentElement && node.parentElement.closest('.gift-data-number')) continue;
+        if(node.parentElement && (node.parentElement.closest('.gift-data-number') || node.parentElement.closest('.all-gift-cost-amount'))) continue;
         const value=node.nodeValue.trim();
         if(value && numericOnly.test(value)) nodes.push(node);
       }
@@ -1339,274 +1410,3 @@ if(levelDataToggle&&levelDataContent&&levelDataTableWrap){
 
 </body>
 </html>
-<style>
-/* v1.1.89：预览卡片仅保留独立选中动效，不联动上方方案 */
-.all-gift-option[data-plan]{cursor:pointer;outline:none;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
-.all-gift-option[data-plan]:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
-.all-gift-option[data-plan].selected{border:2px solid var(--primary)!important;border-top:4px solid var(--primary)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 20%,transparent),0 7px 18px #00000016!important;animation:planSelectedPulse .28s ease-out}
-
-/* v2.1.21：全部方案标题与展开按钮固定同一行 */
-#allGiftPreview .all-gifts-header{align-items:flex-start!important}
-#allGiftPreview .all-gifts-heading strong{white-space:nowrap!important}
-#allGiftPreview .all-gifts-toggle{align-self:flex-start!important}
-</style>
-
-<style>
-/* v1.1.96：全部方案同屏预览文字颜色跟随当前神兽主题 */
-#allGiftPreview .all-gifts-toggle strong,
-#allGiftPreview .all-gift-option h3,
-#allGiftPreview .all-gift-option .all-gift-price,
-#allGiftPreview .all-gift-option .all-gift-pack-info b,
-#allGiftPreview .all-gift-option .all-gift-purchase-metrics b,
-#allGiftPreview .all-gift-option .all-gift-compare-card h4,
-#allGiftPreview .all-gift-option .all-gift-stat b { color: var(--primary); }
-#allGiftPreview .all-gifts-toggle small { color: color-mix(in srgb, var(--primary) 68%, var(--muted)); }
-@media(max-width:520px){.all-gifts-header{align-items:flex-start;gap:10px}.all-gifts-heading strong{font-size:clamp(14px,4vw,18px)}.all-gifts-heading small{max-width:100%}.all-gifts-toggle{align-self:flex-start;padding:7px 9px}}
-
-/* v2.1.21：全部方案标题与展开按钮固定同一行 */
-#allGiftPreview .all-gifts-header{align-items:flex-start!important}
-#allGiftPreview .all-gifts-heading strong{white-space:nowrap!important}
-#allGiftPreview .all-gifts-toggle{align-self:flex-start!important}
-</style>
-
-
-<style>
-/* v1.1.107：修复深色主题下材料库存与礼包统计仍使用浅色背景的问题 */
-body.dark-theme .stock:has(#herbStock),
-body.dark-theme .stock:has(#woodStock),
-body.dark-theme .stock:has(#pillStock),
-body.dark-theme section.card .inventory-panel .stock-grid > .stock,
-body.dark-theme section.card .inventory-panel .stock-grid > .stock.stock-herb,
-body.dark-theme section.card .inventory-panel .stock-grid > .stock.stock-wood,
-body.dark-theme section.card .inventory-panel .stock-grid > .stock.stock-pill {
-  background: #1b2739 !important;
-  background-color: #1b2739 !important;
-  border: 1px solid var(--line) !important;
-  box-shadow: none !important;
-}
-body.dark-theme .stock:has(#herbStock) label,
-body.dark-theme .inventory-panel .stock-herb label,
-body.dark-theme .inventory-panel #herbStock,
-body.dark-theme #summaryHerbPacks,
-body.dark-theme #summaryRebateHerbPacks { color: #ff7777 !important; }
-body.dark-theme .stock:has(#woodStock) label,
-body.dark-theme .inventory-panel .stock-wood label,
-body.dark-theme .inventory-panel #woodStock,
-body.dark-theme #summaryWoodPacks,
-body.dark-theme #summaryRebateWoodPacks { color: #e0a878 !important; }
-body.dark-theme .stock:has(#pillStock) label,
-body.dark-theme .inventory-panel .stock-pill label,
-body.dark-theme .inventory-panel #pillStock,
-body.dark-theme #summaryPillPacks,
-body.dark-theme #summaryRebatePillPacks { color: #45d6c6 !important; }
-body.dark-theme .inventory-panel input[type="number"],
-body.dark-theme .inventory-panel input[type="text"] {
-  background: #101a2a !important; color: var(--ink) !important; border-color: var(--line) !important;
-}
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1),
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2),
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) {
-  background: #1b2739 !important; border-color: var(--line) !important;
-}
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1) .name,
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1) strong { color: #ff7777 !important; }
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2) .name,
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2) strong { color: #e0a878 !important; }
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) .name,
-body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) strong { color: #45d6c6 !important; }
-body.dark-theme .package-summary .status-metric.status-red,
-body.dark-theme .package-summary .fee-metric.status-red,
-body.dark-theme .package-summary .status-metric.status-green,
-body.dark-theme .package-summary .fee-metric.status-green {
-  background: #1b2739 !important; background-color: #1b2739 !important; border-color: var(--line) !important;
-}
-body.dark-theme .package-summary .status-metric.status-red .name,
-body.dark-theme .package-summary .status-metric.status-red strong,
-body.dark-theme .package-summary .fee-metric.status-red .name,
-body.dark-theme .package-summary .fee-metric.status-red strong { color: #ff7777 !important; background: transparent !important; }
-body.dark-theme .package-summary .status-metric.status-green .name,
-body.dark-theme .package-summary .status-metric.status-green strong,
-body.dark-theme .package-summary .fee-metric.status-green .name,
-body.dark-theme .package-summary .fee-metric.status-green strong { color: #45d6a0 !important; background: transparent !important; }
-body.dark-theme .summary .metric { background: #1b2739 !important; border-color: var(--line) !important; }
-body.dark-theme .summary .metric .name { color: var(--muted) !important; }
-body.dark-theme .summary .metric strong { color: var(--ink) !important; }
-body.dark-theme .plan-option.active { background: #1b2739 !important; border-color: var(--primary) !important; box-shadow: inset 0 0 0 1px var(--primary) !important; }
-body.dark-theme .plan-option.active span,
-body.dark-theme .plan-option span { background: #101a2a !important; color: var(--muted) !important; }
-
-
-/* v1.1.110：深色主题下返利开关改用深色底，避免残留浅粉/浅绿背景 */
-body.dark-theme .rebate-chip-label {
-  background: #2b2028 !important;
-  border-color: #a94350 !important;
-  color: #ff858d !important;
-}
-body.dark-theme .rebate-toggle input:checked + .rebate-chip-label {
-  background: #173329 !important;
-  border-color: #278b62 !important;
-  color: #69d6a0 !important;
-}
-
-/* v2.1.12：浅色主题优化材料需求总览卡片 */
-body:not(.dark-theme) .summary:has(#herbNeed) .metric{
-  border-width:1.5px!important;
-  box-shadow:0 3px 12px rgba(31,55,86,.055)!important;
-}
-body:not(.dark-theme) .summary:has(#herbNeed) .metric:nth-child(1){
-  background:#fff0f0!important;
-  border-color:#eaa6a6!important;
-}
-body:not(.dark-theme) .summary:has(#herbNeed) .metric:nth-child(2){
-  background:#fbf1e8!important;
-  border-color:#d7b18e!important;
-}
-body:not(.dark-theme) .summary:has(#herbNeed) .metric:nth-child(3){
-  background:#eaf8f5!important;
-  border-color:#8fcfc4!important;
-}
-/* 材料名称与数值拉开距离，数字略微收小 */
-.summary:has(#herbNeed) .metric .name{
-  margin-bottom:9px!important;
-}
-.summary:has(#herbNeed) .metric strong{
-  font-size:clamp(20px,2.15vw,27px)!important;
-  margin-top:0!important;
-}
-@media(max-width:520px){
-  .summary:has(#herbNeed) .metric .name{margin-bottom:8px!important}
-  .summary:has(#herbNeed) .metric strong{font-size:clamp(17px,4.6vw,22px)!important}
-}
-
-
-/* v2.1.13：材料需求总览使用独立 class，避免旧版移动浏览器不支持 :has() 导致网格布局失效 */
-.material-need-summary{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  width:100%!important;
-  min-width:0!important;
-  gap:8px!important;
-  box-sizing:border-box!important;
-}
-.material-need-summary>.metric{
-  display:block!important;
-  width:auto!important;
-  min-width:0!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-  padding:12px 5px!important;
-  text-align:center!important;
-  background:#fff!important;
-  background-color:#fff!important;
-  border:1px solid #e6e9ee!important;
-  border-top:1px solid #e2e6ec!important;
-  border-radius:10px!important;
-  box-shadow:none!important;
-  overflow:hidden!important;
-}
-.material-need-summary>.metric .name{
-  display:block!important;
-  margin:0 0 8px!important;
-  color:#586273!important;
-  font-size:12px!important;
-  font-weight:650!important;
-  line-height:1.35!important;
-  white-space:nowrap!important;
-}
-.material-need-summary>.metric strong{
-  display:block!important;
-  margin:0!important;
-  font-size:clamp(15px,4.2vw,22px)!important;
-  font-weight:800!important;
-  line-height:1.25!important;
-  white-space:nowrap!important;
-  overflow:visible!important;
-  overflow-wrap:normal!important;
-  font-variant-numeric:tabular-nums!important;
-}
-.material-need-summary>.metric small{display:none!important}
-.material-need-summary>.metric:nth-child(1) .name,
-.material-need-summary>.metric:nth-child(1) strong{color:#c62828!important}
-.material-need-summary>.metric:nth-child(2) .name,
-.material-need-summary>.metric:nth-child(2) strong{color:#79502f!important}
-.material-need-summary>.metric:nth-child(3) .name,
-.material-need-summary>.metric:nth-child(3) strong{color:#087f75!important}
-@media(max-width:520px){
-  .material-need-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
-  .material-need-summary>.metric{padding:11px 2px!important}
-  .material-need-summary>.metric .name{font-size:11px!important;margin-bottom:7px!important}
-  .material-need-summary>.metric strong{font-size:clamp(14px,4.1vw,18px)!important;letter-spacing:-.35px!important}
-}
-
-
-/* v2.1.16：材料需求总览昼夜主题适配 */
-body:not(.dark-theme) .material-need-summary>.metric{
-  background:#f1f3f5!important;
-  background-color:#f1f3f5!important;
-  border:1px solid #dfe3e8!important;
-  border-top:1px solid #dfe3e8!important;
-  box-shadow:none!important;
-}
-body.dark-theme .material-need-summary>.metric{
-  background:#1b2739!important;
-  background-color:#1b2739!important;
-  border:1px solid #334258!important;
-  border-top:1px solid #334258!important;
-  box-shadow:none!important;
-}
-body.dark-theme .material-need-summary>.metric .name{color:#c5cfdd!important}
-body.dark-theme .material-need-summary>.metric:nth-child(1) .name,
-body.dark-theme .material-need-summary>.metric:nth-child(1) strong{color:#ff7777!important}
-body.dark-theme .material-need-summary>.metric:nth-child(2) .name,
-body.dark-theme .material-need-summary>.metric:nth-child(2) strong{color:#e0a878!important}
-body.dark-theme .material-need-summary>.metric:nth-child(3) .name,
-body.dark-theme .material-need-summary>.metric:nth-child(3) strong{color:#45d6c6!important}
-
-
-/* v2.1.17：提高材料卡片昼夜背景规则优先级，覆盖历史 :has() 颜色规则 */
-body:not(.dark-theme) .summary:has(#herbNeed).material-need-summary>.metric:nth-child(1),
-body:not(.dark-theme) .summary:has(#herbNeed).material-need-summary>.metric:nth-child(2),
-body:not(.dark-theme) .summary:has(#herbNeed).material-need-summary>.metric:nth-child(3){
-  background:#f1f3f5!important;
-  background-color:#f1f3f5!important;
-  border-color:#dfe3e8!important;
-  border-top-color:#dfe3e8!important;
-  box-shadow:none!important;
-}
-body.dark-theme .summary:has(#herbNeed).material-need-summary>.metric:nth-child(1),
-body.dark-theme .summary:has(#herbNeed).material-need-summary>.metric:nth-child(2),
-body.dark-theme .summary:has(#herbNeed).material-need-summary>.metric:nth-child(3){
-  background:#1b2739!important;
-  background-color:#1b2739!important;
-  border-color:#334258!important;
-  border-top-color:#334258!important;
-  box-shadow:none!important;
-}
-
-
-/* v2.1.18：材料需求卡片浅灰背景与礼包材料卡片统一 */
-html body:not(.dark-theme) section.card .summary.material-need-summary>.metric:nth-child(1),
-html body:not(.dark-theme) section.card .summary.material-need-summary>.metric:nth-child(2),
-html body:not(.dark-theme) section.card .summary.material-need-summary>.metric:nth-child(3){
-  background:#f0f2f5!important;
-  background-color:#f0f2f5!important;
-  border-color:#e5e8ed!important;
-  border-top-color:#e5e8ed!important;
-  box-shadow:none!important;
-}
-html body.dark-theme section.card .summary.material-need-summary>.metric:nth-child(1),
-html body.dark-theme section.card .summary.material-need-summary>.metric:nth-child(2),
-html body.dark-theme section.card .summary.material-need-summary>.metric:nth-child(3){
-  background:#1b2739!important;
-  background-color:#1b2739!important;
-  border-color:#334258!important;
-  border-top-color:#334258!important;
-  box-shadow:none!important;
-}
-
-
-/* v2.1.21：全部方案标题与展开按钮固定同一行 */
-#allGiftPreview .all-gifts-header{align-items:flex-start!important}
-#allGiftPreview .all-gifts-heading strong{white-space:nowrap!important}
-#allGiftPreview .all-gifts-toggle{align-self:flex-start!important}
-</style>
