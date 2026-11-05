@@ -212,7 +212,7 @@ body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer
  .plan-option strong{font-size:14px}
  .plan-option span{font-size:11px}
  .summary .metric{padding:10px 7px}
- .summary .metric strong{font-size:16px}
+ .summary .metric strong{font-size:15px}
 }
 
 
@@ -577,6 +577,8 @@ section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color
 .all-gift-pack-info>div{border-radius:9px;padding:9px 7px;background:var(--panel2);text-align:center}
 .all-gift-pack-info span,.all-gift-stat span{display:block;color:var(--muted);font-size:12px;line-height:1.4}
 .all-gift-pack-info b{display:block;font-size:16px;margin-top:4px;color:var(--text);overflow-wrap:anywhere}
+.all-gift-pack-info span{font-size:14px}
+.all-gift-pack-info b{font-size:18px}
 .all-gift-purchase-card{background:color-mix(in srgb,#d49a26 10%,var(--panel));border:1px solid color-mix(in srgb,#d49a26 40%,var(--line))}
 .all-gift-purchase-card h4,.all-gift-compare-card h4{margin:0 0 9px;font-size:14px}
 .all-gift-purchase-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -598,7 +600,7 @@ section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color
 .all-gift-mode .all-gift-stat span{font-size:13px;line-height:1.45}
 @media(max-width:1000px){.all-gifts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.all-gifts-grid{grid-template-columns:1fr}}
-@media(max-width:560px){.all-gift-pack-info{gap:5px}.all-gift-pack-info>div{padding:8px 4px}.all-gift-pack-info b{font-size:14px}.all-gift-compare-grid{gap:7px}.all-gift-mode{padding:9px}.all-gift-mode .mode-cost{font-size:18px}}
+@media(max-width:560px){.all-gift-pack-info{gap:5px}.all-gift-pack-info>div{padding:8px 4px}.all-gift-pack-info b{font-size:16px}.all-gift-compare-grid{gap:7px}.all-gift-mode{padding:9px}.all-gift-mode .mode-cost{font-size:18px}}
 
 
 
@@ -653,6 +655,10 @@ body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(
 #allGiftPreview .all-gifts-header{align-items:flex-start!important}
 #allGiftPreview .all-gifts-heading strong{white-space:nowrap!important}
 #allGiftPreview .all-gifts-toggle{align-self:flex-start!important}
+
+/* v2.3.14：全部方案预览卡片内部统一收紧行高；不改变字号、间距、布局或其他样式 */
+#allGiftPreview .all-gift-option,
+#allGiftPreview .all-gift-option *{line-height:1.2!important}
 </style>
 <style>/* v1.2.12：礼包价格去除外框，并与左侧礼包名称同一行垂直对齐 */
 .plan-option .plan-price{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;align-self:center;justify-self:end}
