@@ -3,237 +3,237 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.4.13</title>
+<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.5.2</title>
 <style>
-:root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002}
-*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s}
-body.light-theme{--bg:#f2f5fa;--card:#fff;--panel:#f7f9fd;--ink:#172033;--muted:#68758b;--line:#d5ddeb;--primary:#9a6a13;--soft:#fff5df;--shadow:0 10px 28px #26365010}
-body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.045;transform:rotate(-14deg);white-space:pre-wrap}
-.wrap{position:relative;z-index:1;width:min(1480px,100%);margin:auto;padding:24px clamp(18px,2.2vw,34px) 100px}header{padding:14px 4px 24px}header .eyebrow{font-size:12px;letter-spacing:2px;color:var(--primary);font-weight:800}h1{margin:8px 0;font-size:clamp(26px,4vw,36px)}header p{margin:0;color:var(--muted);line-height:1.7}.card{content-visibility:auto;contain-intrinsic-size:auto 420px;position:relative;isolation:isolate;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,28px);margin:0 0 20px;box-shadow:var(--shadow)}.card>*{position:relative;z-index:1}.card:after{content:"98888";position:absolute;right:18px;bottom:12px;z-index:0;pointer-events:none;font-size:clamp(24px,3vw,40px);font-weight:900;letter-spacing:4px;color:var(--primary);opacity:.07;transform:rotate(-10deg)}h2{font-size:clamp(19px,2.8vw,24px);margin:0 0 16px}h3{font-size:17px;margin:22px 0 12px}.hint{font-size:13px;line-height:1.7;color:var(--muted);margin:-6px 0 16px}
-.gears{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.gear{min-height:160px;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:inherit;transition:.18s}.gear .gear-art{display:block;width:100%;max-width:180px;height:112px;object-fit:contain;border-radius:10px;background:#211708;box-shadow:inset 0 0 0 1px #d9a44155}.gear .icon{font-size:28px;line-height:1}.gear strong{font-size:16px}.gear small{font-size:12px;color:var(--muted)}.gear.active{border:2px solid var(--primary);background:var(--soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 10%,transparent)}
-.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.field{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.field label{display:block;color:var(--muted);font-size:14px;margin-bottom:12px}.slider-row{display:flex;align-items:center;gap:12px}.slider-row input{width:100%;min-width:0;accent-color:var(--primary)}output{white-space:nowrap;min-width:72px;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:17px;font-weight:800}.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:8px}
-.summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.metric{padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--panel);min-width:0}.metric span{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}.metric strong{font-size:clamp(18px,2.6vw,25px);overflow-wrap:anywhere}.metric.gold strong{color:var(--primary)}.progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:18px}.progress div{height:100%;width:0;background:var(--primary);transition:width .2s}
-.stock-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stock{padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.stock label{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}.stock input{width:100%;min-width:0;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}.stock input[type="range"]{display:block;width:100%;padding:0;margin:12px 0 0;accent-color:var(--primary);border:0;background:transparent}.stock-slider-ends{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--muted)}
-.table-wrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:13px}th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line)}th{position:sticky;top:0;background:var(--panel);color:var(--muted);z-index:2}th:first-child,td:first-child{text-align:center}tbody tr:nth-child(even){background:color-mix(in srgb,var(--panel) 48%,transparent)}details summary{cursor:pointer;font-weight:700;padding:4px 0 14px}button.secondary{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);padding:11px 15px;font:600 14px inherit;cursor:pointer}.gift-result{padding-top:10px;border-top:1px dashed var(--line);font-size:14px}.gift-result b{font-size:16px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.notice{border-left:4px solid var(--primary);background:var(--soft);border-radius:0 12px 12px 0;padding:12px 14px;color:var(--ink);font-size:13px;line-height:1.7}footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 0 24px}
+:root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002;}
+*{box-sizing:border-box;}html{min-height:100%;background:var(--bg);}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s;}
+body.light-theme{--bg:#f2f5fa;--card:#fff;--panel:#f7f9fd;--ink:#172033;--muted:#68758b;--line:#d5ddeb;--primary:#9a6a13;--soft:#fff5df;--shadow:0 10px 28px #26365010;}
+body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.045;transform:rotate(-14deg);white-space:pre-wrap;}
+.wrap{position:relative;z-index:1;width:min(1480px,100%);margin:auto;padding:24px clamp(18px,2.2vw,34px) 100px;}header{padding:14px 4px 24px;}header .eyebrow{font-size:12px;letter-spacing:2px;color:var(--primary);font-weight:800;}h1{margin:8px 0;font-size:clamp(26px,4vw,36px);}header p{margin:0;color:var(--muted);line-height:1.7;}.card{content-visibility:auto;contain-intrinsic-size:auto 420px;position:relative;isolation:isolate;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,28px);margin:0 0 20px;box-shadow:var(--shadow);}.card:after{content:"98888";position:absolute;right:18px;bottom:12px;z-index:0;pointer-events:none;font-size:clamp(24px,3vw,40px);font-weight:900;letter-spacing:4px;color:var(--primary);opacity:.07;transform:rotate(-10deg);}h2{font-size:clamp(19px,2.8vw,24px);margin:0 0 16px;}h3{font-size:17px;margin:22px 0 12px;}.hint{font-size:13px;line-height:1.7;color:var(--muted);margin:-6px 0 16px;}
+.gears{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}.gear{min-height:160px;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:inherit;transition:.18s;}.gear .gear-art{display:block;width:100%;max-width:180px;height:112px;object-fit:contain;border-radius:10px;background:#211708;box-shadow:inset 0 0 0 1px #d9a44155;}.gear .icon{font-size:28px;line-height:1;}.gear small{font-size:12px;color:var(--muted);}.gear.active{border:2px solid var(--primary);background:var(--soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 10%,transparent);}
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}.field{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;}.field label{display:block;color:var(--muted);font-size:14px;margin-bottom:12px;}.slider-row{display:flex;align-items:center;gap:12px;}.slider-row input{width:100%;min-width:0;accent-color:var(--primary);}output{white-space:nowrap;min-width:72px;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:17px;font-weight:800;}.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:8px;}
+.summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}.metric{padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--panel);min-width:0;}.metric span{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;}.metric strong{font-size:clamp(18px,2.6vw,25px);overflow-wrap:anywhere;}.metric.gold strong{color:var(--primary);}.progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:18px;}.progress div{height:100%;width:0;background:var(--primary);transition:width .2s;}
+.stock-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}.stock{padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);}.stock label{display:block;color:var(--muted);font-size:13px;margin-bottom:8px;}.stock input{width:100%;min-width:0;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;}.stock input[type="range"]{display:block;width:100%;padding:0;margin:12px 0 0;accent-color:var(--primary);border:0;background:transparent;}.stock-slider-ends{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--muted);}
+.table-wrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:14px;}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:13px;}th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);}th{position:sticky;top:0;background:var(--panel);color:var(--muted);z-index:2;}th:first-child,td:first-child{text-align:center;}tbody tr:nth-child(even){background:color-mix(in srgb,var(--panel) 48%,transparent);}details summary{cursor:pointer;font-weight:700;padding:4px 0 14px;}button.secondary{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);padding:11px 15px;font:600 14px inherit;cursor:pointer;}.gift-result{padding-top:10px;border-top:1px dashed var(--line);font-size:14px;}.gift-result b{font-size:16px;}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}.notice{border-left:4px solid var(--primary);background:var(--soft);border-radius:0 12px 12px 0;padding:12px 14px;color:var(--ink);font-size:13px;line-height:1.7;}footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 0 24px;}
 /* 右下角昼夜切换与返回首页按钮 */
-.floating-actions{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:10px}
-.home-return,.theme-toggle{display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;text-decoration:none;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease}
-.home-return:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}
-.home-return:active{transform:scale(.97)}
-.home-return:focus-visible,.theme-toggle:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
-.home-return svg{width:18px;height:18px;flex:none}
-.theme-toggle{align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;cursor:pointer;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease;white-space:nowrap}
-.theme-toggle:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}.theme-toggle:active{transform:scale(.97)}
-@media(max-width:480px){.floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:7px}.home-return,.theme-toggle{padding:11px 12px;font-size:12px;gap:6px}}
-@media(prefers-reduced-motion:reduce){.home-return{transition:none}}
+.floating-actions{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:10px;}
+.home-return,.theme-toggle{display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;text-decoration:none;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease;}
+.home-return:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003;}
+.home-return:active{transform:scale(.97);}
+.home-return:focus-visible,.theme-toggle:focus-visible{outline:3px solid var(--primary);outline-offset:3px;}
+.home-return svg{width:18px;height:18px;flex:none;}
+.theme-toggle{align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;cursor:pointer;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease;white-space:nowrap;}
+.theme-toggle:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003;}.theme-toggle:active{transform:scale(.97);}
+@media(max-width:480px){.floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:7px;}.home-return,.theme-toggle{padding:11px 12px;font-size:12px;gap:6px;}}
+@media(prefers-reduced-motion:reduce){.home-return{transition:none;}}
 
 
 /* 水印样式与天机阁同步：页面背景及各模块边角使用低透明度 98888，不遮挡文字和操作 */
-body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px}
-body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg)}
-body.light-theme::before{color:#62718a;opacity:.065}body.light-theme::after{color:#586b8b;opacity:.10}
-.wrap{position:relative;isolation:isolate}.wrap>*{position:relative;z-index:1}
-.card{position:relative;isolation:isolate;overflow:hidden}.card>*{position:relative;z-index:1}
-.card::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#8a9bb8;opacity:.045;transform:rotate(-9deg)}
-.card::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.07;transform:rotate(-10deg)}
-body.light-theme .card::before{opacity:.075}body.light-theme .card::after{opacity:.095}
-@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}.card::before{font-size:22px;left:12px;top:12px;opacity:.035}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06}body.light-theme .card::before{opacity:.05}body.light-theme .card::after{opacity:.075}}
+body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px;}
+body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg);}
+body.light-theme::before{color:#62718a;opacity:.065;}body.light-theme::after{color:#586b8b;opacity:.10;}
+.wrap{position:relative;isolation:isolate;}.wrap>*{position:relative;z-index:1;}
+.card{position:relative;isolation:isolate;overflow:hidden;}.card>*{position:relative;z-index:1;}
+.card::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#8a9bb8;opacity:.045;transform:rotate(-9deg);}
+.card::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.07;transform:rotate(-10deg);}
+body.light-theme .card::before{opacity:.075;}body.light-theme .card::after{opacity:.095;}
+@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045;}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08;}.card::before{font-size:22px;left:12px;top:12px;opacity:.035;}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06;}body.light-theme .card::before{opacity:.05;}body.light-theme .card::after{opacity:.075;}}
 
 
 
 
 /* v0.6：神装图标裁去底部黑边，独立正方形裁切，保持原比例 */
-.gear .gear-art{display:block;width:min(100%,180px);aspect-ratio:1/1;height:auto;flex:none;object-fit:cover;object-position:center;border-radius:10px;background:#211708;box-shadow:inset 0 0 0 1px #d9a44155}
-@media(max-width:700px){.gear .gear-art{width:min(100%,180px);aspect-ratio:1/1;height:auto}}
+.gear .gear-art{display:block;width:min(100%,180px);aspect-ratio:1/1;height:auto;flex:none;object-fit:cover;object-position:center;border-radius:10px;background:#211708;box-shadow:inset 0 0 0 1px #d9a44155;}
+@media(max-width:700px){.gear .gear-art{width:min(100%,180px);aspect-ratio:1/1;height:auto;}}
 
 /* v0.7 refinements */
-.page-heading{padding:clamp(18px,3vw,28px);margin-bottom:20px}
-.page-heading h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px);color:var(--ink)}
-.page-heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
-.gears{grid-template-columns:repeat(4,minmax(0,1fr))}
-.gear{gap:8px}
-.gear .gear-art{display:block;width:min(100%,180px);max-width:180px;aspect-ratio:1/1;height:auto;object-fit:contain;object-position:center;border:0;border-radius:10px;background:transparent;box-shadow:none}
-.gear strong{font-size:16px}
-.levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.levels .field{padding:clamp(8px,1.8vw,16px)}
-.slider-row{gap:6px}
-.slider-row output{min-width:58px;padding:8px 5px;font-size:15px}
-.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-@media(max-width:700px){.gears{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gear{min-height:0;padding:10px 8px}.gear .gear-art{width:min(100%,180px)}.levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.levels .field{padding:8px}.slider-row{gap:4px}.slider-row input{min-width:0}.slider-row output{min-width:48px;font-size:13px;padding:7px 3px}.levels .field label{font-size:13px;margin-bottom:8px}.ends{font-size:10px}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.page-heading{padding:17px}}
-@media(max-width:360px){.levels .field{padding:6px}.slider-row output{min-width:42px;font-size:12px}}
+.page-heading{padding:clamp(18px,3vw,28px);margin-bottom:20px;}
+.page-heading h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px);color:var(--ink);}
+.page-heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.7;}
+.gears{grid-template-columns:repeat(4,minmax(0,1fr));}
+.gear{gap:8px;}
+.gear .gear-art{display:block;width:min(100%,180px);max-width:180px;aspect-ratio:1/1;height:auto;object-fit:contain;object-position:center;border:0;border-radius:10px;background:transparent;box-shadow:none;}
+.gear strong{font-size:16px;}
+.levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.levels .field{padding:clamp(8px,1.8vw,16px);}
+.slider-row{gap:6px;}
+.slider-row output{min-width:58px;padding:8px 5px;font-size:15px;}
+.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+@media(max-width:700px){.gears{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}.gear{min-height:0;padding:10px 8px;}.gear .gear-art{width:min(100%,180px);}.levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}.levels .field{padding:8px;}.slider-row{gap:4px;}.slider-row input{min-width:0;}.slider-row output{min-width:48px;font-size:13px;padding:7px 3px;}.levels .field label{font-size:13px;margin-bottom:8px;}.ends{font-size:10px;}.summary{grid-template-columns:repeat(2,minmax(0,1fr));}.page-heading{padding:17px;}}
+@media(max-width:360px){.levels .field{padding:6px;}.slider-row output{min-width:42px;font-size:12px;}}
 
 /* v0.8：神装图标透明去边，保留刀尖等超出边框的主体 */
-.gear .gear-art{width:min(100%,180px)!important;max-width:180px!important;aspect-ratio:1/1!important;height:auto!important;object-fit:contain!important;object-position:center!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important}
-@media(max-width:700px){.gear .gear-art{width:min(100%,180px)!important;aspect-ratio:1/1!important;height:auto!important}}
+.gear .gear-art{width:min(100%,180px)!important;max-width:180px!important;aspect-ratio:1/1!important;height:auto!important;object-fit:contain!important;object-position:center!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;}
+@media(max-width:700px){.gear .gear-art{width:min(100%,180px)!important;aspect-ratio:1/1!important;height:auto!important;}}
 
 /* v1.7: duplicated gift plans for no-rebate and full-rebate scenarios */
-.scenario-title{font-size:20px;font-weight:900;letter-spacing:.3px}.no-rebate-title{color:#dc2626}.rebate-title{color:#16a34a}.card+.card{margin-top:18px}
+.scenario-title{font-size:20px;font-weight:900;letter-spacing:.3px;}.no-rebate-title{color:#dc2626;}.rebate-title{color:#16a34a;}.card+.card{margin-top:18px;}
 
-.hint-inline{font-size:13px;font-weight:500;color:var(--muted)}
-.exp-panel{margin-top:16px;padding:14px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:14px;background:var(--panel)}
-.exp-panel h3{margin:0 0 12px;color:var(--primary);font-size:16px}
-.exp-halves{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:center}
-.exp-half{min-width:0}.exp-half label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}
-.exp-half input:not([type="range"]){width:100%;min-width:0;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}.exp-half .exp-range{display:block;width:100%;margin:15px 0 4px;padding:0;accent-color:#e2a72e;cursor:pointer}.exp-range-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-.exp-caption{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}
-.exp-bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0}.exp-bar div{height:100%;width:0;background:linear-gradient(90deg,#d9a441,#f6ce70);transition:width .2s}
-.gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.gift-card{position:relative;min-width:0;text-align:left;padding:18px;border:1px solid var(--line);border-top:4px solid color-mix(in srgb,var(--primary) 55%,var(--line));border-radius:16px;background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 7%,var(--panel)),var(--panel) 45%);color:var(--ink);font:inherit;cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s}
-.gift-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px #0002}.gift-card.active{border:2px solid var(--primary);border-top:5px solid var(--primary);background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 17%,var(--panel)),var(--soft) 70%);box-shadow:0 9px 26px color-mix(in srgb,var(--primary) 24%,transparent);padding:17px}.gift-card.active:before{content:"已选方案";position:absolute;right:12px;top:-1px;padding:4px 9px;border-radius:0 0 8px 8px;background:var(--primary);color:white;font-size:11px;font-weight:800}
-.gift-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}.gift-top strong{font-size:17px;letter-spacing:.2px}.gift-price{font-weight:900;font-size:22px;color:var(--ink);padding:4px 9px;border-radius:9px;background:color-mix(in srgb,#eab54c 22%,var(--card));white-space:nowrap}
-.gift-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px 0}.gift-facts span{display:flex;flex-direction:column;gap:5px;padding:8px 6px;border-radius:9px;background:color-mix(in srgb,var(--card) 78%,transparent);color:var(--muted);font-size:12px}.gift-facts b{font-size:15px;color:var(--ink);overflow-wrap:anywhere}.gift-facts span{border:1px solid color-mix(in srgb,var(--line) 65%,transparent)}
-.gift-extra{display:block;margin:2px 0 7px;font-size:12px;color:var(--muted);font-weight:400}.gift-convert{display:block;margin-top:6px;padding:7px 9px;border-radius:8px;background:color-mix(in srgb,var(--line) 38%,var(--card));font-size:12px;font-weight:500;color:var(--muted)}.gift-convert b{float:right;font-size:13px;font-weight:700;color:var(--ink)}.gift-result{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding:13px 12px;border:1px solid color-mix(in srgb,#eab54c 60%,var(--line));border-radius:12px;background:color-mix(in srgb,#eab54c 16%,var(--card));font-size:13px;line-height:1.5;color:var(--muted)}.gift-result b{color:var(--ink)}.gift-result .purchase-count{font-size:15px}.gift-result .purchase-count b{font-size:25px;font-weight:900;color:var(--primary)}.gift-result .purchase-total{font-size:13px}.gift-result .purchase-total b{font-size:24px;font-weight:900;color:var(--ink)}.gift-card.active .gift-result{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 12%,var(--card))}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
-.gear .gear-art{width:min(100%,180px)!important;aspect-ratio:1/1!important;height:auto!important;object-fit:contain!important;object-position:center!important;background:transparent!important}
-@media(max-width:760px){.gift-grid{grid-template-columns:1fr}.gift-card{padding:14px}.gift-card.active{padding:13px}.exp-halves{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.exp-half label{font-size:12px}}
+.hint-inline{font-size:13px;font-weight:500;color:var(--muted);}
+.exp-panel{margin-top:16px;padding:14px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:14px;background:var(--panel);}
+.exp-panel h3{margin:0 0 12px;color:var(--primary);font-size:16px;}
+.exp-halves{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:center;}
+.exp-half{min-width:0;}.exp-half label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px;}
+.exp-half input:not([type="range"]){width:100%;min-width:0;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;}.exp-half .exp-range{display:block;width:100%;margin:15px 0 4px;padding:0;accent-color:#e2a72e;cursor:pointer;}.exp-range-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;}
+.exp-caption{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;}
+.exp-bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0;}.exp-bar div{height:100%;width:0;background:linear-gradient(90deg,#d9a441,#f6ce70);transition:width .2s;}
+.gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.gift-card{position:relative;min-width:0;text-align:left;padding:18px;border:1px solid var(--line);border-top:4px solid color-mix(in srgb,var(--primary) 55%,var(--line));border-radius:16px;background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 7%,var(--panel)),var(--panel) 45%);color:var(--ink);font:inherit;cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s;}
+.gift-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px #0002;}.gift-card.active{border:2px solid var(--primary);border-top:5px solid var(--primary);background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 17%,var(--panel)),var(--soft) 70%);box-shadow:0 9px 26px color-mix(in srgb,var(--primary) 24%,transparent);padding:17px;}.gift-card.active:before{content:"已选方案";position:absolute;right:12px;top:-1px;padding:4px 9px;border-radius:0 0 8px 8px;background:var(--primary);color:white;font-size:11px;font-weight:800;}
+.gift-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line);}.gift-top strong{font-size:17px;letter-spacing:.2px;}.gift-price{font-weight:900;font-size:22px;color:var(--ink);padding:4px 9px;border-radius:9px;background:color-mix(in srgb,#eab54c 22%,var(--card));white-space:nowrap;}
+.gift-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px 0;}.gift-facts span{display:flex;flex-direction:column;gap:5px;padding:8px 6px;border-radius:9px;background:color-mix(in srgb,var(--card) 78%,transparent);color:var(--muted);font-size:12px;}.gift-facts b{font-size:15px;color:var(--ink);overflow-wrap:anywhere;}.gift-facts span{border:1px solid color-mix(in srgb,var(--line) 65%,transparent);}
+.gift-extra{display:block;margin:2px 0 7px;font-size:12px;color:var(--muted);font-weight:400;}.gift-convert{display:block;margin-top:6px;padding:7px 9px;border-radius:8px;background:color-mix(in srgb,var(--line) 38%,var(--card));font-size:12px;font-weight:500;color:var(--muted);}.gift-result{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding:13px 12px;border:1px solid color-mix(in srgb,#eab54c 60%,var(--line));border-radius:12px;background:color-mix(in srgb,#eab54c 16%,var(--card));font-size:13px;line-height:1.5;color:var(--muted);}.gift-result .purchase-count{font-size:15px;}.gift-result .purchase-count b{font-size:25px;font-weight:900;color:var(--primary);}.gift-result .purchase-total b{font-size:24px;font-weight:900;color:var(--ink);}.gift-card.active .gift-result{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 12%,var(--card));}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line);}
+.gear .gear-art{width:min(100%,180px)!important;aspect-ratio:1/1!important;height:auto!important;object-fit:contain!important;object-position:center!important;background:transparent!important;}
+@media(max-width:760px){.gift-grid{grid-template-columns:1fr;}.gift-card{padding:14px;}.gift-card.active{padding:13px;}.exp-halves{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;}.exp-half label{font-size:12px;}}
 
 /* v1.9：单次返利上限计算表可编辑联动 */
-.rebate-cap-card{margin-top:18px}.rebate-cap-card h2{color:#16a34a}.rebate-cap-table th{white-space:nowrap}.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 4px;align-items:stretch}.rebate-cap-stat{display:flex;flex-direction:column;gap:7px;padding:16px;border:1px solid color-mix(in srgb,#16a34a 30%,var(--line));border-radius:13px;background:color-mix(in srgb,#16a34a 7%,var(--panel));min-width:0}.rebate-cap-stat span{font-size:13px;color:var(--muted)}.rebate-cap-stat strong{font-size:clamp(22px,3vw,30px);line-height:1.2;color:#16a34a;font-weight:900;overflow-wrap:anywhere}.rebate-cap-stat strong small{font-size:14px}.rebate-cap-stat em{font-style:normal;font-size:12px;color:var(--muted)}
-@media(max-width:700px){.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.rebate-cap-table{font-size:12px}.rebate-cap-table th,.rebate-cap-table td{padding:8px 6px}}
+.rebate-cap-card{margin-top:18px;}.rebate-cap-card h2{color:#16a34a;}.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 4px;align-items:stretch;}.rebate-cap-stat{display:flex;flex-direction:column;gap:7px;padding:16px;border:1px solid color-mix(in srgb,#16a34a 30%,var(--line));border-radius:13px;background:color-mix(in srgb,#16a34a 7%,var(--panel));min-width:0;}.rebate-cap-stat span{font-size:13px;color:var(--muted);}.rebate-cap-stat strong{font-size:clamp(22px,3vw,30px);line-height:1.2;color:#16a34a;font-weight:900;overflow-wrap:anywhere;}.rebate-cap-stat strong small{font-size:14px;}.rebate-cap-stat em{font-style:normal;font-size:12px;color:var(--muted);}
+@media(max-width:700px){.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}.rebate-cap-table{font-size:12px;}}
 
-.rebate-cap-table .rebate-input{box-sizing:border-box;width:100%;min-width:72px;padding:7px 6px;border:1px solid #d6b45d;border-radius:7px;background:#fff8df;color:#202020;font:inherit;text-align:center}.rebate-cap-table output{display:inline-block;padding:7px 5px;font-weight:800;color:var(--ink);white-space:nowrap}.rebate-cap-table tr:nth-last-child(-n+3) output{color:#16803d;font-size:1.08em}.rebate-formulas{margin-top:14px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 80%,transparent);font-size:13px;line-height:1.65}.rebate-formulas ul{margin:8px 0;padding-left:20px}.rebate-cap-table{min-width:680px}
+.rebate-cap-table .rebate-input{font:inherit;}.rebate-cap-table output{font-weight:800;}.rebate-cap-table tr:nth-last-child(-n/**/+3) output{font-size:1.08em;}.rebate-formulas ul{margin:8px 0;padding-left:20px;}
 
 /* v2.1：统一汇总卡片对齐，比例字段明确命名 */
-.rebate-params{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:14px 0 10px;padding:12px;border:1px solid var(--border-color,#d8dce3);border-radius:14px;background:var(--panel-bg,rgba(128,128,128,.06))}
-.rebate-param{min-width:0;padding:10px 8px;text-align:center;border-radius:10px;background:var(--card);color:var(--ink);border:1px solid var(--line)}
-.rebate-param span{display:block;font-size:12px;line-height:1.35;color:var(--muted);opacity:1;margin-bottom:5px;min-height:2.7em;display:flex;align-items:center;justify-content:center;text-align:center}
-.rebate-param strong{font-size:clamp(15px,2vw,20px);font-weight:800;overflow-wrap:anywhere}
+.rebate-params{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:14px 0 10px;padding:12px;border:1px solid var(--border-color,#d8dce3);border-radius:14px;background:var(--panel-bg,rgba(128,128,128,.06));}
+.rebate-param{min-width:0;padding:10px 8px;text-align:center;border-radius:10px;background:var(--card);color:var(--ink);border:1px solid var(--line);}
+.rebate-param span{display:block;font-size:12px;line-height:1.35;color:var(--muted);opacity:1;margin-bottom:5px;min-height:2.7em;display:flex;align-items:center;justify-content:center;text-align:center;}
+.rebate-param strong{font-size:clamp(15px,2vw,20px);font-weight:800;overflow-wrap:anywhere;}
 /* v2.12：价格沿用普通参数卡片配色，人民币符号显示在原数值框内部 */
-.rebate-param.price-param{background:var(--card);border-color:var(--line)}
-.rebate-param.price-param>span{color:var(--muted);font-weight:400}
-.rebate-param.price-param output{display:inline-flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;min-width:4.5em;padding:7px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);white-space:nowrap;overflow-wrap:normal}
-.rebate-param.price-param output::before{content:"¥";display:inline-block;color:inherit;font:inherit}
-.rebate-cap-table output{display:inline-block;min-width:2ch}
-.rebate-cap-table .rebate-input{border:0;background:transparent;box-shadow:none;color:inherit;text-align:center;padding:0;pointer-events:none}
-@media(max-width:620px){.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px}.rebate-param{padding:8px 4px}.rebate-param strong{font-size:15px}}
+.rebate-param.price-param{background:var(--card);border-color:var(--line);}
+.rebate-param.price-param>span{color:var(--muted);font-weight:400;}
+.rebate-param.price-param output{display:inline-flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;min-width:4.5em;padding:7px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);white-space:nowrap;overflow-wrap:normal;}
+
+
+.rebate-cap-table .rebate-input{pointer-events:none;}
+@media(max-width:620px){.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px;}.rebate-param{padding:8px 4px;}.rebate-param strong{font-size:15px;}}
 
 
 /* v2.2：统一返利表格列宽、中文与数字字号层级 */
-.rebate-cap-table{width:100%;min-width:680px;table-layout:fixed;border-collapse:separate;border-spacing:0;font-size:13px}
-.rebate-cap-table th,.rebate-cap-table td{font-size:13px;line-height:1.35;vertical-align:middle;text-align:center;padding:10px 8px;box-sizing:border-box}
-.rebate-cap-table thead th:first-child,.rebate-cap-table tbody th{width:145px;text-align:center;font-size:13px;font-weight:700;white-space:normal}
-.rebate-cap-table thead th:not(:first-child),.rebate-cap-table td{width:calc((100% - 145px)/4);text-align:center}
-.rebate-cap-table thead th{font-weight:700}
-.rebate-cap-table td output{display:inline-block;min-width:2ch;font-size:13px;line-height:1.35;font-weight:500;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
-.rebate-cap-table tr:first-child td output{font-size:15px;font-weight:800}
-.rebate-cap-table tr:nth-last-child(-n+2) td output{font-size:15px;font-weight:800;color:#16803d}
-.rebate-cap-table .rebate-input{font-size:13px;line-height:1.35;text-align:center}
-.rebate-params{grid-template-columns:repeat(7,minmax(0,1fr));align-items:stretch;gap:10px}
-.rebate-param{min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:7px;padding:11px 8px;box-sizing:border-box}
-.rebate-param span{width:100%;min-height:34px;margin:0;font-size:13px;line-height:1.35;color:var(--muted);opacity:1;display:flex;align-items:center;justify-content:center;text-align:center;overflow-wrap:anywhere}
-.rebate-param strong{display:flex;align-items:center;justify-content:center;min-height:30px;font-size:17px;line-height:1.2;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rebate-cap-summary{align-items:stretch}
-.rebate-cap-stat{justify-content:center;min-height:94px;padding:14px 16px;gap:9px}
-.rebate-cap-stat span{font-size:13px;line-height:1.4}
-.rebate-cap-stat strong{font-size:20px;line-height:1.25;font-variant-numeric:tabular-nums}
-@media(max-width:620px){.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.rebate-param{min-height:76px;padding:9px 5px}.rebate-param span{font-size:12px;min-height:32px}.rebate-param strong{font-size:15px}.rebate-cap-table{min-width:680px}.rebate-cap-table th,.rebate-cap-table td{padding:8px 5px}.rebate-cap-table thead th:first-child,.rebate-cap-table tbody th{width:125px}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.rebate-cap-stat{padding:10px 7px;min-height:88px}.rebate-cap-stat span{font-size:12px}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere}}
+
+.rebate-cap-table th,.rebate-cap-table td{font-size:13px;line-height:1.35;}
 
 
-.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 16px}
-.rebate-plan-option{min-width:0;padding:12px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);font:700 14px/1.4 system-ui,-apple-system,"Microsoft YaHei",sans-serif;cursor:pointer;transition:.18s}
-.rebate-plan-option.active{border:2px solid #16a34a;background:color-mix(in srgb,#16a34a 10%,var(--panel));color:#15803d;box-shadow:0 0 0 2px color-mix(in srgb,#16a34a 10%,transparent)}
-@media(max-width:620px){.rebate-plan-select{grid-template-columns:1fr;gap:7px}.rebate-plan-option{padding:10px}}
+.rebate-cap-table thead th{font-weight:700;}
+.rebate-cap-table td output{font-size:13px;line-height:1.35;font-weight:500;font-variant-numeric:tabular-nums;}
+.rebate-cap-table tr:first-child td output{font-size:15px;font-weight:800;}
+
+.rebate-cap-table .rebate-input{font-size:13px;line-height:1.35;}
+.rebate-params{grid-template-columns:repeat(7,minmax(0,1fr));align-items:stretch;gap:10px;}
+.rebate-param{min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:7px;padding:11px 8px;box-sizing:border-box;}
+.rebate-param span{width:100%;min-height:34px;margin:0;font-size:13px;line-height:1.35;color:var(--muted);opacity:1;display:flex;align-items:center;justify-content:center;text-align:center;overflow-wrap:anywhere;}
+.rebate-param strong{display:flex;align-items:center;justify-content:center;min-height:30px;font-size:17px;line-height:1.2;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.rebate-cap-summary{align-items:stretch;}
+.rebate-cap-stat{justify-content:center;min-height:94px;padding:14px 16px;gap:9px;}
+.rebate-cap-stat span{font-size:13px;line-height:1.4;}
+.rebate-cap-stat strong{font-size:20px;line-height:1.25;font-variant-numeric:tabular-nums;}
+@media(max-width:620px){.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}.rebate-param{min-height:76px;padding:9px 5px;}.rebate-param span{font-size:12px;min-height:32px;}.rebate-param strong{font-size:15px;}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}.rebate-cap-stat{padding:10px 7px;min-height:88px;}.rebate-cap-stat span{font-size:12px;}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere;}}
+
+
+.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 16px;}
+.rebate-plan-option{min-width:0;padding:12px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);font:700 14px/1.4 system-ui,-apple-system,"Microsoft YaHei",sans-serif;cursor:pointer;transition:.18s;}
+.rebate-plan-option.active{border:2px solid #16a34a;background:color-mix(in srgb,#16a34a 10%,var(--panel));color:#15803d;box-shadow:0 0 0 2px color-mix(in srgb,#16a34a 10%,transparent);}
+@media(max-width:620px){.rebate-plan-select{grid-template-columns:1fr;gap:7px;}.rebate-plan-option{padding:10px;}}
 
 
 .gift-card[data-plan="monthly"] .gift-extra,
 .gift-card[data-plan="vip10"] .gift-extra { display: none !important; }
 /* v2.6：修复礼包参数卡片误用白色 fallback，统一跟随主题变量 */
-.rebate-params{background:var(--panel);border-color:var(--line)}
-.rebate-param{background:var(--card)!important;color:var(--ink);border-color:var(--line)}
-.rebate-param span{color:var(--muted)!important;opacity:1}
-.rebate-param strong{color:var(--ink)}
+.rebate-params{background:var(--panel);border-color:var(--line);}
+.rebate-param{background:var(--card)!important;color:var(--ink);border-color:var(--line);}
+.rebate-param span{color:var(--muted)!important;opacity:1;}
+.rebate-param strong{color:var(--ink);}
 /* v2.9：宽屏布局修复：扩大页面内容宽度，材料需求四项均分整行，避免数值断行 */
-@media(min-width:1200px){.wrap{width:min(1480px,100%)}.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.metric{padding:18px 20px}.metric strong{font-size:clamp(22px,1.8vw,30px);overflow-wrap:normal;word-break:normal}.metric span{font-size:14px}}
-@media(min-width:701px) and (max-width:1000px){.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{padding:12px}.metric strong{font-size:clamp(17px,2.4vw,23px)}}
-.slider-row .level-number{width:66px;min-width:66px;max-width:66px;text-align:center;padding:8px 3px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-weight:800;font-size:16px;line-height:1.2;appearance:textfield;-webkit-appearance:none}.slider-row .level-number::-webkit-inner-spin-button,.slider-row .level-number::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}@media(max-width:700px){.slider-row .level-number{width:54px;min-width:54px;max-width:54px;font-size:14px;padding:7px 1px}}
+@media(min-width:1200px){.wrap{width:min(1480px,100%);}.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}.metric{padding:18px 20px;}.metric strong{font-size:clamp(22px,1.8vw,30px);overflow-wrap:normal;word-break:normal;}.metric span{font-size:14px;}}
+@media(min-width:701px) and (max-width:1000px){.summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}.metric{padding:12px;}.metric strong{font-size:clamp(17px,2.4vw,23px);}}
+.slider-row .level-number{width:66px;min-width:66px;max-width:66px;text-align:center;padding:8px 3px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-weight:800;font-size:16px;line-height:1.2;appearance:textfield;-webkit-appearance:none;}.slider-row .level-number::-webkit-inner-spin-button,.slider-row .level-number::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}@media(max-width:700px){.slider-row .level-number{width:54px;min-width:54px;max-width:54px;font-size:14px;padding:7px 1px;}}
 
 
 /* v2.17：返利模块 UI 统一套用军师页面的卡片与返利计算样式；仅调整外观，不改计算逻辑 */
-.gift-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.gift-card{display:block;text-align:left;border:1px solid var(--line);border-top:1px solid var(--line);border-radius:13px;padding:14px;background:var(--panel);color:var(--ink);cursor:pointer;min-width:0;box-shadow:none;transition:border-color .18s,background .18s}
-.gift-card:hover{transform:none;box-shadow:0 5px 16px #0002}
-.gift-card.active{border:2px solid var(--primary);padding:13px;background:var(--soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 10%,transparent)}
-.gift-card.active:before{content:"已选方案";position:absolute;right:10px;top:0;padding:4px 8px;border-radius:0 0 7px 7px;background:var(--primary);color:#fff;font-size:11px;font-weight:800}
-.gift-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 0 10px;border-bottom:1px solid var(--line);font-size:16px;margin-bottom:10px}
-.gift-top strong{font-size:16px;letter-spacing:0}
-.gift-price{font-weight:800;font-size:20px;color:var(--primary);padding:0;background:transparent;border-radius:0;white-space:nowrap}
-.gift-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;font-size:13px;color:var(--muted);margin:10px 0}
-.gift-facts span{display:block;border:0;border-radius:7px;padding:7px 5px;background:var(--card);text-align:center;font-size:12px}
-.gift-facts b{display:block;color:var(--ink);font-size:15px;margin-top:3px}
-.gift-extra{font-size:12px;color:var(--muted);margin:3px 0 7px}
-.gift-convert{display:block;margin-top:6px;padding:7px 9px;border-radius:8px;background:color-mix(in srgb,var(--line) 30%,var(--card));font-size:12px;font-weight:500;color:var(--muted)}
-.gift-convert b{float:right;font-size:13px;font-weight:700;color:var(--ink)}
-.gift-result{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:13px;line-height:1.5;color:var(--muted)}
-.gift-result b{color:var(--ink)}
-.gift-result .purchase-count{font-size:14px}
-.gift-result .purchase-count b{font-size:22px;font-weight:800;color:var(--primary)}
-.gift-result .purchase-total{font-size:13px}
-.gift-result .purchase-total b{font-size:20px;font-weight:800;color:var(--ink)}
-.gift-card.active .gift-result{border-color:color-mix(in srgb,var(--primary) 55%,var(--line));background:color-mix(in srgb,var(--primary) 7%,var(--card))}
-.rebate-cap-card{margin-top:16px;border:1.5px solid #d9a13b;background:linear-gradient(145deg,color-mix(in srgb,#d9a13b 7%,var(--card)),var(--card))}
-.rebate-cap-card h2{color:#d9a13b}
-.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}
-.rebate-plan-option{min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);color:var(--ink);font:750 14px/1.4 system-ui,-apple-system,"Microsoft YaHei",sans-serif;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
-.rebate-plan-option.active{border:2px solid #18a765;padding:9px 11px;background:color-mix(in srgb,#18a765 12%,var(--panel));color:#18a765;box-shadow:0 0 0 2px color-mix(in srgb,#18a765 10%,transparent)}
-.rebate-params{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:14px 0 10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);align-items:stretch}
-.rebate-param{min-width:0;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:7px;padding:11px 8px;text-align:center;border-radius:10px;background:var(--card)!important;color:var(--ink);border:1px solid var(--line)}
-.rebate-param span{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0;font-size:13px;line-height:1.35;color:var(--muted)!important;opacity:1;text-align:center;overflow-wrap:anywhere}
-.rebate-param strong{display:flex;align-items:center;justify-content:center;min-height:30px;font-size:17px;line-height:1.2;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow-wrap:anywhere}
-.rebate-param.price-param{background:var(--card)!important;border-color:var(--line)}
-.rebate-param.price-param>span{color:var(--muted)!important;font-weight:400}
-.rebate-param.price-param output{display:inline-flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;min-width:4.5em;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);white-space:nowrap;overflow-wrap:normal}
-.rebate-param.price-param output::before{content:"¥";display:inline-block;color:inherit;font:inherit}
-.rebate-cap-table{width:100%;min-width:680px;table-layout:fixed;border-collapse:separate;border-spacing:0;font-size:13px}
-.rebate-cap-table th,.rebate-cap-table td{font-family:inherit;font-size:13px;line-height:1.4;vertical-align:middle;text-align:center;padding:10px 8px;box-sizing:border-box}
-.rebate-cap-table thead th{background:var(--panel);font-weight:700;color:var(--muted)}
-.rebate-cap-table thead th:first-child,.rebate-cap-table tbody th{width:145px;text-align:center;font-size:13px;font-weight:700;white-space:normal}
-.rebate-cap-table thead th:not(:first-child),.rebate-cap-table td{width:calc((100% - 145px)/4);text-align:center}
-.rebate-cap-table td output{display:inline-block;min-width:2ch;font-size:13px;line-height:1.4;font-weight:500;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
-.rebate-cap-table .rebate-input{border:0;background:transparent;box-shadow:none;color:inherit;text-align:center;padding:0;pointer-events:none;font:inherit}
-.rebate-cap-table tr:nth-last-child(-n+2) td output{font-size:15px;font-weight:800;color:#16803d}
-.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 4px;align-items:stretch}
-.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:9px;min-width:0;min-height:94px;padding:14px 16px;border:1px solid color-mix(in srgb,#18a765 35%,var(--line));border-radius:11px;background:color-mix(in srgb,#18a765 7%,var(--panel))}
-.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted)}
-.rebate-cap-stat strong{font-size:20px;line-height:1.25;color:#18a765;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.rebate-formulas{margin-top:14px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 80%,transparent);font-size:13px;line-height:1.65}
-@media(max-width:760px){.gift-grid{grid-template-columns:1fr;gap:9px}.gift-card{padding:12px}.gift-card.active{padding:11px}.gift-top{font-size:15px}.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px}.rebate-param{min-height:76px;padding:9px 5px}.rebate-param span{font-size:12px;min-height:32px}.rebate-param strong{font-size:15px}.rebate-plan-select{grid-template-columns:1fr;gap:7px}.rebate-plan-option{padding:10px}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.rebate-cap-stat{padding:10px 7px;min-height:88px}.rebate-cap-stat span{font-size:12px}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere}.rebate-cap-table{min-width:680px}.rebate-cap-table th,.rebate-cap-table td{padding:8px 5px}.rebate-cap-table thead th:first-child,.rebate-cap-table tbody th{width:125px}}
+.gift-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+.gift-card{display:block;text-align:left;border:1px solid var(--line);border-top:1px solid var(--line);border-radius:13px;padding:14px;background:var(--panel);color:var(--ink);cursor:pointer;min-width:0;box-shadow:none;transition:border-color .18s,background .18s;}
+.gift-card:hover{transform:none;box-shadow:0 5px 16px #0002;}
+.gift-card.active{border:2px solid var(--primary);padding:13px;background:var(--soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 10%,transparent);}
+.gift-card.active:before{content:"已选方案";position:absolute;right:10px;top:0;padding:4px 8px;border-radius:0 0 7px 7px;background:var(--primary);color:#fff;font-size:11px;font-weight:800;}
+.gift-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 0 10px;border-bottom:1px solid var(--line);font-size:16px;margin-bottom:10px;}
+.gift-top strong{font-size:16px;letter-spacing:0;}
+.gift-price{font-weight:800;font-size:20px;color:var(--primary);padding:0;background:transparent;border-radius:0;white-space:nowrap;}
+.gift-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;font-size:13px;color:var(--muted);margin:10px 0;}
+.gift-facts span{display:block;border:0;border-radius:7px;padding:7px 5px;background:var(--card);text-align:center;font-size:12px;}
+.gift-facts b{display:block;color:var(--ink);font-size:15px;margin-top:3px;}
+.gift-extra{font-size:12px;color:var(--muted);margin:3px 0 7px;}
+.gift-convert{display:block;margin-top:6px;padding:7px 9px;border-radius:8px;background:color-mix(in srgb,var(--line) 30%,var(--card));font-size:12px;font-weight:500;color:var(--muted);}
+.gift-convert b{float:right;font-size:13px;font-weight:700;color:var(--ink);}
+.gift-result{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:13px;line-height:1.5;color:var(--muted);}
+.gift-result b{color:var(--ink);}
+.gift-result .purchase-count{font-size:14px;}
+.gift-result .purchase-count b{font-size:22px;font-weight:800;color:var(--primary);}
+.gift-result .purchase-total{font-size:13px;}
+.gift-result .purchase-total b{font-size:20px;font-weight:800;color:var(--ink);}
+.gift-card.active .gift-result{border-color:color-mix(in srgb,var(--primary) 55%,var(--line));background:color-mix(in srgb,var(--primary) 7%,var(--card));}
+.rebate-cap-card{margin-top:16px;border:1.5px solid #d9a13b;background:linear-gradient(145deg,color-mix(in srgb,#d9a13b 7%,var(--card)),var(--card));}
+.rebate-cap-card h2{color:#d9a13b;}
+.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0;}
+.rebate-plan-option{min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);color:var(--ink);font:750 14px/1.4 system-ui,-apple-system,"Microsoft YaHei",sans-serif;cursor:pointer;transition:background .18s,border-color .18s,color .18s;}
+.rebate-plan-option.active{border:2px solid #18a765;padding:9px 11px;background:color-mix(in srgb,#18a765 12%,var(--panel));color:#18a765;box-shadow:0 0 0 2px color-mix(in srgb,#18a765 10%,transparent);}
+.rebate-params{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:14px 0 10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);align-items:stretch;}
+.rebate-param{min-width:0;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:7px;padding:11px 8px;text-align:center;border-radius:10px;background:var(--card)!important;color:var(--ink);border:1px solid var(--line);}
+.rebate-param span{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0;font-size:13px;line-height:1.35;color:var(--muted)!important;opacity:1;text-align:center;overflow-wrap:anywhere;}
+.rebate-param strong{display:flex;align-items:center;justify-content:center;min-height:30px;font-size:17px;line-height:1.2;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow-wrap:anywhere;}
+.rebate-param.price-param{background:var(--card)!important;border-color:var(--line);}
+.rebate-param.price-param>span{color:var(--muted)!important;font-weight:400;}
+.rebate-param.price-param output{display:inline-flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;min-width:4.5em;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);white-space:nowrap;overflow-wrap:normal;}
+.rebate-param.price-param output::before{content:"¥";display:inline-block;color:inherit;font:inherit;}
+.rebate-cap-table{font-size:13px;}
+.rebate-cap-table th,.rebate-cap-table td{font-family:inherit;font-size:13px;line-height:1.4;}
+.rebate-cap-table thead th{font-weight:700;}
+.rebate-cap-table thead th:first-child,.rebate-cap-table tbody th{font-size:13px;font-weight:700;}
+
+.rebate-cap-table td output{font-size:13px;line-height:1.4;font-weight:500;font-variant-numeric:tabular-nums;}
+.rebate-cap-table .rebate-input{pointer-events:none;font:inherit;}
+.rebate-cap-table tr:nth-last-child(-n/**/+2) td output{font-size:15px;font-weight:800;}
+.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 4px;align-items:stretch;}
+.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:9px;min-width:0;min-height:94px;padding:14px 16px;border:1px solid color-mix(in srgb,#18a765 35%,var(--line));border-radius:11px;background:color-mix(in srgb,#18a765 7%,var(--panel));}
+.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);}
+.rebate-cap-stat strong{font-size:20px;line-height:1.25;color:#18a765;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+.rebate-formulas{margin-top:14px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 80%,transparent);font-size:13px;line-height:1.65;}
+@media(max-width:760px){.gift-grid{grid-template-columns:1fr;gap:9px;}.gift-card{padding:12px;}.gift-card.active{padding:11px;}.gift-top{font-size:15px;}.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px;}.rebate-param{min-height:76px;padding:9px 5px;}.rebate-param span{font-size:12px;min-height:32px;}.rebate-param strong{font-size:15px;}.rebate-plan-select{grid-template-columns:1fr;gap:7px;}.rebate-plan-option{padding:10px;}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}.rebate-cap-stat{padding:10px 7px;min-height:88px;}.rebate-cap-stat span{font-size:12px;}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere;}}
 
 
 /* v2.18：合并返利/不返利礼包方案，右上角统一开关 */
-.gift-card-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px}
-.gift-card-heading h2{margin:0;min-width:0}
-.rebate-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;max-width:100%;padding:9px 16px;border:1px solid #ef4444;border-radius:999px;background:color-mix(in srgb,#ef4444 10%,var(--card));color:#ef4444;font-family:inherit;font-size:13px;font-weight:700;line-height:1.25;cursor:pointer;white-space:nowrap;transition:background .18s,border-color .18s,color .18s}
-.rebate-toggle-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 15%,transparent)}
-.rebate-toggle[aria-pressed="true"]{border-color:#10b981;background:color-mix(in srgb,#10b981 12%,var(--card));color:#10b981}
-.gift-mode[hidden]{display:none!important}
-.gift-purchase-card .gift-grid{margin-top:12px}
-@media(max-width:520px){.gift-card-heading{align-items:flex-start;gap:8px}.gift-card-heading h2{font-size:17px}.rebate-toggle{padding:8px 10px;font-size:12px;white-space:normal;text-align:center;max-width:52%}}
+.gift-card-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px;}
+.gift-card-heading h2{margin:0;min-width:0;}
+.rebate-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;max-width:100%;padding:9px 16px;border:1px solid #ef4444;border-radius:999px;background:color-mix(in srgb,#ef4444 10%,var(--card));color:#ef4444;font-family:inherit;font-size:13px;font-weight:700;line-height:1.25;cursor:pointer;white-space:nowrap;transition:background .18s,border-color .18s,color .18s;}
+.rebate-toggle-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 15%,transparent);}
+.rebate-toggle[aria-pressed="true"]{border-color:#10b981;background:color-mix(in srgb,#10b981 12%,var(--card));color:#10b981;}
+.gift-mode[hidden]{display:none!important;}
+.gift-purchase-card .gift-grid{margin-top:12px;}
+@media(max-width:520px){.gift-card-heading{align-items:flex-start;gap:8px;}.gift-card-heading h2{font-size:17px;}.rebate-toggle{padding:8px 10px;font-size:12px;white-space:normal;text-align:center;max-width:52%;}}
 
 /* v2.19: converted obsidian is a fourth equal tile; purchase state colors and remaining obsidian */
-.gift-facts{grid-template-columns:repeat(4,minmax(0,1fr))}
-.gift-facts .gift-convert{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;text-align:center;margin:0;padding:8px 5px;min-height:54px}
-.gift-facts .gift-convert b{display:block;font-size:15px}
-.gift-result .purchase-count b,.gift-result .purchase-total b{color:#ef4444}
-body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-result .purchase-total b{color:#22c55e}
+.gift-facts{grid-template-columns:repeat(4,minmax(0,1fr));}
+.gift-facts .gift-convert{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;text-align:center;margin:0;padding:8px 5px;min-height:54px;}
+.gift-facts .gift-convert b{display:block;font-size:15px;}
+.gift-result .purchase-count b,.gift-result .purchase-total b{color:#ef4444;}
+body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-result .purchase-total b{color:#22c55e;}
 /* v2.1.6：礼包卡片统一放上方，实际购买与材料数量集中展示在下方整行 */
-.gift-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch}
-.gift-card .gift-result{display:none!important}
-.gift-summary-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-.gift-summary-item{min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;padding:10px 7px;border:1px solid var(--line);border-radius:10px;background:var(--card);text-align:center}
-.gift-summary-item span{font-size:12px;line-height:1.35;color:var(--muted)}
-.gift-summary-item strong{font-size:clamp(15px,1.5vw,20px);line-height:1.25;font-weight:850;color:var(--primary);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-@media(max-width:760px){.gift-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px}.gift-card{padding:10px 8px!important}.gift-top{align-items:flex-start;flex-direction:column;gap:4px;padding-bottom:7px;margin-bottom:7px}.gift-top strong{font-size:13px!important}.gift-price{font-size:15px!important}.gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important}.gift-facts .gift-convert{grid-column:1/-1}.gift-summary-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:7px}.gift-summary-item{padding:8px 4px;gap:5px}.gift-summary-item span{font-size:11px}.gift-summary-item strong{font-size:15px}}
-@media(max-width:420px){.gift-summary-row{grid-template-columns:repeat(3,minmax(0,1fr))}.gift-card{padding:8px 6px!important}.gift-top strong{font-size:12px!important}.gift-price{font-size:13px!important}.gift-facts span{padding:6px 2px!important}.gift-facts b{font-size:12px!important}}
+.gift-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch;}
+.gift-card .gift-result{display:none!important;}
+.gift-summary-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);}
+.gift-summary-item{min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;padding:10px 7px;border:1px solid var(--line);border-radius:10px;background:var(--card);text-align:center;}
+.gift-summary-item span{font-size:12px;line-height:1.35;color:var(--muted);}
+.gift-summary-item strong{font-size:clamp(15px,1.5vw,20px);line-height:1.25;font-weight:850;color:var(--primary);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+@media(max-width:760px){.gift-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px;}.gift-card{padding:10px 8px!important;}.gift-top{align-items:flex-start;flex-direction:column;gap:4px;padding-bottom:7px;margin-bottom:7px;}.gift-top strong{font-size:13px!important;}.gift-price{font-size:15px!important;}.gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;}.gift-facts .gift-convert{grid-column:1/-1;}.gift-summary-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:7px;}.gift-summary-item{padding:8px 4px;gap:5px;}.gift-summary-item span{font-size:11px;}.gift-summary-item strong{font-size:15px;}}
+@media(max-width:420px){.gift-summary-row{grid-template-columns:repeat(3,minmax(0,1fr));}.gift-card{padding:8px 6px!important;}.gift-top strong{font-size:12px!important;}.gift-price{font-size:13px!important;}.gift-facts span{padding:6px 2px!important;}.gift-facts b{font-size:12px!important;}}
 
 /* v2.21：礼包购买数量、预计总价、剩余黑曜石横向排列 */
-.gift-result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:8px;padding:11px 12px}
-.gift-result .purchase-count,.gift-result .purchase-total,.gift-result .remaining-obsidian{min-width:0;font-size:13px;white-space:normal}
-.gift-result .purchase-count b,.gift-result .purchase-total b,.gift-result .remaining-obsidian b{font-size:17px;overflow-wrap:anywhere}
-.gift-result .remaining-obsidian{padding-top:0;border-top:0;border-left:1px dashed var(--line);padding-left:10px}
-@media(max-width:560px){.gift-result{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:9px 7px}.gift-result .purchase-count,.gift-result .purchase-total,.gift-result .remaining-obsidian{font-size:11px}.gift-result .purchase-count b,.gift-result .purchase-total b,.gift-result .remaining-obsidian b{font-size:14px}.gift-result .remaining-obsidian{padding-left:5px}}
-@media(max-width:760px){.gift-facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.gift-facts span{padding:7px 3px;font-size:11px}.gift-facts b,.gift-facts .gift-convert b{font-size:13px}}
+.gift-result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:8px;padding:11px 12px;}
+.gift-result .purchase-count,.gift-result .purchase-total,.gift-result .remaining-obsidian{min-width:0;font-size:13px;white-space:normal;}
+.gift-result .purchase-count b,.gift-result .purchase-total b,.gift-result .remaining-obsidian b{font-size:17px;overflow-wrap:anywhere;}
+.gift-result .remaining-obsidian{padding-top:0;border-top:0;border-left:1px dashed var(--line);padding-left:10px;}
+@media(max-width:560px){.gift-result{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:9px 7px;}.gift-result .purchase-count,.gift-result .purchase-total,.gift-result .remaining-obsidian{font-size:11px;}.gift-result .purchase-count b,.gift-result .purchase-total b,.gift-result .remaining-obsidian b{font-size:14px;}.gift-result .remaining-obsidian{padding-left:5px;}}
+@media(max-width:760px){.gift-facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;}.gift-facts span{padding:7px 3px;font-size:11px;}.gift-facts b,.gift-facts .gift-convert b{font-size:13px;}}
 
 /* VIP10礼包不展示附加字段 */
-.gift-card[data-plan="vip10"] .gift-extra{display:none!important}
+.gift-card[data-plan="vip10"] .gift-extra{display:none!important;}
 
 /* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
 .wrap{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
@@ -243,40 +243,40 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
 .panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
 
 /* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
+#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px);}
+#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3;}
+#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px;}
 
 
 /* v2.1.10：礼包购买方案仅显示小包、折算黑曜石、附加，三项固定横排 */
-.gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;min-width:0}
-.gift-facts>span{min-width:0;white-space:nowrap;overflow:visible;text-overflow:clip;padding:8px 2px!important;text-align:center;font-size:clamp(9px,1.1vw,12px)!important}
-.gift-facts>span b{display:block;white-space:nowrap;overflow:visible;text-overflow:clip;font-size:clamp(11px,1.25vw,15px)!important;overflow-wrap:normal!important;word-break:keep-all!important}
-.gift-facts .gift-convert{grid-column:auto!important}
-.gift-extra-field{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:color-mix(in srgb,var(--card) 78%,transparent);border:1px solid color-mix(in srgb,var(--line) 65%,transparent)!important;border-radius:9px!important;color:var(--muted);min-width:0}
-@media(max-width:760px){.gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important}.gift-facts>span{padding:7px 1px!important;font-size:9px!important}.gift-facts>span b{font-size:11px!important}}
-@media(max-width:420px){.gift-facts>span{font-size:8px!important;padding:6px 0!important}.gift-facts>span b{font-size:10px!important}}
+.gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;min-width:0;}
+.gift-facts>span{min-width:0;white-space:nowrap;overflow:visible;text-overflow:clip;padding:8px 2px!important;text-align:center;font-size:clamp(9px,1.1vw,12px)!important;}
+.gift-facts>span b{display:block;white-space:nowrap;overflow:visible;text-overflow:clip;font-size:clamp(11px,1.25vw,15px)!important;overflow-wrap:normal!important;word-break:keep-all!important;}
+.gift-facts .gift-convert{grid-column:auto!important;}
+.gift-extra-field{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:color-mix(in srgb,var(--card) 78%,transparent);border:1px solid color-mix(in srgb,var(--line) 65%,transparent)!important;border-radius:9px!important;color:var(--muted);min-width:0;}
+@media(max-width:760px){.gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important;}.gift-facts>span{padding:7px 1px!important;font-size:9px!important;}.gift-facts>span b{font-size:11px!important;}}
+@media(max-width:420px){.gift-facts>span{font-size:8px!important;padding:6px 0!important;}.gift-facts>span b{font-size:10px!important;}}
 
 /* v2.1.11：礼包标题价格同排；三项字段的标签行与数值行分别对齐 */
-.gift-grid .gift-card{min-width:0}
-.gift-grid .gift-top{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:6px!important;flex-direction:row!important}
-.gift-grid .gift-top strong{min-width:0;white-space:nowrap!important;word-break:keep-all!important;overflow:visible!important;text-overflow:clip!important;font-size:clamp(10px,1.15vw,16px)!important;line-height:1.25!important}
-.gift-grid .gift-top .gift-price{white-space:nowrap!important;justify-self:end;font-size:clamp(12px,1.35vw,20px)!important}
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
-.gift-grid .gift-facts>span{display:grid!important;grid-template-rows:minmax(1.5em,auto) auto!important;align-content:start!important;justify-items:center!important;align-items:start!important;min-width:0!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25!important}
-.gift-grid .gift-facts>span:not(.gift-convert)::before{content:none!important}
-.gift-grid .gift-facts>span{font-size:clamp(9px,1vw,12px)!important}
-.gift-grid .gift-facts>span b{display:block!important;justify-self:center!important;align-self:start!important;margin-top:3px!important;font-size:clamp(10px,1.15vw,15px)!important;line-height:1.25!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:keep-all!important}
-@media(max-width:760px){.gift-grid .gift-top{gap:4px!important}.gift-grid .gift-top strong{font-size:clamp(9px,2.6vw,13px)!important}.gift-grid .gift-top .gift-price{font-size:clamp(11px,3vw,15px)!important}.gift-grid .gift-facts{gap:3px!important}.gift-grid .gift-facts>span{padding:7px 1px!important;font-size:clamp(8px,2.2vw,10px)!important}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.5vw,12px)!important}}
+.gift-grid .gift-card{min-width:0;}
+.gift-grid .gift-top{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:6px!important;flex-direction:row!important;}
+.gift-grid .gift-top strong{min-width:0;white-space:nowrap!important;word-break:keep-all!important;overflow:visible!important;text-overflow:clip!important;font-size:clamp(10px,1.15vw,16px)!important;line-height:1.25!important;}
+.gift-grid .gift-top .gift-price{white-space:nowrap!important;justify-self:end;font-size:clamp(12px,1.35vw,20px)!important;}
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important;}
+.gift-grid .gift-facts>span{display:grid!important;grid-template-rows:minmax(1.5em,auto) auto!important;align-content:start!important;justify-items:center!important;align-items:start!important;min-width:0!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25!important;}
+.gift-grid .gift-facts>span:not(.gift-convert)::before{content:none!important;}
+.gift-grid .gift-facts>span{font-size:clamp(9px,1vw,12px)!important;}
+.gift-grid .gift-facts>span b{display:block!important;justify-self:center!important;align-self:start!important;margin-top:3px!important;font-size:clamp(10px,1.15vw,15px)!important;line-height:1.25!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:keep-all!important;}
+@media(max-width:760px){.gift-grid .gift-top{gap:4px!important;}.gift-grid .gift-top strong{font-size:clamp(9px,2.6vw,13px)!important;}.gift-grid .gift-top .gift-price{font-size:clamp(11px,3vw,15px)!important;}.gift-grid .gift-facts{gap:3px!important;}.gift-grid .gift-facts>span{padding:7px 1px!important;font-size:clamp(8px,2.2vw,10px)!important;}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.5vw,12px)!important;}}
 
 
 /* v2.1.18：四个神装图标在所有屏幕宽度下始终保持一排 */
-#gears.gears{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:clamp(4px,1.2vw,14px)!important;align-items:stretch!important}
-#gears .gear{min-width:0!important;width:100%!important;box-sizing:border-box!important;padding:clamp(4px,1vw,12px)!important;gap:clamp(3px,.7vw,8px)!important}
-#gears .gear .gear-art{display:block!important;width:100%!important;max-width:180px!important;aspect-ratio:1/1!important;height:auto!important;object-fit:contain!important;margin-inline:auto!important}
-#gears .gear strong{font-size:clamp(9px,1.4vw,16px)!important;line-height:1.2!important;white-space:nowrap!important;text-align:center!important}
-@media(max-width:700px){#gears.gears{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}#gears .gear{padding:4px 2px!important;gap:3px!important;border-radius:8px!important}#gears .gear .gear-art{width:100%!important;max-width:none!important}#gears .gear strong{font-size:clamp(8px,2.4vw,12px)!important;letter-spacing:0!important}}
-@media(max-width:360px){#gears.gears{gap:2px!important}#gears .gear{padding:3px 1px!important}#gears .gear strong{font-size:8px!important}}
+#gears.gears{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:clamp(4px,1.2vw,14px)!important;align-items:stretch!important;}
+#gears .gear{min-width:0!important;width:100%!important;box-sizing:border-box!important;padding:clamp(4px,1vw,12px)!important;gap:clamp(3px,.7vw,8px)!important;}
+#gears .gear .gear-art{display:block!important;width:100%!important;max-width:180px!important;aspect-ratio:1/1!important;height:auto!important;object-fit:contain!important;margin-inline:auto!important;}
+#gears .gear strong{font-size:clamp(9px,1.4vw,16px)!important;line-height:1.2!important;white-space:nowrap!important;text-align:center!important;}
+@media(max-width:700px){#gears.gears{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;}#gears .gear{padding:4px 2px!important;gap:3px!important;border-radius:8px!important;}#gears .gear .gear-art{width:100%!important;max-width:none!important;}#gears .gear strong{font-size:clamp(8px,2.4vw,12px)!important;letter-spacing:0!important;}}
+@media(max-width:360px){#gears.gears{gap:2px!important;}#gears .gear{padding:3px 1px!important;}#gears .gear strong{font-size:8px!important;}}
 
 
 /* v2.1.2：返利参数卡片内容居中，礼包选择卡片与购买方案数据同步展示 */
@@ -332,8 +332,8 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:5px!important;
   }
-  #rebateSelectorCard .rebate-plan-option{padding:8px 3px!important}
-  #rebateSelectorCard .rebate-plan-option.active{padding:7px 2px!important}
+  #rebateSelectorCard .rebate-plan-option{padding:8px 3px!important;}
+  #rebateSelectorCard .rebate-plan-option.active{padding:7px 2px!important;}
 }
 
 </style>
@@ -370,70 +370,70 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 
 <style>
 /* v2.10：返利结果统一保留一位小数，并优化汇总卡片视觉层级 */
-.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 4px;align-items:stretch}
-.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:10px;min-width:0;min-height:98px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--card) 88%,var(--panel));box-shadow:inset 3px 0 0 color-mix(in srgb,var(--primary) 68%,transparent)}
-.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);font-weight:600}
-.rebate-cap-stat strong{display:block;min-width:0;font-size:clamp(22px,2vw,28px);line-height:1.2;color:var(--primary);font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.rebate-cap-stat strong output{display:inline;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;white-space:normal}
-@media(max-width:620px){.rebate-cap-summary{grid-template-columns:1fr;gap:9px}.rebate-cap-stat{min-height:0;padding:13px 15px;gap:6px}.rebate-cap-stat strong{font-size:22px}}
+.rebate-cap-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 4px;align-items:stretch;}
+.rebate-cap-stat{display:flex;flex-direction:column;justify-content:center;gap:10px;min-width:0;min-height:98px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--card) 88%,var(--panel));box-shadow:inset 3px 0 0 color-mix(in srgb,var(--primary) 68%,transparent);}
+.rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);font-weight:600;}
+.rebate-cap-stat strong{display:block;min-width:0;font-size:clamp(22px,2vw,28px);line-height:1.2;color:var(--primary);font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+.rebate-cap-stat strong output{display:inline;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;white-space:normal;}
+@media(max-width:620px){.rebate-cap-summary{grid-template-columns:1fr;gap:9px;}.rebate-cap-stat{min-height:0;padding:13px 15px;gap:6px;}.rebate-cap-stat strong{font-size:22px;}}
 
 /* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
+#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px);}
+#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3;}
+#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px;}
 
 </style>
 <style>
 /* v2.1.3：云母石隐藏后，剩余材料指标自动铺满整行 */
-#micaDemandMetric[hidden]{display:none!important}
-.summary{width:100%;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr))}
-@media(max-width:560px){.summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.metric{padding:10px}.metric span{font-size:12px}.metric strong{font-size:clamp(13px,3.5vw,20px)}}
-@media(max-width:700px){.stock-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#micaDemandMetric[hidden]{display:none!important;}
+.summary{width:100%;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr));}
+@media(max-width:560px){.summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}.summary:has(#micaDemandMetric[hidden]){grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;}.metric{padding:10px;}.metric span{font-size:12px;}.metric strong{font-size:clamp(13px,3.5vw,20px);}}
+@media(max-width:700px){.stock-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
 /* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px)}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px}
+#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px);}
+#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3;}
+#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px;}
 
 </style>
 <style>
 /* v2.1.12：汇总栏移除大包/中包，增加附加总计及返利优惠金额 */
-.gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;overflow-x:auto;align-items:stretch}
-.gift-summary-item{min-width:0}
-.gift-summary-item span{white-space:nowrap}
-.gift-summary-item strong{white-space:nowrap;overflow-wrap:normal}
-.rebate-discount-item{display:none}
-body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(0,1fr))!important}
-body.rebate-enabled .rebate-discount-item{display:flex}
-@media(max-width:760px){.gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(105px,1fr))!important;overflow-x:auto;scrollbar-width:thin}.gift-summary-item{padding:8px 4px}.gift-summary-item span{font-size:11px!important}.gift-summary-item strong{font-size:14px!important}}
+.gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;overflow-x:auto;align-items:stretch;}
+.gift-summary-item{min-width:0;}
+.gift-summary-item span{white-space:nowrap;}
+.gift-summary-item strong{white-space:nowrap;overflow-wrap:normal;}
+.rebate-discount-item{display:none;}
+body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(0,1fr))!important;}
+body.rebate-enabled .rebate-discount-item{display:flex;}
+@media(max-width:760px){.gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(6,minmax(105px,1fr))!important;overflow-x:auto;scrollbar-width:thin;}.gift-summary-item{padding:8px 4px;}.gift-summary-item span{font-size:11px!important;}.gift-summary-item strong{font-size:14px!important;}}
 </style>
 <style>
 /* v2.1.16：材料需求总览标题行增加重置库存按钮，沿用重置等级按钮样式 */
-.stock-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;margin-bottom:12px;min-width:0}
-.stock-summary-heading h2{margin:0!important;min-width:0}
-.stock-summary-heading #resetStock{flex:0 0 auto;white-space:nowrap}
-@media(max-width:420px){.stock-summary-heading{gap:8px}.stock-summary-heading h2{font-size:17px}.stock-summary-heading #resetStock{padding:9px 11px;font-size:13px}}
+.stock-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;margin-bottom:12px;min-width:0;}
+.stock-summary-heading h2{margin:0!important;min-width:0;}
+.stock-summary-heading #resetStock{flex:0 0 auto;white-space:nowrap;}
+@media(max-width:420px){.stock-summary-heading{gap:8px;}.stock-summary-heading h2{font-size:17px;}.stock-summary-heading #resetStock{padding:9px 11px;font-size:13px;}}
 </style>
 <style>
 /* v2.1.19：礼包卡片信息仅展示小包与折算黑曜石，不展示附加 */
-.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
 </style>
 <style>
 /* v2.2.1：礼包卡片内三项数据均显示并固定一排 */
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
-.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 3px!important}}
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important;}
+.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important;}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;}.gift-grid .gift-facts>span{padding:7px 3px!important;}}
 </style>
 <style>
 /* v2.1.22：单次返利上限计算底部三个汇总指标在所有屏幕宽度下始终同排，无横向滚动 */
-.rebate-cap-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(4px,1.6vw,14px)!important;width:100%;min-width:0;overflow:hidden}
-.rebate-cap-stat{min-width:0!important;max-width:100%;box-sizing:border-box;padding:clamp(7px,1.5vw,16px)!important;gap:clamp(4px,1vw,10px)!important}
-.rebate-cap-stat span{font-size:clamp(8px,1.7vw,13px)!important;line-height:1.25!important;overflow-wrap:anywhere}
-.rebate-cap-stat strong{font-size:clamp(12px,3vw,28px)!important;line-height:1.2!important;overflow-wrap:anywhere;word-break:normal}
-.rebate-cap-stat strong output{white-space:normal!important}
-@media(max-width:380px){.rebate-cap-summary{gap:4px!important}.rebate-cap-stat{padding:7px 5px!important}.rebate-cap-stat span{font-size:8px!important}.rebate-cap-stat strong{font-size:12px!important}}
+.rebate-cap-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(4px,1.6vw,14px)!important;width:100%;min-width:0;overflow:hidden;}
+.rebate-cap-stat{min-width:0!important;max-width:100%;box-sizing:border-box;padding:clamp(7px,1.5vw,16px)!important;gap:clamp(4px,1vw,10px)!important;}
+.rebate-cap-stat span{font-size:clamp(8px,1.7vw,13px)!important;line-height:1.25!important;overflow-wrap:anywhere;}
+.rebate-cap-stat strong{font-size:clamp(12px,3vw,28px)!important;line-height:1.2!important;overflow-wrap:anywhere;word-break:normal;}
+.rebate-cap-stat strong output{white-space:normal!important;}
+@media(max-width:380px){.rebate-cap-summary{gap:4px!important;}.rebate-cap-stat{padding:7px 5px!important;}.rebate-cap-stat span{font-size:8px!important;}.rebate-cap-stat strong{font-size:12px!important;}}
 
 /* 移动端：升级数据查询表格横向滚动时固定第一列（等级） */
 @media(max-width:700px){
@@ -449,7 +449,7 @@ body.rebate-enabled .rebate-discount-item{display:flex}
 </style>
 <style>
 /* v2.2.2：补齐附加小卡片，并强制三项同排展示 */
-@media(max-width:700px){.card{contain-intrinsic-size:auto 360px}.gear,.progress div,.home-return,.theme-toggle{transition:none!important}.home-return,.theme-toggle{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+@media(max-width:700px){.card{contain-intrinsic-size:auto 360px;}.gear,.progress div,.home-return,.theme-toggle{transition:none!important;}.home-return,.theme-toggle{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}}
 
 /* v2.1.3：材料需求总览各指标卡片内容水平居中 */
 .summary .metric{
@@ -483,11 +483,11 @@ body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gi
 </style>
 <style>
 /* v2.2.2：礼包卡片实际补回附加小卡片；三项始终三列同排 */
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
-.gift-grid .gift-facts>.gift-extra-field{display:flex!important;visibility:visible!important;opacity:1!important}
-.gift-grid .gift-facts>.gift-convert{display:flex!important;grid-column:auto!important}
-.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>.gift-extra-field{display:flex!important}}
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important;}
+.gift-grid .gift-facts>.gift-extra-field{display:flex!important;visibility:visible!important;opacity:1!important;}
+.gift-grid .gift-facts>.gift-convert{display:flex!important;grid-column:auto!important;}
+.gift-grid .gift-facts>span{min-width:0!important;box-sizing:border-box!important;}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;}.gift-grid .gift-facts>.gift-extra-field{display:flex!important;}}
 </style>
 
 <style id="v2-3-9-flat-gift-fields">
@@ -534,14 +534,14 @@ body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gi
 }
 @media(max-width:760px){
   .gift-grid .gift-facts,
-  #rebateSelectorCard .rebate-gift-facts{gap:5px!important}
+  #rebateSelectorCard .rebate-gift-facts{gap:5px!important;}
 }
 </style>
 
 
 <style id="v2-3-10-mobile-summary-no-wrap">
 /* v2.3.10：折算黑曜石标签仅在移动端分两行；汇总卡片数值禁止换行 */
-.obsidian-label-break{display:inline}
+.obsidian-label-break{display:inline;}
 .gift-summary-row .gift-summary-item span,
 .gift-summary-row .gift-summary-item strong{
   white-space:nowrap!important;
@@ -564,62 +564,62 @@ body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gi
 
 <style>
 /* v2.1.17：礼包卡片仅用高亮表示选中；精简礼包信息；汇总费用/数量按返利状态着色 */
-.gift-card.active::before{content:none!important;display:none!important}
-.gift-card .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-.gift-card .gift-facts .gift-convert{grid-column:auto!important}
-.gift-summary-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;width:100%!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
-.gift-summary-item{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
-.gift-summary-item span{white-space:normal!important;overflow-wrap:anywhere!important}
-.gift-summary-item strong{white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+.gift-card.active::before{content:none!important;display:none!important;}
+.gift-card .gift-facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+.gift-card .gift-facts .gift-convert{grid-column:auto!important;}
+.gift-summary-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;width:100%!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important;}
+.gift-summary-item{min-width:0!important;max-width:100%!important;box-sizing:border-box!important;}
+.gift-summary-item span{white-space:normal!important;overflow-wrap:anywhere!important;}
+.gift-summary-item strong{white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;}
 /* 未开启返利：费用、购买数量使用红色提示 */
-.gift-summary-item:nth-child(1),.gift-summary-item:nth-child(2){border-color:#e05252!important;background:color-mix(in srgb,#e05252 10%,var(--card))!important}
-.gift-summary-item:nth-child(1) strong,.gift-summary-item:nth-child(2) strong{color:#d93636!important}
+.gift-summary-item:nth-child(1),.gift-summary-item:nth-child(2){border-color:#e05252!important;background:color-mix(in srgb,#e05252 10%,var(--card))!important;}
+.gift-summary-item:nth-child(1) strong,.gift-summary-item:nth-child(2) strong{color:#d93636!important;}
 /* 开启返利：费用、购买数量与节省金额使用绿色提示 */
-body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important}
-body.rebate-enabled .gift-summary-item:nth-child(1),body.rebate-enabled .gift-summary-item:nth-child(2),body.rebate-enabled .gift-summary-item.rebate-discount-item{border-color:#2f9e62!important;background:color-mix(in srgb,#2f9e62 11%,var(--card))!important}
-body.rebate-enabled .gift-summary-item:nth-child(1) strong,body.rebate-enabled .gift-summary-item:nth-child(2) strong,body.rebate-enabled .gift-summary-item.rebate-discount-item strong{color:#21864d!important}
-body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!important}
+body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;}
+body.rebate-enabled .gift-summary-item:nth-child(1),body.rebate-enabled .gift-summary-item:nth-child(2),body.rebate-enabled .gift-summary-item.rebate-discount-item{border-color:#2f9e62!important;background:color-mix(in srgb,#2f9e62 11%,var(--card))!important;}
+body.rebate-enabled .gift-summary-item:nth-child(1) strong,body.rebate-enabled .gift-summary-item:nth-child(2) strong,body.rebate-enabled .gift-summary-item.rebate-discount-item strong{color:#21864d!important;}
+body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!important;}
 @media(max-width:760px){
- .gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;padding:6px!important;overflow:hidden!important}
- body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important}
- .gift-summary-item{padding:7px 2px!important;gap:4px!important}
- .gift-summary-item span{font-size:clamp(8px,2.1vw,11px)!important;line-height:1.25!important}
- .gift-summary-item strong{font-size:clamp(10px,2.7vw,14px)!important;line-height:1.2!important}
+ .gift-summary-row,body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;padding:6px!important;overflow:hidden!important;}
+ body.rebate-enabled .gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;}
+ .gift-summary-item{padding:7px 2px!important;gap:4px!important;}
+ .gift-summary-item span{font-size:clamp(8px,2.1vw,11px)!important;line-height:1.25!important;}
+ .gift-summary-item strong{font-size:clamp(10px,2.7vw,14px)!important;line-height:1.2!important;}
 }
-@media(max-width:360px){.gift-summary-row,body.rebate-enabled .gift-summary-row{gap:2px!important;padding:4px!important}.gift-summary-item{padding:6px 1px!important}.gift-summary-item span{font-size:8px!important}.gift-summary-item strong{font-size:10px!important}}
+@media(max-width:360px){.gift-summary-row,body.rebate-enabled .gift-summary-row{gap:2px!important;padding:4px!important;}.gift-summary-item{padding:6px 1px!important;}.gift-summary-item span{font-size:8px!important;}.gift-summary-item strong{font-size:10px!important;}}
 </style>
 <style>
 /* v2.1.20：单次返利上限计算的礼包选择卡片，与礼包购买方案卡片样式同步 */
-#rebateSelectorCard .rebate-plan-select{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(5px,1vw,10px)!important;align-items:stretch!important;margin:12px 0 16px!important}
-#rebateSelectorCard .rebate-plan-option{display:block!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;padding:10px 8px!important;text-align:left!important;white-space:normal!important;overflow:visible!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel)!important;color:var(--ink)!important;font:inherit!important;box-shadow:none!important}
+#rebateSelectorCard .rebate-plan-select{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(5px,1vw,10px)!important;align-items:stretch!important;margin:12px 0 16px!important;}
+#rebateSelectorCard .rebate-plan-option{display:block!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;padding:10px 8px!important;text-align:left!important;white-space:normal!important;overflow:visible!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel)!important;color:var(--ink)!important;font:inherit!important;box-shadow:none!important;}
 
-#rebateSelectorCard .rebate-gift-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;padding:0 0 7px!important;margin:0 0 7px!important;border-bottom:1px solid var(--line)!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-top>strong{min-width:0!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;font-weight:750!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-top>b{flex:0 0 auto!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;color:#a96b00!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important}
-#rebateSelectorCard .rebate-gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:7px 2px!important;border-radius:8px!important;background:var(--card)!important;color:var(--muted)!important;font-size:clamp(9px,.9vw,12px)!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important}
-#rebateSelectorCard .rebate-gift-facts>span>strong{display:block!important;max-width:100%!important;color:var(--ink)!important;font-size:clamp(10px,1vw,14px)!important;line-height:1.2!important;font-weight:800!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important}
-@media(max-width:520px){#rebateSelectorCard .rebate-plan-select{gap:6px!important}#rebateSelectorCard .rebate-plan-option{padding:8px 5px!important}#rebateSelectorCard .rebate-plan-option.active{padding:7px 4px!important}#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{gap:3px!important}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important}}
+#rebateSelectorCard .rebate-gift-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;padding:0 0 7px!important;margin:0 0 7px!important;border-bottom:1px solid var(--line)!important;white-space:nowrap!important;}
+#rebateSelectorCard .rebate-gift-top>strong{min-width:0!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;font-weight:750!important;white-space:nowrap!important;}
+#rebateSelectorCard .rebate-gift-top>b{flex:0 0 auto!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;color:#a96b00!important;white-space:nowrap!important;}
+#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important;}
+#rebateSelectorCard .rebate-gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:7px 2px!important;border-radius:8px!important;background:var(--card)!important;color:var(--muted)!important;font-size:clamp(9px,.9vw,12px)!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important;}
+#rebateSelectorCard .rebate-gift-facts>span>strong{display:block!important;max-width:100%!important;color:var(--ink)!important;font-size:clamp(10px,1vw,14px)!important;line-height:1.2!important;font-weight:800!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important;}
+@media(max-width:520px){#rebateSelectorCard .rebate-plan-select{gap:6px!important;}#rebateSelectorCard .rebate-plan-option{padding:8px 5px!important;}#rebateSelectorCard .rebate-plan-option.active{padding:7px 4px!important;}#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important;}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important;}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important;}#rebateSelectorCard .rebate-gift-facts{gap:3px!important;}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important;}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important;}}
 </style>
 <style>
 /* v2.1.23：单次返利上限计算表格适配容器宽度，禁止横向滚动条 */
-#rebateSelectorCard .table-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important;overflow-y:visible!important;scrollbar-width:none!important}
-#rebateSelectorCard .table-wrap::-webkit-scrollbar{display:none!important}
-#rebateSelectorCard .rebate-cap-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
-#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{min-width:0!important;max-width:100%!important;padding:clamp(3px,1vw,10px)!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;box-sizing:border-box!important}
-#rebateSelectorCard .rebate-cap-table th:first-child{width:22%!important}
-#rebateSelectorCard .rebate-cap-table td{width:19.5%!important}
-#rebateSelectorCard .rebate-cap-table input{display:block;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;padding:clamp(3px,1vw,8px)!important;font-size:clamp(9px,2.3vw,14px)!important}
-#rebateSelectorCard .rebate-cap-table output{display:inline-block;max-width:100%;font-size:clamp(9px,2.4vw,14px)!important;overflow-wrap:anywhere!important;word-break:break-word!important}
-@media(max-width:560px){#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{font-size:clamp(8px,2.2vw,11px)!important;padding:3px 2px!important}#rebateSelectorCard .rebate-cap-table th:first-child{width:23%!important}#rebateSelectorCard .rebate-cap-table td{width:19.25%!important}}
+#rebateSelectorCard .table-wrap{scrollbar-width:none!important;}
+
+
+
+
+
+#rebateSelectorCard .rebate-cap-table input{font-size:clamp(9px,2.3vw,14px)!important;}
+#rebateSelectorCard .rebate-cap-table output{font-size:clamp(9px,2.4vw,14px)!important;}
+@media(max-width:560px){#rebateSelectorCard .rebate-cap-table th,#rebateSelectorCard .rebate-cap-table td{font-size:clamp(8px,2.2vw,11px)!important;}}
 </style>
 <style>
 /* v2.2.1：礼包卡片及返利选择卡片固定展示小包、附加、折算黑曜石三项 */
-.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important}
-.gift-grid .gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;white-space:nowrap!important;box-sizing:border-box!important}
-#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}
-#rebateSelectorCard .rebate-gift-facts>span{min-width:0!important;white-space:nowrap!important}
-@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}.gift-grid .gift-facts>span{padding:7px 2px!important;font-size:clamp(8px,2.1vw,11px)!important}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.4vw,12px)!important}#rebateSelectorCard .rebate-gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important}}
+.gift-grid .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:stretch!important;}
+.gift-grid .gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;white-space:nowrap!important;box-sizing:border-box!important;}
+#rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;}
+#rebateSelectorCard .rebate-gift-facts>span{min-width:0!important;white-space:nowrap!important;}
+@media(max-width:760px){.gift-grid .gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;}.gift-grid .gift-facts>span{padding:7px 2px!important;font-size:clamp(8px,2.1vw,11px)!important;}.gift-grid .gift-facts>span b{font-size:clamp(9px,2.4vw,12px)!important;}#rebateSelectorCard .rebate-gift-facts{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3px!important;}}
 </style>
 <style>
 /* v2.2.3：礼包选中状态仅高亮边框，不改变卡片及内部结果区背景 */
@@ -633,7 +633,7 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
   border-color:var(--line)!important;
   background:var(--card)!important;
 }
-.gift-grid .gift-card.active::before{content:none!important;display:none!important}
+.gift-grid .gift-card.active::before{content:none!important;display:none!important;}
 </style>
 <style>
 /* v2.2.4：礼包字段在小卡片内全部居中；礼包汇总卡片加高并放大数值 */
@@ -673,11 +673,11 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 }
 @media(max-width:760px){
   .gift-grid .gift-facts>span,
-  #rebateSelectorCard .rebate-gift-facts>span{min-height:62px!important;padding:8px 3px!important}
+  #rebateSelectorCard .rebate-gift-facts>span{min-height:62px!important;padding:8px 3px!important;}
   .gift-grid .gift-facts>span b,
-  #rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(12px,3vw,16px)!important}
-  .gift-summary-item{min-height:72px!important;padding:10px 4px!important}
-  .gift-summary-item strong{font-size:clamp(17px,4vw,22px)!important}
+  #rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(12px,3vw,16px)!important;}
+  .gift-summary-item{min-height:72px!important;padding:10px 4px!important;}
+  .gift-summary-item strong{font-size:clamp(17px,4vw,22px)!important;}
 }
 </style>
 <style id="v2-2-7-gift-summary-number-size">
@@ -766,7 +766,7 @@ html body.rebate-enabled #giftSummaryRow.gift-summary-row .gift-summary-item str
   word-break:keep-all!important;
   box-sizing:border-box!important;
 }
-.gift-grid .gift-facts-labels .obsidian-label-break{display:inline!important}
+.gift-grid .gift-facts-labels .obsidian-label-break{display:inline!important;}
 .gift-grid .gift-facts-values>b{
   display:block!important;
   justify-self:center!important;
@@ -797,8 +797,8 @@ html body.rebate-enabled #giftSummaryRow.gift-summary-row .gift-summary-item str
     grid-template-columns:minmax(0,1.2fr) minmax(0,.5fr) minmax(0,1.2fr)!important;
     gap:1px!important;
   }
-  .gift-grid .gift-facts-labels>span{font-size:8px!important}
-  .gift-grid .gift-facts-values>b{font-size:9px!important;letter-spacing:-.25px!important}
+  .gift-grid .gift-facts-labels>span{font-size:8px!important;}
+  .gift-grid .gift-facts-values>b{font-size:9px!important;letter-spacing:-.25px!important;}
 }
 </style>
 
@@ -866,7 +866,7 @@ html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
   overflow:visible!important;
   max-width:none!important;
 }
-#rebateSelectorCard .rebate-gift-facts .obsidian-label-break{display:inline!important}
+#rebateSelectorCard .rebate-gift-facts .obsidian-label-break{display:inline!important;}
 #rebateSelectorCard .rebate-gift-facts .gift-facts-values>b{
   display:block!important;
   justify-self:center!important;
@@ -975,7 +975,7 @@ html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
   color:var(--ink)!important;
   box-shadow:none!important;
 }
-#rebateSelectorCard .rebate-plan-option.gift-card:before{content:none!important;display:none!important}
+#rebateSelectorCard .rebate-plan-option.gift-card:before{content:none!important;display:none!important;}
 #rebateSelectorCard .rebate-plan-option .gift-top{
   display:grid!important;
   grid-template-columns:minmax(0,1fr) auto!important;
@@ -1060,17 +1060,17 @@ html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
   font-variant-numeric:tabular-nums!important;
 }
 @media(max-width:420px){
-  #rebateSelectorCard .rebate-plan-option.gift-card{padding:8px 6px!important}
-  #rebateSelectorCard .rebate-plan-option.gift-card.active{padding:7px 5px!important}
-  #rebateSelectorCard .rebate-plan-option .gift-top strong{font-size:12px!important}
-  #rebateSelectorCard .rebate-plan-option .gift-top .gift-price{font-size:13px!important}
-  #rebateSelectorCard .rebate-plan-option .gift-facts-labels>span{font-size:8px!important}
-  #rebateSelectorCard .rebate-plan-option .gift-facts-values>b{font-size:10px!important}
+  #rebateSelectorCard .rebate-plan-option.gift-card{padding:8px 6px!important;}
+  #rebateSelectorCard .rebate-plan-option.gift-card.active{padding:7px 5px!important;}
+  #rebateSelectorCard .rebate-plan-option .gift-top strong{font-size:12px!important;}
+  #rebateSelectorCard .rebate-plan-option .gift-top .gift-price{font-size:13px!important;}
+  #rebateSelectorCard .rebate-plan-option .gift-facts-labels>span{font-size:8px!important;}
+  #rebateSelectorCard .rebate-plan-option .gift-facts-values>b{font-size:10px!important;}
 }
 
 /* 价格颜色遵循中央 JSON 状态：本地回退红色，JSON 成功恢复主题色 */
-body.gift-data-fallback #rebateSelectorCard .gift-price{color:#d93025!important}
-body.gift-data-json #rebateSelectorCard .gift-price{color:var(--primary)!important}
+body.gift-data-fallback #rebateSelectorCard .gift-price{color:#d93025!important;}
+body.gift-data-json #rebateSelectorCard .gift-price{color:var(--primary)!important;}
 </style>
 
 
@@ -1078,36 +1078,451 @@ body.gift-data-json #rebateSelectorCard .gift-price{color:var(--primary)!importa
 /* 返利计算表：移除数值 output 的独立小卡片外观，仅保留表格单元格内容 */
 #rebateSelectorCard .rebate-cap-table td output,
 #rebateSelectorCard .rebate-cap-table td output[id]{
-  display:inline!important;
-  min-width:0!important;
-  max-width:none!important;
-  margin:0!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
+  
+  
+  
+  
+  
+  
+  
   outline:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  color:inherit;
+  
+  
+  
   font:inherit!important;
   line-height:inherit!important;
-  text-align:center!important;
-  white-space:nowrap!important;
+  
+  
 }
-#rebateSelectorCard .rebate-cap-table tr:nth-last-child(-n+3) td output{
-  color:#16803d!important;
+#rebateSelectorCard .rebate-cap-table tr:nth-last-child(-n/**/+3) td output{
+  
   font-weight:800!important;
 }
 </style>
 
 
-<style id="v2-4-13-rebate-summary-gold-text">
-/* 三个返利汇总卡片的标题与数值统一使用参考图中的金棕色 */
-.rebate-cap-summary .rebate-cap-stat,
-.rebate-cap-summary .rebate-cap-stat span,
-.rebate-cap-summary .rebate-cap-stat strong,
-.rebate-cap-summary .rebate-cap-stat strong output{
-  color:#9a6a13!important;
+<style id="v2-4-15-rebate-summary-flat-and-row-height">
+/* 礼包购买方案的高亮仅作用于购买方案区域，不联动下方独立返利计算选择器 */
+/* 返利表格各数据行统一行高与垂直对齐 */
+
+
+/* 底部三个汇总内容保留横向排列，移除每项外围卡片框与底色 */
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat{
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;outline:0!important;
+}
+/* 底部三个汇总卡片：标题与数值字号各增加 2px，桌面与移动端均生效 */
+.rebate-cap-summary .rebate-cap-stat span{font-size:calc(13px + 2px)!important;}
+.rebate-cap-summary .rebate-cap-stat strong{font-size:clamp(14px,calc(3vw + 2px),30px)!important;}
+@media(max-width:760px){
+  .rebate-cap-summary .rebate-cap-stat span{font-size:calc(12px + 2px)!important;}
+  .rebate-cap-summary .rebate-cap-stat strong{font-size:calc(16px + 2px)!important;}
+}
+@media(max-width:380px){
+  .rebate-cap-summary .rebate-cap-stat span{font-size:10px!important;}
+  .rebate-cap-summary .rebate-cap-stat strong{font-size:14px!important;}
+}
+</style>
+
+
+<style id="rebate-table-uniform-layout-v2416">
+/* 返利计算表：五列等宽、统一居中、数据字体一致 */
+
+#rebateSelectorCard #rebateCalcTable th,
+#rebateSelectorCard #rebateCalcTable td{font-size:13px!important;}
+#rebateSelectorCard #rebateCalcTable tbody th{font-size:13px!important;font-weight:700!important;}
+#rebateSelectorCard #rebateCalcTable td input,
+#rebateSelectorCard #rebateCalcTable td output{font-family:inherit!important;font-size:13px!important;font-weight:500!important;}
+</style>
+
+<style id="v2-4-17-rebate-table-rebuilt">
+/* v2.4.17：重写返利计算表格布局，五列等宽，所有数据在移动端完整显示 */
+
+
+#rebateSelectorCard #rebateCalcTable thead th,
+#rebateSelectorCard #rebateCalcTable tbody th,
+#rebateSelectorCard #rebateCalcTable tbody td{font-family:inherit!important;font-size:13px!important;line-height:1.2!important;}
+#rebateSelectorCard #rebateCalcTable thead th{font-weight:700!important;}
+#rebateSelectorCard #rebateCalcTable tbody th{font-weight:700!important;}
+#rebateSelectorCard #rebateCalcTable tbody td output,
+#rebateSelectorCard #rebateCalcTable tbody td input{font-family:inherit!important;font-size:13px!important;font-weight:500!important;line-height:1.2!important;font-variant-numeric:tabular-nums!important;pointer-events:none!important;}
+
+
+#rebateSelectorCard #rebateCalcTable tr:nth-last-child(-n/**/+3) td output{font-size:13px!important;font-weight:700!important;}
+@media(max-width:560px){
+ #rebateSelectorCard #rebateCalcTable thead th,
+ #rebateSelectorCard #rebateCalcTable tbody th,
+ #rebateSelectorCard #rebateCalcTable tbody td{font-size:clamp(8px,2.5vw,11px)!important;line-height:1.15!important;}
+ #rebateSelectorCard #rebateCalcTable tbody td output,
+ #rebateSelectorCard #rebateCalcTable tbody td input,
+ #rebateSelectorCard #rebateCalcTable tr:nth-last-child(-n/**/+3) td output{font-size:clamp(8px,2.5vw,11px)!important;line-height:1.15!important;}
+ 
+}
+</style>
+
+
+<style id="v2-4-19-remove-gift-summary-outer-frame">
+/* 仅移除礼包汇总一排卡片的外围容器框，保留内部各数据卡片 */
+#giftSummaryRow{
+  border:0 !important;
+  background:transparent !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  box-shadow:none !important;
+}
+</style>
+
+
+<style id="v2-4-20-rebate-table-centered-and-summary-cards-restored">
+/* 返利表格：移动端完整显示五列，列宽均分，所有单元格居中 */
+
+
+
+#rebateSelectorCard #rebateCalcTable tbody th{font-weight:700!important;}
+#rebateSelectorCard #rebateCalcTable tbody td output,
+#rebateSelectorCard #rebateCalcTable tbody td input{font-family:inherit!important;font-size:13px!important;font-weight:500!important;line-height:1.2!important;font-variant-numeric:tabular-nums!important;pointer-events:none!important;}
+
+
+#rebateSelectorCard #rebateCalcTable tr:nth-last-child(-n/**/+3) td output{font-size:13px!important;font-weight:700!important;}
+@media(max-width:560px){
+ #rebateSelectorCard #rebateCalcTable thead th,#rebateSelectorCard #rebateCalcTable tbody th,#rebateSelectorCard #rebateCalcTable tbody td{font-size:clamp(8px,2.5vw,11px)!important;line-height:1.15!important;}
+ #rebateSelectorCard #rebateCalcTable tbody td output,#rebateSelectorCard #rebateCalcTable tbody td input,#rebateSelectorCard #rebateCalcTable tr:nth-last-child(-n/**/+3) td output{font-size:clamp(8px,2.5vw,11px)!important;line-height:1.15!important;}
+}
+/* 只移除四项礼包数据卡片这一整排的外框，保留内部独立数据小卡片 */
+#giftSummaryRow.gift-summary-row{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;}
+#giftSummaryRow .gift-summary-item{display:flex!important;border:1px solid var(--line)!important;border-radius:10px!important;background:var(--card)!important;box-shadow:none!important;}
+/* 返利计算底部三张汇总数据卡片恢复独立卡片边框与浅绿色底色 */
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat{border:1px solid color-mix(in srgb,#18a765 35%,var(--line))!important;border-radius:11px!important;background:color-mix(in srgb,#18a765 7%,var(--panel))!important;box-shadow:none!important;outline:0!important;}
+</style>
+
+
+<style id="v2-4-21-rebate-table-alignment-and-gray-summary">
+/* 返利计算表：所有列及其内容以各自单元格几何中心对齐 */
+
+
+
+
+
+/* 底部三个汇总卡片：浅灰色背景，卡片内标题和数值严格居中 */
+#rebateSelectorCard .rebate-cap-summary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;justify-items:stretch!important;width:100%!important;}
+
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat span,
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat strong,
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat strong output{display:block!important;width:100%!important;text-align:center!important;}
+</style>
+
+<style id="v2-5-4-gift-summary-state-layout">
+/* v2.5.4：未返利四卡均分并隐藏节省金额；返利开启后显示第五卡。保持卡片原有高度。 */
+#giftSummaryRow.gift-summary-row,
+body.rebate-enabled #giftSummaryRow.gift-summary-row{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;
+  gap:clamp(3px,1vw,8px)!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#giftSummaryRow .rebate-discount-item{display:none!important;}
+body.rebate-enabled #giftSummaryRow.gift-summary-row{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+}
+body.rebate-enabled #giftSummaryRow .rebate-discount-item{display:flex!important;}
+#giftSummaryRow .gift-summary-item{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  min-width:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-height:76px!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:760px){
+  #giftSummaryRow.gift-summary-row{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+  body.rebate-enabled #giftSummaryRow.gift-summary-row{grid-template-columns:repeat(5,minmax(0,1fr))!important;}
+  #giftSummaryRow .gift-summary-item{min-height:72px!important;}
+}
+</style>
+
+<style id="v2-5-5-summary-rebate-visibility">
+/* 未开启返利时彻底隐藏第五张节省金额卡片；开启后才显示。 */
+#giftSummaryRow.gift-summary-row > .gift-summary-item.rebate-discount-item{
+  display:none!important;
+}
+body.rebate-enabled #giftSummaryRow.gift-summary-row > .gift-summary-item.rebate-discount-item{
+  display:flex!important;
+}
+/* 四张/五张卡片保持同一行，卡片高度不随返利状态变化。 */
+#giftSummaryRow.gift-summary-row{
+  grid-auto-flow:column!important;
+  grid-auto-rows:minmax(76px,auto)!important;
+}
+@media(max-width:760px){
+  #giftSummaryRow.gift-summary-row{
+    grid-auto-rows:minmax(72px,auto)!important;
+  }
+}
+</style>
+
+
+<style id="v2-5-6-gift-mode-stable-height">
+/* 固定两种礼包模式的占位高度，切换返利时汇总卡片起始纵向位置不变。 */
+#noRebateMode.gift-mode,
+#rebateGiftMode.gift-mode{
+  height:130px!important;
+  min-height:130px!important;
+  box-sizing:border-box!important;
+}
+#noRebateMode.gift-mode>.gift-grid,
+#rebateGiftMode.gift-mode>.gift-grid{
+  height:100%!important;
+  min-height:0!important;
+  align-items:stretch!important;
+}
+#noRebateMode.gift-mode>.gift-grid>.gift-card,
+#rebateGiftMode.gift-mode>.gift-grid>.gift-card{
+  height:100%!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:760px){
+  #noRebateMode.gift-mode,
+  #rebateGiftMode.gift-mode{height:122px!important;min-height:122px!important;}
+}
+</style>
+
+<style id="v2-5-7-gift-mode-slot-anchor">
+/* 两种礼包模式共用同一个固定占位槽；切换只改变槽内可见内容，不参与文档流高度计算。 */
+.gift-mode-slot{position:relative;display:block;width:100%;height:130px;min-height:130px;box-sizing:border-box;margin:0 0 12px!important;}
+.gift-mode-slot>.gift-mode{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;box-sizing:border-box!important;}
+.gift-mode-slot>.gift-mode[hidden]{display:none!important;}
+.gift-mode-slot>.gift-mode:not([hidden])>.gift-grid{height:100%!important;min-height:0!important;align-items:stretch!important;}
+.gift-mode-slot>.gift-mode:not([hidden])>.gift-grid>.gift-card{height:100%!important;min-height:0!important;box-sizing:border-box!important;}
+@media(max-width:760px){.gift-mode-slot{height:122px;min-height:122px;}}
+</style>
+
+<style id="v2-5-15-equal-summary-card-height">
+/* 两种返利状态共用相同汇总卡片高度，避免五列时内容撑高整行。 */
+#giftPurchaseCard{
+  margin-bottom:0!important;
+  padding-bottom:20px!important;
+}
+#giftPurchaseCard .gift-mode-slot{margin:0!important;}
+#giftPurchaseCard #giftSummaryRow.gift-summary-row{
+  margin:0!important;
+  padding-top:20px!important;
+  box-sizing:border-box!important;
+  grid-auto-rows:76px!important;
+  align-items:stretch!important;
+}
+#giftPurchaseCard #giftSummaryRow .gift-summary-item{
+  height:76px!important;
+  min-height:76px!important;
+  max-height:76px!important;
+  box-sizing:border-box!important;
+}
+#giftPurchaseCard + #rebateSelectorCard{margin-top:18px!important;}
+@media(max-width:760px){
+  #giftPurchaseCard #giftSummaryRow.gift-summary-row{grid-auto-rows:72px!important;}
+  #giftPurchaseCard #giftSummaryRow .gift-summary-item{
+    height:72px!important;
+    min-height:72px!important;
+    max-height:72px!important;
+  }
+}
+</style>
+
+
+<style id="v2-5-16-summary-row-fixed-box">
+/*
+ * v2.5.22：统一四卡/五卡状态的汇总区域外框高度。
+ * PC：20px上间距 + 76px卡片行；移动端：20px + 72px卡片行。
+ * 购买方案卡片底部另保留20px；下一个独立板块保留18px间隔。
+ */
+#giftPurchaseCard{
+  margin-bottom:0!important;
+  padding-bottom:20px!important;
+}
+#giftPurchaseCard .gift-mode-slot{
+  margin:0!important;
+}
+#giftPurchaseCard #giftSummaryRow.gift-summary-row{
+  display:grid!important;
+  grid-template-rows:76px!important;
+  grid-auto-rows:76px!important;
+  grid-auto-flow:column!important;
+  height:96px!important;
+  min-height:96px!important;
+  max-height:96px!important;
+  margin:0!important;
+  padding:20px 0 0!important;
+  box-sizing:border-box!important;
+  align-content:start!important;
+  align-items:stretch!important;
+  overflow:hidden!important;
+}
+#giftPurchaseCard #giftSummaryRow.gift-summary-row > .gift-summary-item{
+  height:76px!important;
+  min-height:76px!important;
+  max-height:76px!important;
+  box-sizing:border-box!important;
+}
+#giftPurchaseCard + #rebateSelectorCard{
+  margin-top:18px!important;
+}
+@media(max-width:760px){
+  #giftPurchaseCard #giftSummaryRow.gift-summary-row{
+    grid-template-rows:72px!important;
+    grid-auto-rows:72px!important;
+    height:92px!important;
+    min-height:92px!important;
+    max-height:92px!important;
+  }
+  #giftPurchaseCard #giftSummaryRow.gift-summary-row > .gift-summary-item{
+    height:72px!important;
+    min-height:72px!important;
+    max-height:72px!important;
+  }
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+<style id="rebate-summary-theme-unified-v269">
+/* 返利汇总卡片跟随页面昼夜主题，不再使用固定浅色背景/边框/文字色。 */
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat{
+  border:1px solid var(--line)!important;
+  border-radius:11px!important;
+  background:color-mix(in srgb,var(--card) 82%,var(--panel))!important;
+  box-shadow:none!important;
+  color:var(--ink)!important;
+}
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat span{
+  color:var(--muted)!important;
+}
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat strong,
+#rebateSelectorCard .rebate-cap-summary .rebate-cap-stat strong output{
+  color:var(--primary)!important;
+}
+</style>
+
+
+<style id="rebate-table-exact-column-centering-v2610">
+/* 表头与全部数据行共用明确的五条列轨道；单元格及内部控件均以轨道中心为基准。 */
+#rebateSelectorCard .table-wrap{
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  overflow-x:hidden!important;box-sizing:border-box!important;
+}
+#rebateSelectorCard table#rebateCalcTable{
+  display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;
+  margin:0!important;border:0!important;border-collapse:separate!important;
+  border-spacing:0!important;table-layout:fixed!important;white-space:nowrap!important;
+}
+#rebateSelectorCard table#rebateCalcTable colgroup{display:none!important;}
+#rebateSelectorCard table#rebateCalcTable thead,
+#rebateSelectorCard table#rebateCalcTable tbody{
+  display:block!important;width:100%!important;min-width:0!important;margin:0!important;padding:0!important;
+}
+#rebateSelectorCard table#rebateCalcTable thead tr,
+#rebateSelectorCard table#rebateCalcTable tbody tr{
+  display:grid!important;
+  grid-template-columns:27% 18.25% 18.25% 18.25% 18.25%!important;
+  width:100%!important;min-width:0!important;
+  height:32px!important;min-height:32px!important;max-height:32px!important;
+  margin:0!important;padding:0!important;box-sizing:border-box!important;
+  border-bottom:1px solid var(--line)!important;
+}
+#rebateSelectorCard table#rebateCalcTable thead tr{background:var(--panel)!important;}
+#rebateSelectorCard table#rebateCalcTable tbody tr{background:var(--card)!important;}
+#rebateSelectorCard table#rebateCalcTable tbody tr:nth-child(even){
+  background:color-mix(in srgb,var(--panel) 48%,var(--card))!important;
+}
+#rebateSelectorCard table#rebateCalcTable th,
+#rebateSelectorCard table#rebateCalcTable td{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:32px!important;min-height:32px!important;max-height:32px!important;
+  margin:0!important;padding:0!important;box-sizing:border-box!important;
+  text-align:center!important;vertical-align:middle!important;
+  white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;
+  color:var(--ink)!important;border:0!important;border-right:1px solid var(--line)!important;
+}
+#rebateSelectorCard table#rebateCalcTable thead th{color:var(--muted)!important;background:transparent!important;}
+#rebateSelectorCard table#rebateCalcTable th:first-child,
+#rebateSelectorCard table#rebateCalcTable td:first-child{
+  background:color-mix(in srgb,var(--panel) 72%,var(--card))!important;
+}
+#rebateSelectorCard table#rebateCalcTable td input,
+#rebateSelectorCard table#rebateCalcTable td output{
+  display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;box-sizing:border-box!important;
+  text-align:center!important;color:var(--ink)!important;
+  border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+</style>
+
+
+<style id="rebate-each-cell-content-centering-v2611">
+/* 每个单元格独立居中：不仅单元格居中，单元格内的 input/output 本身也居中。 */
+#rebateSelectorCard #rebateCalcTable thead tr > th,
+#rebateSelectorCard #rebateCalcTable tbody tr > th,
+#rebateSelectorCard #rebateCalcTable tbody tr > td{
+  text-align:center!important;
+  justify-content:center!important;
+  align-items:center!important;
+}
+#rebateSelectorCard #rebateCalcTable tbody tr > td > output{
+  display:inline-block!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding:0!important;
+  text-align:center!important;
+  text-align-last:center!important;
+  direction:ltr!important;
+}
+#rebateSelectorCard #rebateCalcTable tbody tr > td > input[type="number"]{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding:0!important;
+  text-align:center!important;
+  text-align-last:center!important;
+  direction:ltr!important;
+  appearance:textfield!important;
+  -webkit-appearance:none!important;
+  -moz-appearance:textfield!important;
+}
+#rebateSelectorCard #rebateCalcTable tbody tr > td > input[type="number"]::-webkit-inner-spin-button,
+#rebateSelectorCard #rebateCalcTable tbody tr > td > input[type="number"]::-webkit-outer-spin-button{
+  -webkit-appearance:none!important;
+  margin:0!important;
+}
+</style>
+
+
+<style id="gift-price-fallback-both-grids-v2612">
+/* 本地在线预览/JSON 回退时，上方礼包购买方案与下方返利礼包金额统一标红。 */
+body.gift-data-fallback #giftGrid .gift-price,
+body.gift-data-fallback #rebateSelectorCard .gift-price{
+  color:#d93025!important;
 }
 </style>
 
@@ -1121,8 +1536,8 @@ body.gift-data-json #rebateSelectorCard .gift-price{color:var(--primary)!importa
 <section class="card"><h2>等级选择</h2><p class="hint">拖动滑块选择当前等级和目标等级，实时计算四种神装的升级材料需求。</p><div class="levels"><div class="field"><label for="fromLevel">当前等级</label><div class="slider-row"><input id="fromLevel" max="80" min="1" type="range" value="30"/><input id="fromLevelNumber" class="level-number" type="number" min="1" max="80" step="1" value="30" aria-label="直接输入当前等级"></div><div class="ends"><span>1 级</span><span>80 级</span></div></div><div class="field"><label for="toLevel">目标等级</label><div class="slider-row"><input id="toLevel" max="80" min="1" type="range" value="45"/><input id="toLevelNumber" class="level-number" type="number" min="1" max="80" step="1" value="45" aria-label="直接输入目标等级"></div><div class="ends"><span>1 级</span><span>80 级</span></div></div></div><div class="exp-panel"><h3>现有经验条</h3><div class="exp-halves"><div class="exp-half"><label for="currentExp">当前等级已获得经验</label><input id="currentExp" type="number" min="0" step="1" value="0" /><input id="currentExpSlider" class="exp-range" aria-label="拖动调整当前经验" type="range" min="0" max="100" value="0" /><div class="exp-range-ends"><span>0</span><span id="expSliderMax">100</span></div></div><div class="exp-half"><div class="exp-caption"><span id="expFraction">0 / 0</span><span id="expPercent">0%</span></div><div class="exp-bar"><div id="expBarFill"></div></div><div class="exp-caption"><span>本级经验上限</span><span id="expDenominator">0</span></div></div></div><p class="hint" style="margin:8px 0 0">经验会按当前等级的“增长”与四种材料“次需”折算，抵扣本级已完成的升级消耗。</p></div><div class="actions"><button class="secondary" id="resetLevels">重置等级</button><button class="secondary" id="resetExp">重置经验条</button></div></section>
 <section class="card"><h2>已有材料库存</h2><p class="hint">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p><div class="stock-grid"><div class="stock"><label for="micaStock">云母石库存</label><input id="micaStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="micaStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整云母石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="goldStock">乌金石库存</label><input id="goldStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="goldStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整乌金石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="diamondStock">金刚石库存</label><input id="diamondStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="diamondStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整金刚石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div><div class="stock"><label for="obsidianStock">黑曜石库存</label><input id="obsidianStock" min="0" max="500000" type="number" value="0"/><input class="stock-slider" id="obsidianStockSlider" type="range" min="0" max="500000" step="1" value="0" aria-label="拖动调整黑曜石库存"/><div class="stock-slider-ends"><span>0</span><span>500,000</span></div></div></div><div class="stock-summary-heading"><h2>材料需求总览</h2><button class="secondary" id="resetStock">重置库存</button></div><div class="summary"><div class="metric gold" id="micaDemandMetric"><span>云母石</span><strong id="needMica">待计算</strong></div><div class="metric gold"><span>乌金石</span><strong id="needGold">待计算</strong></div><div class="metric gold"><span>金刚石</span><strong id="needDiamond">待计算</strong></div><div class="metric gold"><span>黑曜石</span><strong id="needObsidian">待计算</strong></div><div class="metric gold"><span>折算黑曜石</span><strong id="needConvertedObsidian">待计算</strong></div></div><div class="progress"><div id="levelProgress"></div></div><p class="hint" id="progressText" style="margin:10px 0 0">等级进度：1 / 80</p></section>
 
-<section class="card gift-purchase-card" id="giftPurchaseCard"><div class="gift-card-heading"><h2 id="giftModeHeading">礼包购买方案</h2><button type="button" class="rebate-toggle" id="rebateToggle" aria-pressed="false"><span class="rebate-toggle-dot"></span><span id="rebateToggleText">返利未开启 · 点击开启</span></button></div><p class="hint">礼包开出的小包可获得乌金石，按乌金石 ÷ 4 折算为黑曜石；附加为礼包额外赠送的黑曜石。点击卡片选择方案，自动计算所需购买数量和总价。</p><div class="gift-mode no-rebate-mode" id="noRebateMode"><div class="gift-grid" id="giftGrid"><button class="gift-card active" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button class="gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button class="gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div></div>
-<div class="gift-mode rebate-mode" id="rebateGiftMode" hidden><div class="gift-grid" id="rebateGiftGrid"><button class="gift-card active rebate-gift-card" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10RebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10RebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10RebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRebateRemaining">0</b></div></div></button></div></div><div class="gift-summary-row" id="giftSummaryRow" aria-label="礼包实际购买及材料数量汇总">
+<section class="card gift-purchase-card" id="giftPurchaseCard"><div class="gift-card-heading"><h2 id="giftModeHeading">礼包购买方案</h2><button type="button" class="rebate-toggle" id="rebateToggle" aria-pressed="false"><span class="rebate-toggle-dot"></span><span id="rebateToggleText">返利未开启 · 点击开启</span></button></div><p class="hint">礼包开出的小包可获得乌金石，按乌金石 ÷ 4 折算为黑曜石；附加为礼包额外赠送的黑曜石。点击卡片选择方案，自动计算所需购买数量和总价。</p><div class="gift-mode-slot"><div class="gift-mode no-rebate-mode" id="noRebateMode"><div class="gift-grid" id="giftGrid"><button class="gift-card active" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button class="gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button class="gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div></div>
+<div class="gift-mode rebate-mode" id="rebateGiftMode" hidden><div class="gift-grid" id="rebateGiftGrid"><button class="gift-card active rebate-gift-card" data-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10RebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10RebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10RebateRemaining">0</b></div></div></button><button class="gift-card rebate-gift-card" data-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventRebateCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventRebateCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRebateRemaining">0</b></div></div></button></div></div></div><div class="gift-summary-row" id="giftSummaryRow" aria-label="礼包实际购买及材料数量汇总">
 <div class="gift-summary-item"><span>预计费用</span><strong id="summaryCost">0</strong></div>
 <div class="gift-summary-item"><span>购买礼包数量</span><strong id="summaryCount">0</strong></div>
 
@@ -1144,11 +1559,11 @@ body.gift-data-json #rebateSelectorCard .gift-price{color:var(--primary)!importa
 <tr><th>兑换上限</th><td><input class="rebate-input rc-cap" type="number" value="130000" min="0" step="1"></td><td><input class="rebate-input rc-cap" type="number" value="299000" min="0" step="1"></td><td><input class="rebate-input rc-cap" type="number" value="585000" min="0" step="1"></td><td><input class="rebate-input rc-cap" type="number" value="910000" min="0" step="1"></td></tr>
 <tr><th>返利消耗比例</th><td><input class="rebate-input rc-percent" type="number" value="0.75" min="0" max="1" step="0.01"></td><td><input class="rebate-input rc-percent" type="number" value="0.75" min="0" max="1" step="0.01"></td><td><input class="rebate-input rc-percent" type="number" value="0.75" min="0" max="1" step="0.01"></td><td><input class="rebate-input rc-percent" type="number" value="0.75" min="0" max="1" step="0.01"></td></tr>
 <tr><th>实际消耗数量</th><td><output id="rcActual0">97,500</output></td><td><output id="rcActual1">224,250</output></td><td><output id="rcActual2">438,750</output></td><td><output id="rcActual3">682,500</output></td></tr>
-<tr><th>吃满所需限时包</th><td><output id="rcPacks0">15.625</output></td><td><output id="rcPacks1">21.5625</output></td><td><output id="rcPacks2">13.5</output></td><td><output id="rcPacks3">12.6</output></td></tr>
+<tr><th>所需限时包</th><td><output id="rcPacks0">15.625</output></td><td><output id="rcPacks1">21.5625</output></td><td><output id="rcPacks2">13.5</output></td><td><output id="rcPacks3">12.6</output></td></tr>
 </tbody></table></div>
 <div class="rebate-cap-summary" aria-label="返利计算汇总">
-<div class="rebate-cap-stat"><span>合计限时包</span><strong><output id="rcTotalPacks">64</output></strong></div>
-<div class="rebate-cap-stat"><span>吃满所需</span><strong><output id="rcTotalCost">¥8,947.2</output></strong></div>
+<div class="rebate-cap-stat"><span>合计限时数量</span><strong><output id="rcTotalPacks">64</output></strong></div>
+<div class="rebate-cap-stat"><span>预计费用</span><strong><output id="rcTotalCost">¥8,947.2</output></strong></div>
 <div class="rebate-cap-stat"><span>节省金额</span><strong><output id="rcSaved">¥2,982.4</output></strong></div>
 </div>
 </section>
@@ -1254,7 +1669,7 @@ function update(){
    if(rem)rem.textContent=fmt(Math.max(0,count*p.obsidian-need));
    if(rebateRem)rebateRem.textContent=fmt(Math.max(0,rebateCount*p.obsidian-rebateNeed));
  }
- document.querySelectorAll('.gift-card').forEach(card=>card.classList.toggle('active',card.dataset.plan===selectedPlan));
+ document.querySelectorAll('#giftGrid .gift-card, #rebateGiftGrid .gift-card').forEach(card=>card.classList.toggle('active',card.dataset.plan===selectedPlan));
  syncGiftSummary();
 }
 function syncGiftSummary(){
@@ -1498,5 +1913,5 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
 
 
 </body>
-<!-- 当前版本：v2.4.0 -->
+<!-- 当前版本：v2.5.4 -->
 </html>
