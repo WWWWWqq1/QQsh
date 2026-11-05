@@ -1071,7 +1071,7 @@ function applyShenshouGiftConfig(config){
  Object.keys(giftPlans).forEach(key=>delete giftPlans[key]);
  Object.assign(giftPlans,next);
  shenshouGiftMaterials=materials.filter(m=>m&&m.packageField).map(m=>({key:m.key,name:String(m.name??m.key),packageField:m.packageField}));
- if(typeof system.rebate?.enabled==='boolean'&&typeof updateRebateView==='function')updateRebateView(system.rebate.enabled);
+ // 返利开关不跟随礼包 JSON 配置；页面初始状态固定为关闭，避免移动端加载配置后自动开启。
  shenshouFieldVisibility={};
  for(const key of ['price','big','middle','small',...shenshouGiftMaterials.map(m=>m.packageField)]){
   const defaultHidden=['herb','wood','pill'].includes(key);
@@ -1365,7 +1365,7 @@ function updateRebateView(enabled=rebateToggles.some(toggle=>toggle.checked)){
 // 切换返利只更新上方返利视图；跳过同屏预览重绘，避免礼包卡片选中动效被重新触发。
 rebateToggles.forEach(toggle=>toggle.addEventListener('change',()=>{updateRebateView(toggle.checked);render(true);}));
 document.querySelectorAll('#rebateOffPanel .plan-option,#rebateOnPanel .plan-option').forEach(btn=>btn.addEventListener('click',()=>chooseGiftPlan(btn.dataset.plan)));
-updateRebateView();
+updateRebateView(false);
 
 initSelects();renderTable();applyBeastTheme();render();
 </script>
