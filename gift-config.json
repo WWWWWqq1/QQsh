@@ -39,10 +39,10 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 9.3,
+          "price": 8.8,
           "big": 1,
           "middle": 1,
-          "small": 960,
+          "small": 680,
           "herb": 91,
           "wood": 39,
           "pill": 21
@@ -108,12 +108,12 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 9.3,
+          "price": 8.8,
           "big": 1,
           "middle": 1,
-          "small": 1200,
-          "extra": 0,
-          "obsidian": 1500
+          "small": 800,
+          "extra": 50,
+          "obsidian": 1050
         }
       ],
       "materials": [
@@ -280,9 +280,9 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 6.8,
+          "price": 8.8,
           "stones": 55,
-          "unitPrice": 8.1
+          "unitPrice": 6.2
         }
       ],
       "materials": [
@@ -322,9 +322,9 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 6.8,
-          "stones": 238,
-          "unitPrice": 35
+          "price": 7.3,
+          "stones": 188,
+          "unitPrice": 25.8
         }
       ],
       "materials": [
