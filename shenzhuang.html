@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.5.2</title>
+<meta content="#172033" name="theme-color"/><title>神装升级计算器 v2.6.19</title>
 <style>
 :root{--bg:#101827;--card:#172338;--panel:#1d2b43;--ink:#edf3ff;--muted:#a8b6cc;--line:#344663;--primary:#d9a441;--soft:#382f21;--shadow:0 12px 32px #0002;}
 *{box-sizing:border-box;}html{min-height:100%;background:var(--bg);}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;transition:background .25s,color .25s;}
@@ -1543,11 +1543,14 @@ function update(){
  const net=adjusted.map((v,i)=>Math.max(0,v-stocks[i]));
  $('needMica').textContent=fmt(net[0]);$('needGold').textContent=fmt(net[1]);$('needDiamond').textContent=fmt(net[2]);$('needObsidian').textContent=fmt(net[3]);
  $('micaDemandMetric').hidden=adjusted[0]===0;
- const converted=net[0]/8+net[1]/4+net[2]/2+net[3];
+ // v2.6.19：黑曜石库存统一抵扣四种材料折算后的总需求，避免库存剩余被浪费。
+ // adjusted[3] 是扣除黑曜石自身库存前的需求，避免与 stocks[3] 重复抵扣。
+ const totalBeforeObsidianStock=net[0]/8+net[1]/4+net[2]/2+adjusted[3];
+ const converted=Math.max(0,totalBeforeObsidianStock-stocks[3]);
  $('needConvertedObsidian').textContent=fmt(Math.ceil(converted));
- // 折算黑曜石仅用于礼包需求计算，不在材料需求总览中单独显示。
+ // 折算黑曜石显示扣除黑曜石库存后的真实礼包需求，普通与返利方案共用此基数。
  const need=Math.ceil(converted);
- const rebateNeed=Math.ceil(net[0]*0.75/8+net[1]*0.75/4+net[2]*0.75/2+net[3]*0.75);
+ const rebateNeed=Math.ceil(converted*0.75);
  for(const [key,p] of Object.entries(giftPlans)){
    const count=need===0?0:Math.ceil(need/p.obsidian);
    const rebateCount=rebateNeed===0?0:Math.ceil(rebateNeed/p.obsidian);

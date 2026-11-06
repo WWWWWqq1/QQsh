@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v1.4.13</title>
+<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v2.2.9</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -700,6 +700,81 @@ html body .junshi-material-summary>.metric:nth-child(3) .name{
   font-size:16px!important;
 }
 
+
+/* v2.2.9：移动端布局与礼包卡片单行规则（统一样式，避免重复覆盖） */
+@media (max-width:560px) {
+  .attr-title-row {
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  .attr-title-row h3 {
+    margin:0 0 7px !important;
+  }
+  .attr-title-row .attribute-buttons {
+    display:grid !important;
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    gap:4px !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+  .attr-title-row .attribute-buttons .attribute-btn {
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    padding:7px 1px !important;
+    font-size:clamp(10px,2.8vw,13px) !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+  }
+
+  .level-boxes {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  .level-box {
+    width:100% !important;
+    min-width:0 !important;
+    padding:9px 7px !important;
+  }
+  .level-label {
+    font-size:13px !important;
+    white-space:nowrap !important;
+  }
+  .level-row {
+    grid-template-columns:minmax(0,1fr) 58px !important;
+    gap:5px !important;
+  }
+  .level-value {
+    font-size:15px !important;
+    padding:5px 2px !important;
+  }
+  .range-ends { font-size:10px !important; }
+
+  /* 原显示字号 27px，缩小 25% */
+  .junshi-material-summary>.metric strong {
+    font-size:20.25px !important;
+  }
+}
+
+/* 礼包卡片内所有文本、数字和标签均保持单行；不强制裁切内容 */
+.gift-grid>.gift-card,
+.gift-grid>.gift-card *,
+.rebate-gift-cards>button,
+.rebate-gift-cards>button *,
+.all-gifts-grid .all-gift-option,
+.all-gifts-grid .all-gift-option *,
+.all-gift-option,
+.all-gift-option * {
+  white-space:nowrap !important;
+  overflow-wrap:normal !important;
+  word-break:keep-all !important;
+}
+
 </style>
 <footer class="page-footer"><span class="author">@wwwwwWqq1</span><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></footer>
 
@@ -800,7 +875,6 @@ function applyJunshiGiftConfig(configData){
  giftMaterialNames=materials.filter(m=>m&&m.packageField).map(m=>String(m.name??m.key));
  giftFieldVisibility=system.fieldVisibility||{};
  giftConfig=system;
- if(typeof system.rebate?.enabled==='boolean')rebateEnabled=system.rebate.enabled;
  if(rebateToggle){rebateToggle.checked=rebateEnabled;document.body.classList.toggle('rebate-on',rebateEnabled);const heading=rebateToggle.closest('.gift-heading');if(heading)heading.classList.toggle('rebate-off',!rebateEnabled);const label=rebateToggle.parentElement?.querySelector('.rebate-chip-label');if(label){label.textContent=rebateEnabled?label.dataset.onText:label.dataset.offText;rebateToggle.setAttribute('aria-label',rebateEnabled?'返利已开启，点击关闭':'返利未开启，点击开启');}}
  if(!giftPlans[selectedGift])selectedGift=Object.keys(giftPlans)[0];
  renderGiftSelectors();
