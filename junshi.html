@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v2.3.13</title>
+<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v2.3.18</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -257,7 +257,136 @@ body.rebate-on .gift-total>div.gift-metric-cost strong,body.rebate-on .gift-tota
 body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </style>
 
-<meta name="qqsh-version" content="v2.3.14">
+<meta name="qqsh-version" content="v2.3.18">
+<style id="junshi-gift-pack-label-flat-v2-3-15">
+/* 礼包购买方案与返利计算：大/中/小包标签取消独立底色卡片，字体与数值统一 */
+#giftPlan .gift-grid .gift-facts > span,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span{
+  display:block!important;
+  padding:0!important;
+  margin:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  text-align:center!important;
+}
+#giftPlan .gift-grid .gift-facts > span > b,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b{
+  font-size:12px!important;
+  line-height:1.2!important;
+  font-weight:700!important;
+  margin:3px 0 0!important;
+}
+#giftPlan .gift-grid .gift-facts,
+#rebateCalcPanel .rebate-gift-cards .gift-facts{
+  gap:5px!important;
+  margin-bottom:2px!important;
+}
+@media(max-width:560px){
+  #giftPlan .gift-grid .gift-facts,
+  #rebateCalcPanel .rebate-gift-cards .gift-facts{gap:3px!important}
+  #giftPlan .gift-grid .gift-facts > span,
+  #giftPlan .gift-grid .gift-facts > span > b,
+  #rebateCalcPanel .rebate-gift-cards .gift-facts > span,
+  #rebateCalcPanel .rebate-gift-cards .gift-facts > span > b{
+    font-size:10.5px!important;
+    letter-spacing:-.35px!important;
+  }
+}
+</style>
+<style id="junshi-rebate-pack-no-individual-cards-v2-3-17">
+/* 返利计算礼包卡片：大/中/小包仅保留文字和数字，彻底移除每列独立卡片外观 */
+#rebateCalcPanel .rebate-gift-cards .gift-facts,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b{
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+#rebateCalcPanel .rebate-gift-cards .gift-facts{
+  display: grid !important;
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: 4px !important;
+  padding: 0 !important;
+}
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span{
+  display: block !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b{
+  display: block !important;
+  margin: 3px 0 0 !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+@media(max-width:560px){
+  #rebateCalcPanel .rebate-gift-cards .gift-facts{gap: 2px !important;}
+  #rebateCalcPanel .rebate-gift-cards .gift-facts > span,
+  #rebateCalcPanel .rebate-gift-cards .gift-facts > span > b{
+    font-size: 10px !important;
+    letter-spacing: -.2px !important;
+  }
+}
+</style>
+<style id="v2-3-14-floating-actions-spacing">
+/* 与神装页面一致：两个悬浮按钮共用固定定位容器，间距7px */
+.page-footer .floating-actions{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:7px;}
+.page-footer .floating-actions .home-link,.page-footer .floating-actions .theme-toggle{position:static;right:auto;bottom:auto;margin:0;}
+@media(max-width:480px){.page-footer .floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:7px;}}
+</style>
+
+<style id="junshi-rebate-nested-number-span-reset-v2-3-18">
+/* 根因修复：数字标红脚本会在礼包字段内部再包一层 .gift-data-number；
+   .gift-facts span 的基础样式会命中这层嵌套 span，重新生成白底小卡片。
+   返利区域必须同时清除直接子项和内部数字 span 的卡片样式。 */
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span .gift-data-number,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b .gift-data-number {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  padding: 0 !important;
+}
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span .gift-data-number,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b .gift-data-number {
+  display: inline !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+}
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span,
+#rebateCalcPanel .rebate-gift-cards .gift-facts > span > b {
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+@media(max-width:560px){
+  #rebateCalcPanel .rebate-gift-cards .gift-facts > span,
+  #rebateCalcPanel .rebate-gift-cards .gift-facts > span > b {
+    font-size: 10.5px !important;
+    letter-spacing: -.35px !important;
+  }
+}
+</style>
+
 </head><body><main>
 <header class="hero"><h1>军师升级材料计算器</h1><p>选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p></header>
 <section class="panel"><h2>计算属性数量</h2><div class="segment"><button id="oneBtn" class="active" type="button">计算一条属性</button><button id="twoBtn" type="button">计算两条属性</button></div></section>
@@ -1384,9 +1513,6 @@ renderResults();renderGiftSelectors();renderGiftPlan();renderAllGiftPreview();
 </style>
 
 </body></html>
-<style id="v2-3-14-floating-actions-spacing">
-/* 与神装页面一致：两个悬浮按钮共用固定定位容器，间距7px */
-.page-footer .floating-actions{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:7px;}
-.page-footer .floating-actions .home-link,.page-footer .floating-actions .theme-toggle{position:static;right:auto;bottom:auto;margin:0;}
-@media(max-width:480px){.page-footer .floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:7px;}}
-</style>
+
+
+
