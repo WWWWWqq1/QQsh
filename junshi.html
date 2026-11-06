@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v2.2.18</title>
+<meta name="theme-color" content="#f7f9fc"><title>军师升级材料计算器 v2.3.13</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -147,18 +147,18 @@ body.dark{--bg:#11151d;--panel:#1b2230;--panel2:#222c3d;--text:#f2f4f8;--muted:#
 
 .rebate-calc-panel{margin-top:16px;border:1.5px solid #d9a13b;background:linear-gradient(145deg,color-mix(in srgb,#d9a13b 7%,var(--panel)),var(--panel))}
 .rebate-calc-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.rebate-calc-heading h2{margin:0;color:#d9a13b}.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}.rebate-plan-select button{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel2);color:var(--text);font-weight:750;cursor:pointer}.rebate-plan-select button.active{border:2px solid #18a765;background:rgba(24,167,101,.12);color:#18a765;padding:9px 11px}@media(max-width:560px){.rebate-plan-select{grid-template-columns:1fr}}
-.rebate-pack-overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
-.rebate-pack-overview>div,.rebate-calc-summary>div{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px;min-width:0;text-align:center}
-.rebate-pack-overview span,.rebate-calc-summary span{display:block;color:var(--muted);font-size:14px;font-weight:600;line-height:1.45;text-align:center}.rebate-pack-overview b{display:block;font-size:18px;font-weight:750;line-height:1.4;margin-top:5px;color:var(--text);overflow-wrap:anywhere;text-align:center}
+.rebate-calc-heading h2{margin:0;color:#d9a13b}
+
+.rebate-calc-summary>div{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px;min-width:0;text-align:center}
+.rebate-calc-summary span{display:block;color:var(--muted);font-size:14px;font-weight:600;line-height:1.45;text-align:center}
 /* 返利计算卡片统一正文排版：表格中的汉字和数字同字号、同字重，不对个别行单独放大或加粗 */
 .rebate-table,.rebate-table th,.rebate-table td{font-family:inherit;font-size:14px!important;font-weight:400!important;line-height:1.45;font-variant-numeric:tabular-nums}
 .rebate-table th,.rebate-table td{text-align:center;padding:10px 12px}
-.rebate-table thead th:nth-child(2),.rebate-table tbody td:nth-child(2){color:#ff5b5b!important}.rebate-table thead th:nth-child(3),.rebate-table tbody td:nth-child(3){color:#25c777!important}.rebate-table thead th:nth-child(4),.rebate-table tbody td:nth-child(4){color:#5da8ff!important}
+.rebate-table thead th,.rebate-table tbody th,.rebate-table tbody td{color:var(--text)!important}
 .rebate-table thead th{background:var(--panel2)}.rebate-table tbody th{background:color-mix(in srgb,var(--panel2) 70%,transparent);white-space:nowrap}
 .rebate-table .actual-consumption td,.rebate-table .needed-packs td{font-size:14px!important;font-weight:400!important}
 .rebate-calc-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.rebate-calc-summary>div{border:1px solid var(--line)!important;background:var(--panel2)!important;box-shadow:none!important}.rebate-calc-summary strong{display:block;margin-top:5px;color:#d9a13b;font-size:20px;font-weight:800;line-height:1.4;overflow-wrap:anywhere;text-align:center}
-@media(max-width:760px){.rebate-pack-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.rebate-calc-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.rebate-table th,.rebate-table td{padding:8px 6px;font-size:14px!important}.rebate-table tbody th{white-space:normal}.rebate-pack-overview b{font-size:16px}.rebate-calc-summary strong{font-size:18px}}
+@media(max-width:760px){.rebate-calc-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.rebate-table th,.rebate-table td{padding:8px 6px;font-size:14px!important}.rebate-table tbody th{white-space:normal}.rebate-calc-summary strong{font-size:18px}}
 
 
 /* 军师页面水印：沿用神装页面配置，仅将水印色调轻微调整为蓝色 */
@@ -257,8 +257,9 @@ body.rebate-on .gift-total>div.gift-metric-cost strong,body.rebate-on .gift-tota
 body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </style>
 
+<meta name="qqsh-version" content="v2.3.14">
 </head><body><main>
-<header class="hero"><h1>军师升级材料计算器</h1><p>选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p><p class="muted" style="margin-top:8px">生命 · 武攻 · 法攻 · 武防 · 法防 · 速度</p></header>
+<header class="hero"><h1>军师升级材料计算器</h1><p>选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p></header>
 <section class="panel"><h2>计算属性数量</h2><div class="segment"><button id="oneBtn" class="active" type="button">计算一条属性</button><button id="twoBtn" type="button">计算两条属性</button></div></section>
 <section class="panel"><h2>属性与等级</h2><div id="attr1" class="attr-card"></div><div id="attr2" class="attr-card" hidden></div>
 <div class="actions"><button id="resetLevels" class="btn" type="button">重置等级</button><button id="resetExp" class="btn" type="button">重置经验</button></div><div id="status" class="muted" style="display:none" aria-live="polite"></div></section>
@@ -266,15 +267,15 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 <div class="inventory-title-row"><h2>已有材料库存</h2></div>
 <p class="inventory-intro">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p>
 <div class="stock-grid junshi-stock-grid">
-  <div class="stock stock-yang"><label for="stockYang">阳炎符库存</label><input id="stockYang" min="0" step="1" type="number" inputmode="numeric" value="0" />
-    <input class="stock-range" id="stockYangRange" type="range" min="0" max="10000" step="1" value="0" aria-label="阳炎符库存滑动条" />
-    <div class="stock-range-scale"><span>0</span><span>10,000</span></div></div>
-  <div class="stock stock-chang"><label for="stockChang">长生符库存</label><input id="stockChang" min="0" step="1" type="number" inputmode="numeric" value="0" />
-    <input class="stock-range" id="stockChangRange" type="range" min="0" max="10000" step="1" value="0" aria-label="长生符库存滑动条" />
-    <div class="stock-range-scale"><span>0</span><span>10,000</span></div></div>
-  <div class="stock stock-sheng"><label for="stockSheng">圣人符库存</label><input id="stockSheng" min="0" step="1" type="number" inputmode="numeric" value="0" />
-    <input class="stock-range" id="stockShengRange" type="range" min="0" max="10000" step="1" value="0" aria-label="圣人符库存滑动条" />
-    <div class="stock-range-scale"><span>0</span><span>10,000</span></div></div>
+  <div class="stock stock-yang"><label for="stockYang">阳炎符库存</label><input id="stockYang" min="0" max="200000" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockYangRange" type="range" min="0" max="200000" step="1" value="0" aria-label="阳炎符库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>200,000</span></div></div>
+  <div class="stock stock-chang"><label for="stockChang">长生符库存</label><input id="stockChang" min="0" max="200000" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockChangRange" type="range" min="0" max="200000" step="1" value="0" aria-label="长生符库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>200,000</span></div></div>
+  <div class="stock stock-sheng"><label for="stockSheng">圣人符库存</label><input id="stockSheng" min="0" max="200000" step="1" type="number" inputmode="numeric" value="0" />
+    <input class="stock-range" id="stockShengRange" type="range" min="0" max="200000" step="1" value="0" aria-label="圣人符库存滑动条" />
+    <div class="stock-range-scale"><span>0</span><span>200,000</span></div></div>
 </div>
 <div class="inventory-overview-heading"><h2 class="inventory-overview-title">材料需求总览</h2><button id="resetStock" class="btn reset-stock-btn" type="button">重置库存</button></div>
 <div class="summary junshi-material-summary">
@@ -322,10 +323,7 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 <section class="panel rebate-calc-panel" id="rebateCalcPanel">
   <div class="rebate-calc-heading"><h2 id="rebateCalcTitle">返利计算 · 月初礼包</h2></div>
   <p class="muted" id="rebateCalcHint">参考神装返利计算模块，选择礼包查看对应的返利情况。</p>
-  <div class="rebate-plan-select rebate-gift-cards" role="group" aria-label="选择返利计算礼包"></div>
-  <div class="rebate-pack-overview" hidden>
-    <div><span>价格</span><b id="rebatePackPrice">¥99</b></div><div><span>大包数量</span><b id="rebatePackBig">213</b></div><div><span>中包数量</span><b id="rebatePackMiddle">80</b></div><div><span>小包数量</span><b id="rebatePackSmall">17,040</b></div>
-  </div>
+  <div class="gift-grid rebate-gift-cards" role="group" aria-label="选择返利计算礼包"></div>
   <div class="table-wrap rebate-table-wrap"><table class="rebate-table"><thead><tr><th>项目</th><th>阳炎符</th><th>长生符</th><th>圣人符</th></tr></thead><tbody>
     <tr><th>每包材料数量</th><td>35</td><td>15</td><td>7</td></tr>
     <tr><th>消耗所得积分</th><td>3</td><td>7</td><td>15</td></tr>
@@ -333,14 +331,13 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
     <tr><th>兑换上限</th><td>1,560,000</td><td>936,000</td><td>468,000</td></tr>
     <tr><th>比例</th><td>3/4</td><td>3/4</td><td>3/4</td></tr>
     <tr class="actual-consumption"><th>实际消耗数量</th><td>1,170,000</td><td>702,000</td><td>351,000</td></tr>
-    <tr class="needed-packs"><th>所需兑换数量</th><td>133,714</td><td>187,200</td><td>200,571</td></tr>
+    <tr class="needed-packs"><th>小包数量</th><td id="rebateSmallYang">0</td><td id="rebateSmallChang">0</td><td id="rebateSmallSheng">0</td></tr>
   </tbody></table></div>
   <div class="rebate-calc-summary">
-    <div><span>合计限时大包（向上取整）</span><strong id="rebateTotalBig">32</strong></div>
-    <div><span>合计限时小包</span><strong id="rebateTotalSmall">521,486</strong></div>
-    <div><span>吃满所需元子</span><strong id="rebateYuanzi">¥4,474</strong></div>
-    <div><span>节省金额</span><strong id="rebateSaving">¥1,491</strong></div>
-  </div>
+     <div><span>合计礼包数量</span><strong id="rebateTotalBig">计算中</strong></div>
+     <div><span>预计费用</span><strong id="rebateYuanzi">计算中</strong></div>
+     <div><span>节省金额</span><strong id="rebateSaving">计算中</strong></div>
+   </div>
 </section>
 
 <section class="panel"><h2>升级数据查询</h2><div class="table-wrap"><table class="upgrade-query-table"><thead><tr><th>等级</th><th>阳炎符</th><th>长生符</th><th>圣人符</th><th>成长值</th><th>经验条</th><th>阳炎符次需</th><th>长生符次需</th><th>圣人符次需</th></tr></thead><tbody id="tableBody"></tbody></table></div><div class="notice">数据来源：你提供的军师系统 1–80 级升级表。经验抵扣按当前经验值 ÷ 当前等级成长值向下取整，折算可抵扣的当前等级次需材料；结果最低为 0。</div></section>
@@ -535,30 +532,9 @@ body.dark .result-banner{background:var(--result-bg)}
 }
 
 /* v1.0.70：返利计算礼包按钮固定一排三列 */
-.rebate-plan-select{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-}
-.rebate-plan-select button{
-  min-width:0;
-  width:100%;
-  padding-left:5px;
-  padding-right:5px;
-  white-space:normal;
-  overflow-wrap:anywhere;
-  line-height:1.25;
-}
-@media(max-width:560px){
-  .rebate-plan-select{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:6px;
-  }
-  .rebate-plan-select button{
-    padding:10px 3px;
-    font-size:12px;
-  }
-}
+
+
+
 
 
 /* v1.0.70：默认200px预览；仅指定按钮可切换完整展示 */
@@ -577,19 +553,10 @@ body.dark .result-banner{background:var(--result-bg)}
 #allGiftContent[hidden]{display:none!important}
 
 
-/* v1.4.7：礼包名与价格固定同一行，价格靠右显示 */
+/* 返利区复用上方礼包方案卡片样式 */
 .rebate-gift-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin:14px 0!important}
-.rebate-gift-cards>button{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;column-gap:8px;row-gap:10px;min-width:0;width:100%;padding:13px!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel2)!important;color:var(--text)!important;text-align:left;white-space:normal;overflow-wrap:anywhere}
-.rebate-gift-cards>button.active{border:2px solid #18a765!important;padding:12px!important;background:color-mix(in srgb,#18a765 8%,var(--panel))!important;box-shadow:0 0 0 1px color-mix(in srgb,#18a765 12%,transparent)}
-.rebate-gift-name{grid-column:1;grid-row:1;min-width:0;font-size:15px;line-height:1.25;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:clip;letter-spacing:-.25px}
-.rebate-gift-price{grid-column:2;grid-row:1;display:inline-flex;align-items:baseline;gap:3px;justify-self:end;white-space:nowrap;border-radius:7px;padding:4px 6px;background:color-mix(in srgb,#d9a13b 10%,var(--panel));color:var(--muted);font-size:11px}
-.rebate-gift-price b{display:inline;color:#d9a13b;font-size:16px;line-height:1.2;margin:0}
-.rebate-gift-counts{grid-column:1 / -1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
-.rebate-gift-counts>span{display:block;min-width:0;padding:8px 4px;border-radius:8px;background:var(--panel);color:var(--muted);font-size:12px;text-align:center}
-.rebate-gift-counts b{display:block;margin-top:4px;color:var(--text);font-size:14px;line-height:1.3;overflow-wrap:anywhere}
-.rebate-pack-overview[hidden]{display:none!important}
-@media(max-width:560px){.rebate-gift-cards{gap:6px!important}.rebate-gift-cards>button{padding:8px 5px!important;column-gap:3px;row-gap:7px}.rebate-gift-cards>button.active{padding:7px 4px!important}.rebate-gift-name{font-size:11px;line-height:1.2;letter-spacing:-.45px}.rebate-gift-price{gap:2px;padding:3px 4px;font-size:9px}.rebate-gift-price b{font-size:12px}.rebate-gift-counts{gap:3px}.rebate-gift-counts>span{font-size:10px;padding:6px 2px}.rebate-gift-counts b{font-size:11px;overflow-wrap:anywhere}}
-
+.rebate-gift-cards>.gift-card{width:100%;min-width:0}
+@media(max-width:560px){.rebate-gift-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}}
 /* v1.4.9：返利汇总卡片去除左侧立体强调边；升级数据查询固定等级列 */
 .rebate-calc-summary>div{border:1px solid var(--line)!important;box-shadow:none!important;background:var(--panel2)!important}
 .upgrade-query-table{border-collapse:separate;border-spacing:0}
@@ -776,7 +743,7 @@ html body .junshi-material-summary>.metric:nth-child(3) .name{
 }
 
 </style>
-<footer class="page-footer"><span class="author">@wwwwwWqq1</span><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></footer>
+<footer class="page-footer"><span class="author">@wwwwwWqq1</span><div class="floating-actions"><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></div></footer>
 
 <script>
 function setGiftDataSource(source){
@@ -804,7 +771,7 @@ for(let i=1;i<=2;i++){$('level'+i).addEventListener('input',()=>{normalizeLevel(
 function clearResult(){$('rYang').textContent=$('rChang').textContent=$('rSheng').textContent='—';$('dYang').textContent=$('dChang').textContent=$('dSheng').textContent='剩余需求';$('resultDetail').innerHTML='';}
 function calculateOne(i){const lv=Number($('level'+i).value),target=Number($('targetRange'+i).value),exp=Number($('exp'+i).value)||0;if(target<lv)return {error:'目标等级不能低于当前等级。'};const start=row(lv),end=row(target);let need=[1,2,3].map(col=>rows.filter(r=>r[0]>lv&&r[0]<=target).reduce((sum,r)=>sum+Number(r[col]||0),0));const growth=Number(start[4]);const times=growth>0?Math.floor(exp/growth):0;const credit=[start[6]*times,start[7]*times,start[8]*times];need=need.map((v,j)=>Math.max(0,v-credit[j]));return {attr:selectedAttr(i),lv,target,exp,cap:Number(start[5])||Number(row(Math.min(80,lv+1))[5])||0,need,credit,times}}
 let currentNeedsAfterExp=[0,0,0],currentStocks=[0,0,0];
-function renderResults(){try{const results=[];for(let i=1;i<=count;i++){const r=calculateOne(i);if(r.error){$('status').textContent=r.error;return}results.push(r)}const gross=[0,0,0];results.forEach(r=>r.need.forEach((v,j)=>gross[j]+=v));const stock=[Math.max(0,Math.floor(Number($('stockYang')?.value)||0)),Math.max(0,Math.floor(Number($('stockChang')?.value)||0)),Math.max(0,Math.floor(Number($('stockSheng')?.value)||0))];currentNeedsAfterExp=gross.slice();currentStocks=stock.slice();const totals=gross.map((v,j)=>Math.max(0,v-stock[j]));['rYang','rChang','rSheng'].forEach((id,j)=>$(id).textContent=fmt(totals[j]));$('resultDetail').innerHTML=`<table class="result-table"><thead><tr><th>属性</th><th>升级区间</th><th>阳炎符总需求</th><th>长生符总需求</th><th>圣人符总需求</th></tr></thead><tbody>${results.map(r=>`<tr><td>${r.attr}</td><td>${r.lv} → ${r.target}</td><td>${fmt(r.need[0])}</td><td>${fmt(r.need[1])}</td><td>${fmt(r.need[2])}</td></tr>`).join('')}<tr><th colspan="2">合计总需求（已扣经验）</th>${gross.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><th colspan="2">扣除库存后</th>${totals.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></tbody></table>`;$('status').textContent='已实时更新。先合计升级材料需求并扣除经验条抵扣；礼包购买再按返利规则计算并扣除库存。';if(typeof renderGiftPlan==='function')renderGiftPlan()}catch(err){console.error('军师材料需求计算失败',err);const status=$('status');if(status)status.textContent='计算出现异常，请检查等级与经验输入后重试。';}}
+function renderResults(){try{const results=[];for(let i=1;i<=count;i++){const r=calculateOne(i);if(r.error){$('status').textContent=r.error;return}results.push(r)}const gross=[0,0,0];results.forEach(r=>r.need.forEach((v,j)=>gross[j]+=v));const stock=[$('stockYang'),$('stockChang'),$('stockSheng')].map(el=>{const value=Math.min(200000,Math.max(0,Math.floor(Number(el?.value)||0)));if(el&&String(value)!==el.value)el.value=String(value);return value;});currentNeedsAfterExp=gross.slice();currentStocks=stock.slice();const totals=gross.map((v,j)=>Math.max(0,v-stock[j]));['rYang','rChang','rSheng'].forEach((id,j)=>$(id).textContent=fmt(totals[j]));$('resultDetail').innerHTML=`<table class="result-table"><thead><tr><th>属性</th><th>升级区间</th><th>阳炎符总需求</th><th>长生符总需求</th><th>圣人符总需求</th></tr></thead><tbody>${results.map(r=>`<tr><td>${r.attr}</td><td>${r.lv} → ${r.target}</td><td>${fmt(r.need[0])}</td><td>${fmt(r.need[1])}</td><td>${fmt(r.need[2])}</td></tr>`).join('')}<tr><th colspan="2">合计总需求（已扣经验）</th>${gross.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><th colspan="2">扣除库存后</th>${totals.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></tbody></table>`;$('status').textContent='已实时更新。先合计升级材料需求并扣除经验条抵扣；礼包购买再按返利规则计算并扣除库存。';if(typeof renderGiftPlan==='function')renderGiftPlan()}catch(err){console.error('军师材料需求计算失败',err);const status=$('status');if(status)status.textContent='计算出现异常，请检查等级与经验输入后重试。';}}
 ['stockYang','stockChang','stockSheng'].forEach(id=>$(id).addEventListener('input',()=>renderResults()));
 $('resetStock').addEventListener('click',()=>{['stockYang','stockChang','stockSheng'].forEach(id=>$(id).value='0');renderResults();});
 $('resetLevels').onclick=()=>{for(let i=1;i<=2;i++){$('level'+i).value=30;$('targetRange'+i).value=45;normalizeLevel(i)}clearResult();$('status').textContent='等级已重置为当前 30 级、目标 45 级。'};
@@ -820,15 +787,33 @@ function giftFieldVisible(field,p){const v=(p&&p.fieldVisibility)||giftConfig?.f
 function getGiftPackage(id){return giftPlans[id]||giftPlans.monthly||Object.values(giftPlans)[0]||null;}
 function getGiftRatio(){return Number(giftConfig?.rebate?.ratio??giftFallbackRatio)||0;}
 function renderGiftSelectors(){
- const main=document.querySelector('.gift-grid');
+ const main=document.querySelector('.gift-grid:not(.rebate-gift-cards)');
  const rebate=document.querySelector('.rebate-gift-cards');
  const packages=Object.values(giftPlans);
  const packageFields=p=>[['big','大包'],['middle','中包'],['small','小包'],...giftMaterialKeys.map((key,i)=>[key,giftMaterialNames[i]||key])].filter(([key])=>giftFieldVisible(key,p)&&p[key]!==undefined);
  const facts=p=>packageFields(p).map(([key,label])=>`<span>${label} <b>${fmt(p[key]||0)}</b></span>`).join('');
- if(main)main.innerHTML=packages.map(p=>`<button type="button" class="gift-card ${p.id===selectedGift?'selected':''}" data-gift="${p.id}"><div class="gift-top"><strong>${p.name}</strong>${giftFieldVisible('price',p)?`<span class="gift-price">${money(p.price)}</span>`:''}</div><div class="gift-facts">${facts(p)}</div></button>`).join('');
- if(rebate)rebate.innerHTML=packages.map(p=>`<button type="button" data-rebate-gift="${p.id}" class="${p.id===selectedGift?'active':''}" aria-pressed="${p.id===selectedGift?'true':'false'}"><strong class="rebate-gift-name">${p.name}</strong>${giftFieldVisible('price',p)?`<span class="rebate-gift-price">价格 <b>${money(p.price)}</b></span>`:''}<span class="rebate-gift-counts">${facts(p)}</span></button>`).join('');
- document.querySelectorAll('[data-gift]').forEach(btn=>btn.addEventListener('click',()=>{selectedGift=btn.dataset.gift;document.querySelectorAll('[data-gift]').forEach(b=>b.classList.toggle('selected',b===btn));renderGiftPlan();}));
- document.querySelectorAll('[data-rebate-gift]').forEach(btn=>btn.addEventListener('click',()=>setRebateGift(btn.dataset.rebateGift)));
+ const card=(p,attribute)=>`<button type="button" class="gift-card ${p.id===selectedGift?'selected':''}" ${attribute}="${p.id}"><div class="gift-top"><strong>${p.name}</strong>${giftFieldVisible('price',p)?`<span class="gift-price">${money(p.price)}</span>`:''}</div><div class="gift-facts">${facts(p)}</div></button>`;
+ if(main)main.innerHTML=packages.map(p=>card(p,'data-gift')).join('');
+ if(rebate)rebate.innerHTML=packages.map(p=>card(p,'data-rebate-gift')).join('');
+ document.querySelectorAll('[data-gift]').forEach(btn=>btn.addEventListener('click',()=>{
+  selectedGift=btn.dataset.gift;
+  syncGiftCardSelection();
+  setRebateGift(selectedGift);
+  renderGiftPlan();
+ }));
+ document.querySelectorAll('[data-rebate-gift]').forEach(btn=>btn.addEventListener('click',()=>{
+  selectedGift=btn.dataset.rebateGift;
+  syncGiftCardSelection();
+  setRebateGift(selectedGift);
+  renderGiftPlan();
+ }));
+}
+function syncGiftCardSelection(){
+ document.querySelectorAll('[data-gift],[data-rebate-gift]').forEach(btn=>{
+  const active=(btn.dataset.gift||btn.dataset.rebateGift)===selectedGift;
+  btn.classList.toggle('selected',active);
+  btn.setAttribute('aria-pressed',String(active));
+ });
 }
 // 内置礼包配置作为在线预览/本地预览备用数据源；网站环境优先读取同目录 JSON。
 const JUNSHI_GIFT_FALLBACK={
@@ -948,24 +933,40 @@ if(allGiftToggle&&allGiftContent){
     }, true);
   }
 }
+function getRebateMaterialSmallPacks(rebate){
+ // 小包数量必须由祭坛兑换积分关系推导：
+ // 实际消耗数量 × 兑换所需积分 ÷ 消耗所得积分 ÷ 每包材料数量。
+ const table=document.querySelector('.rebate-table');
+ if(!table)return [0,0,0];
+ const rows=Array.from(table.querySelectorAll('tbody tr'));
+ const rowByLabel=label=>rows.find(row=>row.querySelector('th')?.textContent.trim()===label);
+ const consumptionRow=rowByLabel(rebate?'实际消耗数量':'兑换上限');
+ const pointRow=rowByLabel('消耗所得积分');
+ const redeemRow=rowByLabel('兑换所需积分');
+ const packRow=rowByLabel('每包材料数量');
+ if(!consumptionRow||!pointRow||!redeemRow||!packRow)return [0,0,0];
+ const cells=row=>Array.from(row.querySelectorAll('td')).map(td=>Number(td.textContent.replace(/,/g,'').trim())||0);
+ const consumption=cells(consumptionRow),points=cells(pointRow),redeem=cells(redeemRow),perPack=cells(packRow);
+ return [0,1,2].map(i=>{
+  if(!points[i]||!perPack[i])return 0;
+  // 保留页面原有整数小包口径：不足一包不计入完整小包。
+  return Math.floor(consumption[i]*redeem[i]/points[i]/perPack[i]);
+ });
+}
 function calculateGiftStats(p,rebate){
- const ratio=rebate?Math.max(0,1-getGiftRatio()):1;
- const adjusted=currentNeedsAfterExp.map((n,i)=>Math.max(0,n*ratio-currentStocks[i]));
- const yields=giftMaterialKeys.map(k=>Number(p[k])||0);
- if(yields.some((value,i)=>adjusted[i]>0&&value<=0))return {adjusted,open:[Infinity,Infinity,Infinity],smallNeed:Infinity,qty:Infinity,purchasedSmall:0,remaining:0,cost:Infinity};
- const open=adjusted.map((n,i)=>n<=0?0:Math.ceil(n/yields[i]));
+ const open=getRebateMaterialSmallPacks(!!rebate);
  const smallNeed=open.reduce((sum,n)=>sum+n,0);
  const smallPerGift=Number(p.small)||0;
- if(smallPerGift<=0&&smallNeed>0)return {adjusted,open,smallNeed,qty:Infinity,purchasedSmall:0,remaining:0,cost:Infinity};
+ if(smallPerGift<=0&&smallNeed>0)return {adjusted:[],open,smallNeed,qty:Infinity,purchasedSmall:0,remaining:0,cost:Infinity};
  const qty=smallNeed>0?Math.ceil(smallNeed/smallPerGift):0;
  const purchasedSmall=qty*smallPerGift;
- return {adjusted,open,smallNeed,qty,purchasedSmall,remaining:Math.max(0,purchasedSmall-smallNeed),cost:qty*(Number(p.price)||0)};
+ return {adjusted:[],open,smallNeed,qty,purchasedSmall,remaining:Math.max(0,purchasedSmall-smallNeed),cost:qty*(Number(p.price)||0)};
 }
 function renderAllGiftPreview(){
  const host=document.getElementById('allGiftGrid');if(!host||!Object.keys(giftPlans).length)return;
  const plans=Object.values(giftPlans);const fmtAll=n=>Number(n).toLocaleString('en-US');const moneyAll=n=>'¥'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
  const stat=(label,value)=>`<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
- const mode=(label,stats,isRebate)=>`<div class="all-gift-mode ${isRebate?'rebate':'normal'}"><div class="mode-cost">${moneyAll(stats.cost)}</div>${stat('购买礼包数量',fmtAll(stats.qty)+' 个')}${stat('阳炎符包数',fmtAll(stats.open[0])+' 个')}${stat('长生符包数',fmtAll(stats.open[1])+' 个')}${stat('圣人符包数',fmtAll(stats.open[2])+' 个')}${stat('剩余小包数量',fmtAll(stats.remaining)+' 个')}</div>`;
+ const mode=(label,stats,isRebate)=>`<div class="all-gift-mode ${isRebate?'rebate':'normal'}"><div class="mode-cost-label">预计费用</div><div class="mode-cost">${moneyAll(stats.cost)}</div>${stat('购买礼包数量',fmtAll(stats.qty)+' 个')}${stat('阳炎符包数',fmtAll(stats.open[0])+' 个')}${stat('长生符包数',fmtAll(stats.open[1])+' 个')}${stat('圣人符包数',fmtAll(stats.open[2])+' 个')}${stat('剩余小包数量',fmtAll(stats.remaining)+' 个')}</div>`;
  host.innerHTML=plans.map(p=>{const normal=calculateGiftStats(p,false),rebate=calculateGiftStats(p,true);const chosen=document.querySelector('.gift-card.selected')?.dataset.gift===p.id;return `<article class="all-gift-option ${chosen?'selected':''}"><section class="all-gift-info-card"><div class="all-gift-top"><h3>${p.name}</h3><span class="all-gift-price">${moneyAll(p.price)}</span></div><div class="all-gift-pack-info"><div><span>大包</span><b>${fmtAll(p.big||0)}</b></div>${Number(p.middle)>0?`<div><span>中包</span><b>${fmtAll(p.middle)}</b></div>`:''}<div><span>小包</span><b>${fmtAll(p.small)}</b></div></div></section><section class="all-gift-compare-card"><div class="all-gift-compare-head"><span>不返利</span><i>/</i><span>返利</span></div><div class="all-gift-compare-grid">${mode('不返利',normal,false)}${mode('返利',rebate,true)}</div></section></article>`;}).join('');
 }
 
@@ -975,6 +976,20 @@ function renderGiftPlan(){
  document.body.classList.toggle('rebate-on',!!rebateEnabled);
  const p=getGiftPackage(selectedGift);if(!p)return;
  const stats=calculateGiftStats(p,rebateEnabled);const normal=calculateGiftStats(p,false);
+ // 返利计算区底部三项汇总始终跟随当前选中的礼包及实时计算结果
+ const rebateStats=calculateGiftStats(p,true);
+ const rebateTotalEl=document.getElementById('rebateTotalBig');
+ const rebateCostEl=document.getElementById('rebateYuanzi');
+ const rebateSavingEl=document.getElementById('rebateSaving');
+ const displayFinite=(value,formatter)=>Number.isFinite(Number(value))?formatter(Number(value)):'—';
+ // 表格小包数、礼包数量、费用统一来自同一个积分兑换公式结果。
+ ['rebateSmallYang','rebateSmallChang','rebateSmallSheng'].forEach((id,i)=>{
+  const cell=document.getElementById(id);
+  if(cell)cell.textContent=displayFinite(rebateStats.open[i],n=>fmt(n));
+ });
+ if(rebateTotalEl)rebateTotalEl.textContent=displayFinite(rebateStats.qty,n=>fmt(n)+' 个');
+ if(rebateCostEl)rebateCostEl.textContent=displayFinite(rebateStats.cost,n=>money(n));
+ if(rebateSavingEl)rebateSavingEl.textContent=displayFinite(normal.cost-rebateStats.cost,n=>money(n));
  $('giftAmount').textContent=money(stats.cost);
  $('giftPurchaseCount').textContent=fmt(stats.qty)+' 个';
  $('openYang').textContent=fmt(stats.open[0])+' 包';$('openChang').textContent=fmt(stats.open[1])+' 包';$('openSheng').textContent=fmt(stats.open[2])+' 包';$('giftRemainingSmall').textContent=fmt(stats.remaining)+' 个';
@@ -986,13 +1001,11 @@ function renderGiftPlan(){
 // 返利计算卡片沿用页面原有兑换细则；礼包参数由同目录 JSON 动态读取。
 function setRebateGift(id){
  const p=getGiftPackage(id);if(!p)return;
- document.getElementById('rebateCalcTitle').textContent='返利计算 · '+p.name;
- document.getElementById('rebateCalcHint').textContent='当前方案：'+p.name+'。返利比例 '+(getGiftRatio()*100).toFixed(0)+'%；下方展示原有兑换规则及所选礼包参数。';
- document.getElementById('rebatePackPrice').textContent=giftFieldVisible('price',p)?money(p.price):'—';
- document.getElementById('rebatePackBig').textContent=fmt(p.big||0);
- document.getElementById('rebatePackMiddle').textContent=fmt(p.middle||0);
- document.getElementById('rebatePackSmall').textContent=fmt(p.small||0);
- document.querySelectorAll('[data-rebate-gift]').forEach(b=>{const active=b.dataset.rebateGift===id;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+ const title=document.getElementById('rebateCalcTitle');
+ const hint=document.getElementById('rebateCalcHint');
+ if(title)title.textContent='返利计算 · '+p.name;
+ if(hint)hint.textContent='当前选择：'+p.name+'。下方展示该礼包对应的返利计算结果。';
+ syncGiftCardSelection();
 }
 renderResults();renderGiftSelectors();renderGiftPlan();renderAllGiftPreview();
 </script>
@@ -1279,4 +1292,101 @@ renderResults();renderGiftSelectors();renderGiftPlan();renderAllGiftPreview();
 }
 </style>
 
+
+<style id="junshi-all-gift-purchase-metrics-one-row-v2-2-19">
+/* 四项礼包汇总指标在所有屏幕宽度下始终保持单行 */
+.all-gift-purchase-metrics{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:8px!important;
+  min-width:0!important;
+}
+.all-gift-purchase-metrics>div{
+  min-width:0!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+}
+.all-gift-purchase-metrics span{white-space:nowrap!important;font-size:12px!important}
+.all-gift-purchase-metrics b{white-space:nowrap!important;overflow-wrap:normal!important}
+@media(max-width:560px){
+  .all-gift-purchase-metrics{gap:5px!important}
+  .all-gift-purchase-metrics>div{padding:8px 3px!important}
+  .all-gift-purchase-metrics span{font-size:10px!important}
+  .all-gift-purchase-metrics b{font-size:15px!important}
+}
+</style>
+
+
+<style id="junshi-rebate-summary-three-items-one-row-v2-2-20">
+.rebate-calc-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+  min-width:0!important;
+}
+.rebate-calc-summary>div{min-width:0!important}
+@media(max-width:760px){
+  .rebate-calc-summary{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .rebate-calc-summary>div{padding:9px 4px!important}
+  .rebate-calc-summary span{font-size:11px!important;white-space:nowrap!important}
+  .rebate-calc-summary strong{font-size:16px!important;white-space:nowrap!important}
+}
+</style>
+
+
+<style id="junshi-rebate-table-neutral-text-v2-3-1">
+/* 返利规则表格取消按材料列区分字体颜色，统一跟随页面正文颜色 */
+.rebate-table thead th,
+.rebate-table tbody th,
+.rebate-table tbody td{
+  color:var(--text)!important;
+}
+</style>
+
+
+<style id="junshi-rebate-cards-reuse-main-gift-style-v2-3-2">
+#rebateCalcPanel .rebate-gift-cards>.gift-card{display:block!important;text-align:left!important}
+#rebateCalcPanel .rebate-gift-cards>.gift-card .gift-top{display:flex!important;align-items:center!important;justify-content:space-between!important}
+#rebateCalcPanel .rebate-gift-cards>.gift-card .gift-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+@media(max-width:560px){
+  #rebateCalcPanel .rebate-gift-cards>.gift-card{padding-left:4px!important;padding-right:4px!important}
+  #rebateCalcPanel .rebate-gift-cards .gift-facts{gap:3px!important}
+  #rebateCalcPanel .rebate-gift-cards .gift-facts>span{padding-left:0!important;padding-right:0!important}
+  #rebateCalcPanel .rebate-gift-cards .gift-facts>span>b{font-size:10.5px!important;letter-spacing:-.5px!important}
+}
+</style>
+
+
+<style id="junshi-gift-cards-bottom-space-minus-10-v2-3-3">
+/* 两处礼包卡片底部空白各缩减10px，后续内容自然上移10px */
+#giftPlan .gift-grid>.gift-card .gift-facts,
+#rebateCalcPanel .rebate-gift-cards>.gift-card .gift-facts{
+  margin-bottom:2px!important;
+}
+</style>
+
+
+<style id="junshi-all-gift-mode-cost-label-v2-3-5">
+.all-gift-mode .mode-cost-label{
+  margin:0 0 2px;
+  font-size:13px;
+  line-height:1.35;
+  font-weight:600;
+  color:var(--muted);
+}
+.all-gift-mode .mode-cost{margin-top:0!important}
+@media(max-width:560px){
+  .all-gift-mode .mode-cost-label{font-size:12px}
+}
+</style>
+
 </body></html>
+<style id="v2-3-14-floating-actions-spacing">
+/* 与神装页面一致：两个悬浮按钮共用固定定位容器，间距7px */
+.page-footer .floating-actions{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:7px;}
+.page-footer .floating-actions .home-link,.page-footer .floating-actions .theme-toggle{position:static;right:auto;bottom:auto;margin:0;}
+@media(max-width:480px){.page-footer .floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:7px;}}
+</style>
