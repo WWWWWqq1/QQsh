@@ -128,10 +128,10 @@ body.light-theme .card::before{opacity:.075;}body.light-theme .card::after{opaci
 @media(max-width:620px){.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}.rebate-param{min-height:76px;padding:9px 5px;}.rebate-param span{font-size:12px;min-height:32px;}.rebate-param strong{font-size:15px;}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}.rebate-cap-stat{padding:10px 7px;min-height:88px;}.rebate-cap-stat span{font-size:12px;}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere;}}
 
 
-.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 16px;}
-.rebate-plan-option{min-width:0;padding:12px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);font:700 14px/1.4 system-ui,-apple-system,"Microsoft YaHei",sans-serif;cursor:pointer;transition:.18s;}
-.rebate-plan-option.active{border:2px solid #16a34a;background:color-mix(in srgb,#16a34a 10%,var(--panel));color:#15803d;box-shadow:0 0 0 2px color-mix(in srgb,#16a34a 10%,transparent);}
-@media(max-width:620px){.rebate-plan-select{grid-template-columns:1fr;gap:7px;}.rebate-plan-option{padding:10px;}}
+
+
+
+@media(max-width:620px){}
 
 
 .gift-card[data-plan="monthly"] .gift-extra,
@@ -171,9 +171,9 @@ body.light-theme .card::before{opacity:.075;}body.light-theme .card::after{opaci
 .gift-card.active .gift-result{border-color:color-mix(in srgb,var(--primary) 55%,var(--line));background:color-mix(in srgb,var(--primary) 7%,var(--card));}
 .rebate-cap-card{margin-top:16px;border:1.5px solid #d9a13b;background:linear-gradient(145deg,color-mix(in srgb,#d9a13b 7%,var(--card)),var(--card));}
 .rebate-cap-card h2{color:#d9a13b;}
-.rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0;}
-.rebate-plan-option{min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);color:var(--ink);font:750 14px/1.4 system-ui,-apple-system,"Microsoft YaHei",sans-serif;cursor:pointer;transition:background .18s,border-color .18s,color .18s;}
-.rebate-plan-option.active{border:2px solid #18a765;padding:9px 11px;background:color-mix(in srgb,#18a765 12%,var(--panel));color:#18a765;box-shadow:0 0 0 2px color-mix(in srgb,#18a765 10%,transparent);}
+
+
+
 .rebate-params{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:14px 0 10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);align-items:stretch;}
 .rebate-param{min-width:0;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:7px;padding:11px 8px;text-align:center;border-radius:10px;background:var(--card)!important;color:var(--ink);border:1px solid var(--line);}
 .rebate-param span{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin:0;font-size:13px;line-height:1.35;color:var(--muted)!important;opacity:1;text-align:center;overflow-wrap:anywhere;}
@@ -195,7 +195,7 @@ body.light-theme .card::before{opacity:.075;}body.light-theme .card::after{opaci
 .rebate-cap-stat span{font-size:13px;line-height:1.4;color:var(--muted);}
 .rebate-cap-stat strong{font-size:20px;line-height:1.25;color:#18a765;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
 .rebate-formulas{margin-top:14px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 80%,transparent);font-size:13px;line-height:1.65;}
-@media(max-width:760px){.gift-grid{grid-template-columns:1fr;gap:9px;}.gift-card{padding:12px;}.gift-card.active{padding:11px;}.gift-top{font-size:15px;}.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px;}.rebate-param{min-height:76px;padding:9px 5px;}.rebate-param span{font-size:12px;min-height:32px;}.rebate-param strong{font-size:15px;}.rebate-plan-select{grid-template-columns:1fr;gap:7px;}.rebate-plan-option{padding:10px;}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}.rebate-cap-stat{padding:10px 7px;min-height:88px;}.rebate-cap-stat span{font-size:12px;}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere;}}
+@media(max-width:760px){.gift-grid{grid-template-columns:1fr;gap:9px;}.gift-card{padding:12px;}.gift-card.active{padding:11px;}.gift-top{font-size:15px;}.rebate-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:8px;}.rebate-param{min-height:76px;padding:9px 5px;}.rebate-param span{font-size:12px;min-height:32px;}.rebate-param strong{font-size:15px;}.rebate-cap-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}.rebate-cap-stat{padding:10px 7px;min-height:88px;}.rebate-cap-stat span{font-size:12px;}.rebate-cap-stat strong{font-size:16px;overflow-wrap:anywhere;}}
 
 
 /* v2.18：合并返利/不返利礼包方案，右上角统一开关 */
@@ -243,9 +243,9 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
 .panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
 
 /* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px);}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3;}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px;}
+
+
+
 
 
 /* v2.1.10：礼包购买方案仅显示小包、折算黑曜石、附加，三项固定横排 */
@@ -291,24 +291,8 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
   text-align:center!important;
   justify-content:center!important;
 }
-#rebateSelectorCard .rebate-plan-select{
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  box-sizing:border-box!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  justify-items:stretch!important;
-}
-#rebateSelectorCard .rebate-plan-option{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-  text-align:center!important;
-  min-width:0!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
+
+
 #rebateSelectorCard .rebate-gift-top{
   width:100%!important;
   justify-content:center!important;
@@ -328,12 +312,9 @@ body.rebate-enabled .gift-result .purchase-count b,body.rebate-enabled .gift-res
   text-align:center!important;
 }
 @media(max-width:520px){
-  #rebateSelectorCard .rebate-plan-select{
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:5px!important;
-  }
-  #rebateSelectorCard .rebate-plan-option{padding:8px 3px!important;}
-  #rebateSelectorCard .rebate-plan-option.active{padding:7px 2px!important;}
+  
+  
+  
 }
 
 </style>
@@ -378,9 +359,9 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 @media(max-width:620px){.rebate-cap-summary{grid-template-columns:1fr;gap:9px;}.rebate-cap-stat{min-height:0;padding:13px 15px;gap:6px;}.rebate-cap-stat strong{font-size:22px;}}
 
 /* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px);}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3;}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px;}
+
+
+
 
 </style>
 <style>
@@ -392,9 +373,9 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 @media(max-width:700px){.stock-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
 /* v2.1.9：单次返利上限计算的三种礼包名称始终保持单行并排 */
-#rebateSelectorCard .rebate-plan-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.5vw,9px);}
-#rebateSelectorCard .rebate-plan-option{min-width:0;white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:clip;padding:10px 3px;font-size:clamp(10px,2.8vw,14px);line-height:1.3;}
-#rebateSelectorCard .rebate-plan-option.active{padding:9px 2px;}
+
+
+
 
 </style>
 <style>
@@ -469,16 +450,8 @@ body.rebate-enabled .rebate-discount-item{display:flex;}
 
 /* v2.1.4：修复深色主题下返利礼包选中卡片仍使用浅色主题配色的问题 */
 
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top strong,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span{
-  color:var(--ink)!important;
-}
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-top>b,
-body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts>span>strong{
-  color:var(--primary)!important;
-}
+
+
 
 </style>
 <style>
@@ -590,8 +563,8 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 </style>
 <style>
 /* v2.1.20：单次返利上限计算的礼包选择卡片，与礼包购买方案卡片样式同步 */
-#rebateSelectorCard .rebate-plan-select{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(5px,1vw,10px)!important;align-items:stretch!important;margin:12px 0 16px!important;}
-#rebateSelectorCard .rebate-plan-option{display:block!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;padding:10px 8px!important;text-align:left!important;white-space:normal!important;overflow:visible!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel)!important;color:var(--ink)!important;font:inherit!important;box-shadow:none!important;}
+
+
 
 #rebateSelectorCard .rebate-gift-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;padding:0 0 7px!important;margin:0 0 7px!important;border-bottom:1px solid var(--line)!important;white-space:nowrap!important;}
 #rebateSelectorCard .rebate-gift-top>strong{min-width:0!important;font-size:clamp(10px,1.05vw,14px)!important;line-height:1.25!important;font-weight:750!important;white-space:nowrap!important;}
@@ -599,7 +572,7 @@ body.rebate-enabled .gift-summary-item.rebate-discount-item{display:flex!importa
 #rebateSelectorCard .rebate-gift-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important;}
 #rebateSelectorCard .rebate-gift-facts>span{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:7px 2px!important;border-radius:8px!important;background:var(--card)!important;color:var(--muted)!important;font-size:clamp(9px,.9vw,12px)!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important;}
 #rebateSelectorCard .rebate-gift-facts>span>strong{display:block!important;max-width:100%!important;color:var(--ink)!important;font-size:clamp(10px,1vw,14px)!important;line-height:1.2!important;font-weight:800!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important;}
-@media(max-width:520px){#rebateSelectorCard .rebate-plan-select{gap:6px!important;}#rebateSelectorCard .rebate-plan-option{padding:8px 5px!important;}#rebateSelectorCard .rebate-plan-option.active{padding:7px 4px!important;}#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important;}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important;}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important;}#rebateSelectorCard .rebate-gift-facts{gap:3px!important;}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important;}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important;}}
+@media(max-width:520px){#rebateSelectorCard .rebate-gift-top{gap:2px!important;padding-bottom:6px!important;margin-bottom:6px!important;}#rebateSelectorCard .rebate-gift-top>strong{font-size:clamp(9px,2.6vw,12px)!important;}#rebateSelectorCard .rebate-gift-top>b{font-size:clamp(9px,2.6vw,12px)!important;}#rebateSelectorCard .rebate-gift-facts{gap:3px!important;}#rebateSelectorCard .rebate-gift-facts>span{padding:6px 1px!important;font-size:clamp(8px,2vw,10px)!important;}#rebateSelectorCard .rebate-gift-facts>span>strong{font-size:clamp(9px,2.2vw,12px)!important;}}
 </style>
 <style>
 /* v2.1.23：单次返利上限计算表格适配容器宽度，禁止横向滚动条 */
@@ -805,24 +778,9 @@ html body.rebate-enabled #giftSummaryRow.gift-summary-row .gift-summary-item str
 
 <style id="v2-4-6-rebate-package-sync">
 /* v2.4.6：返利礼包卡片与上方礼包卡片共用三字段 DOM、数据与布局 */
-html body #rebateSelectorCard .rebate-plan-option,
-html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option{
-  background:var(--panel)!important;
-  color:var(--ink)!important;
-  box-shadow:none!important;
-}
-html body #rebateSelectorCard .rebate-plan-option.active,
-html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
-  background:var(--panel)!important;
-  color:var(--ink)!important;
-  border:2px solid #b77908!important;
-  box-shadow:0 0 0 1px #b7790820!important;
-}
-#rebateSelectorCard .rebate-plan-option.active .rebate-gift-top,
-#rebateSelectorCard .rebate-plan-option.active .rebate-gift-top strong,
-#rebateSelectorCard .rebate-plan-option.active .rebate-gift-facts{
-  color:var(--ink)!important;
-}
+
+
+
 #rebateSelectorCard .rebate-gift-facts{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
@@ -944,128 +902,24 @@ html body:not(.light-theme) #rebateSelectorCard .rebate-plan-option.active{
 
 <style id="v2-4-10-rebate-cards-use-gift-card-ui">
 /* 返利区直接复用上方礼包购买方案卡片样式，不再维护第二套字段 UI */
-#rebateSelectorCard .rebate-plan-select{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:clamp(5px,1vw,10px)!important;
-  align-items:stretch!important;
-}
-#rebateSelectorCard .rebate-plan-option.gift-card{
-  position:relative!important;
-  display:block!important;
-  width:100%!important;
-  min-width:0!important;
-  box-sizing:border-box!important;
-  padding:14px!important;
-  border:1px solid var(--line)!important;
-  border-top:1px solid var(--line)!important;
-  border-radius:13px!important;
-  background:var(--panel)!important;
-  color:var(--ink)!important;
-  box-shadow:none!important;
-  font:inherit!important;
-  text-align:left!important;
-  cursor:pointer!important;
-  transform:none!important;
-}
-#rebateSelectorCard .rebate-plan-option.gift-card.active{
-  border:2px solid var(--primary)!important;
-  padding:13px!important;
-  background:var(--panel)!important;
-  color:var(--ink)!important;
-  box-shadow:none!important;
-}
-#rebateSelectorCard .rebate-plan-option.gift-card:before{content:none!important;display:none!important;}
-#rebateSelectorCard .rebate-plan-option .gift-top{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) auto!important;
-  align-items:center!important;
-  gap:6px!important;
-  padding:0 0 7px!important;
-  margin:0 0 7px!important;
-  border-bottom:1px solid var(--line)!important;
-}
-#rebateSelectorCard .rebate-plan-option .gift-top strong{
-  min-width:0!important;
-  font-size:clamp(10px,1.15vw,16px)!important;
-  line-height:1.25!important;
-  white-space:nowrap!important;
-  color:var(--ink)!important;
-}
-#rebateSelectorCard .rebate-plan-option .gift-top .gift-price{
-  justify-self:end!important;
-  font-size:clamp(12px,1.35vw,20px)!important;
-  line-height:1.25!important;
-  font-weight:900!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  white-space:nowrap!important;
-}
-#rebateSelectorCard .rebate-plan-option .gift-facts{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr)!important;
-  gap:5px!important;
-  width:100%!important;
-  min-width:0!important;
-  margin:0!important;
-  padding:0!important;
-}
-#rebateSelectorCard .rebate-plan-option .gift-facts-labels,
-#rebateSelectorCard .rebate-plan-option .gift-facts-values{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  align-items:center!important;
-  justify-items:center!important;
-  gap:2px!important;
-  width:100%!important;
-  min-width:0!important;
-  margin:0!important;
-  padding:0!important;
-}
-#rebateSelectorCard .rebate-plan-option .gift-facts-labels>span{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  width:100%!important;
-  min-width:0!important;
-  margin:0!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  color:var(--muted)!important;
-  font-size:clamp(8px,2.1vw,11px)!important;
-  line-height:1.15!important;
-  text-align:center!important;
-  white-space:nowrap!important;
-}
-#rebateSelectorCard .rebate-plan-option .gift-facts-values>b{
-  display:block!important;
-  justify-self:center!important;
-  margin:0!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  color:#ef332c!important;
-  font-size:clamp(9px,2.25vw,12px)!important;
-  font-weight:800!important;
-  line-height:1.2!important;
-  text-align:center!important;
-  white-space:nowrap!important;
-  font-variant-numeric:tabular-nums!important;
-}
+
+
+
+
+
+
+
+
+
+
+
 @media(max-width:420px){
-  #rebateSelectorCard .rebate-plan-option.gift-card{padding:8px 6px!important;}
-  #rebateSelectorCard .rebate-plan-option.gift-card.active{padding:7px 5px!important;}
-  #rebateSelectorCard .rebate-plan-option .gift-top strong{font-size:12px!important;}
-  #rebateSelectorCard .rebate-plan-option .gift-top .gift-price{font-size:13px!important;}
-  #rebateSelectorCard .rebate-plan-option .gift-facts-labels>span{font-size:8px!important;}
-  #rebateSelectorCard .rebate-plan-option .gift-facts-values>b{font-size:10px!important;}
+  
+  
+  
+  
+  
+  
 }
 
 /* 价格颜色遵循中央 JSON 状态：本地回退红色，JSON 成功恢复主题色 */
@@ -1526,6 +1380,48 @@ body.gift-data-fallback #rebateSelectorCard .gift-price{
 }
 </style>
 
+
+<style id="gift-cards-height-120-v2614">
+/* 仅统一礼包卡片外部高度为 120px；内部内容沿用 v2.6.18 原始布局，不作平移。 */
+
+</style>
+
+<style id="v2-6-16-rebate-gift-grid-flow-fix">
+/* 返利礼包卡片独立占据文档流；与下方计算表保持12px间距，避免卡片与表格贴合/覆盖。 */
+#rebateSelectorCard #rebatePlanGiftGrid{
+  position:relative!important;
+  display:grid!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0 0 12px!important;
+  align-items:stretch!important;
+}
+#rebateSelectorCard #rebatePlanGiftGrid>.gift-card{
+  position:relative!important;
+  height:120px!important;
+  min-height:120px!important;
+  box-sizing:border-box!important;
+}
+#rebateSelectorCard #rebateCalcTable{
+  position:relative!important;
+}
+</style>
+
+
+<style id="v2-6-19-all-gift-purchase-small-extra-left-shift">
+/* 礼包购买方案（返利开/关两种显示）及返利方案卡片：仅“小包”“附加”字段名与对应数值左移卡片宽度10%；折算黑曜石不移动。 */
+#giftGrid .gift-card,
+#rebateGiftGrid .gift-card,
+#rebatePlanGiftGrid .gift-card{container-type:inline-size;}
+#giftGrid .gift-card .gift-facts-labels>span:nth-child(-n+2),
+#giftGrid .gift-card .gift-facts-values>b:nth-child(-n+2),
+#rebateGiftGrid .gift-card .gift-facts-labels>span:nth-child(-n+2),
+#rebateGiftGrid .gift-card .gift-facts-values>b:nth-child(-n+2),
+#rebatePlanGiftGrid .gift-card .gift-facts-labels>span:nth-child(-n+2),
+#rebatePlanGiftGrid .gift-card .gift-facts-values>b:nth-child(-n+2){
+  transform:translateX(-10cqw);
+}
+</style>
 </head>
 <body><div class="floating-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜主题" title="切换昼夜主题"><span aria-hidden="true">☀️</span><span>切换昼夜</span></button><a class="home-return" href="index.html" aria-label="返回首页" title="返回首页">
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a.9.9 0 0 1-.9.9h-5.2v-6.1H9.6v6.1H4.4a.9.9 0 0 1-.9-.9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1546,11 +1442,7 @@ body.gift-data-fallback #rebateSelectorCard .gift-price{
 <div class="gift-summary-item rebate-discount-item"><span>节省金额</span><strong id="summaryDiscount">0</strong></div>
 </div></section>
 <section class="card rebate-cap-card" id="rebateSelectorCard"><h2>单次返利上限计算</h2><p class="hint">选择礼包后，下方参数、材料数量、返利消耗及购买成本会同步切换。</p>
-<div class="rebate-plan-select" role="group" aria-label="选择返利计算礼包">
-<button type="button" class="gift-card rebate-plan-option active" data-plan="monthly" data-rebate-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div></button>
-<button type="button" class="gift-card rebate-plan-option" data-plan="vip10" data-rebate-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div></button>
-<button type="button" class="gift-card rebate-plan-option" data-plan="event" data-rebate-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div></button>
-</div>
+<div class="gift-grid" id="rebatePlanGiftGrid" role="group" aria-label="选择返利计算礼包"><button type="button" class="gift-card" data-plan="monthly" data-rebate-plan="monthly"><div class="gift-top"><strong>月初礼包</strong><span class="gift-price">¥99</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>21,300</b><b>0</b><b>26,625</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="monthlyCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="monthlyCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="monthlyRemaining">0</b></div></div></button><button type="button" class="gift-card" data-plan="vip10" data-rebate-plan="vip10"><div class="gift-top"><strong>VIP10礼包</strong><span class="gift-price">¥139.8</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>20,800</b><b>0</b><b>26,000</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="vip10Count">0</b> 份</div><div class="purchase-total">预计总价：<b id="vip10Cost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="vip10Remaining">0</b></div></div></button><button type="button" class="gift-card" data-plan="event" data-rebate-plan="event"><div class="gift-top"><strong>限时礼包</strong><span class="gift-price">¥9.3</span></div><div class="gift-facts"><div class="gift-facts-labels"><span>小包</span><span>附加</span><span>折算黑曜石</span></div><div class="gift-facts-values"><b>1,200</b><b>0</b><b>1,500</b></div></div><div class="gift-result"><div class="purchase-count">购买数量：<b id="eventCount">0</b> 份</div><div class="purchase-total">预计总价：<b id="eventCost">¥0</b></div><div class="remaining-obsidian">剩余黑曜石：<b id="eventRemaining">0</b></div></div></button></div>
 <!-- v2.1.21：移除单次返利上限计算中的礼包基础参数展示区及对应输出节点。 -->
 <div class="table-wrap"><table class="rebate-cap-table" id="rebateCalcTable"><thead><tr><th>项目</th><th>云母石</th><th>乌金石</th><th>金刚石</th><th>黑曜石</th></tr></thead><tbody>
 <tr><th>每包材料数量</th><td><output id="rcMat0">208,000</output></td><td><output id="rcMat1">104,000</output></td><td><output id="rcMat2">52,000</output></td><td><output id="rcMat3">26,000</output></td></tr>
@@ -1796,7 +1688,7 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
         const facts=card.querySelector('.gift-facts');
         if(facts) facts.innerHTML=renderGiftFacts(data);
       });
-      document.querySelectorAll('.rebate-plan-option[data-rebate-plan="'+id+'"]').forEach(card=>{
+      document.querySelectorAll('#rebatePlanGiftGrid .gift-card[data-rebate-plan="'+id+'"]').forEach(card=>{
         const name=card.querySelector('.gift-top strong'),price=card.querySelector('.gift-price');
         if(name)name.textContent=data.name||old.name||id;
         if(price){price.textContent='¥'+data.price.toLocaleString('zh-CN',{maximumFractionDigits:2});price.closest('.gift-top')?.toggleAttribute('hidden',shenzhuangFieldVisibility.price===false);}
@@ -1833,7 +1725,7 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
           const facts=card.querySelector('.gift-facts');
           if(facts) facts.innerHTML=renderGiftFacts(data);
         });
-        document.querySelectorAll('.rebate-plan-option[data-rebate-plan="'+id+'"]').forEach(card=>{
+        document.querySelectorAll('#rebatePlanGiftGrid .gift-card[data-rebate-plan="'+id+'"]').forEach(card=>{
           const name=card.querySelector('.gift-top strong');
           const price=card.querySelector('.gift-price');
           if(name) name.textContent=data.name||id;
@@ -1856,7 +1748,7 @@ $('resetLevels').addEventListener('click',()=>{$('fromLevel').value=30;$('toLeve
 
 <script id="gift-data-numeric-only">
 (function(){
-  const giftCardSelector = '.plan-option,.gift-card,.package-option,.rebate-plan-option,.all-gift-option,.gift-plan,.gift-package,.gift-card-item';
+  const giftCardSelector = '.plan-option,.gift-card,.package-option,.all-gift-option,.gift-plan,.gift-package,.gift-card-item';
   const numericOnly = /^[¥￥$]?\s*-?[\d,]+(?:\.\d+)?\s*(?:个|枚|块|元)?$/;
   function markNumericText(root){
     if(!root || root.nodeType!==1) return;
