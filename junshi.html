@@ -1127,7 +1127,7 @@ function getCurrentMaterialNeeds(){return currentNeedsAfterExp.map((n,i)=>Math.m
 function renderGiftPlan(){
  document.body.classList.toggle('rebate-on',!!rebateEnabled);
  const p=getGiftPackage(selectedGift);if(!p)return;
- const stats=calculatePurchaseStats(p,rebateEnabled);const normal=calculateIndependentRebateStats(p,false);
+ const stats=calculatePurchaseStats(p,rebateEnabled);const normalPurchaseStats=calculatePurchaseStats(p,false);const normal=calculateIndependentRebateStats(p,false);
  // 返利计算区底部三项汇总始终跟随当前选中的礼包及实时计算结果
  const rebateStats=calculateIndependentRebateStats(p,true);
  const rebateTotalEl=document.getElementById('rebateTotalBig');
@@ -1145,7 +1145,7 @@ function renderGiftPlan(){
  $('giftAmount').textContent=money(stats.cost);
  $('giftPurchaseCount').textContent=fmt(stats.qty)+' 个';
  $('openYang').textContent=fmt(stats.open[0])+' 包';$('openChang').textContent=fmt(stats.open[1])+' 包';$('openSheng').textContent=fmt(stats.open[2])+' 包';$('giftRemainingSmall').textContent=fmt(stats.remaining)+' 个';
- const savingsMetric=document.getElementById('giftSavingsMetric');if(savingsMetric){if(rebateEnabled){document.getElementById('giftSavingsAmount').textContent=money(Math.max(0,normal.cost-stats.cost));savingsMetric.style.display='';}else savingsMetric.style.display='none';}
+ const savingsMetric=document.getElementById('giftSavingsMetric');if(savingsMetric){if(rebateEnabled){document.getElementById('giftSavingsAmount').textContent=money(Math.max(0,normalPurchaseStats.cost-stats.cost));savingsMetric.style.display='';}else savingsMetric.style.display='none';}
  $('giftExplain').textContent=`当前选择：${p.name}。先扣除经验条抵扣，再扣除已有材料库存；${rebateEnabled?'返利开启，剩余需求按 '+fmt(getGiftRatio()*100)+'% 返还计算。':'返利关闭，按剩余材料需求计算。'}三种材料分别计算小包数后相加，再按每份礼包的小包数量向上取整。`;
  renderAllGiftPreview();
 }
