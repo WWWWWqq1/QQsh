@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v2.3.8</title>
+<title>神兽升级计算器 v2.4.4</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
 body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
@@ -29,7 +29,10 @@ header p{margin:0;color:#e6e5ff}
 .heading-note{font-size:12px;font-weight:400;color:var(--muted);margin-left:8px}
 .card h3{font-size:15px;margin:18px 0 10px}
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.level-fields{align-items:start;margin-bottom:0}.level-picker{display:flex;flex-direction:column;gap:5px;min-width:0}.manual-level-input{display:none}.level-picker label{margin-bottom:1px;font-weight:650}.level-slider-row{display:flex;align-items:center;gap:8px}.level-slider{flex:1;min-width:0;width:100%;height:26px;padding:0;accent-color:var(--primary);cursor:pointer;touch-action:pan-y}.level-value{flex:0 0 auto;min-width:60px;text-align:center;padding:5px 8px;border:1px solid color-mix(in srgb,var(--primary) 38%,var(--line));border-radius:9px;background:var(--primary-soft);color:var(--primary);font-weight:800;font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 #ffffff70}.level-range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:-4px;padding:0 2px}.level-picker:first-child{padding-right:2px}.level-picker:nth-child(2){padding-left:2px}
+.level-fields{align-items:start;margin-bottom:0}.level-picker{display:flex;flex-direction:column;gap:5px;min-width:0}.manual-level-input{display:none}.level-picker label{margin-bottom:1px;font-weight:650}.level-slider-row{display:flex;align-items:center;gap:8px}
+.level-number{width:66px;min-width:66px;height:36px;box-sizing:border-box;text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font:inherit;font-weight:700;padding:4px 5px}
+.level-number:focus{outline:2px solid var(--primary);outline-offset:1px}
+.level-slider{flex:1;min-width:0}.level-slider{flex:1;min-width:0;width:100%;height:26px;padding:0;accent-color:var(--primary);cursor:pointer;touch-action:pan-y}.level-value{flex:0 0 auto;min-width:60px;text-align:center;padding:5px 8px;border:1px solid color-mix(in srgb,var(--primary) 38%,var(--line));border-radius:9px;background:var(--primary-soft);color:var(--primary);font-weight:800;font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 #ffffff70}.level-range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:-4px;padding:0 2px}.level-picker:first-child{padding-right:2px}.level-picker:nth-child(2){padding-left:2px}
 /* 恢复常规等级滑块刻度，撤销时间轴样式 */
 .level-picker:after{content:none}.level-range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:-2px;padding:0 2px}
 .exp-panel{margin-top:14px;padding:14px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--primary-soft) 45%,white)}
@@ -90,10 +93,18 @@ button.action{border:0;border-radius:9px;padding:9px 13px;font:inherit;cursor:po
 .note{font-size:12px;color:var(--muted);margin:12px 0 0}
 .section{margin-top:16px}
 details summary{cursor:pointer;font-weight:650;padding:4px 0 12px}
-.level-table{width:100%;table-layout:fixed;border-collapse:collapse;white-space:normal;font-size:12px}
-.level-table th,.level-table td{padding:8px 5px;border-bottom:1px solid var(--line);text-align:center;overflow-wrap:anywhere}
-.level-table th:first-child,.level-table td:first-child{text-align:center}
+.level-table{width:max-content;min-width:100%;table-layout:auto;border-collapse:collapse;white-space:nowrap;font-size:12px}
+.level-table th,.level-table td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap;overflow-wrap:normal;word-break:keep-all}
+.level-table th:first-child,.level-table td:first-child{
+ text-align:center;position:sticky;left:0;z-index:2;
+ background:var(--card);box-shadow:2px 0 3px #00000012
+}
 .level-table thead th{position:sticky;top:0;background:var(--primary-soft);color:var(--primary);z-index:1}
+.level-table thead th:first-child{left:0;z-index:4;background:var(--primary-soft)}
+.level-table tbody tr:nth-child(even) td:first-child{background:#fafbfe}
+body.dark-theme .level-table tbody tr:nth-child(even) td:first-child{background:#182437}
+.level-table.attributes-only th:nth-child(n+2):nth-child(-n+9),
+.level-table.attributes-only td:nth-child(n+2):nth-child(-n+9){display:none}
 .level-table tbody tr:nth-child(even){background:#fafbfe}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 0 0}
 @media(max-width:760px){.wrap{padding:14px 10px 32px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.card{padding:15px}.beasts{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.beast{min-height:100px;padding:12px 7px}.beast .beast-icon{font-size:31px}.beast strong{font-size:17px}.beast span{font-size:12px}.summary{gap:7px}.metric{padding:10px}.fields{gap:7px}.exp-panel{padding:11px}.level-slider-row{gap:6px}.level-value{min-width:54px;padding:5px 6px;font-size:13px}.level-picker:first-child{padding-right:2px}.level-picker:nth-child(2){padding-left:2px}.result-table{font-size:12px}.result-table th,.result-table td{padding:6px 3px}}
@@ -607,8 +618,11 @@ section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color
 
 .level-data-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .level-data-heading h2{margin:0}
-.level-data-toggle{flex:0 0 auto;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);font:inherit;font-weight:700;padding:7px 12px;cursor:pointer}
-.level-data-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.level-data-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.level-data-actions .all-gifts-toggle{padding:8px 12px;font-size:13px}
+.level-data-actions button[aria-pressed="true"]{background:var(--primary);color:#fff}
+.level-data-actions button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media(max-width:420px){.level-data-heading{gap:8px}.level-data-actions{gap:6px}.level-data-actions .all-gifts-toggle{padding:8px 10px;font-size:12px}}
 
 
 /* 昼夜主题：默认白天 06:00–17:59，夜间 18:00–05:59 */
@@ -828,14 +842,14 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
   <section class="card">
     <h2>神兽及等级选择 <small class="heading-note">不查看属性可不选择神兽</small></h2>
     <div class="beasts" id="beasts">
-      <button class="beast active" data-beast="火暴龙"><b class="beast-icon" aria-hidden="true">🐉</b><strong>火暴龙</strong><span>生命 · 武攻 · 法攻</span></button>
+      <button class="beast" data-beast="火暴龙"><b class="beast-icon" aria-hidden="true">🐉</b><strong>火暴龙</strong><span>生命 · 武攻 · 法攻</span></button>
       <button class="beast" data-beast="飞羽凤"><b class="beast-icon" aria-hidden="true">🦅</b><strong>飞羽凤</strong><span>生命 · 速度</span></button>
       <button class="beast" data-beast="玄武龟"><b class="beast-icon" aria-hidden="true">🐢</b><strong>玄武龟</strong><span>生命 · 武防 · 法防</span></button>
-      <button class="beast" data-beast="幽冥虎"><b class="beast-icon" aria-hidden="true">🐅</b><strong>幽冥虎</strong><span>生命 · 穿透 · 护甲 · 速度</span></button>
+      <button class="beast active" data-beast="幽冥虎"><b class="beast-icon" aria-hidden="true">🐅</b><strong>幽冥虎</strong><span>生命 · 穿透 · 护甲 · 速度</span></button>
     </div>
     <div class="fields level-fields">
-      <div class="field level-picker"><label for="fromLevel">当前等级</label><div class="level-slider-row"><input class="level-slider" id="fromLevel" type="range" min="1" max="80" step="1" value="40" aria-label="当前等级"><output class="level-value" id="fromLevelValue" for="fromLevel">40 级</output></div><div class="level-range-labels"><span>1 级</span><span>80 级</span></div></div>
-      <div class="field level-picker"><label for="toLevel">目标等级</label><div class="level-slider-row"><input class="level-slider" id="toLevel" type="range" min="1" max="80" step="1" value="60" aria-label="目标等级"><output class="level-value" id="toLevelValue" for="toLevel">60 级</output></div><div class="level-range-labels"><span>1 级</span><span>80 级</span></div></div>
+      <div class="field level-picker"><label for="fromLevel">当前等级</label><div class="level-slider-row"><input class="level-number" id="fromLevelNumber" type="number" min="1" max="80" step="1" value="40" aria-label="手动输入等级"><input class="level-slider" id="fromLevel" type="range" min="1" max="80" step="1" value="40" aria-label="当前等级"><output class="level-value" id="fromLevelValue" for="fromLevel">40 级</output></div><div class="level-range-labels"><span>1 级</span><span>80 级</span></div></div>
+      <div class="field level-picker"><label for="toLevel">目标等级</label><div class="level-slider-row"><input class="level-number" id="toLevelNumber" type="number" min="1" max="80" step="1" value="60" aria-label="手动输入等级"><input class="level-slider" id="toLevel" type="range" min="1" max="80" step="1" value="60" aria-label="目标等级"><output class="level-value" id="toLevelValue" for="toLevel">60 级</output></div><div class="level-range-labels"><span>1 级</span><span>80 级</span></div></div>
     </div>
     <div class="exp-panel compact-exp">
       <div class="exp-halves">
@@ -968,11 +982,17 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </section>
 
 <section class="card section">
-  <div class="level-data-heading"><h2>等级数据查询</h2><button type="button" id="levelDataToggle" class="level-data-toggle" aria-expanded="false" aria-controls="levelDataContent">展开全部</button></div>
-  <p class="note" style="margin-top:-5px;margin-bottom:12px">默认显示 40–80 级；各列均匀分布并居中显示。</p>
-  <div id="levelDataContent">
+  <div class="level-data-heading">
+    <h2>等级数据查询</h2>
+    <div class="level-data-actions">
+      <button type="button" id="levelAttributeToggle" class="all-gifts-toggle" aria-pressed="false">属性</button>
+      <button type="button" id="levelDataToggle" class="all-gifts-toggle" aria-expanded="false" aria-controls="levelDataContent">展开全部</button>
+    </div>
+  </div>
+  <p class="note" style="margin:0 0 10px!important">完整展示1–80级全部14列数据；默认定位到40级，可上下及横向滚动查看。等级表示升至该等级所需材料，神兽初始为1级。</p>
+  <div id="levelDataContent" style="margin-top:0">
     <div class="table-wrap" id="levelDataTableWrap" style="max-height:200px;overflow:auto">
-      <table class="level-table"><thead><tr><th>等级</th><th>灵草</th><th>灵木</th><th>灵丹</th><th>生命</th><th>武攻/法攻</th><th>武防/法防</th><th>穿透/护甲</th><th>速度</th></tr></thead><tbody id="levelRows"></tbody></table>
+      <table class="level-table"><thead><tr><th>等级</th><th>灵草</th><th>灵木</th><th>灵丹</th><th>成长值</th><th>经验条</th><th>灵草次需</th><th>灵木次需</th><th>灵丹次需</th><th>生命</th><th>武攻/法攻</th><th>武防/法防</th><th>穿透/护甲</th><th>速度</th></tr></thead><tbody id="levelRows"></tbody></table>
     </div>
   </div>
 </section>
@@ -999,7 +1019,86 @@ function setGiftDataSource(source){
 document.body.classList.add('gift-data-source-initialized','gift-data-fallback');
 
 const raw = [
-[0,0,0,35,35,35,14,14],[8,0,0,45,45,45,18,18],[36,0,0,60,60,60,23,23],[96,0,0,75,75,75,30,30],[200,0,0,95,95,95,38,38],[360,0,0,120,120,120,48,48],[546,234,0,150,150,150,60,60],[816,408,0,185,185,185,74,74],[1170,650,0,225,225,225,90,90],[1640,820,0,270,270,270,108,108],[2200,1400,0,320,320,320,128,128],[2640,1760,0,375,375,375,150,150],[3380,2340,1040,435,435,435,174,174],[4256,3040,1520,500,500,500,200,200],[5250,3850,2100,570,570,570,228,228],[6400,4800,2800,645,645,645,258,258],[7106,5434,3344,725,725,725,290,290],[8460,6580,4230,810,810,810,324,324],[9994,7890,5260,900,900,900,360,360],[11720,9376,6446,1000,1000,1000,400,400],[13566,10982,7752,1110,1110,1110,444,444],[14520,11880,8580,1230,1230,1230,492,492],[16606,13718,10108,1360,1360,1360,544,544],[18912,15760,11820,1500,1500,1500,600,600],[21450,18018,13728,1650,1650,1650,660,660],[24128,20416,15776,1810,1810,1810,725,725],[25272,21528,16848,1980,1980,1980,795,795],[28224,24192,19152,2160,2160,2160,870,870],[31436,27100,21680,2350,2350,2350,950,950],[34800,30160,24360,2550,2550,2550,1035,1035],[38440,33480,27280,2765,2765,2765,1125,1125],[39680,34720,28520,2995,2995,2995,1220,1220],[43560,38280,31680,3240,3240,3240,1320,1320],[47668,42060,35050,3500,3500,3500,1430,1430],[52080,46128,38688,3775,3775,3775,1550,1550],[56664,50368,42498,4065,4065,4065,1680,1680],[58016,51744,43904,4370,4370,4370,1820,1820],[62852,56236,47966,4690,4690,4690,1970,1970],[68016,61040,52320,5025,5025,5025,2130,2130],[73360,66024,56854,5380,5380,5380,2310,2310],[79333,71778,62333,5680,5680,5680,2430,2430],[98353,89412,78235,5980,5980,5980,2550,2550],[107333,98000,86333,6280,6280,6280,2670,2670],[122667,112444,99667,6580,6580,6580,2790,2790],[131579,121053,107895,6880,6880,6880,2910,2910],[147789,136421,122211,7180,7180,7180,3030,3030],[164842,152632,137368,7480,7480,7480,3150,3150],[182737,169684,153368,7780,7780,7780,3270,3270],[191400,178200,161700,8080,8080,8080,3390,3390],[210000,196000,178500,8380,8380,8380,3540,3540],[229400,214600,196100,8680,8680,8680,3690,3690],[249600,234000,214500,8980,8980,8980,3840,3840],[257714,242095,222571,9280,9280,9280,3990,3990],[278476,262095,241619,9580,9580,9580,4140,4140],[300000,282857,261429,9880,9880,9880,4290,4290],[322286,304381,282000,10180,10180,10180,4440,4440],[329636,311818,289545,10480,10480,10480,4590,4590],[352364,333818,310636,10780,10780,10780,4740,4740],[375818,356545,332455,11080,11080,11080,4890,4890],[400000,380000,355000,11380,11380,11380,5040,5040],[424924,404196,378226,11580,11580,11580,5090,5090],[430920,410400,384750,11780,11780,11780,5140,5140],[456114,434288,408408,11980,11980,11980,5190,5190],[462000,441000,414750,12180,12180,12180,5240,5240],[487400,465776,438696,12380,12380,12380,5290,5290],[493120,471680,444880,12580,12580,12580,5340,5340],[518880,496800,469200,12780,12780,12780,5390,5390],[524352,502504,475194,12980,12980,12980,5440,5440],[550368,527904,499824,13180,13180,13180,5490,5490],[555600,533376,505596,13480,13480,13480,5590,5590],[581808,558992,530472,13780,13780,13780,5790,5790],[588068,564200,535990,14080,14080,14080,5990,5990],[613316,590172,561242,14380,14380,14380,6090,6090],[618192,595296,566676,14680,14680,14680,6290,6290],[644820,621372,592062,14980,14980,14980,6390,6390],[649600,626400,597400,15280,15280,15280,6590,6590],[676476,652740,623070,15580,15580,15580,6690,6690],[680920,657440,628090,15880,15880,15880,6890,6890],[708000,684000,654000,16180,16180,16180,6990,6990],[712560,688808,659118,16480,16480,16480,7190,7190]
+[0,0,0,35,35,35,14,14],
+[8,0,0,45,45,45,18,18],
+[36,0,0,60,60,60,23,23],
+[96,0,0,75,75,75,30,30],
+[200,0,0,95,95,95,38,38],
+[360,0,0,120,120,120,48,48],
+[546,234,0,150,150,150,60,60],
+[816,408,0,185,185,185,74,74],
+[1170,650,0,225,225,225,90,90],
+[1640,820,0,270,270,270,108,108],
+[2200,1400,0,320,320,320,128,128],
+[2640,1760,0,375,375,375,150,150],
+[3380,2340,1040,435,435,435,174,174],
+[4256,3040,1520,500,500,500,200,200],
+[5250,3850,2100,570,570,570,228,228],
+[6400,4800,2800,645,645,645,258,258],
+[7106,5434,3344,725,725,725,290,290],
+[8460,6580,4230,810,810,810,324,324],
+[9994,7890,5260,900,900,900,360,360],
+[11720,9376,6446,1000,1000,1000,400,400],
+[13566,10982,7752,1110,1110,1110,444,444],
+[14520,11880,8580,1230,1230,1230,492,492],
+[16606,13718,10108,1360,1360,1360,544,544],
+[18912,15760,11820,1500,1500,1500,600,600],
+[21450,18018,13728,1650,1650,1650,660,660],
+[24128,20416,15776,1810,1810,1810,725,725],
+[25272,21528,16848,1980,1980,1980,795,795],
+[28224,24192,19152,2160,2160,2160,870,870],
+[31436,27100,21680,2350,2350,2350,950,950],
+[34800,30160,24360,2550,2550,2550,1035,1035],
+[38440,33480,27280,2765,2765,2765,1125,1125],
+[39680,34720,28520,2995,2995,2995,1220,1220],
+[43560,38280,31680,3240,3240,3240,1320,1320],
+[47668,42060,35050,3500,3500,3500,1430,1430],
+[52080,46128,38688,3775,3775,3775,1550,1550],
+[56664,50368,42498,4065,4065,4065,1680,1680],
+[58016,51744,43904,4370,4370,4370,1820,1820],
+[62852,56236,47966,4690,4690,4690,1970,1970],
+[68016,61040,52320,5025,5025,5025,2130,2130],
+[73360,66024,56854,5380,5380,5380,2310,2310],
+[79333,71778,62333,5680,5680,5680,2430,2430],
+[98353,89412,78235,5980,5980,5980,2550,2550],
+[107333,98000,86333,6280,6280,6280,2670,2670],
+[122667,112444,99667,6580,6580,6580,2790,2790],
+[131579,121053,107895,6880,6880,6880,2910,2910],
+[147789,136421,122211,7180,7180,7180,3030,3030],
+[164842,152632,137368,7480,7480,7480,3150,3150],
+[182737,169684,153368,7780,7780,7780,3270,3270],
+[191400,178200,161700,8080,8080,8080,3390,3390],
+[210000,196000,178500,8380,8380,8380,3540,3540],
+[229400,214600,196100,8680,8680,8680,3690,3690],
+[249600,234000,214500,8980,8980,8980,3840,3840],
+[257714,242095,222571,9280,9280,9280,3990,3990],
+[278476,262095,241619,9580,9580,9580,4140,4140],
+[300000,282857,261429,9880,9880,9880,4290,4290],
+[322286,304381,282000,10180,10180,10180,4440,4440],
+[329636,311818,289545,10480,10480,10480,4590,4590],
+[352364,333818,310636,10780,10780,10780,4740,4740],
+[375818,356545,332455,11080,11080,11080,4890,4890],
+[400000,380000,355000,11380,11380,11380,5040,5040],
+[424924,404196,378226,11580,11580,11580,5090,5090],
+[430920,410400,384750,11780,11780,11780,5140,5140],
+[456114,434288,408408,11980,11980,11980,5190,5190],
+[462000,441000,414750,12180,12180,12180,5240,5240],
+[487400,465776,438696,12380,12380,12380,5290,5290],
+[493120,471680,444880,12580,12580,12580,5340,5340],
+[518880,496800,469200,12780,12780,12780,5390,5390],
+[524352,502504,475194,12980,12980,12980,5440,5440],
+[550368,527904,499824,13180,13180,13180,5490,5490],
+[555600,533376,505596,13480,13480,13480,5590,5590],
+[581808,558992,530472,13780,13780,13780,5790,5790],
+[588068,564200,535990,14080,14080,14080,5990,5990],
+[613316,590172,561242,14380,14380,14380,6090,6090],
+[618192,595296,566676,14680,14680,14680,6290,6290],
+[644820,621372,592062,14980,14980,14980,6390,6390],
+[649600,626400,597400,15280,15280,15280,6590,6590],
+[676476,652740,623070,15580,15580,15580,6690,6690],
+[680920,657440,628090,15880,15880,15880,6890,6890],
+[708000,684000,654000,16180,16180,16180,6990,6990],
+[712560,688808,659118,16480,16480,16480,7190,7190]
 ];
 const expData = {
  growth: [0,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,13,13,13,13,13,14,14,14,14,14,15,15,15,15,15,16,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,24,24,25,25,26,26,27,27,28,28,29,29,30,30,31,31,32],
@@ -1102,7 +1201,7 @@ function chooseGiftPlan(planId){
  document.querySelectorAll('.plan-option').forEach(btn=>btn.classList.toggle('active',btn.dataset.plan===planId));
  render(true);
 }
-let selectedBeast='火暴龙';
+let selectedBeast='幽冥虎';
 // 默认主题按本地时间：06:00–17:59 白天，18:00–05:59 黑夜；手动切换后本次页面会话优先。
 let manualThemeChoice=false;
 function setPageTheme(isLight){
@@ -1137,8 +1236,9 @@ function initSelects(){
 }
 function updateLevelLabels(){
  for(const id of ['fromLevel','toLevel']){
-  const el=$(id),out=$(id+'Value');
+  const el=$(id),out=$(id+'Value'),numberInput=$(id+'Number');
   if(out) out.textContent=`${el.value} 级`;
+  if(numberInput) numberInput.value=String(el.value);
   el.dataset.lastValue=String(el.value);
  }
 }
@@ -1327,9 +1427,34 @@ if(allGiftGrid){
    }
  });
 }
-function renderTable(){$('levelRows').innerHTML=raw.slice(39).map((r,i)=>`<tr><td>${i+40}</td>${r.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}
+function renderTable(){
+ const rows=raw.map((r,i)=>[
+  i+1, r[0], r[1], r[2],
+  expData.growth[i]||0, expData.bar[i]||0,
+  expData.herb[i]||0, expData.wood[i]||0, expData.pill[i]||0,
+  r[3], r[4], r[5], r[6], r[7]
+ ]);
+ $('levelRows').innerHTML=rows.map(row=>`<tr>${row.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('');
+ // 默认定位到40级；完整保留1–80级，可在表格内上下滚动。
+ const wrap=$('levelDataTableWrap');
+ if(wrap){
+  const target=wrap.querySelector('#levelRows tr:nth-child(40)');
+  if(target)wrap.scrollTop=Math.max(0,target.getBoundingClientRect().top-wrap.getBoundingClientRect().top+wrap.scrollTop);
+ }
+}
 document.addEventListener('click',event=>{const btn=event.target.closest('.plan-option[data-plan]');if(btn)chooseGiftPlan(btn.dataset.plan);});
 document.querySelectorAll('.beast').forEach(btn=>btn.addEventListener('click',()=>{selectedBeast=btn.dataset.beast;applyBeastTheme();document.querySelectorAll('.beast').forEach(b=>b.classList.toggle('active',b===btn));render()}));
+['fromLevel','toLevel'].forEach(id=>{
+ const numberInput=$(id+'Number');
+ if(numberInput)numberInput.addEventListener('change',()=>{
+  let level=Math.max(1,Math.min(80,Math.floor(Number(numberInput.value)||1)));
+  if(id==='toLevel' && level<getLevel('fromLevel',1)) level=getLevel('fromLevel',1);
+  if(id==='fromLevel' && level>getLevel('toLevel',80)) level=getLevel('toLevel',80);
+  $(id).value=String(level);
+  updateLevelLabels();
+  render();
+ });
+});
 ['fromLevel','toLevel'].forEach(id=>$(id).addEventListener('input',()=>{
  let level=Math.max(1,Math.min(80,Math.floor(Number($(id).value)||1)));
  if(id==='toLevel' && level<getLevel('fromLevel',1)) level=getLevel('fromLevel',1);
@@ -1374,12 +1499,21 @@ initSelects();renderTable();applyBeastTheme();render();
 const levelDataToggle=document.getElementById('levelDataToggle');
 const levelDataContent=document.getElementById('levelDataContent');
 const levelDataTableWrap=document.getElementById('levelDataTableWrap');
+const levelAttributeToggle=document.getElementById('levelAttributeToggle');
+const levelDataTable=document.querySelector('#levelDataTableWrap .level-table');
 if(levelDataToggle&&levelDataContent&&levelDataTableWrap){
   levelDataToggle.addEventListener('click',()=>{
     const expanded=levelDataToggle.getAttribute('aria-expanded')==='true';
     levelDataToggle.setAttribute('aria-expanded',String(!expanded));
     levelDataTableWrap.style.maxHeight=expanded?'200px':'500px';
     levelDataToggle.textContent=expanded?'展开全部':'收起全部';
+  });
+}
+if(levelAttributeToggle&&levelDataTable){
+  levelAttributeToggle.addEventListener('click',()=>{
+    const attributesOnly=levelAttributeToggle.getAttribute('aria-pressed')!=='true';
+    levelAttributeToggle.setAttribute('aria-pressed',String(attributesOnly));
+    levelDataTable.classList.toggle('attributes-only',attributesOnly);
   });
 }
 </script>
