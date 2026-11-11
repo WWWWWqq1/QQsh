@@ -822,7 +822,51 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
   .summary:has(#herbNeed) .metric strong{font-size:20px!important;}
 }
 </style>
-\n</head>
+\n<style id="level-picker-altar-style">
+/* v2.4.6：等级选择卡片样式与祭坛统一 */
+.level-fields{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important}
+.level-fields .level-picker{
+  box-sizing:border-box!important;min-width:0!important;padding:12px 10px 9px!important;
+  border:1px solid var(--line)!important;border-radius:17px!important;
+  background:var(--primary-soft)!important;display:flex!important;flex-direction:column!important;gap:6px!important;
+}
+.level-fields .level-picker label{font-size:14px!important;font-weight:500!important;color:var(--muted)!important;margin:0 0 1px!important}
+.level-fields .level-slider-row{display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important}
+.level-fields .level-slider-row .level-slider{order:1!important;flex:1 1 auto!important;width:0!important;min-width:0!important;height:26px!important}
+.level-fields .level-slider-row .level-number{order:2!important;flex:0 0 60px!important;width:60px!important;min-width:60px!important;height:50px!important;border-radius:15px!important;font-size:18px!important;font-weight:500!important;background:var(--card)!important}
+.level-fields .level-slider-row .level-value{display:none!important}
+.level-fields .level-range-labels{margin:0!important;padding:0 2px!important;font-size:11px!important}
+.level-actions{display:flex!important;justify-content:flex-end!important;align-items:center!important;gap:8px!important;margin-top:12px!important}
+.level-actions .action{width:auto!important;min-width:0!important;white-space:nowrap!important}
+@media(max-width:420px){
+ .level-fields{gap:10px!important}
+ .level-fields .level-picker{padding:11px 9px 8px!important}
+ .level-fields .level-slider-row{gap:6px!important}
+ .level-fields .level-slider-row .level-number{flex-basis:58px!important;width:58px!important;min-width:58px!important;height:48px!important}
+ .level-actions{display:flex!important;justify-content:flex-end!important}
+}
+</style>
+<style id="exp-no-wrap-v246">
+
+/* v2.4.6：经验面板始终双列展示，标题与数值行禁止换行 */
+.exp-panel .exp-halves{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.exp-panel .exp-half{min-width:0!important}
+.exp-panel .exp-half h3,
+.exp-panel .exp-caption,
+.exp-panel .level-range-labels{white-space:nowrap!important}
+.exp-panel .exp-half+ .exp-half{
+  border-left:1px solid var(--line)!important;
+  border-top:0!important;
+  padding:0 0 0 14px!important;
+}
+@media(max-width:420px){
+  .exp-panel .exp-halves{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+</style>\n</head>
 <body>
 <div class="floating-actions">
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜主题" title="切换昼夜主题"><svg id="themeToggleIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="themeToggleText">切换夜间</span></button>
