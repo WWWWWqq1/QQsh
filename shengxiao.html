@@ -2,9 +2,9 @@
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#101827">
-<title>生肖材料计算器 v1.0.11</title>
+<title>生肖材料计算器 v2.1.12</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--line:#2b3b55;--text:#edf3ff;--muted:#9eacc3;--gold:#e8bd72;--blue:#80b9ff;--green:#83d7b2;--red:#ff9b9b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172943 0%,var(--bg) 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}.wrap{max-width:1200px;margin:auto;padding:20px 16px 40px}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:2px}.head h1{font-size:clamp(24px,5vw,34px);margin:3px 0 0}.subtitle{font-size:13px;color:var(--muted);margin-top:5px}.tag{border:1px solid #46536a;border-radius:999px;padding:6px 10px;color:#c9d7ed;font-size:12px;white-space:nowrap}.panel{background:linear-gradient(145deg,rgba(23,36,58,.96),rgba(15,25,42,.97));border:1px solid var(--line);border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 10px 28px #0002}.section-title{display:flex;align-items:center;gap:9px;font-weight:700;margin-bottom:14px}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode-btn,.group-btn{border:1px solid var(--line);border-radius:10px;background:#111c2d;color:var(--muted);padding:12px 10px;font-size:14px;cursor:pointer}.mode-btn.active,.group-btn.active{border-color:var(--gold);background:#342c22;color:#ffe0a3;box-shadow:inset 0 0 0 1px #e8bd7230}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}.field select,.field input[type=number]{width:100%;height:43px;border:1px solid #354863;border-radius:9px;background:#0c1626;color:var(--text);padding:0 11px;font-size:15px;outline:none}.field input:focus,.field select:focus{border-color:var(--blue)}.levels{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:16px 0 6px}.level-value{font-weight:750;color:var(--gold);font-size:20px;font-variant-numeric:tabular-nums}.range{width:100%;accent-color:var(--gold);cursor:pointer}.range-labels{display:flex;justify-content:space-between;color:#7788a2;font-size:11px;margin-top:2px}.constellation-list{display:grid;grid-template-columns:1fr;gap:10px}.constellation{border:1px solid var(--line);background:#0e192a;border-radius:12px;padding:12px}.constellation-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.constellation-name{font-weight:650}.mini-label{font-size:11px;color:var(--muted)}.small-range{width:100%;accent-color:var(--blue)}.group-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.target-row{display:grid;grid-template-columns:1fr minmax(90px,140px);gap:12px;align-items:center}.target-row label{font-size:13px;color:var(--muted)}.target-row input{width:100%;height:42px;background:#0c1626;border:1px solid #354863;border-radius:9px;color:var(--text);padding:0 10px;font-size:16px}.skill-target-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:center;margin-top:10px}.skill-target-controls #skillTarget{width:100%;min-width:0;height:38px;box-sizing:border-box;border:1px solid #354863;border-radius:9px;background:#0c1626;color:var(--text);padding:0 10px;font-size:15px}.skill-target-controls .range{width:100%;min-width:0}.skill-target-controls .range-labels{grid-column:1/-1}.skill-target-controls .range{min-width:0}.skill-target-controls .range-labels{grid-column:1/-1;margin-top:-8px}.error{color:var(--red);font-size:12px;margin-top:10px;min-height:18px}.result-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.result-head h2{font-size:17px;margin:0}.total{font-size:clamp(28px,6vw,38px);font-weight:800;letter-spacing:-1px;color:var(--gold);font-variant-numeric:tabular-nums;margin:8px 0 0;overflow-wrap:anywhere}.unit{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0}.result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}.stat{padding:12px;border:1px solid var(--line);border-radius:11px;background:#0c1626;min-width:0}.stat .label{color:var(--muted);font-size:11px}.stat .value{font-size:18px;font-weight:700;margin-top:5px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.breakdown{width:100%;table-layout:fixed;border-collapse:collapse;margin-top:12px;font-size:15px}.breakdown th,.breakdown td{width:25%;padding:13px 8px;border-bottom:1px solid #293951;text-align:left;overflow-wrap:anywhere}.breakdown th{color:var(--muted);font-weight:600;font-size:13px}.breakdown td:last-child,.breakdown th:last-child{text-align:right;font-variant-numeric:tabular-nums}@media(max-width:600px){.breakdown{font-size:13px}.breakdown th,.breakdown td{padding:10px 4px}.breakdown th{font-size:11px}}.pill{display:inline-block;border-radius:999px;background:#22344a;padding:3px 8px;color:#cfe1fb;font-size:11px}.note{color:var(--muted);font-size:12px;margin:10px 0 0}.hidden{display:none!important}.footer{text-align:center;color:#697a94;font-size:11px;padding:10px 0}.reset{background:transparent;border:1px solid #40516a;border-radius:9px;color:#b9c7dc;padding:8px 11px;cursor:pointer;font-size:12px}.divider{height:1px;background:var(--line);margin:16px 0} .inventory-overview-title{font-size:18px;font-weight:750;color:var(--text);margin:18px 0 10px}
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--line:#2b3b55;--text:#edf3ff;--muted:#9eacc3;--gold:#e8bd72;--blue:#80b9ff;--green:#83d7b2;--red:#ff9b9b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172943 0%,var(--bg) 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}.wrap{max-width:1200px;margin:auto;padding:20px 16px 40px}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:2px}.head h1{font-size:clamp(24px,5vw,34px);margin:3px 0 0}.subtitle{font-size:13px;color:var(--muted);margin-top:5px}.tag{border:1px solid #46536a;border-radius:999px;padding:6px 10px;color:#c9d7ed;font-size:12px;white-space:nowrap}.panel{background:linear-gradient(145deg,rgba(23,36,58,.96),rgba(15,25,42,.97));border:1px solid var(--line);border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 10px 28px #0002}.section-title{display:flex;align-items:center;gap:9px;font-weight:700;margin-bottom:14px}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode-btn,.group-btn{border:1px solid var(--line);border-radius:10px;background:#111c2d;color:var(--muted);padding:12px 10px;font-size:14px;cursor:pointer}.mode-btn.active,.group-btn.active{border-color:var(--gold);background:#342c22;color:#ffe0a3;box-shadow:inset 0 0 0 1px #e8bd7230}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}.field select,.field input[type=number]{width:100%;height:43px;border:1px solid #354863;border-radius:9px;background:#0c1626;color:var(--text);padding:0 11px;font-size:15px;outline:none}.field input:focus,.field select:focus{border-color:var(--blue)}.levels{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:16px 0 6px}.level-value{font-weight:750;color:var(--gold);font-size:20px;font-variant-numeric:tabular-nums}.range{width:100%;accent-color:var(--gold);cursor:pointer}.range-labels{display:flex;justify-content:space-between;color:#7788a2;font-size:11px;margin-top:2px}.constellation-list{display:grid;grid-template-columns:1fr;gap:10px}.constellation{border:1px solid var(--line);background:#0e192a;border-radius:12px;padding:12px}.constellation-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.constellation-name{font-weight:650}.mini-label{font-size:11px;color:var(--muted)}.small-range{width:100%;accent-color:var(--blue)}.group-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.target-row{display:grid;grid-template-columns:1fr minmax(90px,140px);gap:12px;align-items:center}.target-row label{font-size:13px;color:var(--muted)}.target-row input{width:100%;height:42px;background:#0c1626;border:1px solid #354863;border-radius:9px;color:var(--text);padding:0 10px;font-size:16px}.skill-target-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:center;margin-top:10px}.skill-target-controls #skillTarget{width:100%;min-width:0;height:38px;box-sizing:border-box;border:1px solid #354863;border-radius:9px;background:#0c1626;color:var(--text);padding:0 10px;font-size:15px}.skill-target-controls .range{width:100%;min-width:0}.skill-target-controls .range-labels{grid-column:1/-1}.skill-target-controls .range{min-width:0}.skill-target-controls .range-labels{grid-column:1/-1;margin-top:-8px}.error{color:var(--red);font-size:12px;margin-top:0;min-height:0}.error:not(:empty){margin-top:10px}.result-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.result-head h2{font-size:17px;margin:0}.total{font-size:clamp(28px,6vw,38px);font-weight:800;letter-spacing:-1px;color:var(--gold);font-variant-numeric:tabular-nums;margin:8px 0 0;overflow-wrap:anywhere}.unit{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0}.result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}.stat{padding:12px;border:1px solid var(--line);border-radius:11px;background:#0c1626;min-width:0}.stat .label{color:var(--muted);font-size:11px}.stat .value{font-size:18px;font-weight:700;margin-top:5px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.breakdown{width:100%;table-layout:fixed;border-collapse:collapse;margin-top:12px;font-size:15px}.breakdown th,.breakdown td{width:25%;padding:13px 8px;border-bottom:1px solid #293951;text-align:left;overflow-wrap:anywhere}.breakdown th{color:var(--muted);font-weight:600;font-size:13px}.breakdown td:last-child,.breakdown th:last-child{text-align:right;font-variant-numeric:tabular-nums}@media(max-width:600px){.breakdown{font-size:13px}.breakdown th,.breakdown td{padding:10px 4px}.breakdown th{font-size:11px}}.pill{display:inline-block;border-radius:999px;background:#22344a;padding:3px 8px;color:#cfe1fb;font-size:11px}.note{color:var(--muted);font-size:12px;margin:10px 0 0}.hidden{display:none!important}.footer{text-align:center;color:#697a94;font-size:11px;padding:10px 0}.reset{background:transparent;border:1px solid #40516a;border-radius:9px;color:#b9c7dc;padding:8px 11px;cursor:pointer;font-size:12px}.divider{height:1px;background:var(--line);margin:16px 0} .inventory-overview-title{font-size:18px;font-weight:750;color:var(--text);margin:18px 0 10px}
 .inventory-card{margin-top:12px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}.inventory-heading,.inventory-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px}.inventory-heading{font-weight:700;font-size:14px}.inventory-fields{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:12px;margin-top:12px}.inventory-fields label{font-size:12px;color:var(--muted)}.inventory-fields input{width:100%;min-width:0;height:40px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);padding:0 10px;font-size:15px}.inventory-bottom{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.inventory-bottom strong{font-size:20px;color:var(--gold);font-variant-numeric:tabular-nums}
 /* 所有卡片统一单列排列 */.layout{display:flex;flex-direction:column;gap:0}.layout>.panel{width:100%;margin:14px 0}.constellation-list{grid-template-columns:1fr}.layout{display:flex;flex-direction:column}.layout>.panel{width:100%;margin:14px 0}
 @media(max-width:430px){.wrap{padding:15px 11px 28px}.panel{padding:14px}.constellation-list{grid-template-columns:1fr}.group-grid{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr 1fr}.result-grid .stat:last-child{grid-column:1/-1}.tag{display:none}.head h1{font-size:25px}}
@@ -22,11 +22,11 @@
 .float-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;cursor:pointer;box-shadow:0 5px 20px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .float-action:hover{border-color:var(--gold);transform:translateY(-1px)}
 body{padding-bottom:72px}
-/* 生肖选择响应式网格：电脑端 6 列，手机端 4 列，极窄屏自动降为 3 列 */
+/* 生肖选择网格：所有屏幕每行六个 */
 #singleConstellationList{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
 #singleConstellationList [data-zodiac]{width:100%;min-width:0;text-align:center!important;padding:10px 6px;font-size:14px}
-@media(max-width:700px){#singleConstellationList{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}#singleConstellationList [data-zodiac]{padding:10px 4px;font-size:13px}}
-@media(max-width:360px){#singleConstellationList{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#singleConstellationList [data-zodiac]{padding:9px 2px;font-size:12px}}
+@media(max-width:700px){#singleConstellationList{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}#singleConstellationList [data-zodiac]{padding:8px 2px;font-size:12px}}
+@media(max-width:360px){#singleConstellationList{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}#singleConstellationList [data-zodiac]{padding:7px 1px;font-size:11px}}
 
 /* 生肖专属符号与主题色 */
 .zodiac-card{--zodiac-color:#d6a45e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:76px;padding:9px 4px!important;text-align:center!important;border-color:color-mix(in srgb,var(--zodiac-color) 28%,var(--line));background:linear-gradient(145deg,color-mix(in srgb,var(--zodiac-color) 9%,var(--panel2)),var(--panel2));transition:border-color .15s,background .15s,transform .15s}
@@ -259,19 +259,253 @@ body::after{
 body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </style>
 
+<style id="junshi-level-style-v212">
+/* v2.1.2：当前等级与目标等级控件样式同步军师 */
+.level-control-card{padding:11px 13px!important;border:1px solid var(--line)!important;border-radius:14px!important;background:var(--panel)!important}
+.level-control-head{display:block!important;margin:0 0 7px!important}
+.level-control-head label{display:block!important;font-size:16px!important;color:var(--muted)!important;white-space:nowrap}
+.level-row{display:grid!important;grid-template-columns:minmax(0,1fr) 74px!important;gap:10px!important;align-items:center!important}
+.level-row .range{width:100%!important;min-width:0!important;margin:0!important;accent-color:var(--gold)}
+.level-number.level-value{display:block!important;width:74px!important;min-width:0!important;height:42px!important;margin:0!important;padding:6px 4px!important;border:1px solid var(--line)!important;border-radius:12px!important;background:var(--panel2)!important;color:var(--text)!important;text-align:center!important;font-size:19px!important;font-weight:750!important;white-space:nowrap}
+.level-control-card .range-labels{display:flex!important;justify-content:space-between!important;margin-top:7px!important;font-size:12px!important;color:var(--muted)!important}
+:root[data-theme="light"] .level-number.level-value{background:var(--panel2)!important;border-color:var(--line)!important;color:var(--text)!important}
+@media(max-width:430px){
+ .level-control-card{padding:10px 9px!important}
+ .level-row{grid-template-columns:minmax(0,1fr) 62px!important;gap:6px!important}
+ .level-number.level-value{width:62px!important;height:40px!important;font-size:17px!important}
+ .level-control-head label{font-size:14px!important}
+ .level-control-card .range-labels{font-size:11px!important}
+}
+
+/* v2.1.7：移动端布局紧凑化 */
+@media(max-width:700px){
+  #singleConstellationList{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:6px!important}
+  #singleConstellationList .zodiac-card{min-height:64px;padding:7px 1px!important;gap:3px}
+  #singleConstellationList .zodiac-symbol{width:30px;height:30px;border-radius:9px;font-size:20px}
+  #singleConstellationList .zodiac-label{font-size:11px;white-space:nowrap}
+  #skillSettings .group-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px;margin-bottom:10px}
+  #skillSettings .group-grid .group-btn{min-width:0;padding:9px 3px;font-size:13px}
+  #constellationList.constellation-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #constellationList .constellation{min-width:0;padding:8px}
+  #constellationList .constellation-top{margin-bottom:7px}
+  #constellationList .skill-level-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:7px;align-items:center}
+  #constellationList .skill-level-row input[type=number]{width:58px;min-width:0;height:36px;padding:0 4px;text-align:center;font-size:14px}
+  #constellationList .skill-level-row input[type=range]{width:100%;min-width:0;margin:0}
+  #constellationList .range-labels{display:none!important}
+  #skillSettings .error:empty{display:none}
+  .layout>.panel:first-child{padding-bottom:10px}
+}
+@media(max-width:360px){
+  #constellationList .skill-level-row{grid-template-columns:52px minmax(0,1fr);gap:5px}
+  #constellationList .skill-level-row input[type=number]{width:52px}
+}
+</style>
+<style id="shengxiao-skill-input-ui-v219">
+/* v2.1.9：明确覆盖技能升级生肖等级数字输入框原生样式 */
+@media screen and (max-width:700px){
+  #skillSettings #constellationList .skill-level-row{
+    display:grid !important;
+    grid-template-columns:64px minmax(0,1fr) !important;
+    align-items:center !important;
+    gap:9px !important;
+    width:100% !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]{
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    display:block !important;
+    box-sizing:border-box !important;
+    width:64px !important;
+    min-width:64px !important;
+    max-width:64px !important;
+    height:40px !important;
+    margin:0 !important;
+    padding:0 4px !important;
+    border:1px solid #40516a !important;
+    border-radius:11px !important;
+    background:#17243a !important;
+    color:#edf3ff !important;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.22),0 2px 5px rgba(0,0,0,.12) !important;
+    font-family:inherit !important;
+    font-size:16px !important;
+    font-weight:750 !important;
+    line-height:38px !important;
+    text-align:center !important;
+    font-variant-numeric:tabular-nums !important;
+    outline:none !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]:focus{
+    border-color:#80b9ff !important;
+    background:#1b2b43 !important;
+    box-shadow:0 0 0 3px rgba(128,185,255,.2) !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]::-webkit-inner-spin-button,
+  #skillSettings #constellationList .skill-level-row input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none !important;
+    margin:0 !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="range"]{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+}
+@media screen and (max-width:360px){
+  #skillSettings #constellationList .skill-level-row{
+    grid-template-columns:58px minmax(0,1fr) !important;
+    gap:7px !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]{
+    width:58px !important;
+    min-width:58px !important;
+    max-width:58px !important;
+    height:38px !important;
+  }
+}
+</style>
+
+<style id="shengxiao-skill-input-ui-v2110">
+/* v2.1.10：输入框降低视觉重量，与生肖卡片统一 */
+@media screen and (max-width:700px){
+  #skillSettings #constellationList .skill-level-row{
+    grid-template-columns:54px minmax(0,1fr) !important;
+    gap:8px !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]{
+    width:54px !important;
+    min-width:54px !important;
+    max-width:54px !important;
+    height:36px !important;
+    padding:0 3px !important;
+    border:1px solid var(--line) !important;
+    border-radius:9px !important;
+    background:var(--panel2) !important;
+    color:var(--text) !important;
+    box-shadow:none !important;
+    font-family:inherit !important;
+    font-size:15px !important;
+    font-weight:700 !important;
+    line-height:34px !important;
+    text-align:center !important;
+    font-variant-numeric:tabular-nums !important;
+    outline:none !important;
+    transition:border-color .15s ease,background .15s ease,box-shadow .15s ease !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]:focus{
+    border-color:var(--blue) !important;
+    background:var(--panel) !important;
+    box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 16%,transparent) !important;
+  }
+  :root[data-theme="light"] #skillSettings #constellationList .skill-level-row input[type="number"]{
+    background:#fff !important;
+    border-color:#d9e1ec !important;
+    color:#26354a !important;
+  }
+  :root[data-theme="light"] #skillSettings #constellationList .skill-level-row input[type="number"]:focus{
+    background:#fff !important;
+    border-color:#6da2d8 !important;
+    box-shadow:0 0 0 2px rgba(55,124,196,.12) !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]::-webkit-inner-spin-button,
+  #skillSettings #constellationList .skill-level-row input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none !important;
+    margin:0 !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="range"]{
+    min-width:0 !important;
+  }
+}
+@media screen and (max-width:360px){
+  #skillSettings #constellationList .skill-level-row{
+    grid-template-columns:50px minmax(0,1fr) !important;
+    gap:6px !important;
+  }
+  #skillSettings #constellationList .skill-level-row input[type="number"]{
+    width:50px !important;
+    min-width:50px !important;
+    max-width:50px !important;
+  }
+}
+</style>
+
+<style id="shengxiao-skill-row-fixed-v2111">
+/* v2.1.11：技能生肖等级控件始终左输入框、右滑动条，禁止换行 */
+#skillSettings #constellationList .skill-level-row{
+  display:flex !important;
+  flex-flow:row nowrap !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+  white-space:nowrap !important;
+}
+#skillSettings #constellationList .skill-level-row input[type="number"]{
+  display:block !important;
+  flex:0 0 54px !important;
+  width:54px !important;
+  min-width:54px !important;
+  max-width:54px !important;
+  height:36px !important;
+  box-sizing:border-box !important;
+  border:1px solid var(--line) !important;
+  border-radius:9px !important;
+  background:var(--panel2) !important;
+  color:var(--text) !important;
+  padding:0 3px !important;
+  margin:0 !important;
+  box-shadow:none !important;
+  font-family:inherit !important;
+  font-size:15px !important;
+  font-weight:700 !important;
+  line-height:34px !important;
+  text-align:center !important;
+  outline:none !important;
+  -webkit-appearance:textfield !important;
+  appearance:textfield !important;
+}
+#skillSettings #constellationList .skill-level-row input[type="number"]:focus{
+  border-color:var(--blue) !important;
+  border-radius:9px !important;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 16%,transparent) !important;
+}
+#skillSettings #constellationList .skill-level-row input[type="number"]::-webkit-inner-spin-button,
+#skillSettings #constellationList .skill-level-row input[type="number"]::-webkit-outer-spin-button{
+  -webkit-appearance:none !important;
+  margin:0 !important;
+}
+#skillSettings #constellationList .skill-level-row input[type="range"]{
+  display:block !important;
+  flex:1 1 0 !important;
+  width:0 !important;
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+@media(max-width:360px){
+  #skillSettings #constellationList .skill-level-row{gap:6px !important}
+  #skillSettings #constellationList .skill-level-row input[type="number"]{
+    flex-basis:50px !important;
+    width:50px !important;
+    min-width:50px !important;
+    max-width:50px !important;
+  }
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div><div class="eyebrow">MATERIAL PLANNER</div><h1>生肖材料计算器</h1><div class="subtitle">按目标等级估算生肖石与技能升级消耗</div></div></header>
 <div class="layout">
 <section class="panel"><div class="section-title">选择计算方式</div><div class="mode-switch"><button class="mode-btn active" id="singleMode">单个生肖</button><button class="mode-btn" id="skillMode">技能升级</button></div>
-<div id="singleSettings" style="margin-top:16px"><div class="mini-label" style="margin-bottom:10px">选择生肖</div><div id="singleConstellationList" class="constellation-list"></div><div class="level-controls" style="margin-top:14px"><div class="level-control-card"><div class="level-control-head"><label for="singleStart">当前等级</label><strong><span id="singleStartText">5</span><small>级</small></strong></div><input class="level-number" id="singleStart" type="number" min="0" max="44" value="5" inputmode="numeric" aria-label="当前等级数值"><input class="range" id="singleStartRange" type="range" min="0" max="44" value="5" aria-label="当前等级滑动条"><div class="range-labels"><span>0 级</span><span>44 级</span></div></div><div class="level-control-card target-control-card"><div class="level-control-head"><label for="singleTargetNumber">目标等级</label><strong><span id="singleTargetText">10</span><small>级</small></strong></div><input class="level-number" id="singleTargetNumber" type="number" min="6" max="45" value="10" inputmode="numeric" aria-label="目标等级数值"><input class="range" id="singleTarget" type="range" min="6" max="45" value="10" aria-label="目标等级滑动条"><div class="range-labels"><span id="singleMinLabel">6 级</span><span>45 级</span></div></div></div><div class="level-reset-row"><button class="reset" id="resetLevelsBtn" type="button">↺ 重置等级</button></div></div>
+<div id="singleSettings" style="margin-top:16px"><div class="mini-label" style="margin-bottom:10px">选择生肖</div><div id="singleConstellationList" class="constellation-list"></div><div class="level-controls" style="margin-top:14px"><div class="level-control-card"><div class="level-control-head"><label for="singleStart">当前等级</label></div><div class="level-row"><input class="range" id="singleStartRange" type="range" min="0" max="44" value="5" aria-label="当前等级滑动条"><input class="level-number level-value" id="singleStart" type="number" min="0" max="44" value="5" inputmode="numeric" aria-label="当前等级数值"></div><div class="range-labels"><span>0 级</span><span>44 级</span></div></div><div class="level-control-card target-control-card"><div class="level-control-head"><label for="singleTargetNumber">目标等级</label></div><div class="level-row"><input class="range" id="singleTarget" type="range" min="6" max="45" value="10" aria-label="目标等级滑动条"><input class="level-number level-value" id="singleTargetNumber" type="number" min="6" max="45" value="10" inputmode="numeric" aria-label="目标等级数值"></div><div class="range-labels"><span id="singleMinLabel">6 级</span><span>45 级</span></div></div></div><div class="level-reset-row"><button class="reset" id="resetLevelsBtn" type="button">↺ 重置等级</button></div></div>
 <div id="skillSettings" class="hidden" style="margin-top:16px"><div class="group-grid"><button class="group-btn active" data-group="加速">加速</button><button class="group-btn" data-group="加攻">加攻</button><button class="group-btn" data-group="加防">加防</button></div><div class="target-row skill-level-summary"><span class="skill-summary-spacer" aria-hidden="true"></span><strong class="level-value current-skill-summary" id="skillCurrentMilestone" aria-live="polite">5级-1阶-加速12%</strong><strong class="level-value target-skill-summary"><span id="skillTargetText">10</span><span id="skillTargetUnit"> 级</span><span id="skillTargetMilestone" class="skill-target-milestone-inline hidden" aria-live="polite"></span></strong></div><div class="mini-label" style="margin-top:5px">四个生肖共用目标等级</div><div class="skill-target-controls"><input id="skillTarget" type="number" min="0" max="45" value="10" inputmode="numeric" aria-label="共用目标等级数值"><input class="range" id="skillTargetRange" type="range" min="0" max="45" value="10" aria-label="共用目标等级滑动条"><div class="range-labels"><span>0 级</span><span>45 级</span></div></div><div class="divider"></div><div class="mini-label" style="margin-bottom:10px">分别设置四个生肖的当前等级</div><div id="constellationList" class="constellation-list"></div><p class="note">技能当前阶数按四个生肖中的最低等级确定。</p><div class="level-reset-row"><button class="reset" id="resetSkillLevelsBtn" type="button">↺ 重置等级</button></div></div><div id="error" class="error" role="status"></div></section>
-<section class="panel"><div class="inventory-card"><div class="inventory-heading"><div><div class="inventory-title">已有材料库存</div><div class="inventory-subtitle">输入当前持有的生肖石数量，自动从材料需求中扣除</div></div><button class="reset inventory-reset" id="resetInventoryBtn" type="button">重置库存</button></div><div class="inventory-fields"><input id="inventoryInput" type="number" min="0" max="100000" step="1" value="0" inputmode="numeric" aria-label="已有生肖石库存"><div class="inventory-slider-wrap"><input id="inventoryRange" class="inventory-range" type="range" min="0" max="100000" step="1" value="0" aria-label="库存数量滑动条"><div class="range-labels"><span>0</span><span>100,000</span></div></div></div><div class="inventory-overview-title">材料需求总览</div><div class="inventory-stats"><div class="inventory-stat"><div class="label">材料总需求</div><div class="value" id="stockTotalDemand">—</div><div class="hint">升级所需生肖石</div></div><div class="inventory-stat"><div class="label">已有材料库存</div><div class="value" id="stockCurrent">0</div><div class="hint">当前持有数量</div></div><div class="inventory-stat" id="stockSkillCostStat"><div class="label">技能升阶消耗数量</div><div class="value" id="stockSkillCost">0</div><div class="hint">四个生肖合计</div></div><div class="inventory-stat"><div class="label">扣除库存后实际需求</div><div class="value" id="remainingCost">—</div><div class="hint">仍需准备的生肖石</div></div><div class="inventory-stat"><div class="label">等级变化</div><div class="value" id="levelChangeSummary">—</div><div class="hint">当前等级 → 目标等级</div></div></div><div class="inventory-note" id="inventoryNote">根据当前等级和目标等级自动计算材料需求。</div></div>
+<section class="panel"><div class="inventory-card"><div class="inventory-heading"><div><div class="inventory-title">已有材料库存</div><div class="inventory-subtitle">输入当前持有的生肖石数量，自动从材料需求中扣除</div></div><button class="reset inventory-reset" id="resetInventoryBtn" type="button">重置库存</button></div><div class="inventory-fields"><input id="inventoryInput" type="number" min="0" max="100000" step="1" value="0" inputmode="numeric" aria-label="已有生肖石库存"><div class="inventory-slider-wrap"><input id="inventoryRange" class="inventory-range" type="range" min="0" max="100000" step="1" value="0" aria-label="库存数量滑动条"><div class="range-labels"><span>0</span><span>100,000</span></div></div></div><div class="inventory-overview-title">材料需求总览</div><div class="inventory-stats"><div class="inventory-stat"><div class="label">生肖石需求</div><div class="value" id="stockTotalDemand">—</div><div class="hint">升级所需生肖石总量</div></div><div class="inventory-stat"><div class="label">等级变化</div><div class="value" id="levelChangeSummary">—</div><div class="hint">当前等级 → 目标等级</div></div></div></div>
 <div class="result-head hidden"><div><h2>预计消耗生肖石</h2><div class="total" id="total">— <span class="unit">生肖石</span></div></div><button class="reset" id="resetBtn" type="button">重置设置</button></div><div class="result-grid hidden"><div class="stat"><div class="label">生肖升级消耗</div><div class="value" id="zodiacCost">—</div></div><div class="stat hidden" id="skillCostStat"><div class="label">技能升级消耗</div><div class="value" id="skillCost">—</div></div><div class="stat"><div class="label">银票消耗</div><div class="value" id="silverCost">—</div></div><div class="stat"><div class="label">目标等级</div><div class="value" id="targetSummary">45 级</div></div></div></section>
+<section class="panel details-panel"><div class="section-title" style="margin-bottom:4px">消耗明细</div><div id="details"></div><p class="note" id="ruleNote">生肖升级消耗按“升入该等级”对应的生肖石与银票数量累计。</p></section>
 <div class="package-wrap" id="packageWrap"><div class="package-heading"><div><h3>礼包购买方案</h3><p>礼包名称、价格及展示字段同步读取中央礼包配置；按扣除现有库存后的生肖石缺口，向上取整计算购买数量，不含返利。</p></div></div>
 <div class="package-options" id="packageOptions"></div>
 <div class="package-summary" id="packageSummary">当前选择：第二个半价礼包。</div><div class="package-stats"><div class="package-stat purchase-positive"><span>预计费用</span><strong id="packageCost">¥0</strong><small>按所选礼包价格计算</small></div><div class="package-stat purchase-positive"><span>购买礼包数量</span><strong id="packageCount">0 份</strong><small>向上取整，确保材料够用</small></div><div class="package-stat"><span>购买生肖石总量</span><strong id="packageStones">0</strong><small>礼包数量 × 单份生肖石</small></div><div class="package-stat purchase-warning"><span>购买后剩余</span><strong id="packageSurplus">0</strong><small>购买总量减实际需求</small></div></div></div>
-<section class="panel details-panel"><div class="section-title" style="margin-bottom:4px">消耗明细</div><div id="details"></div><p class="note" id="ruleNote">生肖升级消耗按“升入该等级”对应的生肖石与银票数量累计。</p></section>
+
 <section class="panel wide"><div class="section-title">技能阶数查询</div><div style="overflow-x:auto"><table class="breakdown skill-query-table"><colgroup><col style="width:12%"><col style="width:10%"><col style="width:13%"><col style="width:14%"><col style="width:14%"><col style="width:13%"><col style="width:14%"><col style="width:10%"></colgroup><thead><tr><th>等级区间</th><th>技能阶数</th><th>单条生肖消耗</th><th>升阶消耗</th><th>累计生肖石消耗</th><th>单个生肖银票累计</th><th>四个生肖银票累计</th><th>技能效果</th></tr></thead><tbody id="skillTable"></tbody></table></div></section>
 <section class="panel wide upgrade-data-panel"><div class="section-head"><div><h2>升级数据查询</h2><p>展开后查看 1–45 级完整数据。</p></div><div class="zodiac-data-controls"><button type="button" class="zodiac-data-action" id="toggleUpgradeTable" aria-expanded="false">展开全部</button></div></div><div class="upgrade-query-result" id="upgradeQueryResult" aria-live="polite"></div><div class="zodiac-upgrade-table-wrap collapsed" id="upgradeDataWrap"><table class="breakdown upgrade-query-table"><colgroup><col style="width:16.66%"><col style="width:16.66%"><col style="width:16.66%"><col style="width:16.66%"><col style="width:16.66%"><col style="width:16.7%"></colgroup><thead><tr><th>升入等级</th><th>所需生肖石</th><th>升阶消耗生肖石</th><th>累计消耗生肖石</th><th>所需银票</th><th>累计消耗银票</th></tr></thead><tbody id="upgradeTable"></tbody></table></div><p class="note">所需生肖石和银票表示从上一级升入该等级的消耗；升阶消耗生肖石仅在 5 的整数倍等级显示，累计消耗生肖石为截至该等级的升级生肖石与升阶生肖石总和；累计消耗银票为截至该等级的银票总和。</p></section>
 </div><div class="footer">@wwwwwqq1</div></main><div class="float-actions"><button class="float-action" id="themeBtn" type="button">☀️ 切换昼夜</button><a class="float-action" href="index.html" aria-label="返回主页">⌂ 返回主页</a></div>
@@ -298,8 +532,8 @@ function silverCost(start,target){start=clampLevel(start);target=clampLevel(targ
 function stepFor(level){level=clampLevel(level);return Math.max(1,Math.min(9,Math.ceil(level/5)))}
 function skillUpgradeCost(fromStep,toStep){let perConstellation=0;for(let step=fromStep+1;step<=toStep;step++)perConstellation+=skillSteps[step-1]?.cost||0;return perConstellation*4}
 function stepInfo(step){return skillSteps[Math.max(0,Math.min(11,step-1))]}
-function fillConstellations(){const all=Object.values(groups).flat();$('singleConstellationList').innerHTML=all.map(name=>{const z=zodiacMeta[name];return `<button type="button" class="group-btn zodiac-card ${name===selectedConstellation?'active':''}" data-zodiac="${name}" style="--zodiac-color:${z.color}" aria-label="选择${name}"><span class="zodiac-symbol" aria-hidden="true">${z.symbol}</span><span class="zodiac-label">${name}</span></button>`}).join('');document.querySelectorAll('[data-zodiac]').forEach(b=>b.addEventListener('click',()=>{selectedConstellation=b.dataset.zodiac;document.querySelectorAll('[data-zodiac]').forEach(x=>x.classList.toggle('active',x===b));calculate()}));$('constellationList').innerHTML=groups[activeGroup].map((name,i)=>`<div class="constellation" style="--zodiac-color:${zodiacMeta[name].color}"><div class="constellation-top"><span class="constellation-name-wrap"><span class="constellation-symbol">${zodiacMeta[name].symbol}</span><span class="constellation-name">${name}</span></span><span class="pill">当前 <b id="startLabel${i}">${5}</b> 级</span></div><div class="field" style="margin-top:9px"><label for="startNum${i}">当前等级（可输入）</label><input id="startNum${i}" data-index="${i}" type="number" min="0" max="45" value="${5}" inputmode="numeric"></div><input class="small-range" id="start${i}" data-index="${i}" type="range" min="0" max="45" value="${5}" aria-label="${name}当前等级"><div class="range-labels"><span>0级</span><span>45级</span></div></div>`).join('');groups[activeGroup].forEach((_,i)=>{const r=$('start'+i),n=$('startNum'+i);r.addEventListener('input',()=>{n.value=r.value;$('startLabel'+i).textContent=r.value;calculate()});n.addEventListener('change',()=>{n.value=clampLevel(n.value);r.value=n.value;$('startLabel'+i).textContent=n.value;calculate()})})}
-function switchMode(next){mode=next;$('singleMode').classList.toggle('active',mode==='single');$('skillMode').classList.toggle('active',mode==='skill');$('singleSettings').classList.toggle('hidden',mode!=='single');$('skillSettings').classList.toggle('hidden',mode!=='skill');$('skillCostStat').classList.toggle('hidden',mode!=='skill');$('stockSkillCostStat').classList.toggle('hidden',mode!=='skill');$('stockSkillCostStat').classList.toggle('hidden',mode!=='skill');calculate()}
+function fillConstellations(){const all=Object.values(groups).flat();$('singleConstellationList').innerHTML=all.map(name=>{const z=zodiacMeta[name];return `<button type="button" class="group-btn zodiac-card ${name===selectedConstellation?'active':''}" data-zodiac="${name}" style="--zodiac-color:${z.color}" aria-label="选择${name}"><span class="zodiac-symbol" aria-hidden="true">${z.symbol}</span><span class="zodiac-label">${name}</span></button>`}).join('');document.querySelectorAll('[data-zodiac]').forEach(b=>b.addEventListener('click',()=>{selectedConstellation=b.dataset.zodiac;document.querySelectorAll('[data-zodiac]').forEach(x=>x.classList.toggle('active',x===b));calculate()}));$('constellationList').innerHTML=groups[activeGroup].map((name,i)=>`<div class="constellation" style="--zodiac-color:${zodiacMeta[name].color}"><div class="constellation-top"><span class="constellation-name-wrap"><span class="constellation-symbol">${zodiacMeta[name].symbol}</span><span class="constellation-name">${name}</span></span><span class="pill">当前 <b id="startLabel${i}">${5}</b> 级</span></div><div class="skill-level-row"><input id="startNum${i}" data-index="${i}" type="number" min="0" max="45" value="${5}" inputmode="numeric" aria-label="${name}当前等级数值"><input class="small-range" id="start${i}" data-index="${i}" type="range" min="0" max="45" value="${5}" aria-label="${name}当前等级滑动条"></div></div>`).join('');groups[activeGroup].forEach((_,i)=>{const r=$('start'+i),n=$('startNum'+i);r.addEventListener('input',()=>{n.value=r.value;$('startLabel'+i).textContent=r.value;calculate()});n.addEventListener('change',()=>{n.value=clampLevel(n.value);r.value=n.value;$('startLabel'+i).textContent=n.value;calculate()})})}
+function switchMode(next){mode=next;$('singleMode').classList.toggle('active',mode==='single');$('skillMode').classList.toggle('active',mode==='skill');$('singleSettings').classList.toggle('hidden',mode!=='single');$('skillSettings').classList.toggle('hidden',mode!=='skill');$('skillCostStat').classList.toggle('hidden',mode!=='skill');calculate()}
 function showDetails(rows){const totalStones=rows.reduce((sum,r)=>sum+(Number(r.cost)||0),0);const totalSilver=rows.reduce((sum,r)=>sum+(Number(r.silver)||0),0);$('details').innerHTML=`<table class="breakdown consumption-details-table"><colgroup><col style="width:22%"><col style="width:22%"><col style="width:19%"><col style="width:19%"><col style="width:18%"></colgroup><thead><tr><th>项目</th><th>等级 / 说明</th><th>生肖石消耗</th><th>银票消耗</th><th>属性提升</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.name}</td><td>${r.info}</td><td>${fmt(r.cost)}</td><td>${fmt(r.silver||0)}</td><td></td></tr>`).join('')}<tr class="consumption-total-row"><td colspan="2">合计消耗</td><td>${fmt(totalStones)}</td><td>${fmt(totalSilver)}</td><td>—</td></tr></tbody></table>`}
 function updateSkillMilestone(target){const el=$('skillTargetMilestone'),num=$('skillTargetText'),unit=$('skillTargetUnit');if(!el)return;if(target>0&&target%5===0){const step=stepFor(target),info=stepInfo(step);num.classList.add('hidden');unit.classList.add('hidden');el.textContent=`${target}级-${step}阶-${activeGroup}${info.effect}`;el.classList.remove('hidden')}else{num.classList.remove('hidden');unit.classList.remove('hidden');el.textContent='';el.classList.add('hidden')}}
 function updateCurrentSkillMilestone(starts){const el=$('skillCurrentMilestone');if(!el)return;const lowest=Math.min(...starts);if(lowest<5){el.textContent='';el.classList.add('hidden');return}const step=stepFor(lowest),info=stepInfo(step);el.textContent=`${lowest}级-${step}阶-${activeGroup}${info.effect}`;el.classList.remove('hidden')}
@@ -409,11 +643,11 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadConste
 setInterval(loadConstellationGiftConfig,300000);
 
 
-function calculate(){let target,rows=[],zodiac=0,skill=0,silver=0;const err=$('error');err.textContent='';if(mode==='single'){const start=clampLevel($('singleStart').value);target=clampLevel($('singleTarget').value);$('singleStart').value=start;const c=stoneCost(start,target),sc=silverCost(start,target);if(c===null){err.textContent='目标等级必须至少比当前等级高 1 级。';renderInvalid();return}zodiac=c;silver=sc;rows.push({name:selectedConstellation,info:`${start} → ${target} 级`,cost:c,silver:sc});$('targetSummary').textContent=target+' 级';$('ruleNote').textContent='生肖升级消耗按“升入该等级”对应的生肖石与银票数量累计。技能组模式会另计技能升级生肖石消耗。'}else{target=clampLevel($('skillTarget').value);const starts=groups[activeGroup].map((_,i)=>clampLevel($('startNum'+i).value));const lowest=Math.min(...starts);if(target<lowest)target=lowest;$('skillTarget').value=target;$('skillTargetRange').value=target;$('skillTargetText').textContent=target;updateSkillMilestone(target);updateCurrentSkillMilestone(starts);starts.forEach((s,i)=>{const c=s>=target?0:stoneCost(s,target),sc=s>=target?0:silverCost(s,target);zodiac+=c;silver+=sc;rows.push({name:groups[activeGroup][i],info:s>target?`${s} 级（高于目标，按无需升级计）`:`${s} → ${target} 级`,cost:c,silver:sc})});const from=stepFor(lowest),to=stepFor(target);skill=skillUpgradeCost(from,to);rows.push({name:'技能升级',info:`${from}阶→${to}阶`,cost:skill,silver:0});$('targetSummary').textContent=target+' 级';$('ruleNote').textContent=`技能阶数依据当前最低等级 ${lowest} 级对应的 ${from} 阶计算，目标 ${target} 级对应 ${to} 阶；技能升阶生肖石由四个生肖各自消耗，按每阶单个生肖消耗 × 4 计入总需求。银票按四个生肖各自的等级提升累计。`}const totalCost=zodiac+skill;const stock=Math.max(0,Math.min(100000,Math.floor(Number($('inventoryInput').value)||0)));$('inventoryInput').value=stock;$('inventoryRange').value=stock;$('stockTotalDemand').textContent=fmt(totalCost);$('stockCurrent').textContent=fmt(stock);$('stockSkillCost').textContent=fmt(skill);$('remainingCost').textContent=fmt(Math.max(0,totalCost-stock));updatePackagePurchase(Math.max(0,totalCost-stock));$('total').innerHTML=`${fmt(totalCost)} <span class="unit">生肖石</span>`;$('zodiacCost').textContent=fmt(zodiac);$('skillCost').textContent=fmt(skill);$('silverCost').textContent=fmt(silver);let fromLevel,toLevel;if(mode==='single'){fromLevel=clampLevel($('singleStart').value);toLevel=clampLevel($('singleTarget').value)}else{fromLevel=Math.min(...groups[activeGroup].map((_,i)=>clampLevel($('startNum'+i).value)));toLevel=clampLevel($('skillTarget').value)}$('levelChangeSummary').textContent=`${fromLevel} → ${toLevel}`;$('inventoryNote').textContent=stock>=totalCost?`当前库存足够覆盖本次生肖石需求，扣除后剩余 ${fmt(stock-totalCost)} 块生肖石；本次另需银票 ${fmt(silver)}。`:`当前库存为 ${fmt(stock)} 块，扣除后还需要 ${fmt(Math.max(0,totalCost-stock))} 块生肖石；本次另需银票 ${fmt(silver)}。`;showDetails(rows)}
-function renderInvalid(){$('total').innerHTML='— <span class="unit">生肖石</span>';$('remainingCost').textContent='—';$('zodiacCost').textContent='—';$('skillCost').textContent='—';$('silverCost').textContent='—';$('targetSummary').textContent='—';$('details').innerHTML='<p class="note">请修正等级设置后查看计算结果。</p>'}
-function resetLevels(){if(mode==='single'){ $('singleStart').value=5;$('singleStartRange').value=5;$('singleStartText').textContent='5';$('singleTarget').min=6;$('singleTargetNumber').min=6;$('singleTarget').value=10;$('singleTargetNumber').value=10;$('singleTargetText').textContent='10';$('singleMinLabel').textContent='6 级';}else{$('skillTarget').value=10;$('skillTargetRange').value=10;$('skillTargetText').textContent='10';groups[activeGroup].forEach((_,i)=>{const v=5;$('start'+i).value=v;$('startNum'+i).value=v;$('startLabel'+i).textContent=v;});}calculate()}
-function reset(){if(mode==='single'){$('singleStart').value=5;$('singleStartRange').value=5;$('singleStartText').textContent=5;$('singleTarget').value=10;$('singleTargetNumber').value=10;$('singleTarget').min=6;$('singleTargetNumber').min=6;$('singleMinLabel').textContent='6 级';$('singleTargetText').textContent=10;selectedConstellation='子鼠';fillConstellations()}else{$('skillTarget').value=10;$('skillTargetRange').value=10;$('skillTargetText').textContent=10;groups[activeGroup].forEach((_,i)=>{const v=5;$('start'+i).value=v;$('startNum'+i).value=v;$('startLabel'+i).textContent=v})}calculate()}
-$('singleMode').addEventListener('click',()=>switchMode('single'));$('skillMode').addEventListener('click',()=>switchMode('skill'));function syncSingleStart(raw){const v=Math.min(44,clampLevel(raw));$('singleStart').value=v;$('singleStartRange').value=v;$('singleStartText').textContent=v;$('singleTarget').min=v+1;$('singleTargetNumber').min=v+1;$('singleMinLabel').textContent=(v+1)+' 级';if(clampLevel($('singleTarget').value)<=v){$('singleTarget').value=v+1;$('singleTargetNumber').value=v+1;$('singleTargetText').textContent=v+1}calculate()}$('singleStart').addEventListener('change',()=>syncSingleStart($('singleStart').value));$('singleStartRange').addEventListener('input',()=>{ $('singleStart').value=$('singleStartRange').value;syncSingleStart($('singleStartRange').value)});$('singleTarget').addEventListener('input',()=>{$('singleTargetText').textContent=$('singleTarget').value;$('singleTargetNumber').value=$('singleTarget').value;calculate()});$('singleTargetNumber').addEventListener('change',()=>{const min=clampLevel($('singleStart').value)+1;const v=Math.min(45,Math.max(min,clampLevel($('singleTargetNumber').value)));$('singleTargetNumber').value=v;$('singleTarget').min=min;$('singleTarget').value=v;$('singleTargetText').textContent=v;calculate()});$('skillTarget').addEventListener('change',()=>{const v=clampLevel($('skillTarget').value);$('skillTarget').value=v;$('skillTargetRange').value=v;$('skillTargetText').textContent=v;calculate()});$('skillTargetRange').addEventListener('input',()=>{$('skillTarget').value=$('skillTargetRange').value;$('skillTargetText').textContent=$('skillTargetRange').value;calculate()});document.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{activeGroup=b.dataset.group;document.querySelectorAll('[data-group]').forEach(x=>x.classList.toggle('active',x===b));fillConstellations();calculate()}));$('inventoryInput').addEventListener('input',()=>{const v=Math.max(0,Math.min(100000,Math.floor(Number($('inventoryInput').value)||0)));$('inventoryRange').value=v;calculate()});$('inventoryRange').addEventListener('input',()=>{$('inventoryInput').value=$('inventoryRange').value;calculate()});$('resetInventoryBtn').addEventListener('click',()=>{$('inventoryInput').value=0;$('inventoryRange').value=0;calculate()});$('resetBtn').addEventListener('click',reset);$('resetLevelsBtn').addEventListener('click',resetLevels);$('resetSkillLevelsBtn').addEventListener('click',resetLevels);
+function calculate(){let target,rows=[],zodiac=0,skill=0,silver=0;const err=$('error');err.textContent='';if(mode==='single'){const start=clampLevel($('singleStart').value);target=clampLevel($('singleTarget').value);$('singleStart').value=start;const c=stoneCost(start,target),sc=silverCost(start,target);if(c===null){err.textContent='目标等级必须至少比当前等级高 1 级。';renderInvalid();return}zodiac=c;silver=sc;rows.push({name:selectedConstellation,info:`${start} → ${target} 级`,cost:c,silver:sc});$('targetSummary').textContent=target+' 级';$('ruleNote').textContent='生肖升级消耗按“升入该等级”对应的生肖石与银票数量累计。技能组模式会另计技能升级生肖石消耗。'}else{target=clampLevel($('skillTarget').value);const starts=groups[activeGroup].map((_,i)=>clampLevel($('startNum'+i).value));const lowest=Math.min(...starts);if(target<lowest)target=lowest;$('skillTarget').value=target;$('skillTargetRange').value=target;$('skillTargetText').textContent=target;updateSkillMilestone(target);updateCurrentSkillMilestone(starts);starts.forEach((s,i)=>{const c=s>=target?0:stoneCost(s,target),sc=s>=target?0:silverCost(s,target);zodiac+=c;silver+=sc;rows.push({name:groups[activeGroup][i],info:s>target?`${s} 级（高于目标，按无需升级计）`:`${s} → ${target} 级`,cost:c,silver:sc})});const from=stepFor(lowest),to=stepFor(target);skill=skillUpgradeCost(from,to);rows.push({name:'技能升级',info:`${from}阶→${to}阶`,cost:skill,silver:0});$('targetSummary').textContent=target+' 级';$('ruleNote').textContent=`技能阶数依据当前最低等级 ${lowest} 级对应的 ${from} 阶计算，目标 ${target} 级对应 ${to} 阶；技能升阶生肖石由四个生肖各自消耗，按每阶单个生肖消耗 × 4 计入总需求。银票按四个生肖各自的等级提升累计。`}const totalCost=zodiac+skill;const stock=Math.max(0,Math.min(100000,Math.floor(Number($('inventoryInput').value)||0)));$('inventoryInput').value=stock;$('inventoryRange').value=stock;$('stockTotalDemand').textContent=fmt(totalCost);if($('stockCurrent'))$('stockCurrent').textContent=fmt(stock);if($('stockSkillCost'))$('stockSkillCost').textContent=fmt(skill);if($('remainingCost'))$('remainingCost').textContent=fmt(Math.max(0,totalCost-stock));updatePackagePurchase(Math.max(0,totalCost-stock));$('total').innerHTML=`${fmt(totalCost)} <span class="unit">生肖石</span>`;$('zodiacCost').textContent=fmt(zodiac);$('skillCost').textContent=fmt(skill);$('silverCost').textContent=fmt(silver);let fromLevel,toLevel;if(mode==='single'){fromLevel=clampLevel($('singleStart').value);toLevel=clampLevel($('singleTarget').value)}else{fromLevel=Math.min(...groups[activeGroup].map((_,i)=>clampLevel($('startNum'+i).value)));toLevel=clampLevel($('skillTarget').value)}$('levelChangeSummary').textContent=`${fromLevel} → ${toLevel}`;if($('inventoryNote'))$('inventoryNote').textContent=stock>=totalCost?`当前库存足够覆盖本次生肖石需求，扣除后剩余 ${fmt(stock-totalCost)} 块生肖石；本次另需银票 ${fmt(silver)}。`:`当前库存为 ${fmt(stock)} 块，扣除后还需要 ${fmt(Math.max(0,totalCost-stock))} 块生肖石；本次另需银票 ${fmt(silver)}。`;showDetails(rows)}
+function renderInvalid(){$('total').innerHTML='— <span class="unit">生肖石</span>';if($('remainingCost'))$('remainingCost').textContent='—';$('zodiacCost').textContent='—';$('skillCost').textContent='—';$('silverCost').textContent='—';$('targetSummary').textContent='—';$('details').innerHTML='<p class="note">请修正等级设置后查看计算结果。</p>'}
+function resetLevels(){if(mode==='single'){ $('singleStart').value=5;$('singleStartRange').value=5;if($('singleStartText'))$('singleStartText').textContent='5';$('singleTarget').min=6;$('singleTargetNumber').min=6;$('singleTarget').value=10;$('singleTargetNumber').value=10;if($('singleTargetText'))$('singleTargetText').textContent='10';$('singleMinLabel').textContent='6 级';}else{$('skillTarget').value=10;$('skillTargetRange').value=10;$('skillTargetText').textContent='10';groups[activeGroup].forEach((_,i)=>{const v=5;$('start'+i).value=v;$('startNum'+i).value=v;$('startLabel'+i).textContent=v;});}calculate()}
+function reset(){if(mode==='single'){$('singleStart').value=5;$('singleStartRange').value=5;if($('singleStartText'))$('singleStartText').textContent=5;$('singleTarget').value=10;$('singleTargetNumber').value=10;$('singleTarget').min=6;$('singleTargetNumber').min=6;$('singleMinLabel').textContent='6 级';if($('singleTargetText'))$('singleTargetText').textContent=10;selectedConstellation='子鼠';fillConstellations()}else{$('skillTarget').value=10;$('skillTargetRange').value=10;$('skillTargetText').textContent=10;groups[activeGroup].forEach((_,i)=>{const v=5;$('start'+i).value=v;$('startNum'+i).value=v;$('startLabel'+i).textContent=v})}calculate()}
+$('singleMode').addEventListener('click',()=>switchMode('single'));$('skillMode').addEventListener('click',()=>switchMode('skill'));function syncSingleStart(raw){const v=Math.min(44,clampLevel(raw));$('singleStart').value=v;$('singleStartRange').value=v;if($('singleStartText'))$('singleStartText').textContent=v;$('singleTarget').min=v+1;$('singleTargetNumber').min=v+1;$('singleMinLabel').textContent=(v+1)+' 级';if(clampLevel($('singleTarget').value)<=v){$('singleTarget').value=v+1;$('singleTargetNumber').value=v+1;if($('singleTargetText'))$('singleTargetText').textContent=v+1}calculate()}$('singleStart').addEventListener('change',()=>syncSingleStart($('singleStart').value));$('singleStartRange').addEventListener('input',()=>{ $('singleStart').value=$('singleStartRange').value;syncSingleStart($('singleStartRange').value)});$('singleTarget').addEventListener('input',()=>{const v=Number($('singleTarget').value);$('singleTargetNumber').value=v;if($('singleTargetText'))$('singleTargetText').textContent=v;calculate()});$('singleTarget').addEventListener('change',()=>{const v=Number($('singleTarget').value);$('singleTargetNumber').value=v;if($('singleTargetText'))$('singleTargetText').textContent=v;calculate()});$('singleTargetNumber').addEventListener('input',()=>{const min=clampLevel($('singleStart').value)+1;const v=Math.min(45,Math.max(min,clampLevel($('singleTargetNumber').value)));$('singleTargetNumber').value=v;$('singleTarget').min=min;$('singleTarget').value=v;if($('singleTargetText'))$('singleTargetText').textContent=v;calculate()});$('singleTargetNumber').addEventListener('change',()=>{const min=clampLevel($('singleStart').value)+1;const v=Math.min(45,Math.max(min,clampLevel($('singleTargetNumber').value)));$('singleTargetNumber').value=v;$('singleTarget').min=min;$('singleTarget').value=v;if($('singleTargetText'))$('singleTargetText').textContent=v;calculate()});$('skillTarget').addEventListener('change',()=>{const v=clampLevel($('skillTarget').value);$('skillTarget').value=v;$('skillTargetRange').value=v;$('skillTargetText').textContent=v;calculate()});$('skillTargetRange').addEventListener('input',()=>{$('skillTarget').value=$('skillTargetRange').value;$('skillTargetText').textContent=$('skillTargetRange').value;calculate()});document.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{activeGroup=b.dataset.group;document.querySelectorAll('[data-group]').forEach(x=>x.classList.toggle('active',x===b));fillConstellations();calculate()}));$('inventoryInput').addEventListener('input',()=>{const v=Math.max(0,Math.min(100000,Math.floor(Number($('inventoryInput').value)||0)));$('inventoryRange').value=v;calculate()});$('inventoryRange').addEventListener('input',()=>{$('inventoryInput').value=$('inventoryRange').value;calculate()});$('resetInventoryBtn').addEventListener('click',()=>{$('inventoryInput').value=0;$('inventoryRange').value=0;calculate()});$('resetBtn').addEventListener('click',reset);$('resetLevelsBtn').addEventListener('click',resetLevels);$('resetSkillLevelsBtn').addEventListener('click',resetLevels);
 let previousSkillLevel=0;let cumulativeSilverPerZodiac=0;let cumulativeZodiacStones=0;$('skillTable').innerHTML=skillSteps.map(s=>{const stones=stoneCost(previousSkillLevel,s.max),silver=silverCost(0,s.max);const intervalSkillStones=(s.cost||0)*4;const totalZodiacStones=stones+intervalSkillStones;cumulativeZodiacStones+=totalZodiacStones;cumulativeSilverPerZodiac=silver;previousSkillLevel=s.max;return `<tr><td>${s.range}</td><td>${s.step} 阶</td><td>${fmt(stones)}</td><td>${fmt(intervalSkillStones)}</td><td>${fmt(cumulativeZodiacStones)}</td><td>${fmt(silver)}</td><td>${fmt(silver*4)}</td><td>${s.effect}</td></tr>`}).join('');
 let upgradeTableExpanded=false;
 function renderUpgradeQuery(){const tbody=$('upgradeTable');let cumulative=0;let cumulativeSilver=0;tbody.innerHTML=costs.map((c,i)=>{const level=i+1;const tierCost=level%5===0?(skillSteps[level/5-1]?.cost||0):0;cumulative+=c+tierCost;cumulativeSilver+=silverCosts[i];return `<tr><td>${level} 级</td><td>${fmt(c)}</td><td>${tierCost?fmt(tierCost):'—'}</td><td>${fmt(cumulative)}</td><td>${fmt(silverCosts[i])}</td><td>${fmt(cumulativeSilver)}</td></tr>`}).join('');}
