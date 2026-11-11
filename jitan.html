@@ -339,7 +339,7 @@ body[data-altar="5"]{--altar-tone:#7052a0}
 }
 
 </style>
-<meta name="qqsh-version" content="jitan-v2.2.1">
+<meta name="qqsh-version" content="jitan-v2.2.2">
 
 <style id="mobile-data-filter-layout-v1270">
 /* v1.2.70：移动端祭坛筛选严格两行布局 */
@@ -593,7 +593,7 @@ function applyAltarGiftConfig(config){
  ALTAR_PACKAGES.splice(0,ALTAR_PACKAGES.length,...next);
  altarGiftFieldVisibility=system.fieldVisibility||{};
  const rebate=system.rebate||{};
- if(typeof rebate.enabled==='boolean')rebateEnabled=rebate.enabled;
+ // 页面默认关闭返利；不从礼包配置中恢复开启状态。
  if(Number.isFinite(Number(rebate.ratio)))rebateRatio=Number(rebate.ratio);
  document.querySelectorAll('.rebate-package[data-package]').forEach((btn,i)=>{
   const p=ALTAR_PACKAGES[i];if(!p)return;
