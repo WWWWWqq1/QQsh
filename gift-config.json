@@ -39,10 +39,10 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 8.8,
+          "price": 10.3,
           "big": 1,
           "middle": 1,
-          "small": 680,
+          "small": 880,
           "herb": 91,
           "wood": 39,
           "pill": 21
@@ -108,12 +108,12 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 8.8,
+          "price": 10.3,
           "big": 1,
           "middle": 1,
-          "small": 800,
-          "extra": 50,
-          "obsidian": 1050
+          "small": 1100,
+          "extra": 18,
+          "obsidian": 1393
         }
       ],
       "materials": [
@@ -166,10 +166,10 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 9.3,
+          "price": 10.3,
           "big": 1,
           "middle": 1,
-          "small": 960,
+          "small": 880,
           "yang": 35,
           "chang": 15,
           "sheng": 7
@@ -231,9 +231,9 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 6.3,
-          "small": 920,
-          "unitPrice": 146
+          "price": 8.8,
+          "small": 690,
+          "unitPrice": 78.4
         }
       ],
       "materials": [
@@ -322,9 +322,9 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 7.3,
-          "stones": 188,
-          "unitPrice": 25.8
+          "price": 11.8,
+          "stones": 388,
+          "unitPrice": 32.9
         }
       ],
       "materials": [
@@ -376,10 +376,10 @@
         {
           "id": "limited",
           "name": "限时礼包",
-          "price": 14.3,
-          "big": 11,
+          "price": 7.3,
+          "big": 4,
           "middle": 7,
-          "small": 77,
+          "small": 28,
           "yield": [
             70,
             40,
@@ -444,10 +444,10 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 14.3,
-          "big": 11,
+          "price": 7.3,
+          "big": 4,
           "middle": 5,
-          "small": 55,
+          "small": 20,
           "guikui": 1050,
           "gupu": 450,
           "beiji": 225
