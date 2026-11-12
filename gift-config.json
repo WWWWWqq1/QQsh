@@ -473,7 +473,11 @@
           "packageField": "beiji"
         }
       ],
-      "fieldVisibility": {}
+      "fieldVisibility": {
+        "guikui": false,
+        "gupu": false,
+        "beiji": false
+      }
     }
   ]
 }
