@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fc"><title>北斗材料计算器 v2.1.1</title>
+<meta name="theme-color" content="#f7f9fc"><title>北斗材料计算器 v2.2.1</title>
 <style>
 :root{--bg:#f4f6fa;--panel:#fff;--panel2:#f6f8fc;--text:#1b2434;--muted:#64748b;--line:#d4deef;--accent:#a87516;--accent2:#d6a12d;--shadow:0 8px 26px #1a2b4510;--result-bg:#fff;--result-text:#1b2434;--result-line:#d4deef;--result-cell:#f6f8fc;--result-head:#eaf0f8;--result-head-text:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s,color .2s}
@@ -131,9 +131,12 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
 .junshi-material-summary .metric-chang>span{color:#159b62}
 .junshi-material-summary .metric-sheng>span{color:#347fe0}
 
-/* 升级数据表：各列等宽，表头与单元格内容居中 */
-.table-wrap table{width:100%;table-layout:fixed}
-.table-wrap th,.table-wrap td{text-align:center;vertical-align:middle}
+/* 升级数据表：表头允许换行，列宽按最后一行数据的实际字符宽度比例分配 */
+#tableBody{ }
+.table-wrap table.upgrade-data-table{width:max-content;min-width:100%;table-layout:fixed}
+.upgrade-data-table th,.upgrade-data-table td{text-align:center;vertical-align:middle}
+.upgrade-data-table th{white-space:normal;overflow-wrap:anywhere;word-break:break-all;line-height:1.25;padding:7px 4px}
+.upgrade-data-table td{white-space:nowrap;padding:8px 5px}
 
 /* 礼包方案响应式：PC 自动均分整行，移动端固定两列 */
 .gift-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))!important}
@@ -167,6 +170,476 @@ body.light-theme::before{color:#657e9f;opacity:.065}body.light-theme::after{colo
 body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 </style>
 
+
+<style id="beidou-attribute-one-row-v2-1-14">
+/* v2.1.14：七种属性按钮固定一行，并铺满属性卡片可用宽度 */
+.attr-title-row{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.attr-title-row h3{
+  margin:0 0 9px!important;
+  white-space:nowrap!important;
+}
+.attr-title-row .attribute-buttons{
+  display:grid!important;
+  grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:clamp(3px,0.8vw,8px)!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  flex:none!important;
+}
+.attr-title-row .attribute-buttons .attribute-btn{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:7px 1px!important;
+  font-size:clamp(9px,1.1vw,14px)!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+@media(max-width:560px){
+  .attr-title-row .attribute-buttons{
+    grid-template-columns:repeat(7,minmax(0,1fr))!important;
+    gap:4px!important;
+  }
+  .attr-title-row .attribute-buttons .attribute-btn{
+    padding:7px 0!important;
+    font-size:clamp(9px,2.7vw,12px)!important;
+  }
+}
+@media(max-width:360px){
+  .attr-title-row .attribute-buttons{gap:2px!important}
+  .attr-title-row .attribute-buttons .attribute-btn{
+    padding-left:0!important;
+    padding-right:0!important;
+    font-size:9px!important;
+  }
+}
+</style>
+
+
+<style id="beidou-exp-panel-title-outside-v2-1-17">
+.exp-panel-title{
+  margin:13px 0 7px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+@media(max-width:560px){
+  .exp-panel-title{margin:11px 0 6px!important}
+}
+</style>
+
+
+<style id="beidou-gift-card-canonical-v2-2-12">
+/* v2.2.15：统一 PC/手机端礼包数据字号，修复手机断点将22px覆盖为16px */
+#giftPlan #giftGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+  margin-top:12px!important;
+}
+#giftPlan #giftGrid>.gift-card{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:15px!important;
+  min-width:0!important;
+  min-height:108px!important;
+  padding:8px 10px 4px!important;
+  border:1.5px solid var(--line)!important;
+  border-radius:13px!important;
+  background:var(--panel2)!important;
+  color:var(--text)!important;
+  font:inherit!important;
+  text-align:left!important;
+}
+#giftPlan #giftGrid>.gift-card.selected{
+  padding:7.5px 9.5px 3.5px!important;
+  border:2px solid var(--accent)!important;
+  background:var(--panel)!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-top{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  flex-wrap:nowrap!important;
+  gap:6px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-top>strong{
+  display:block!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+  font-weight:750!important;
+  white-space:nowrap!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-top>.gift-price{
+  display:block!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:var(--accent)!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:start!important;
+  gap:3px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:3px!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-label{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  font-weight:500!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--text)!important;
+  font-family:inherit!important;
+  font-size:26px!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+@media(max-width:760px){
+  #giftPlan #giftGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;}
+  #giftPlan #giftGrid>.gift-card{min-height:104px!important;gap:12px!important;padding:7px 6px 3px!important;}
+  #giftPlan #giftGrid>.gift-card.selected{padding:6.5px 5.5px 2.5px!important;}
+}
+@media(max-width:420px){
+  #giftPlan #giftGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;}
+  #giftPlan #giftGrid>.gift-card{min-height:100px!important;gap:10px!important;padding:7px 4px 3px!important;}
+  #giftPlan #giftGrid>.gift-card.selected{padding:6.5px 3.5px 2.5px!important;}
+  #giftPlan #giftGrid>.gift-card>.gift-top{gap:2px!important;}
+  #giftPlan #giftGrid>.gift-card>.gift-top>strong,
+  #giftPlan #giftGrid>.gift-card>.gift-top>.gift-price{font-size:12px!important;}
+  #giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field,
+  #giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-label{font-size:10px!important;}
+  #giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{font-size:26px!important;}
+}
+</style>
+
+
+<style id="beidou-gift-fields-no-inner-cards-v2-2-17">
+/* v2.2.17：字段区只显示文字，不给字段或字段行添加外部卡片/胶囊背景 */
+#giftPlan #giftGrid>.gift-card>.gift-facts{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:3px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:3px!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-label{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  font-weight:500!important;
+}
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{
+  all:unset!important;
+  display:block!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--text)!important;
+  font-family:inherit!important;
+  font-size:26px!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+</style>
+
+
+<style id="beidou-gift-field-number-theme-background-fix-v2-2-18">
+/* v2.2.18：礼包字段数值不再被全局数字包装脚本生成白色胶囊 */
+#giftPlan #giftGrid .gift-field-value,
+#giftPlan #giftGrid .gift-field-value .gift-data-number{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#giftPlan #giftGrid .gift-field-value .gift-data-number{
+  display:inline!important;
+  color:inherit!important;
+  font:inherit!important;
+  line-height:inherit!important;
+}
+#giftPlan #giftGrid .gift-field,
+#giftPlan #giftGrid .gift-field-label{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+</style>
+
+
+<style id="beidou-gift-value-font-match-label-v2-2-19">
+/* v2.2.19：字段数据字号与字段名称一致，统一为12px */
+#giftPlan #giftGrid .gift-field>.gift-field-value,
+#giftPlan #giftGrid .gift-field .gift-field-value,
+#giftPlan #giftGrid .gift-field-value{
+  font-size:12px!important;
+  line-height:1.2!important;
+  font-weight:500!important;
+}
+@media(max-width:420px){
+  #giftPlan #giftGrid .gift-field>.gift-field-value,
+  #giftPlan #giftGrid .gift-field .gift-field-value,
+  #giftPlan #giftGrid .gift-field-value{
+    font-size:12px!important;
+    line-height:1.2!important;
+    font-weight:500!important;
+  }
+}
+</style>
+
+
+<style id="beidou-gift-value-font-specificity-match-v2-2-20">
+/* v2.2.20：使用与原26px规则完全相同的选择器优先级，字段数据确实跟随字段名称 */
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{
+  font-size:12px!important;
+  line-height:1.2!important;
+  font-weight:500!important;
+}
+@media(max-width:420px){
+  #giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{
+    font-size:12px!important;
+    line-height:1.2!important;
+    font-weight:500!important;
+  }
+}
+</style>
+
+
+<style id="beidou-gift-json-fallback-red-values-v2-2-21">
+/* v2.2.21：中央 JSON 读取失败/本地预览时，礼包数值红色；字段数值节点不参与胶囊包装 */
+body.gift-data-fallback #giftPlan #giftGrid .gift-field-value{
+  color:#d93025!important;
+  -webkit-text-fill-color:#d93025!important;
+}
+body.gift-data-fallback #giftPlan #giftGrid .gift-price{
+  color:#d93025!important;
+  -webkit-text-fill-color:#d93025!important;
+}
+body.gift-data-json #giftPlan #giftGrid .gift-field-value{
+  color:var(--text)!important;
+  -webkit-text-fill-color:var(--text)!important;
+}
+</style>
+
+<style id="beidou-mobile-skill-notes-and-gift-stats-v2-3-2">
+/* v2.3.2：移动端技能说明逐条分行；礼包六项统计固定三列两行 */
+@media(max-width:560px){
+  .skill-effect-notes p{display:block!important;margin:4px 0!important;line-height:1.6!important;}
+  #giftPlan .gift-explain{display:none!important;}
+  #giftPlan .gift-total{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    gap:7px 6px!important;
+    width:100%!important;
+  }
+  #giftPlan .gift-total>*{min-width:0!important;}
+}
+</style>
+
+<style id="beidou-gift-mobile-value-and-selection-note-v2-3-3">
+/* v2.3.3：移动端礼包数据放大；在统计卡片上方显示当前礼包及三选一说明 */
+@media(max-width:560px){
+  #giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{
+    font-size:16px!important;
+    line-height:1.15!important;
+    font-weight:750!important;
+  }
+  #giftPlan .gift-explain{
+    display:block!important;
+    margin:10px 0 8px!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:var(--muted)!important;
+    font-size:12px!important;
+    line-height:1.55!important;
+  }
+}
+</style>
+
+
+<style id="beidou-floating-actions-gap-and-gift-note-v2-3-6">
+/* v2.3.6：右下角悬浮按钮组间距参照军师7px；移除礼包说明中的“每个礼包”描述 */
+.page-footer .floating-actions{
+  position:fixed!important;
+  right:max(10px,env(safe-area-inset-right))!important;
+  bottom:max(12px,env(safe-area-inset-bottom))!important;
+  z-index:9999!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:7px!important;
+}
+.page-footer .floating-actions .home-link,
+.page-footer .floating-actions .theme-toggle{
+  position:static!important;
+  inset:auto!important;
+  margin:0!important;
+}
+@media(max-width:760px){
+  .page-footer .floating-actions{gap:7px!important;}
+}
+</style>
+
+
+<style id="beidou-gift-field-values-shift-down-5px-v2-3-8">
+/* v2.3.8：仅将礼包字段数据数值向下移动5px，字段名称及卡片布局不变 */
+#giftPlan #giftGrid>.gift-card>.gift-facts>.gift-field>.gift-field-value{
+  position:relative!important;
+  top:5px!important;
+}
+</style>
+
+
+<style id="beidou-upgrade-table-no-horizontal-scroll-v2-3-15">
+/* v2.3.15：表头字体回退至调整前大小；数据字体保持增大 */
+.table-wrap:has(>.upgrade-data-table){
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  max-width:100%!important;
+}
+.upgrade-data-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+}
+.upgrade-data-table th{
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+  padding:6px 1px!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+}
+.upgrade-data-table td{
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-all!important;
+  padding:7px 2px!important;
+  font-size:clamp(10px,2.5vw,13px)!important;
+  line-height:1.2!important;
+}
+</style>
+
 </head><body><main>
 <header class="hero"><h1>北斗材料计算器</h1><p>北斗共七条属性，可选择计算一条或两条属性，自行设置当前等级、当前经验和目标等级，查看所需升级材料。</p><p class="muted" style="margin-top:8px">速度 · 穿透 · 护甲 · 生命 · 暴击 · 命中 · 闪避</p></header>
 <section class="panel"><h2>计算属性数量</h2><div class="segment"><button id="oneBtn" class="active" type="button">计算一条属性</button><button id="twoBtn" type="button">计算两条属性</button></div></section>
@@ -174,7 +647,7 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 <div class="actions"><button id="resetLevels" class="btn" type="button">重置等级</button><button id="resetExp" class="btn" type="button">重置经验</button></div><div id="status" class="muted" style="display:none" aria-live="polite"></div></section>
 <section class="result-banner inventory-result-card">
 <div class="inventory-title-row"><h2>已有材料库存</h2></div>
-<p class="inventory-intro">输入当前背包中的材料数量，材料需求总览将显示扣除库存后的剩余需求。</p>
+
 <div class="stock-grid junshi-stock-grid">
   <div class="stock stock-yang"><label for="stockYang">古魁经库存</label><input id="stockYang" min="0" max="100000" step="1" type="number" inputmode="numeric" value="0" />
     <input class="stock-range" id="stockYangRange" type="range" min="0" max="100000" step="1" value="0" aria-label="古魁经库存滑动条" />
@@ -224,12 +697,19 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
     <tr><td>50级</td><td>7阶</td><td>60%</td><td>35%</td><td>30%</td></tr>
   </tbody></table></div>
   <div class="skill-effect-notes muted">
-    <p>任意两个星系升级到10级可选择一条技能；任意四个星系升级到10级可选择两条技能；任意七个星系升级到10级可选择三条技能。</p>
-    <p>全部星系升到15级技能自动升级到2级；全部星系升到20级技能自动升级到3级；全部星系升到25级技能自动升级到4级；全部星系升到30级技能自动升级到5级；全部星系升到40级技能自动升级到6级；全部星系升到50级技能自动升级到7级。</p>
-  </div>
+     <p>任意两个星系升级到10级可选择一条技能；</p>
+     <p>任意四个星系升级到10级可选择两条技能；</p>
+     <p>任意七个星系升级到10级可选择三条技能。</p>
+     <p>全部星系升到15级技能自动升级到2级；</p>
+     <p>全部星系升到20级技能自动升级到3级；</p>
+     <p>全部星系升到25级技能自动升级到4级；</p>
+     <p>全部星系升到30级技能自动升级到5级；</p>
+     <p>全部星系升到40级技能自动升级到6级；</p>
+     <p>全部星系升到50级技能自动升级到7级。</p>
+   </div>
 </section>
 
-<section class="panel"><h2>升级数据表</h2><div class="table-wrap"><table><thead><tr><th>等级区间</th><th>古魁经</th><th>古朴文</th><th>北极令</th><th>成长值</th><th>经验条</th><th>古魁经(次需)</th><th>古朴文(次需)</th><th>北极令(次需)</th></tr></thead><tbody id="tableBody"></tbody></table></div><div class="notice">数据来源：你提供的北斗系统 0–50 级升级表。经验抵扣按当前经验值 ÷ 当前等级成长值向下取整，折算可抵扣的当前等级次需材料；结果最低为 0。</div></section>
+<section class="panel"><h2>升级数据表</h2><div class="table-wrap"><table class="upgrade-data-table"><thead><tr><th>升入等级</th><th>古魁经</th><th>古朴文</th><th>北极令</th><th>成长值</th><th>经验条</th><th>古次需</th><th>古次需</th><th>北次需</th></tr></thead><tbody id="tableBody"></tbody></table></div></section>
 </main>
 <style>
 .skill-effect-table th,.skill-effect-table td{text-align:center}
@@ -418,9 +898,10 @@ body.dark .result-banner{background:var(--result-bg)}
 }
 
 </style>
-<footer class="page-footer"><span class="author">@wwwwwWqq1</span><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></footer>
+<footer class="page-footer"><span class="author">@wwwwwWqq1</span><div class="floating-actions"><button class="home-link theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜模式" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l-1.42 1.42M17.65 6.35l1.42-1.42"></path></svg><span>切换昼夜</span></button><a class="home-link" href="index.html" aria-label="返回首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9M9 20v-7h6v7"></path></svg><span>返回首页</span></a></div></footer>
 
 <script>
+/* v2.1.11：修复旧版脚本引用不存在的结果节点导致的运行时中断；本地 file:// 打开时跳过 JSON 网络请求。 */
 function setGiftDataSource(source){
   if(!document.body.classList.contains('gift-data-source-initialized')){document.body.classList.add('gift-data-source-initialized','gift-data-fallback');}
   document.body.classList.toggle('gift-data-fallback',source==='fallback');
@@ -432,7 +913,7 @@ document.body.classList.add('gift-data-source-initialized','gift-data-fallback')
 const rows=[[1,2,0,0,17,17,2,0,0],[2,8,0,0,17,20,4,0,0],[3,18,0,0,17,50,6,0,0],[4,48,0,0,17,110,8,0,0],[5,130,0,0,17,220,10,0,0],[6,288,48,0,17,400,12,2,0],[7,546,156,0,17,670,14,4,0],[8,928,348,0,18,1050,16,6,0],[9,1566,696,0,18,1560,18,8,0],[10,2460,1230,0,18,2220,20,10,0],[11,3740,2040,0,18,3050,22,12,0],[12,5424,3164,1130,18,4070,24,14,5],[13,7644,4704,2058,18,5300,26,16,7],[14,10528,6768,3384,18,6760,28,18,9],[15,13380,8920,4906,19,8470,30,20,11],[16,17600,12100,7150,19,10450,32,22,13],[17,22746,16056,10035,19,12720,34,24,15],[18,28980,20930,13685,19,15300,36,26,17],[19,36442,26852,18221,19,18210,38,28,19],[20,42920,32190,22533,20,21470,40,30,21],[21,51954,39584,28451,20,24730,42,32,23],[22,62392,48212,35450,20,28360,44,34,25],[23,74474,58284,43713,20,32380,46,36,27],[24,88320,69920,53360,20,36810,48,38,29],[25,104200,83360,64604,20,41670,50,40,31],[26,116324,93954,73821,21,46980,52,42,33],[27,135648,110528,87920,21,52760,54,44,35],[28,157416,129306,104007,21,59030,56,46,37],[29,181772,150432,122226,21,65810,58,48,39],[30,208920,174100,142762,21,73120,60,50,41],[31,209820,174850,143377,23,80432,60,50,41],[32,212160,176800,144976,25,88395,60,50,41],[33,215700,179750,147395,27,97057,60,50,41],[34,220260,183550,150511,29,106472,60,50,41],[35,225900,188250,154365,31,116693,60,50,41],[36,232320,193600,158752,33,127779,60,50,41],[37,239640,199700,163754,35,139790,60,50,41],[38,247740,206450,169289,37,152791,60,50,41],[39,256680,213900,175398,39,166848,60,50,41],[40,266400,222000,182040,41,182031,60,50,41],[41,276900,230750,189215,43,198414,60,50,41],[42,288060,240050,196841,45,216072,60,50,41],[43,300120,250100,205082,47,235087,60,50,41],[44,312900,260750,213815,49,255539,60,50,41],[45,326520,272100,223122,51,277516,60,50,41],[46,340860,284050,232921,53,301105,60,50,41],[47,356040,296700,243294,55,326397,60,50,41],[48,372120,310100,254282,57,353488,60,50,41],[49,388980,324150,265803,59,382474,60,50,41],[50,406680,338900,277898,61,413455,60,50,41]];
 const attrs=['速度','穿透','护甲','生命','暴击','命中','闪避'];
 const $=id=>document.getElementById(id);let count=1;const fmt=n=>Math.max(0,Math.floor(n)).toLocaleString('en-US');const row=l=>rows[Math.max(0,Math.min(49,Number(l)||0))];
-function fieldMarkup(i){return `<div class="attr-head"><div class="attr-title-row"><h3>属性 ${i}</h3><div class="attribute-buttons" role="group" aria-label="选择属性 ${i}">${attrs.map((a,j)=>`<button type="button" class="attribute-btn ${j===i-1?'selected':''}" data-attr-index="${i}" data-attr="${a}" aria-pressed="${j===i-1?'true':'false'}">${a}</button>`).join('')}</div></div><span class="muted">独立设置当前等级与目标等级</span></div><div class="level-boxes"><div class="level-box"><div class="level-label">当前等级</div><div class="level-row"><input id="level${i}" type="range" min="0" max="49" value="20" step="1" aria-label="当前等级滑块"><div class="level-value" id="levelValue${i}">20 级</div></div><div class="range-ends"><span>0 级</span><span>49 级</span></div></div><div class="level-box"><div class="level-label">目标等级</div><div class="level-row"><input id="targetRange${i}" type="range" min="21" max="50" value="30" step="1" aria-label="目标等级滑块"><div class="level-value" id="targetValue${i}">30 级</div></div><div class="range-ends"><span id="targetMinLabel${i}">21 级</span><span>50 级</span></div></div></div><div class="exp-panel"><h3>当前经验条</h3><div class="exp-layout"><div class="exp-input-row"><div class="field"><label for="exp${i}">当前等级已获得经验值</label><input id="exp${i}" class="exp-number" type="number" min="0" value="0" step="1"></div><input id="expRange${i}" class="exp-range" type="range" min="0" max="1" value="0" step="1" aria-label="当前经验条滑块"><div class="progress-meta"><span id="expMin${i}">0</span><span id="expMax${i}">经验上限待计算</span></div></div><div><div class="progress-meta"><span id="expFraction${i}">0 / 0</span><span id="expPercent${i}">0.0%</span></div><div class="progress-track"><div id="fill${i}" class="progress-fill"></div></div><div class="progress-meta"><span>本级经验上限</span><span id="expCap${i}">—</span></div></div></div><div class="muted" style="margin-top:10px">已获得经验会按当前等级成长值和三种材料次需折算，抵扣已完成的升级消耗。</div></div>`}
+function fieldMarkup(i){return `<div class="attr-head"><div class="attr-title-row"><h3>属性 ${i}</h3><div class="attribute-buttons" role="group" aria-label="选择属性 ${i}">${attrs.map((a,j)=>`<button type="button" class="attribute-btn ${j===i-1?'selected':''}" data-attr-index="${i}" data-attr="${a}" aria-pressed="${j===i-1?'true':'false'}">${a}</button>`).join('')}</div></div><span class="muted">独立设置当前等级与目标等级</span></div><div class="level-boxes"><div class="level-box"><div class="level-label">当前等级</div><div class="level-row"><input id="level${i}" type="range" min="0" max="49" value="20" step="1" aria-label="当前等级滑块"><div class="level-value" id="levelValue${i}">20 级</div></div><div class="range-ends"><span>0 级</span><span>49 级</span></div></div><div class="level-box"><div class="level-label">目标等级</div><div class="level-row"><input id="targetRange${i}" type="range" min="21" max="50" value="30" step="1" aria-label="目标等级滑块"><div class="level-value" id="targetValue${i}">30 级</div></div><div class="range-ends"><span id="targetMinLabel${i}">21 级</span><span>50 级</span></div></div></div><h3 class="exp-panel-title">当前经验条</h3><div class="exp-panel"><div class="exp-layout"><div class="exp-input-row"><div class="field"><label for="exp${i}">当前等级已获得经验值</label><input id="exp${i}" class="exp-number" type="number" min="0" value="0" step="1"></div><input id="expRange${i}" class="exp-range" type="range" min="0" max="1" value="0" step="1" aria-label="当前经验条滑块"><div class="progress-meta"><span id="expMin${i}">0</span><span id="expMax${i}">经验上限待计算</span></div></div><div><div class="progress-meta"><span id="expFraction${i}">0 / 0</span><span id="expPercent${i}">0.0%</span></div><div class="progress-track"><div id="fill${i}" class="progress-fill"></div></div><div class="progress-meta"><span>本级经验上限</span><span id="expCap${i}">—</span></div></div></div><div class="muted" style="margin-top:10px">已获得经验会按当前等级成长值和三种材料次需折算，抵扣已完成的升级消耗。</div></div>`}
 $('attr1').innerHTML=fieldMarkup(1);$('attr2').innerHTML=fieldMarkup(2);
 function chooseAttribute(i,a){document.querySelectorAll(`[data-attr-index="${i}"]`).forEach(b=>{const on=b.dataset.attr===a;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on?'true':'false')})}
 function setCount(n){count=n;if(n===2&&selectedAttr(1)===selectedAttr(2)){chooseAttribute(2,attrs.find(a=>a!==selectedAttr(1)))}refreshAttributeButtons();$('oneBtn').classList.toggle('active',n===1);$('twoBtn').classList.toggle('active',n===2);$('attr2').hidden=n===1;clearResult();renderResults()}
@@ -443,16 +924,16 @@ document.querySelectorAll('.attribute-btn').forEach(btn=>btn.addEventListener('c
 function normalizeLevel(i){let lv=Number($('level'+i).value);let target=Number($('targetRange'+i).value);const minTarget=Math.min(50,lv+1);$('targetRange'+i).min=String(minTarget);$('targetMinLabel'+i).textContent=minTarget+' 级';if(target<minTarget){target=minTarget;$('targetRange'+i).value=String(target)}$('levelValue'+i).textContent=lv+' 级';$('targetValue'+i).textContent=target+' 级';updateExp(i)}
 function updateExp(i){const lv=Math.max(0,Math.min(49,Number($('level'+i).value)||0)),r=row(lv);let cap=Number(r[5]);if(!Number.isFinite(cap)||cap<=0)cap=Number(row(Math.min(49,lv+1))[5])||1;const expInput=$('exp'+i),expRange=$('expRange'+i);expInput.max=String(cap);expRange.max=String(cap);let raw=Number(expInput.value);if(!Number.isFinite(raw))raw=0;let exp=Math.max(0,Math.min(cap,raw));expInput.value=String(exp);expRange.value=String(exp);$('expMin'+i).textContent='0';$('expMax'+i).textContent=fmt(cap);$('expCap'+i).textContent=fmt(cap)+' 经验';$('expFraction'+i).textContent=fmt(exp)+' / '+fmt(cap);let pct=cap?exp/cap*100:0;$('expPercent'+i).textContent=pct.toFixed(1)+'%';$('fill'+i).style.width=pct+'%'}
 for(let i=1;i<=2;i++){$('level'+i).addEventListener('input',()=>{normalizeLevel(i);renderResults()});$('targetRange'+i).addEventListener('input',()=>{normalizeLevel(i);renderResults()});$('exp'+i).addEventListener('input',()=>{updateExp(i);renderResults()});$('expRange'+i).addEventListener('input',()=>{const v=$('expRange'+i).value;$('exp'+i).value=v;updateExp(i);renderResults()});normalizeLevel(i)}refreshAttributeButtons();
-function clearResult(){$('rYang').textContent=$('rChang').textContent=$('rSheng').textContent='—';$('dYang').textContent=$('dChang').textContent=$('dSheng').textContent='剩余需求';const detail=$('resultDetail');if(detail)detail.innerHTML='';const summary=$('resultSummary');if(summary)summary.textContent='修改属性、等级或经验值后，自动显示剩余材料需求。'}
+function clearResult(){['rYang','rChang','rSheng'].forEach(id=>{const el=$(id);if(el)el.textContent='—'});['dYang','dChang','dSheng'].forEach(id=>{const el=$(id);if(el)el.textContent='剩余需求'});const detail=$('resultDetail');if(detail)detail.innerHTML='';const summary=$('resultSummary');if(summary)summary.textContent='修改属性、等级或经验值后，自动显示剩余材料需求。'}
 function calculateOne(i){const lv=Number($('level'+i).value),target=Number($('targetRange'+i).value),exp=Number($('exp'+i).value)||0;if(target<=lv)return {error:'目标等级必须高于当前等级。'};const start=row(lv),end=row(Math.min(49,target));let need=[1,2,3].map(col=>rows.filter(r=>r[0]>lv&&r[0]<=target).reduce((sum,r)=>sum+Number(r[col]||0),0));const growth=Number(start[4]);const times=growth>0?Math.floor(exp/growth):0;const credit=[start[6]*times,start[7]*times,start[8]*times];need=need.map((v,j)=>Math.max(0,v-credit[j]));return {attr:selectedAttr(i),lv,target,exp,cap:Number(start[5])||Number(row(Math.min(49,lv+1))[5])||0,need,credit,times}}
-function renderResults(){try{const results=[];for(let i=1;i<=count;i++){const r=calculateOne(i);if(r.error){$('status').textContent=r.error;return}results.push(r)}const gross=[0,0,0];results.forEach(r=>r.need.forEach((v,j)=>gross[j]+=v));const stock=[Math.max(0,Math.floor(Number($('stockYang')?.value)||0)),Math.max(0,Math.floor(Number($('stockChang')?.value)||0)),Math.max(0,Math.floor(Number($('stockSheng')?.value)||0))];const totals=gross.map((v,j)=>Math.max(0,v-stock[j]));['rYang','rChang','rSheng'].forEach((id,j)=>$(id).textContent=fmt(totals[j]));['dYang','dChang','dSheng'].forEach((id,j)=>$(id).textContent=`总需求 ${fmt(gross[j])} − 库存 ${fmt(stock[j])}`);$('resultDetail').innerHTML=`<table class="result-table"><thead><tr><th>属性</th><th>升级区间</th><th>古魁经总需求</th><th>古朴文总需求</th><th>北极令总需求</th></tr></thead><tbody>${results.map(r=>`<tr><td>${r.attr}</td><td>${r.lv} → ${r.target}</td><td>${fmt(r.need[0])}</td><td>${fmt(r.need[1])}</td><td>${fmt(r.need[2])}</td></tr>`).join('')}<tr><th colspan="2">合计总需求</th>${gross.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><th colspan="2">扣除库存后</th>${totals.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></tbody></table>`;const minLv=Math.min(...results.map(r=>r.lv)),maxTarget=Math.max(...results.map(r=>r.target));$('progressText').textContent=`当前起始等级 ${minLv} · 目标等级 ${maxTarget} / 50`;$('levelProgress').style.width=`${Math.max(0,Math.min(100,maxTarget/50*100))}%`;$('status').textContent='已实时更新。先合计升级材料总需求，再分别扣除库存，结果最低为 0。经验抵扣仍按当前等级成长值折算。';if(typeof renderGiftPlan==='function')renderGiftPlan()}catch(err){console.error('北斗材料需求计算失败',err);const status=$('status');if(status)status.textContent='计算出现异常，请检查等级与经验输入后重试。';}}
+function renderResults(){try{const results=[];for(let i=1;i<=count;i++){const r=calculateOne(i);if(r.error){$('status').textContent=r.error;return}results.push(r)}const gross=[0,0,0];results.forEach(r=>r.need.forEach((v,j)=>gross[j]+=v));const stock=[Math.max(0,Math.floor(Number($('stockYang')?.value)||0)),Math.max(0,Math.floor(Number($('stockChang')?.value)||0)),Math.max(0,Math.floor(Number($('stockSheng')?.value)||0))];const totals=gross.map((v,j)=>Math.max(0,v-stock[j]));['rYang','rChang','rSheng'].forEach((id,j)=>$(id).textContent=fmt(totals[j]));['dYang','dChang','dSheng'].forEach((id,j)=>{const el=$(id);if(el)el.textContent=`总需求 ${fmt(gross[j])} − 库存 ${fmt(stock[j])}`});$('resultDetail').innerHTML=`<table class="result-table"><thead><tr><th>属性</th><th>升级区间</th><th>古魁经总需求</th><th>古朴文总需求</th><th>北极令总需求</th></tr></thead><tbody>${results.map(r=>`<tr><td>${r.attr}</td><td>${r.lv} → ${r.target}</td><td>${fmt(r.need[0])}</td><td>${fmt(r.need[1])}</td><td>${fmt(r.need[2])}</td></tr>`).join('')}<tr><th colspan="2">合计总需求</th>${gross.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><th colspan="2">扣除库存后</th>${totals.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></tbody></table>`;const minLv=Math.min(...results.map(r=>r.lv)),maxTarget=Math.max(...results.map(r=>r.target));const progressText=$('progressText'),levelProgress=$('levelProgress');if(progressText)progressText.textContent=`当前起始等级 ${minLv} · 目标等级 ${maxTarget} / 50`;if(levelProgress)levelProgress.style.width=`${Math.max(0,Math.min(100,maxTarget/50*100))}%`;$('status').textContent='已实时更新。先合计升级材料总需求，再分别扣除库存，结果最低为 0。经验抵扣仍按当前等级成长值折算。';if(typeof renderGiftPlan==='function')renderGiftPlan()}catch(err){console.error('北斗材料需求计算失败',err);const status=$('status');if(status)status.textContent='计算出现异常，请检查等级与经验输入后重试。';}}
 ['stockYang','stockChang','stockSheng'].forEach(id=>$(id).addEventListener('input',()=>renderResults()));
 $('resetStock').addEventListener('click',()=>{['stockYang','stockChang','stockSheng'].forEach(id=>$(id).value='0');renderResults();});
 $('resetLevels').onclick=()=>{for(let i=1;i<=2;i++){$('level'+i).value=20;$('targetRange'+i).value=30;normalizeLevel(i)}clearResult();$('status').textContent='等级已重置为当前 20 级、目标 30 级。'};
 $('resetExp').onclick=()=>{for(let i=1;i<=2;i++){$('exp'+i).value=0;updateExp(i)}clearResult();$('status').textContent='经验条已重置为 0。'};
-$('tableBody').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?`${v-1}-${v}级`:fmt(v)}</td>`).join('')}</tr>`).join('');
+const upgradeTable=$('tableBody').closest('table');const lastUpgradeRow=rows[rows.length-1]||[];const lastRowTexts=lastUpgradeRow.map((v,i)=>i===0?String(v):fmt(v));const colWidths=lastRowTexts.map(text=>Math.max(42,Array.from(text).length*7+14));const totalColWidth=colWidths.reduce((sum,width)=>sum+width,0);let upgradeColgroup=upgradeTable.querySelector('colgroup');if(!upgradeColgroup){upgradeColgroup=document.createElement('colgroup');upgradeTable.insertBefore(upgradeColgroup,upgradeTable.querySelector('thead'));}upgradeColgroup.innerHTML=colWidths.map(width=>`<col style="width:${(width/totalColWidth*100).toFixed(3)}%">`).join('');$('tableBody').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?`${v}`:fmt(v)}</td>`).join('')}</tr>`).join('');
 
-const DEFAULT_BEIDOU_GIFT_SYSTEM={"id":"beidou","name":"beidou","status":"active","source":"用户于2026-10-30提供的北斗礼包页面截图","algorithm":"礼包购买参数按最新截图录入；材料选择与购买计算仍由北斗原系统页面负责。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":10,"small":710,"guikui":1050,"gupu":450,"beiji":225},{"id":"value","name":"越兑越划算","price":1,"big":1,"middle":1,"small":1,"guikui":1,"gupu":1,"beiji":1},{"id":"event","name":"限时礼包","price":14.3,"big":11,"middle":5,"small":55,"guikui":1050,"gupu":450,"beiji":225}],"materials":[{"key":"guikui","name":"古魁经","unit":"礼包产出","packageField":"guikui"},{"key":"gupu","name":"古朴文","unit":"礼包产出","packageField":"gupu"},{"key":"beiji","name":"北极令","unit":"礼包产出","packageField":"beiji"}]};
+const DEFAULT_BEIDOU_GIFT_SYSTEM={"id":"beidou","name":"beidou","status":"active","source":"用户于2026-10-30提供的北斗礼包页面截图","algorithm":"礼包购买参数按最新截图录入；材料选择与购买计算仍由北斗原系统页面负责。","rebate":{"enabled":false},"packages":[{"id":"monthly","name":"月初礼包","price":99,"big":71,"middle":10,"small":710,"guikui":1050,"gupu":450,"beiji":225},{"id":"value","name":"越兑越划算","price":96,"big":6,"middle":60,"small":360,"guikui":1050,"gupu":450,"beiji":225},{"id":"event","name":"限时礼包","price":7.3,"big":4,"middle":5,"small":20,"guikui":1050,"gupu":450,"beiji":225}],"materials":[{"key":"guikui","name":"古魁经","unit":"礼包产出","packageField":"guikui"},{"key":"gupu","name":"古朴文","unit":"礼包产出","packageField":"gupu"},{"key":"beiji","name":"北极令","unit":"礼包产出","packageField":"beiji"}],"fieldVisibility":{"guikui":false,"gupu":false,"beiji":false}};
 let beidouGiftSystem=JSON.parse(JSON.stringify(DEFAULT_BEIDOU_GIFT_SYSTEM));
 let beidouGiftPackages=beidouGiftSystem.packages||[];
 let selectedGift=beidouGiftPackages[0]?.id||'';
@@ -475,7 +956,7 @@ function renderBeidouGiftCards(){
    const rows=[];for(let i=0;i<other.length;i+=3)rows.push(other.slice(i,i+3));
    return `<button type="button" class="gift-card ${pack.id===selectedGift?'selected':''}" data-gift="${escapeGiftText(pack.id)}" aria-pressed="${pack.id===selectedGift?'true':'false'}">
     <div class="gift-top"><strong>${escapeGiftText(pack.name||'未命名礼包')}</strong>${price?`<span class="gift-price">¥${formatGiftValue(price[1])}</span>`:''}</div>
-    ${rows.map(row=>`<div class="gift-facts">${row.map(([key,value])=>`<span>${escapeGiftText(beidouFieldLabel(key))} <b>${formatGiftValue(value)}</b></span>`).join('')}</div>`).join('')}
+    ${rows.map(row=>`<div class="gift-facts">${row.map(([key,value])=>`<span class="gift-field"><span class="gift-field-label">${escapeGiftText(beidouFieldLabel(key))}</span><b class="gift-field-value">${formatGiftValue(value)}</b></span>`).join('')}</div>`).join('')}
    </button>`;
  }).join('');
  host.querySelectorAll('[data-gift]').forEach(btn=>btn.addEventListener('click',()=>{selectedGift=btn.dataset.gift;renderBeidouGiftCards();renderGiftPlan();}));
@@ -492,12 +973,37 @@ function applyBeidouGiftConfig(config){
  renderBeidouGiftCards();renderGiftPlan();
 }
 async function loadBeidouGiftConfig(){
- try{
-  const response=await fetch('./gift-config.json?t='+Date.now(),{cache:'no-store'});
-  if(!response.ok)throw new Error('HTTP '+response.status);
-  applyBeidouGiftConfig(await response.json());
-  setGiftDataSource('json');
- }catch(error){setGiftDataSource('fallback');console.warn('[北斗礼包配置] 读取中央配置失败，继续使用页面内置默认礼包。',error);}
+ // 默认使用 fallback；只有中央 JSON 成功读取并通过校验后才切换正常颜色。
+ setGiftDataSource('fallback');
+ if(location.protocol==='file:'){
+  console.info('[北斗礼包配置] 当前为 file:// 本地预览，浏览器通常禁止读取同目录 JSON，使用页面内置数据。');
+  return;
+ }
+ const candidates=[
+  new URL('./gift-config.json',document.baseURI).href,
+  new URL('../gift-config.json',document.baseURI).href,
+  new URL('/gift-config.json',location.origin).href
+ ];
+ const tried=new Set();
+ let lastError=null;
+ for(const url of candidates){
+  if(tried.has(url))continue;
+  tried.add(url);
+  try{
+   const response=await fetch(url+(url.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store'});
+   if(!response.ok)throw new Error('HTTP '+response.status+' @ '+url);
+   const config=await response.json();
+   applyBeidouGiftConfig(config);
+   setGiftDataSource('json');
+   console.info('[北斗礼包配置] 已读取中央 JSON：',url);
+   return;
+  }catch(error){
+   lastError=error;
+   console.warn('[北斗礼包配置] JSON 路径读取失败：',url,error);
+  }
+ }
+ setGiftDataSource('fallback');
+ console.warn('[北斗礼包配置] 所有候选路径均读取失败，继续使用页面内置礼包数据；在线预览数值保持红色。',lastError);
 }
 function money(v){return '¥'+Number(v||0).toLocaleString('zh-CN',{minimumFractionDigits:v%1?1:0,maximumFractionDigits:2});}
 function getCurrentMaterialNeeds(){return [Number(($('rYang')?.textContent||'0').replace(/,/g,''))||0,Number(($('rChang')?.textContent||'0').replace(/,/g,''))||0,Number(($('rSheng')?.textContent||'0').replace(/,/g,''))||0];}
@@ -536,13 +1042,13 @@ function renderGiftPlan(){
  $('giftPurchaseCount').textContent=fmt(giftQty)+' 个';
  $('giftRemainingSmall').textContent=fmt(unusedSmallBoxes);
  const allocation=materials.map((material,index)=>`${material.name} ${fmt(boxesByMaterial[index])} 个小包`).join('、');
- $('giftExplain').textContent=`当前选择：${pack.name}。每个礼包可开出 ${fmt(smallPerGift)} 个小包；每个小包可在${materials.map((material,index)=>`${material.name}包（${fmt(Number(pack[material.packageField])||0)}）`).join('、')}中三选一。按当前材料缺口分配：${allocation}，预计购买 ${fmt(giftQty)} 个礼包，共获得 ${fmt(totalSmallBoxes)} 个小包；分配后剩余 ${fmt(unusedSmallBoxes)} 个未使用小包。下方分别显示三种材料包的分配数量。`;
+ $('giftExplain').textContent=`当前选择：${pack.name}。可开出 ${fmt(smallPerGift)} 个小包；每个小包可选择开出${materials.map(material=>`${material.name}*${fmt(Number(pack[material.packageField])||0)}`).join('、')}中的一种。`;
 }
 renderBeidouGiftCards();
 loadBeidouGiftConfig();
+// 页面获得焦点或恢复显示时再同步一次；不使用定时轮询，避免移动端后台持续唤醒。
 window.addEventListener('focus',loadBeidouGiftConfig);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadBeidouGiftConfig();});
-setInterval(loadBeidouGiftConfig,300000);
 
 
 renderResults();renderGiftPlan();
@@ -641,7 +1147,7 @@ renderResults();renderGiftPlan();
       const nodes=[];
       while(walker.nextNode()){
         const node=walker.currentNode;
-        if(node.parentElement && node.parentElement.closest('.gift-data-number')) continue;
+        if(node.parentElement && (node.parentElement.closest('.gift-data-number') || node.parentElement.closest('.gift-field-value'))) continue;
         const value=node.nodeValue.trim();
         if(value && numericOnly.test(value)) nodes.push(node);
       }
@@ -669,5 +1175,217 @@ renderResults();renderGiftPlan();
   else start();
 })();
 </script>
+
+
+<style id="beidou-stock-and-demand-three-columns-v2-1-18">
+/* v2.1.18：库存三卡片、需求三卡片在所有屏宽下固定一行并铺满整行 */
+.junshi-stock-grid,
+.junshi-material-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:clamp(5px,1.2vw,10px)!important;
+}
+.junshi-stock-grid>.stock,
+.junshi-material-summary>.metric{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+.junshi-stock-grid>.stock{
+  padding:clamp(6px,1.4vw,12px)!important;
+}
+.junshi-stock-grid>.stock label{
+  display:block!important;
+  min-width:0!important;
+  margin-bottom:6px!important;
+  font-size:clamp(9px,2.4vw,12px)!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+}
+.junshi-stock-grid>.stock input[type="number"]{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  padding:clamp(5px,1.3vw,9px)!important;
+  font-size:clamp(10px,2.8vw,14px)!important;
+}
+.junshi-stock-grid>.stock .stock-range{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  margin-top:5px!important;
+}
+.junshi-stock-grid>.stock .stock-range-scale{
+  gap:2px!important;
+  font-size:clamp(7px,1.9vw,10px)!important;
+  white-space:nowrap!important;
+}
+.junshi-material-summary>.metric{
+  padding:clamp(7px,1.5vw,12px) 3px!important;
+  text-align:center!important;
+}
+.junshi-material-summary>.metric span{
+  display:block!important;
+  min-width:0!important;
+  margin-bottom:5px!important;
+  font-size:clamp(9px,2.4vw,12px)!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+}
+.junshi-material-summary>.metric strong{
+  display:block!important;
+  min-width:0!important;
+  font-size:clamp(10px,3vw,17px)!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+@media(max-width:360px){
+  .junshi-stock-grid,.junshi-material-summary{gap:4px!important}
+  .junshi-stock-grid>.stock{padding:5px 3px!important}
+  .junshi-stock-grid>.stock label{font-size:8px!important}
+  .junshi-stock-grid>.stock input[type="number"]{font-size:10px!important;padding:4px 2px!important}
+  .junshi-stock-grid>.stock .stock-range-scale{font-size:7px!important}
+  .junshi-material-summary>.metric{padding:6px 1px!important}
+  .junshi-material-summary>.metric span{font-size:8px!important}
+  .junshi-material-summary>.metric strong{font-size:9px!important}
+}
+</style>
+
+
+<style id="beidou-gift-three-cards-one-row-v2-1-20">
+/* v2.1.20：礼包卡片固定三列；材料产出字段由最新 JSON 的 fieldVisibility 隐藏 */
+#giftPlan .gift-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:clamp(5px,1vw,10px)!important;
+}
+#giftPlan .gift-grid>.gift-card{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  padding:clamp(6px,1.2vw,12px)!important;
+}
+#giftPlan .gift-card .gift-top{
+  align-items:flex-start!important;
+  flex-direction:column!important;
+  gap:4px!important;
+  font-size:clamp(10px,2.5vw,15px)!important;
+  line-height:1.25!important;
+  margin-bottom:7px!important;
+}
+#giftPlan .gift-card .gift-price{
+  font-size:clamp(11px,2.7vw,16px)!important;
+}
+#giftPlan .gift-card .gift-facts{
+  grid-template-columns:1fr!important;
+  gap:3px!important;
+  margin-bottom:0!important;
+}
+#giftPlan .gift-card .gift-facts span{
+  padding:4px 2px!important;
+  font-size:clamp(8px,2vw,11px)!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+#giftPlan .gift-card .gift-facts b{
+  display:inline!important;
+  margin:0 0 0 2px!important;
+  font-size:clamp(9px,2.2vw,13px)!important;
+  white-space:nowrap!important;
+}
+@media(max-width:360px){
+  #giftPlan .gift-grid{gap:3px!important}
+  #giftPlan .gift-grid>.gift-card{padding:5px 3px!important}
+  #giftPlan .gift-card .gift-top{font-size:9px!important}
+  #giftPlan .gift-card .gift-price{font-size:10px!important}
+  #giftPlan .gift-card .gift-facts span{font-size:7px!important;padding:3px 1px!important}
+  #giftPlan .gift-card .gift-facts b{font-size:8px!important}
+}
+</style>
+
+
+<style id="beidou-inventory-font-size-v2-1-21">
+/* v2.1.21：放大库存名称，以及材料需求总览的名称和数值 */
+.junshi-stock-grid>.stock label{
+  font-size:clamp(14px,1.55vw,18px)!important;
+  font-weight:650!important;
+  line-height:1.3!important;
+  margin-bottom:9px!important;
+}
+.junshi-material-summary>.metric span{
+  font-size:clamp(15px,1.65vw,19px)!important;
+  font-weight:650!important;
+  line-height:1.3!important;
+  margin-bottom:7px!important;
+}
+.junshi-material-summary>.metric strong{
+  font-size:clamp(25px,3vw,36px)!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+}
+@media(max-width:420px){
+  .junshi-stock-grid>.stock label{font-size:clamp(12px,3.5vw,15px)!important}
+  .junshi-material-summary>.metric span{font-size:clamp(12px,3.6vw,15px)!important}
+  .junshi-material-summary>.metric strong{font-size:clamp(16px,4.6vw,21px)!important}
+}
+</style>
+
+
+<style id="beidou-demand-values-font-adjust-v2-1-22">
+/* v2.1.22：材料需求总览数值字号稍微缩小 */
+.junshi-material-summary>.metric strong{
+  font-size:clamp(22px,2.7vw,32px)!important;
+}
+@media(max-width:420px){
+  .junshi-material-summary>.metric strong{
+    font-size:clamp(15px,4.2vw,19px)!important;
+  }
+}
+</style>
+
+
+<style id="beidou-gift-card-ui-match-shenshou-v2-2-1">
+/* v2.2.1：北斗礼包购买方案三张礼包卡片内部排版参照神兽礼包卡片；仅调整视觉，不改数据与计算 */
+#giftGrid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin-top:12px!important;}
+#giftGrid .gift-card{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:auto 1fr!important;align-items:start!important;column-gap:8px!important;row-gap:12px!important;
+  min-width:0!important;min-height:130px!important;padding:16px 14px 13px!important;
+  border:1.5px solid var(--line)!important;border-radius:13px!important;
+  background:var(--panel2)!important;color:var(--text)!important;
+  font:inherit!important;text-align:left!important;transition:border-color .16s,background .16s,box-shadow .16s!important;
+}
+#giftGrid .gift-card.selected{border:2px solid var(--accent)!important;padding:15.5px 13.5px 12.5px!important;background:var(--panel)!important;box-shadow:none!important;}
+#giftGrid .gift-card .gift-top{display:contents!important;}
+#giftGrid .gift-card .gift-top>strong{grid-column:1/3!important;grid-row:1!important;display:block!important;align-self:center!important;margin:0!important;font-size:16px!important;line-height:1.35!important;font-weight:750!important;min-width:0!important;}
+#giftGrid .gift-card .gift-price{grid-column:3!important;grid-row:1!important;display:block!important;align-self:center!important;justify-self:end!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:var(--accent)!important;font-size:16px!important;line-height:1.35!important;font-weight:800!important;text-align:right!important;white-space:nowrap!important;}
+#giftGrid .gift-card .gift-facts{display:contents!important;}
+#giftGrid .gift-card .gift-facts>span{
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  grid-row:2!important;min-width:0!important;min-height:48px!important;padding:5px 2px!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  color:var(--muted)!important;font-size:12px!important;line-height:1.4!important;text-align:center!important;
+}
+#giftGrid .gift-card .gift-facts>span b{display:block!important;width:auto!important;margin:2px 0 0!important;padding:0!important;background:transparent!important;color:var(--text)!important;font-size:14px!important;line-height:1.35!important;font-weight:750!important;overflow-wrap:anywhere!important;}
+@media(max-width:760px){#giftGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+@media(max-width:420px){
+ #giftGrid{grid-template-columns:minmax(0,1fr)!important;gap:8px!important;}
+ #giftGrid .gift-card{min-height:120px!important;padding:13px 12px!important;row-gap:10px!important;}
+ #giftGrid .gift-card.selected{padding:12.5px 11.5px!important;}
+ #giftGrid .gift-card .gift-top>strong,#giftGrid .gift-card .gift-price{font-size:15px!important;}
+ #giftGrid .gift-card .gift-facts>span b{font-size:14px!important;}
+}
+</style>
 
 </body></html>
