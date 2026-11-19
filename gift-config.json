@@ -166,10 +166,10 @@
         {
           "id": "event",
           "name": "限时礼包",
-          "price": 10.3,
+          "price": 8.8,
           "big": 1,
           "middle": 1,
-          "small": 880,
+          "small": 688,
           "yang": 35,
           "chang": 15,
           "sheng": 7
@@ -232,8 +232,8 @@
           "id": "event",
           "name": "限时礼包",
           "price": 8.8,
-          "small": 888,
-          "unitPrice": 100.9
+          "small": 688,
+          "unitPrice": 78.2
         }
       ],
       "materials": [
