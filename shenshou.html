@@ -3,676 +3,3057 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>神兽升级计算器 v2.4.4</title>
+<title>神兽升级计算器 v2.4.9</title>
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--ink:#20283a;--muted:#687386;--line:#e2e7f0;--primary:#2878d0;--primary-soft:#eaf3ff;--gold:#bd8732}
-body.theme-fire{--primary:#2878d0;--primary-soft:#eaf3ff}
-body.theme-fly{--primary:#d64545;--primary-soft:#fff0f0}
-body.theme-turtle{--primary:#93653e;--primary-soft:#f5eee7}
-body.theme-tiger{--primary:#7952bd;--primary-soft:#f2edfb}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.5}
-.wrap{max-width:1200px;margin:0 auto;padding:24px 20px 48px}
-header{padding:26px 24px;border-radius:20px;background:linear-gradient(125deg,color-mix(in srgb,var(--primary) 88%,#182033),var(--primary));color:white;box-shadow:0 12px 32px #252a4a22}
-.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.78}
-h1{margin:5px 0 8px;font-size:clamp(25px,4vw,36px)}
-header p{margin:0;color:#e6e5ff}
-.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-top:20px}
-/* 桌面端模块统一纵向排列；模块内部表单/指标根据空间适度并列 */
-.card{width:100%}
-.fields{grid-template-columns:repeat(2,minmax(0,1fr))}
-.stock-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-.summary{grid-template-columns:repeat(3,minmax(0,1fr))}
-.table-wrap{max-width:100%}
-.card{background:var(--card);border:1px solid color-mix(in srgb,var(--primary) 24%,var(--line));border-top:3px solid var(--primary);border-radius:16px;padding:20px;box-shadow:0 5px 18px #24304a08;min-width:0}
-.card h2{font-size:18px;margin:0 0 15px;color:var(--primary)}
-.heading-note{font-size:12px;font-weight:400;color:var(--muted);margin-left:8px}
-.card h3{font-size:15px;margin:18px 0 10px}
-.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.level-fields{align-items:start;margin-bottom:0}.level-picker{display:flex;flex-direction:column;gap:5px;min-width:0}.manual-level-input{display:none}.level-picker label{margin-bottom:1px;font-weight:650}.level-slider-row{display:flex;align-items:center;gap:8px}
-.level-number{width:66px;min-width:66px;height:36px;box-sizing:border-box;text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font:inherit;font-weight:700;padding:4px 5px}
-.level-number:focus{outline:2px solid var(--primary);outline-offset:1px}
-.level-slider{flex:1;min-width:0}.level-slider{flex:1;min-width:0;width:100%;height:26px;padding:0;accent-color:var(--primary);cursor:pointer;touch-action:pan-y}.level-value{flex:0 0 auto;min-width:60px;text-align:center;padding:5px 8px;border:1px solid color-mix(in srgb,var(--primary) 38%,var(--line));border-radius:9px;background:var(--primary-soft);color:var(--primary);font-weight:800;font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 #ffffff70}.level-range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:-4px;padding:0 2px}.level-picker:first-child{padding-right:2px}.level-picker:nth-child(2){padding-left:2px}
-/* 恢复常规等级滑块刻度，撤销时间轴样式 */
-.level-picker:after{content:none}.level-range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:-2px;padding:0 2px}
-.exp-panel{margin-top:14px;padding:14px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:12px;background:color-mix(in srgb,var(--primary-soft) 45%,white)}
-.exp-panel h3{margin:0 0 12px;color:var(--primary)}.compact-exp{padding:11px;margin-top:13px}.compact-exp .exp-bar{margin-top:8px}.compact-exp .exp-caption{margin-top:5px}.exp-halves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.exp-half{min-width:0}.exp-half+ .exp-half{border-left:1px solid var(--line);padding-left:14px}.exp-half h3{font-size:14px}.exp-half .field label{margin-bottom:5px}@media(max-width:420px){.exp-halves{grid-template-columns:1fr}.exp-half+ .exp-half{border-left:0;border-top:1px solid var(--line);padding:12px 0 0}}
-.exp-denom{min-height:42px;display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:white}
-.exp-denom strong{font-size:18px;font-variant-numeric:tabular-nums;color:var(--primary)}.exp-denom span{font-size:12px;color:var(--muted)}
-.exp-bar{height:10px;margin-top:14px;border-radius:99px;background:var(--line);overflow:hidden}.exp-bar div{height:100%;width:0;background:var(--primary);transition:width .15s}
-.exp-caption{display:flex;justify-content:space-between;margin-top:5px;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}.exp-result{margin-top:10px;padding:10px;border-radius:9px;background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:600}
-.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-select,input{width:100%;min-width:0;border:1px solid #cfd6e3;border-radius:9px;padding:10px 11px;background:#fff;color:var(--ink);font:inherit}
-input[type=number]{font-variant-numeric:tabular-nums}
-.beasts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:16px}
-.beast{border:1px solid var(--line);border-radius:12px;padding:13px 8px;text-align:center;cursor:pointer;background:#fff;color:var(--ink);font:inherit;transition:background .18s,border-color .18s,transform .18s;min-height:94px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-.beast:active{transform:scale(.98)}
-.beast .beast-icon{display:block;font-size:29px;line-height:1.15;filter:drop-shadow(0 2px 2px #0002)}
-.beast strong{display:block;font-size:16px;line-height:1.3;font-weight:750}
-.beast span{font-size:12px;line-height:1.35;color:var(--muted)}
-.beast.active{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}
-.stock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.stock{background:var(--primary-soft);border:1px solid color-mix(in srgb,var(--primary) 24%,var(--line));padding:11px;border-radius:12px}
-.stock label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-.stock input{padding:8px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-button.action{border:0;border-radius:9px;padding:9px 13px;font:inherit;cursor:pointer}
-.secondary{background:#f0f2f8;color:#39445a}
-.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.metric{border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-top:2px solid var(--primary);border-radius:12px;padding:13px;background:var(--primary-soft);min-width:0}
-.metric .name{font-size:12px;color:var(--muted)}
-.metric strong{display:block;font-size:clamp(19px,3vw,25px);margin:4px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.metric small{font-size:11px;color:var(--muted)}
-.result-table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px} .result-table th,.result-table td{white-space:nowrap;overflow:hidden;text-overflow:clip} .result-table th:first-child,.result-table td:first-child{width:21%} .result-table th:not(:first-child),.result-table td:not(:first-child){width:26.333%;}
-.result-table th,.result-table td{padding:7px 5px;height:36px;line-height:20px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
-.card h3{font-size:15px;margin:12px 0 7px}.level-fields+h3{margin-top:10px;margin-bottom:6px}.level-fields+.card h3{margin-top:10px}
-.result-table th:first-child,.result-table td:first-child{text-align:left}
-.result-table th{color:var(--primary);font-weight:600;background:var(--primary-soft)}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
-.pack-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
-.pack-row:last-child{border-bottom:0}
-.plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.plan-option{display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);font:inherit;cursor:pointer}.plan-option strong{font-size:14px}.plan-option span,.plan-option small{font-size:12px;color:var(--muted)}.plan-option.active{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px var(--primary)}@media(max-width:650px){.plan-options{grid-template-columns:1fr}}
-.pack-row span{color:var(--muted);font-size:14px}
-.pack-row strong{font-size:21px;font-variant-numeric:tabular-nums;text-align:right}
-.pack-columns{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
-.pack-detail{min-width:0;border:1px solid var(--line);border-radius:13px;padding:14px;background:#fff}
-.pack-detail h3{margin:0 0 10px;font-size:19px;color:var(--primary)}
-.allocation-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.allocation-item{display:flex;flex-direction:column;gap:7px;min-width:0;padding:15px 12px;border:1px solid color-mix(in srgb,var(--primary) 28%,var(--line));border-radius:12px;background:var(--primary-soft)}
-.allocation-name{font-size:17px;font-weight:750;color:var(--primary)}
-.allocation-item strong{font-size:clamp(21px,2.1vw,28px);line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-.allocation-desc{font-size:14px;color:var(--muted)}
-.purchase-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;position:relative;padding-left:22px}.purchase-grid:before{content:"";position:absolute;left:8px;top:16px;bottom:16px;width:2px;border-radius:2px;background:color-mix(in srgb,var(--primary) 32%,var(--line))}
-.purchase-card{display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-width:0;min-height:92px;padding:13px;position:relative;border:1px solid color-mix(in srgb,var(--primary) 25%,var(--line));border-radius:12px;background:linear-gradient(145deg,var(--primary-soft),#fff)}
-.purchase-card:before{content:"";position:absolute;left:-15px;top:23px;width:14px;height:2px;background:color-mix(in srgb,var(--primary) 32%,var(--line))}.purchase-card:after{content:"";position:absolute;left:-19px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}.purchase-card .purchase-label{font-size:15px;font-weight:700;color:var(--ink)}
-.purchase-card .purchase-desc{font-size:12px;color:var(--muted);line-height:1.45;order:3;margin-top:auto}.purchase-card .purchase-label{order:1}.purchase-card .purchase-value{order:2}
-.purchase-card .purchase-value{font-size:clamp(20px,2vw,26px);font-weight:800;line-height:1.2;color:var(--primary);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-@media(max-width:420px){.purchase-grid{grid-template-columns:minmax(0,1fr);padding-left:20px}.purchase-card{padding:11px;min-height:108px}.purchase-card .purchase-label{font-size:14px}.purchase-card .purchase-desc{font-size:11px}}
-@media(max-width:760px){.pack-columns{grid-template-columns:1fr}.allocation-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.allocation-item{padding:12px 8px}.allocation-name{font-size:15px}.allocation-desc{font-size:12px}.pack-detail h3{font-size:17px}}
-@media(max-width:420px){.allocation-grid{grid-template-columns:1fr}.allocation-item{display:grid;grid-template-columns:1fr auto;align-items:center}.allocation-desc{grid-column:1/-1}}
-.note{font-size:12px;color:var(--muted);margin:12px 0 0}
-.section{margin-top:16px}
-details summary{cursor:pointer;font-weight:650;padding:4px 0 12px}
-.level-table{width:max-content;min-width:100%;table-layout:auto;border-collapse:collapse;white-space:nowrap;font-size:12px}
-.level-table th,.level-table td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap;overflow-wrap:normal;word-break:keep-all}
-.level-table th:first-child,.level-table td:first-child{
- text-align:center;position:sticky;left:0;z-index:2;
- background:var(--card);box-shadow:2px 0 3px #00000012
+:root {
+    --bg: #f4f6fb;
+    --card: #fff;
+    --ink: #20283a;
+    --muted: #687386;
+    --line: #e2e7f0;
+    --primary: #2878d0;
+    --primary-soft: #eaf3ff;
+    --gold: #bd8732;
 }
-.level-table thead th{position:sticky;top:0;background:var(--primary-soft);color:var(--primary);z-index:1}
-.level-table thead th:first-child{left:0;z-index:4;background:var(--primary-soft)}
-.level-table tbody tr:nth-child(even) td:first-child{background:#fafbfe}
-body.dark-theme .level-table tbody tr:nth-child(even) td:first-child{background:#182437}
+
+body.theme-fire {
+    --primary: #2878d0;
+    --primary-soft: #eaf3ff;
+}
+
+body.theme-fly {
+    --primary: #d64545;
+    --primary-soft: #fff0f0;
+}
+
+body.theme-turtle {
+    --primary: #93653e;
+    --primary-soft: #f5eee7;
+}
+
+body.theme-tiger {
+    --primary: #7952bd;
+    --primary-soft: #f2edfb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    line-height: 1.5;
+}
+
+.wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+}
+
+header {
+    padding: 26px 24px;
+    border-radius: 20px;
+    background: linear-gradient(125deg,color-mix(in srgb,var(--primary) 88%,#182033),var(--primary));
+    color: white;
+    box-shadow: 0 12px 32px #252a4a22;
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    opacity: .78;
+}
+
+h1 {
+    margin: 5px 0 8px;
+    font-size: clamp(25px,4vw,36px);
+}
+
+header p {
+    margin: 0;
+    color: #e6e5ff;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+
+/*桌面端模块统一纵向排列；模块内部表单/指标根据空间适度并列*/
+
+.card {
+    width: 100%;
+}
+
+.fields {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+}
+
+.stock-grid {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+}
+
+.summary {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+}
+
+.table-wrap {
+    max-width: 100%;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid color-mix(in srgb,var(--primary) 24%,var(--line));
+    border-top: 3px solid var(--primary);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 18px #24304a08;
+    min-width: 0;
+}
+
+.card h2 {
+    font-size: 18px;
+    margin: 0 0 15px;
+    color: var(--primary);
+}
+
+.heading-note {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 8px;
+}
+
+.card h3 {
+    font-size: 15px;
+    margin: 18px 0 10px;
+}
+
+.fields {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+}
+
+.level-fields {
+    align-items: start;
+    margin-bottom: 0;
+}
+
+.level-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.manual-level-input {
+    display: none;
+}
+
+.level-picker label {
+    margin-bottom: 1px;
+    font-weight: 650;
+}
+
+.level-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.level-number {
+    width: 66px;
+    min-width: 66px;
+    height: 36px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    padding: 4px 5px;
+}
+
+.level-number:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.level-slider {
+    flex: 1;
+    min-width: 0;
+}
+
+.level-slider {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 26px;
+    padding: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+    touch-action: pan-y;
+}
+
+.level-value {
+    flex: 0 0 auto;
+    min-width: 60px;
+    text-align: center;
+    padding: 5px 8px;
+    border: 1px solid color-mix(in srgb,var(--primary) 38%,var(--line));
+    border-radius: 9px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 1px 0 #ffffff70;
+}
+
+.level-range-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: -4px;
+    padding: 0 2px;
+}
+
+.level-picker:first-child {
+    padding-right: 2px;
+}
+
+.level-picker:nth-child(2) {
+    padding-left: 2px;
+}
+
+/*恢复常规等级滑块刻度，撤销时间轴样式*/
+
+.level-picker:after {
+    content: none;
+}
+
+.level-range-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: -2px;
+    padding: 0 2px;
+}
+
+.exp-panel {
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb,var(--primary) 28%,var(--line));
+    border-radius: 12px;
+    background: color-mix(in srgb,var(--primary-soft) 45%,white);
+}
+
+.exp-panel h3 {
+    margin: 0 0 12px;
+    color: var(--primary);
+}
+
+.compact-exp {
+    padding: 11px;
+    margin-top: 13px;
+}
+
+.compact-exp .exp-bar {
+    margin-top: 8px;
+}
+
+.compact-exp .exp-caption {
+    margin-top: 5px;
+}
+
+.exp-halves {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 14px;
+}
+
+.exp-half {
+    min-width: 0;
+}
+
+.exp-half+ .exp-half {
+    border-left: 1px solid var(--line);
+    padding-left: 14px;
+}
+
+.exp-half h3 {
+    font-size: 14px;
+}
+
+.exp-half .field label {
+    margin-bottom: 5px;
+}
+
+@media (max-width:420px) {
+    .exp-halves {
+        grid-template-columns: 1fr;
+    }
+    .exp-half+ .exp-half {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding: 12px 0 0;
+    }
+}
+
+.exp-denom {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 11px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: white;
+}
+
+.exp-denom strong {
+    font-size: 18px;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary);
+}
+
+.exp-denom span {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.exp-bar {
+    height: 10px;
+    margin-top: 14px;
+    border-radius: 99px;
+    background: var(--line);
+    overflow: hidden;
+}
+
+.exp-bar div {
+    height: 100%;
+    width: 0;
+    background: var(--primary);
+    transition: width .15s;
+}
+
+.exp-caption {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.exp-result {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 9px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+select,input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #cfd6e3;
+    border-radius: 9px;
+    padding: 10px 11px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+}
+
+input[type=number] {
+    font-variant-numeric: tabular-nums;
+}
+
+.beasts {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 9px;
+    margin-bottom: 16px;
+}
+
+.beast {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 8px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    transition: background .18s,border-color .18s,transform .18s;
+    min-height: 94px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.beast:active {
+    transform: scale(.98);
+}
+
+.beast .beast-icon {
+    display: block;
+    font-size: 29px;
+    line-height: 1.15;
+    filter: drop-shadow(0 2px 2px #0002);
+}
+
+.beast strong {
+    display: block;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 750;
+}
+
+.beast span {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--muted);
+}
+
+.beast.active {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.stock-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+}
+
+.stock {
+    background: var(--primary-soft);
+    border: 1px solid color-mix(in srgb,var(--primary) 24%,var(--line));
+    padding: 11px;
+    border-radius: 12px;
+}
+
+.stock label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.stock input {
+    padding: 8px;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+button.action {
+    border: 0;
+    border-radius: 9px;
+    padding: 9px 13px;
+    font: inherit;
+    cursor: pointer;
+}
+
+.secondary {
+    background: #f0f2f8;
+    color: #39445a;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+}
+
+.metric {
+    border: 1px solid color-mix(in srgb,var(--primary) 28%,var(--line));
+    border-top: 2px solid var(--primary);
+    border-radius: 12px;
+    padding: 13px;
+    background: var(--primary-soft);
+    min-width: 0;
+}
+
+.metric .name {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.metric strong {
+    display: block;
+    font-size: clamp(19px,3vw,25px);
+    margin: 4px 0;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.metric small {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.result-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.result-table th,.result-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.result-table th:first-child,.result-table td:first-child {
+    width: 21%;
+}
+
+.result-table th:not(:first-child),.result-table td:not(:first-child) {
+    width: 26.333%;
+}
+
+.result-table th,.result-table td {
+    padding: 7px 5px;
+    height: 36px;
+    line-height: 20px;
+    border-bottom: 1px solid var(--line);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.card h3 {
+    font-size: 15px;
+    margin: 12px 0 7px;
+}
+
+.level-fields+h3 {
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.level-fields+.card h3 {
+    margin-top: 10px;
+}
+
+.result-table th:first-child,.result-table td:first-child {
+    text-align: left;
+}
+
+.result-table th {
+    color: var(--primary);
+    font-weight: 600;
+    background: var(--primary-soft);
+}
+
+.table-wrap {
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.pack-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.pack-row:last-child {
+    border-bottom: 0;
+}
+
+.plan-options {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.plan-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    text-align: left;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: white;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+}
+
+.plan-option strong {
+    font-size: 14px;
+}
+
+.plan-option span,.plan-option small {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.plan-option.active {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+@media (max-width:650px) {
+    .plan-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pack-row span {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.pack-row strong {
+    font-size: 21px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.pack-columns {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.pack-detail {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    padding: 14px;
+    background: #fff;
+}
+
+.pack-detail h3 {
+    margin: 0 0 10px;
+    font-size: 19px;
+    color: var(--primary);
+}
+
+.allocation-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+}
+
+.allocation-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+    padding: 15px 12px;
+    border: 1px solid color-mix(in srgb,var(--primary) 28%,var(--line));
+    border-radius: 12px;
+    background: var(--primary-soft);
+}
+
+.allocation-name {
+    font-size: 17px;
+    font-weight: 750;
+    color: var(--primary);
+}
+
+.allocation-item strong {
+    font-size: clamp(21px,2.1vw,28px);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.allocation-desc {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.purchase-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 10px;
+    position: relative;
+    padding-left: 22px;
+}
+
+.purchase-grid:before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 16px;
+    bottom: 16px;
+    width: 2px;
+    border-radius: 2px;
+    background: color-mix(in srgb,var(--primary) 32%,var(--line));
+}
+
+.purchase-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+    min-height: 92px;
+    padding: 13px;
+    position: relative;
+    border: 1px solid color-mix(in srgb,var(--primary) 25%,var(--line));
+    border-radius: 12px;
+    background: linear-gradient(145deg,var(--primary-soft),#fff);
+}
+
+.purchase-card:before {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 23px;
+    width: 14px;
+    height: 2px;
+    background: color-mix(in srgb,var(--primary) 32%,var(--line));
+}
+
+.purchase-card:after {
+    content: "";
+    position: absolute;
+    left: -19px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.purchase-card .purchase-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.purchase-card .purchase-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.45;
+    order: 3;
+    margin-top: auto;
+}
+
+.purchase-card .purchase-label {
+    order: 1;
+}
+
+.purchase-card .purchase-value {
+    order: 2;
+}
+
+.purchase-card .purchase-value {
+    font-size: clamp(20px,2vw,26px);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width:420px) {
+    .purchase-grid {
+        grid-template-columns: minmax(0,1fr);
+        padding-left: 20px;
+    }
+    .purchase-card {
+        padding: 11px;
+        min-height: 108px;
+    }
+    .purchase-card .purchase-label {
+        font-size: 14px;
+    }
+    .purchase-card .purchase-desc {
+        font-size: 11px;
+    }
+}
+
+@media (max-width:760px) {
+    .pack-columns {
+        grid-template-columns: 1fr;
+    }
+    .allocation-grid {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+    .allocation-item {
+        padding: 12px 8px;
+    }
+    .allocation-name {
+        font-size: 15px;
+    }
+    .allocation-desc {
+        font-size: 12px;
+    }
+    .pack-detail h3 {
+        font-size: 17px;
+    }
+}
+
+@media (max-width:420px) {
+    .allocation-grid {
+        grid-template-columns: 1fr;
+    }
+    .allocation-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
+    .allocation-desc {
+        grid-column: 1/-1;
+    }
+}
+
+.note {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 12px 0 0;
+}
+
+.section {
+    margin-top: 16px;
+}
+
+details summary {
+    cursor: pointer;
+    font-weight: 650;
+    padding: 4px 0 12px;
+}
+
+.level-table {
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.level-table th,.level-table td {
+    padding: 8px 9px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
+}
+
+.level-table th:first-child,.level-table td:first-child {
+    text-align: center;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--card);
+    box-shadow: 2px 0 3px #00000012;
+}
+
+.level-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--primary-soft);
+    color: var(--primary);
+    z-index: 1;
+}
+
+.level-table thead th:first-child {
+    left: 0;
+    z-index: 4;
+    background: var(--primary-soft);
+}
+
+.level-table tbody tr:nth-child(even) td:first-child {
+    background: #fafbfe;
+}
+
+body.dark-theme .level-table tbody tr:nth-child(even) td:first-child {
+    background: #182437;
+}
+
 .level-table.attributes-only th:nth-child(n+2):nth-child(-n+9),
-.level-table.attributes-only td:nth-child(n+2):nth-child(-n+9){display:none}
-.level-table tbody tr:nth-child(even){background:#fafbfe}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 0 0}
-@media(max-width:760px){.wrap{padding:14px 10px 32px}.layout{grid-template-columns:minmax(0,1fr);gap:13px}.card{padding:15px}.beasts{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.beast{min-height:100px;padding:12px 7px}.beast .beast-icon{font-size:31px}.beast strong{font-size:17px}.beast span{font-size:12px}.summary{gap:7px}.metric{padding:10px}.fields{gap:7px}.exp-panel{padding:11px}.level-slider-row{gap:6px}.level-value{min-width:54px;padding:5px 6px;font-size:13px}.level-picker:first-child{padding-right:2px}.level-picker:nth-child(2){padding-left:2px}.result-table{font-size:12px}.result-table th,.result-table td{padding:6px 3px}}
-@media(max-width:380px){.stock-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.metric strong{font-size:22px}}
-
-/* 固定返回首页按钮 */
-.floating-actions{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:8px}
-.home-return{position:static;display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;text-decoration:none;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease}
-.home-return:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}
-.home-return:active{transform:scale(.97)}
-.home-return:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
-.home-return svg{width:18px;height:18px;flex:none}
-@media(max-width:480px){.floating-actions{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));gap:6px}.home-return{padding:11px 12px;font-size:13px;gap:6px}}
-@media(prefers-reduced-motion:reduce){.home-return{transition:none}}
-
-
-/* 水印样式与天机阁同步：页面背景及各模块边角使用低透明度 98888，不遮挡文字和操作 */
-body::before{content:"98888     98888     98888";position:fixed;inset:12% -10% auto -10%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,5vw,58px);font-weight:900;letter-spacing:10px;line-height:2.8;color:#8a96aa;opacity:.055;transform:rotate(-14deg);white-space:pre-wrap;word-spacing:24px}
-body::after{content:"98888";position:fixed;right:7%;bottom:15%;z-index:0;pointer-events:none;user-select:none;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:4px;line-height:1;color:#8a96aa;opacity:.10;transform:rotate(-12deg)}
-.wrap{position:relative;isolation:isolate}.wrap>*{position:relative;z-index:1}
-.card{position:relative;isolation:isolate;overflow:hidden}.card>*{position:relative;z-index:1}
-.card::before{content:"98888";position:absolute;left:20px;top:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(20px,2.5vw,32px);font-weight:900;letter-spacing:3px;line-height:1;color:#8a9bb8;opacity:.045;transform:rotate(-9deg)}
-.card::after{content:"98888";position:absolute;right:20px;bottom:14px;z-index:0;pointer-events:none;user-select:none;font-size:clamp(26px,3vw,40px);font-weight:900;letter-spacing:4px;line-height:1;color:#8197bb;opacity:.07;transform:rotate(-10deg)}
-@media(max-width:700px){body::before{inset:18% -25% auto -25%;font-size:30px;letter-spacing:7px;line-height:4;opacity:.045}body::after{right:12%;bottom:24%;font-size:30px;opacity:.08}.card::before{font-size:22px;left:12px;top:12px;opacity:.035}.card::after{font-size:27px;right:12px;bottom:10px;opacity:.06}}
-
-
-/* 已有材料库存：移除内层卡片边框、底色和额外内边距 */
-.inventory-panel {
-  margin: 0 0 18px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+.level-table.attributes-only td:nth-child(n+2):nth-child(-n+9) {
+    display: none;
 }
-.inventory-panel > h3 { margin-top: 0; }
-.inventory-actions { display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:12px; }
-/* 与「神兽及等级选择」标题保持一致：字号、字重及动态主题色统一 */
-.card h3.stock-overview-title { margin:0; font-family:inherit; font-size:18px !important; font-weight:700; color:var(--primary); line-height:1.35; }
-.level-actions{justify-content:flex-end;align-items:center}.exp-input-slider{display:block;margin-top:7px;width:100%;height:24px;padding:0;accent-color:var(--primary);cursor:pointer;touch-action:pan-y}.level-actions .action{white-space:nowrap}
-@media(max-width:420px){.level-actions{display:grid;grid-template-columns:1fr 1fr}.level-actions .action{width:100%;padding-left:8px;padding-right:8px}}
 
-/* 七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应 */
-.wrap{box-sizing:border-box!important;width:calc(100% - 32px)!important;max-width:1200px!important;margin-left:auto!important;margin-right:auto!important;padding-left:16px!important;padding-right:16px!important;}
-@media(max-width:760px){.wrap{width:calc(100% - 20px)!important;max-width:1200px!important;padding-left:10px!important;padding-right:10px!important;}}
+.level-table tbody tr:nth-child(even) {
+    background: #fafbfe;
+}
 
-/* 七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度 */
-.panel,.card,.hero{box-sizing:border-box; border-radius:18px!important; box-shadow:0 8px 24px rgba(0,0,0,.12)!important;}
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 24px 0 0;
+}
 
-/* v1.1.45: center and evenly distribute the upgrade attribute table; refine numeric typography */
+@media (max-width:760px) {
+    .wrap {
+        padding: 14px 10px 32px;
+    }
+    .layout {
+        grid-template-columns: minmax(0,1fr);
+        gap: 13px;
+    }
+    .card {
+        padding: 15px;
+    }
+    .beasts {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 9px;
+    }
+    .beast {
+        min-height: 100px;
+        padding: 12px 7px;
+    }
+    .beast .beast-icon {
+        font-size: 31px;
+    }
+    .beast strong {
+        font-size: 17px;
+    }
+    .beast span {
+        font-size: 12px;
+    }
+    .summary {
+        gap: 7px;
+    }
+    .metric {
+        padding: 10px;
+    }
+    .fields {
+        gap: 7px;
+    }
+    .exp-panel {
+        padding: 11px;
+    }
+    .level-slider-row {
+        gap: 6px;
+    }
+    .level-value {
+        min-width: 54px;
+        padding: 5px 6px;
+        font-size: 13px;
+    }
+    .level-picker:first-child {
+        padding-right: 2px;
+    }
+    .level-picker:nth-child(2) {
+        padding-left: 2px;
+    }
+    .result-table {
+        font-size: 12px;
+    }
+    .result-table th,.result-table td {
+        padding: 6px 3px;
+    }
+}
+
+@media (max-width:380px) {
+    .stock-grid {
+        grid-template-columns: 1fr;
+    }
+    .summary {
+        grid-template-columns: 1fr;
+    }
+    .metric strong {
+        font-size: 22px;
+    }
+}
+
+/*固定返回首页按钮*/
+
+.floating-actions {
+    position: fixed;
+    right: max(16px,env(safe-area-inset-right));
+    bottom: max(16px,env(safe-area-inset-bottom));
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-return {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 17px;
+    border: 1px solid color-mix(in srgb,var(--primary) 35%,var(--line));
+    border-radius: 999px;
+    background: color-mix(in srgb,var(--card) 92%,transparent);
+    color: var(--primary);
+    font: 600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    text-decoration: none;
+    box-shadow: 0 6px 22px #0002;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform .2s ease,box-shadow .2s ease,background-color .25s ease;
+}
+
+.home-return:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 26px #0003;
+}
+
+.home-return:active {
+    transform: scale(.97);
+}
+
+.home-return:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.home-return svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+}
+
+@media (max-width:480px) {
+    .floating-actions {
+        right: max(12px,env(safe-area-inset-right));
+        bottom: max(12px,env(safe-area-inset-bottom));
+        gap: 6px;
+    }
+    .home-return {
+        padding: 11px 12px;
+        font-size: 13px;
+        gap: 6px;
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    .home-return {
+        transition: none;
+    }
+}
+
+/*水印样式与天机阁同步：页面背景及各模块边角使用低透明度 98888，不遮挡文字和操作*/
+
+body::before {
+    content: "98888     98888     98888";
+    position: fixed;
+    inset: 12% -10% auto -10%;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    font-size: clamp(28px,5vw,58px);
+    font-weight: 900;
+    letter-spacing: 10px;
+    line-height: 2.8;
+    color: #8a96aa;
+    opacity: .055;
+    transform: rotate(-14deg);
+    white-space: pre-wrap;
+    word-spacing: 24px;
+}
+
+body::after {
+    content: "98888";
+    position: fixed;
+    right: 7%;
+    bottom: 15%;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    font-size: clamp(28px,4vw,48px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    line-height: 1;
+    color: #8a96aa;
+    opacity: .10;
+    transform: rotate(-12deg);
+}
+
+.wrap {
+    position: relative;
+    isolation: isolate;
+}
+
+.wrap>* {
+    position: relative;
+    z-index: 1;
+}
+
+.card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.card>* {
+    position: relative;
+    z-index: 1;
+}
+
+.card::before {
+    content: "98888";
+    position: absolute;
+    left: 20px;
+    top: 14px;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    font-size: clamp(20px,2.5vw,32px);
+    font-weight: 900;
+    letter-spacing: 3px;
+    line-height: 1;
+    color: #8a9bb8;
+    opacity: .045;
+    transform: rotate(-9deg);
+}
+
+.card::after {
+    content: "98888";
+    position: absolute;
+    right: 20px;
+    bottom: 14px;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    font-size: clamp(26px,3vw,40px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    line-height: 1;
+    color: #8197bb;
+    opacity: .07;
+    transform: rotate(-10deg);
+}
+
+@media (max-width:700px) {
+    body::before {
+        inset: 18% -25% auto -25%;
+        font-size: 30px;
+        letter-spacing: 7px;
+        line-height: 4;
+        opacity: .045;
+    }
+    body::after {
+        right: 12%;
+        bottom: 24%;
+        font-size: 30px;
+        opacity: .08;
+    }
+    .card::before {
+        font-size: 22px;
+        left: 12px;
+        top: 12px;
+        opacity: .035;
+    }
+    .card::after {
+        font-size: 27px;
+        right: 12px;
+        bottom: 10px;
+        opacity: .06;
+    }
+}
+
+/*已有材料库存：移除内层卡片边框、底色和额外内边距*/
+
+.inventory-panel {
+    margin: 0 0 18px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.inventory-panel > h3 {
+    margin-top: 0;
+}
+
+.inventory-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 12px;
+}
+
+/*与「神兽及等级选择」标题保持一致：字号、字重及动态主题色统一*/
+
+.card h3.stock-overview-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: 18px !important;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.35;
+}
+
+.level-actions {
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.exp-input-slider {
+    display: block;
+    margin-top: 7px;
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+    touch-action: pan-y;
+}
+
+.level-actions .action {
+    white-space: nowrap;
+}
+
+@media (max-width:420px) {
+    .level-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .level-actions .action {
+        width: 100%;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+/*七系统统一布局规范 v1：桌面最大宽度 1200px，移动端自适应*/
+
+.wrap {
+    box-sizing: border-box !important;
+    width: calc(100% - 32px) !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+@media (max-width:760px) {
+    .wrap {
+        width: calc(100% - 20px) !important;
+        max-width: 1200px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+
+/*七系统统一卡片观感：保留各系统主题色与背景，只统一圆角、边界和阴影强度*/
+
+.panel,.card,.hero {
+    box-sizing: border-box;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12) !important;
+}
+
+/*v1.1.45: center and evenly distribute the upgrade attribute table; refine numeric typography*/
+
 .result-table th,
 .result-table td {
-  text-align: center !important;
-  padding: 8px 6px;
-  font-size: 13px;
-  line-height: 1.35;
-  font-variant-numeric: tabular-nums;
+    text-align: center !important;
+    padding: 8px 6px;
+    font-size: 13px;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
 }
+
 .result-table th:first-child,
 .result-table td:first-child,
 .result-table th:not(:first-child),
 .result-table td:not(:first-child) {
-  width: 25%;
-  text-align: center !important;
+    width: 25%;
+    text-align: center !important;
 }
-.result-table td { font-size: 14px; font-weight: 500; }
-.result-table th { font-size: 12px; font-weight: 650; }
+
+.result-table td {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.result-table th {
+    font-size: 12px;
+    font-weight: 650;
+}
+
 @media (max-width: 600px) {
-  .result-table th, .result-table td { padding: 7px 3px; }
-  .result-table td { font-size: 13px; }
-  .result-table th { font-size: 11px; }
+    .result-table th, .result-table td {
+        padding: 7px 3px;
+    }
+    .result-table td {
+        font-size: 13px;
+    }
+    .result-table th {
+        font-size: 11px;
+    }
 }
 
+/*v1.1.50：神兽礼包/返利卡片套用军师礼包购买方案的卡片式 UI；仅调整呈现，不改计算逻辑*/
 
-/* v1.1.50：神兽礼包/返利卡片套用军师礼包购买方案的卡片式 UI；仅调整呈现，不改计算逻辑 */
-.card.section:has(.plan-options){padding:18px;border-radius:18px;box-shadow:0 10px 24px #26365012}
-.card.section:has(.plan-options)>h2{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:20px;color:var(--ink)}
-.card.section:has(.plan-options)>.note{font-size:13px;color:var(--muted);line-height:1.55;margin:0 0 14px!important}
-.plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
-.plan-option{display:block;min-width:0;padding:12px 13px;border:1px solid var(--line);border-radius:13px;background:#f5f7fb;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .16s,background .16s,box-shadow .16s}
-.plan-option strong{display:block;font-size:15px;line-height:1.35;font-weight:750;margin-bottom:9px}
-.plan-option span{display:block;padding:8px 6px;border-radius:8px;background:#fff;color:var(--muted);font-size:12px;line-height:1.5;text-align:center}
-.plan-option.active{border:1.5px solid #b77912;background:#fff;box-shadow:inset 0 0 0 1px #b77912}
-.plan-option.active span{background:#f5f7fb}
-.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.summary .metric{border:1px solid transparent;border-top:0;border-radius:11px;padding:12px 10px;background:#f0f2f5;min-width:0;text-align:center}
-.summary .metric .name{font-size:12px;line-height:1.4;color:#4b5563}
-.summary .metric strong{display:block;font-size:18px;line-height:1.35;margin:7px 0 0;font-weight:800;overflow-wrap:anywhere}
-.summary .metric small{display:none}
-.summary .metric:first-child{background:#fbe0e0;border-color:#f7d5d5}
-.summary .metric:first-child .name,.summary .metric:first-child strong{color:#c92121}
-.card.section.rebate-placeholder .summary .metric:first-child{background:#e0f6e9;border-color:#c6ecd5}
-.card.section.rebate-placeholder .summary .metric:first-child .name,.card.section.rebate-placeholder .summary .metric:first-child strong{color:#16834b}
-.pack-columns{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px!important}
-.pack-detail{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}
-.pack-detail h3{margin:0 0 10px;font-size:15px;color:var(--ink)}
-.allocation-grid{gap:7px}
-.allocation-item{padding:10px 7px;border-radius:9px;text-align:center;align-items:center;background:var(--primary-soft)}
-.allocation-name{font-size:13px}
-.allocation-item strong{font-size:18px}
-.allocation-desc{font-size:11px;text-align:center}
-.purchase-grid{padding-left:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.purchase-grid:before,.purchase-card:before,.purchase-card:after{display:none}
-.purchase-card{min-height:78px;gap:5px;padding:10px;border-radius:9px;background:#f5f7fb;border-color:var(--line)}
-.purchase-label{font-size:12px;color:var(--muted)}
-.purchase-desc{font-size:11px;color:var(--muted)}
-.purchase-value{font-size:17px!important;line-height:1.3;color:var(--ink)}
-@media(max-width:760px){
- .plan-options{grid-template-columns:repeat(2,minmax(0,1fr))}
- .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
- .pack-columns{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:420px){
- .card.section:has(.plan-options){padding:13px}
- .plan-options{gap:7px}
- .plan-option{padding:10px}
- .plan-option strong{font-size:14px}
- .plan-option span{font-size:11px}
- .summary .metric{padding:10px 7px}
- .summary .metric strong{font-size:15px}
+.card.section:has(.plan-options) {
+    padding: 18px;
+    border-radius: 18px;
+    box-shadow: 0 10px 24px #26365012;
 }
 
-
-/* v1.1.88：合并吃/不吃返利方案，用开关切换两套独立计算结果 */
-.rebate-toggle{display:inline-flex;align-items:center;cursor:pointer;user-select:none;flex:0 0 auto}
-.rebate-toggle input{position:absolute;opacity:0;width:1px;height:1px}
-.rebate-chip-label{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:1.5px solid #ff4d4f;border-radius:999px;background:#fff2f0;color:#ff4d4f;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;transition:background .18s,border-color .18s,color .18s}
-.rebate-toggle input:checked+.rebate-chip-label{background:#e8f8ef;border-color:#20a464;color:#16834f}
-#rebateOffPanel[hidden],#rebateOnPanel[hidden]{display:none!important}
-#rebateOffPanel>h2,#rebateOnPanel>h2{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.rebate-section-title{ margin:0; font-family:inherit; font-size:18px !important; font-weight:700; color:var(--primary); line-height:1.35; }
-@media(max-width:520px){.rebate-chip-label{font-size:11px;padding:7px 10px}.rebate-section-title{font-size:18px color:var(--primary);}}
-
-
-/* v1.1.88：修复材料需求总览首张卡片误用红色强调，改为中性卡片样式 */
-.summary .metric:first-child{background:#f0f2f5!important;border-color:transparent!important}
-.summary .metric:first-child .name,
-.summary .metric:first-child strong{color:var(--ink)!important}
-
-
-/* v2.1.6：开启返利时，返利结果区全部七项指标保持同一行展示 */
-#rebateOnPanel .package-summary{grid-template-columns:repeat(7,minmax(0,1fr));}
-@media(max-width:760px){
-  #rebateOnPanel .package-summary{grid-template-columns:repeat(7,minmax(105px,1fr));overflow-x:auto;padding-bottom:4px;}
+.card.section:has(.plan-options)>h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 20px;
+    color: var(--ink);
 }
 
-/* v1.1.88：隐藏两种返利状态中的「自选包分配」卡片，保留其计算节点供原有逻辑使用 */
-#rebateOffPanel .allocation-detail,
-#rebateOnPanel .allocation-detail{display:none!important}
-
-
-/* v1.1.88：礼包选项卡片统一为参考图样式 */
-.plan-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
-.plan-option{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;align-items:start;column-gap:8px;row-gap:12px;min-width:0;min-height:130px;padding:16px 14px 13px;border:1.5px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .16s,background .16s,box-shadow .16s}
-.plan-option strong{grid-column:1;grid-row:1;display:block;margin:0;font-size:16px;line-height:1.35;font-weight:750}
-.plan-option .plan-price{grid-column:2;grid-row:1;display:block;margin:0;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#b77912;font-size:16px;line-height:1.35;font-weight:800;text-align:right;white-space:nowrap;align-self:center;justify-self:end}
-.plan-option .plan-pack-stats{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-self:stretch}
-.plan-option .plan-pack-stats span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:5px 2px;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.4;text-align:center}
-.plan-option .plan-pack-stats b{display:block;color:var(--ink);font-size:14px;font-weight:750;overflow-wrap:anywhere}
-.plan-option.active{border:2px solid #b77912;background:#fff;box-shadow:none}
-.plan-option.active .plan-pack-stats span{background:transparent}
-@media(max-width:760px){.plan-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:420px){
- .plan-options{grid-template-columns:minmax(0,1fr);gap:8px}
- .plan-option{min-height:120px;padding:13px 12px}
- .plan-option strong,.plan-option .plan-price{font-size:15px}
- .plan-option .plan-pack-stats b{font-size:14px}
+.card.section:has(.plan-options)>.note {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0 0 14px !important;
 }
 
-
-/* v1.1.88：返利开关移至两种方案面板之外，切换时不会随面板一起隐藏 */
-.rebate-control-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px;padding:0 2px}
-.rebate-section-title{font-size:20px;font-weight:750;color:var(--primary);line-height:1.35}
-#rebateOffPanel,#rebateOnPanel{margin-top:0}
-
-
-/* v1.1.88：礼包购买方案选中动效；同步预览卡片高亮 */
-@keyframes planSelectedPulse {
-  0% { transform:scale(1); }
-  45% { transform:scale(1.018); }
-  100% { transform:scale(1); }
+.plan-options {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+    margin: 0 0 14px;
 }
+
 .plan-option {
-  transition: transform .2s ease, border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+    display: block;
+    min-width: 0;
+    padding: 12px 13px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: #f5f7fb;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .16s,background .16s,box-shadow .16s;
 }
+
+.plan-option strong {
+    display: block;
+    font-size: 15px;
+    line-height: 1.35;
+    font-weight: 750;
+    margin-bottom: 9px;
+}
+
+.plan-option span {
+    display: block;
+    padding: 8px 6px;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+}
+
 .plan-option.active {
-  animation:planSelectedPulse .28s ease-out;
-  border-color:var(--primary)!important;
-  box-shadow:inset 0 0 0 1px var(--primary), 0 0 0 2px color-mix(in srgb, var(--primary) 18%, transparent), 0 5px 14px #00000012!important;
+    border: 1.5px solid #b77912;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #b77912;
 }
+
+.plan-option.active span {
+    background: #f5f7fb;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 8px;
+}
+
+.summary .metric {
+    border: 1px solid transparent;
+    border-top: 0;
+    border-radius: 11px;
+    padding: 12px 10px;
+    background: #f0f2f5;
+    min-width: 0;
+    text-align: center;
+}
+
+.summary .metric .name {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #4b5563;
+}
+
+.summary .metric strong {
+    display: block;
+    font-size: 18px;
+    line-height: 1.35;
+    margin: 7px 0 0;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.summary .metric small {
+    display: none;
+}
+
+.summary .metric:first-child {
+    background: #fbe0e0;
+    border-color: #f7d5d5;
+}
+
+.summary .metric:first-child .name,.summary .metric:first-child strong {
+    color: #c92121;
+}
+
+.card.section.rebate-placeholder .summary .metric:first-child {
+    background: #e0f6e9;
+    border-color: #c6ecd5;
+}
+
+.card.section.rebate-placeholder .summary .metric:first-child .name,.card.section.rebate-placeholder .summary .metric:first-child strong {
+    color: #16834b;
+}
+
+.pack-columns {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 12px;
+    margin-top: 12px !important;
+}
+
+.pack-detail {
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    padding: 12px;
+    background: #fff;
+}
+
+.pack-detail h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: var(--ink);
+}
+
+.allocation-grid {
+    gap: 7px;
+}
+
+.allocation-item {
+    padding: 10px 7px;
+    border-radius: 9px;
+    text-align: center;
+    align-items: center;
+    background: var(--primary-soft);
+}
+
+.allocation-name {
+    font-size: 13px;
+}
+
+.allocation-item strong {
+    font-size: 18px;
+}
+
+.allocation-desc {
+    font-size: 11px;
+    text-align: center;
+}
+
+.purchase-grid {
+    padding-left: 0;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 7px;
+}
+
+.purchase-grid:before,.purchase-card:before,.purchase-card:after {
+    display: none;
+}
+
+.purchase-card {
+    min-height: 78px;
+    gap: 5px;
+    padding: 10px;
+    border-radius: 9px;
+    background: #f5f7fb;
+    border-color: var(--line);
+}
+
+.purchase-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.purchase-desc {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.purchase-value {
+    font-size: 17px !important;
+    line-height: 1.3;
+    color: var(--ink);
+}
+
+@media (max-width:760px) {
+    .plan-options {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+    .summary {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+    .pack-columns {
+        grid-template-columns: minmax(0,1fr);
+    }
+}
+
+@media (max-width:420px) {
+    .card.section:has(.plan-options) {
+        padding: 13px;
+    }
+    .plan-options {
+        gap: 7px;
+    }
+    .plan-option {
+        padding: 10px;
+    }
+    .plan-option strong {
+        font-size: 14px;
+    }
+    .plan-option span {
+        font-size: 11px;
+    }
+    .summary .metric {
+        padding: 10px 7px;
+    }
+    .summary .metric strong {
+        font-size: 15px;
+    }
+}
+
+/*v1.1.88：合并吃/不吃返利方案，用开关切换两套独立计算结果*/
+
+.rebate-toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    flex: 0 0 auto;
+}
+
+.rebate-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.rebate-chip-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border: 1.5px solid #ff4d4f;
+    border-radius: 999px;
+    background: #fff2f0;
+    color: #ff4d4f;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    transition: background .18s,border-color .18s,color .18s;
+}
+
+.rebate-toggle input:checked+.rebate-chip-label {
+    background: #e8f8ef;
+    border-color: #20a464;
+    color: #16834f;
+}
+
+#rebateOffPanel[hidden],#rebateOnPanel[hidden] {
+    display: none !important;
+}
+
+#rebateOffPanel>h2,#rebateOnPanel>h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.rebate-section-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: 18px !important;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.35;
+}
+
+@media (max-width:520px) {
+    .rebate-chip-label {
+        font-size: 11px;
+        padding: 7px 10px;
+    }
+    .rebate-section-title {
+        font-size: 18px;
+        color: var(--primary);
+    }
+}
+
+/*v1.1.88：修复材料需求总览首张卡片误用红色强调，改为中性卡片样式*/
+
+.summary .metric:first-child {
+    background: #f0f2f5 !important;
+    border-color: transparent !important;
+}
+
+.summary .metric:first-child .name,
+.summary .metric:first-child strong {
+    color: var(--ink) !important;
+}
+
+/*v2.1.6：开启返利时，返利结果区全部七项指标保持同一行展示*/
+
+#rebateOnPanel .package-summary {
+    grid-template-columns: repeat(7,minmax(0,1fr));
+}
+
+@media (max-width:760px) {
+    #rebateOnPanel .package-summary {
+        grid-template-columns: repeat(7,minmax(105px,1fr));
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+}
+
+/*v1.1.88：隐藏两种返利状态中的「自选包分配」卡片，保留其计算节点供原有逻辑使用*/
+
+#rebateOffPanel .allocation-detail,
+#rebateOnPanel .allocation-detail {
+    display: none !important;
+}
+
+/*v1.1.88：礼包选项卡片统一为参考图样式*/
+
+.plan-options {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+    margin: 0 0 14px;
+}
+
+.plan-option {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    column-gap: 8px;
+    row-gap: 12px;
+    min-width: 0;
+    min-height: 130px;
+    padding: 16px 14px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 13px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .16s,background .16s,box-shadow .16s;
+}
+
+.plan-option strong {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.35;
+    font-weight: 750;
+}
+
+.plan-option .plan-price {
+    grid-column: 2;
+    grid-row: 1;
+    display: block;
+    margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #b77912;
+    font-size: 16px;
+    line-height: 1.35;
+    font-weight: 800;
+    text-align: right;
+    white-space: nowrap;
+    align-self: center;
+    justify-self: end;
+}
+
+.plan-option .plan-pack-stats {
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 4px;
+    align-self: stretch;
+}
+
+.plan-option .plan-pack-stats span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 5px 2px;
+    border-radius: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.plan-option .plan-pack-stats b {
+    display: block;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.plan-option.active {
+    border: 2px solid #b77912;
+    background: #fff;
+    box-shadow: none;
+}
+
+.plan-option.active .plan-pack-stats span {
+    background: transparent;
+}
+
+@media (max-width:760px) {
+    .plan-options {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+@media (max-width:420px) {
+    .plan-options {
+        grid-template-columns: minmax(0,1fr);
+        gap: 8px;
+    }
+    .plan-option {
+        min-height: 120px;
+        padding: 13px 12px;
+    }
+    .plan-option strong,.plan-option .plan-price {
+        font-size: 15px;
+    }
+    .plan-option .plan-pack-stats b {
+        font-size: 14px;
+    }
+}
+
+/*v1.1.88：返利开关移至两种方案面板之外，切换时不会随面板一起隐藏*/
+
+.rebate-control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 10px;
+    padding: 0 2px;
+}
+
+.rebate-section-title {
+    font-size: 20px;
+    font-weight: 750;
+    color: var(--primary);
+    line-height: 1.35;
+}
+
+#rebateOffPanel,#rebateOnPanel {
+    margin-top: 0;
+}
+
+/*v1.1.88：礼包购买方案选中动效；同步预览卡片高亮*/
+
+@keyframes planSelectedPulse {
+    0% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.018);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.plan-option {
+    transition: transform .2s ease, border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+
+.plan-option.active {
+    animation: planSelectedPulse .28s ease-out;
+    border-color: var(--primary) !important;
+    box-shadow: inset 0 0 0 1px var(--primary), 0 0 0 2px color-mix(in srgb, var(--primary) 18%, transparent), 0 5px 14px #00000012 !important;
+}
+
 .all-gift-option {
-  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
+
 .all-gift-option.selected {
-  animation:planSelectedPulse .28s ease-out;
-  box-shadow:inset 0 0 0 1px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent), 0 6px 16px #00000012!important;
+    animation: planSelectedPulse .28s ease-out;
+    box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent), 0 6px 16px #00000012 !important;
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .plan-option, .all-gift-option { transition:none!important; }
-  .plan-option.active, .all-gift-option.selected { animation:none!important; }
+    .plan-option, .all-gift-option {
+        transition: none !important;
+    }
+    .plan-option.active, .all-gift-option.selected {
+        animation: none !important;
+    }
 }
 
-/* v1.1.88：标题与返利开关收回礼包购买方案卡片内部 */
-.rebate-control-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px;padding:0}
-#rebateOffPanel>.rebate-control-row{margin:0 0 10px}
+/*v1.1.88：标题与返利开关收回礼包购买方案卡片内部*/
 
-
-/* v1.1.88：恢复各主卡片之间的垂直间距，避免边框贴合 */
-.card.section + .card.section{margin-top:16px}
-#rebateOffPanel.card.section,#rebateOnPanel.card.section{margin-top:16px}
-
-
-/* v1.1.88：隐藏购买估算卡片，但保留计算脚本依赖的 DOM 节点 */
-.pack-detail.purchase-detail{display:none!important}
-
-
-/* v1.1.88：礼包方案摘要调整为费用、购买数量及三类自选包与剩余小包 */
-.package-summary{grid-template-columns:repeat(6,minmax(0,1fr))}
-@media(max-width:900px){.package-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:520px){.package-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-
-/* v1.1.88：返利状态摘要配色与手机窄屏礼包卡片布局 */
-.status-metric.status-red{background:#fbe0e0!important;border-color:#f5caca!important;color:#c62828}
-.status-metric.status-red .name,.status-metric.status-red strong{color:#c62828}
-.status-metric.status-green{background:#dff4e7!important;border-color:#b6e3c8!important;color:#16834a}
-.status-metric.status-green .name,.status-metric.status-green strong{color:#16834a}
-.plan-options{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-.plan-option{min-width:0}
-@media(max-width:520px){
-  .plan-options{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
-  .plan-option{padding:10px 7px!important}
-  .plan-option strong{font-size:12px!important;overflow-wrap:anywhere}
-  .plan-option .plan-price{font-size:12px!important}
-  .plan-option .plan-pack-stats{gap:3px!important}
-  .plan-option .plan-pack-stats span{font-size:10px!important}
-  .plan-option .plan-pack-stats b{font-size:11px!important}
+.rebate-control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 10px;
+    padding: 0;
 }
 
+#rebateOffPanel>.rebate-control-row {
+    margin: 0 0 10px;
+}
 
-/* v1.1.88：明确强化预计费用卡片的状态色，避免通用样式覆盖 */
+/*v1.1.88：恢复各主卡片之间的垂直间距，避免边框贴合*/
+
+.card.section + .card.section {
+    margin-top: 16px;
+}
+
+#rebateOffPanel.card.section,#rebateOnPanel.card.section {
+    margin-top: 16px;
+}
+
+/*v1.1.88：隐藏购买估算卡片，但保留计算脚本依赖的 DOM 节点*/
+
+.pack-detail.purchase-detail {
+    display: none !important;
+}
+
+/*v1.1.88：礼包方案摘要调整为费用、购买数量及三类自选包与剩余小包*/
+
+.package-summary {
+    grid-template-columns: repeat(6,minmax(0,1fr));
+}
+
+@media (max-width:900px) {
+    .package-summary {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+}
+
+@media (max-width:520px) {
+    .package-summary {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+/*v1.1.88：返利状态摘要配色与手机窄屏礼包卡片布局*/
+
+.status-metric.status-red {
+    background: #fbe0e0 !important;
+    border-color: #f5caca !important;
+    color: #c62828;
+}
+
+.status-metric.status-red .name,.status-metric.status-red strong {
+    color: #c62828;
+}
+
+.status-metric.status-green {
+    background: #dff4e7 !important;
+    border-color: #b6e3c8 !important;
+    color: #16834a;
+}
+
+.status-metric.status-green .name,.status-metric.status-green strong {
+    color: #16834a;
+}
+
+.plan-options {
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+}
+
+.plan-option {
+    min-width: 0;
+}
+
+@media (max-width:520px) {
+    .plan-options {
+        grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+        gap: 6px !important;
+    }
+    .plan-option {
+        padding: 10px 7px !important;
+    }
+    .plan-option strong {
+        font-size: 12px !important;
+        overflow-wrap: anywhere;
+    }
+    .plan-option .plan-price {
+        font-size: 12px !important;
+    }
+    .plan-option .plan-pack-stats {
+        gap: 3px !important;
+    }
+    .plan-option .plan-pack-stats span {
+        font-size: 10px !important;
+    }
+    .plan-option .plan-pack-stats b {
+        font-size: 11px !important;
+    }
+}
+
+/*v1.1.88：明确强化预计费用卡片的状态色，避免通用样式覆盖*/
+
 .package-summary .fee-metric.status-red,
 .package-summary .fee-metric.status-red .name,
-.package-summary .fee-metric.status-red strong{
-  background-color:#fbe0e0!important;
-  border-color:#f5caca!important;
-  color:#c62828!important;
+.package-summary .fee-metric.status-red strong {
+    background-color: #fbe0e0 !important;
+    border-color: #f5caca !important;
+    color: #c62828 !important;
 }
+
 .package-summary .fee-metric.status-green,
 .package-summary .fee-metric.status-green .name,
-.package-summary .fee-metric.status-green strong{
-  background-color:#dff4e7!important;
-  border-color:#b6e3c8!important;
-  color:#16834a!important;
+.package-summary .fee-metric.status-green strong {
+    background-color: #dff4e7 !important;
+    border-color: #b6e3c8 !important;
+    color: #16834a !important;
 }
 
+/*v1.1.88：材料配色统一；需求缺口三等分占满整行并放大数字*/
 
-/* v1.1.88：材料配色统一；需求缺口三等分占满整行并放大数字 */
-.summary:has(#herbNeed){
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  width:100%;
-  gap:10px!important;
+.summary:has(#herbNeed) {
+    display: grid !important;
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+    width: 100%;
+    gap: 10px !important;
 }
-.summary:has(#herbNeed) .metric{min-width:0;padding:14px 10px!important}
-.summary:has(#herbNeed) .metric strong{display:block;font-size:clamp(22px,2.4vw,30px)!important;line-height:1.25;margin-top:5px}
-.summary:has(#herbNeed) .metric:nth-child(1){background:#fde6e6!important;border-color:#f3bcbc!important;border-top-color:#d93636!important}
+
+.summary:has(#herbNeed) .metric {
+    min-width: 0;
+    padding: 14px 10px !important;
+}
+
+.summary:has(#herbNeed) .metric strong {
+    display: block;
+    font-size: clamp(22px,2.4vw,30px) !important;
+    line-height: 1.25;
+    margin-top: 5px;
+}
+
+.summary:has(#herbNeed) .metric:nth-child(1) {
+    background: #fde6e6 !important;
+    border-color: #f3bcbc !important;
+    border-top-color: #d93636 !important;
+}
+
 .summary:has(#herbNeed) .metric:nth-child(1) .name,
 .summary:has(#herbNeed) .metric:nth-child(1) strong,
-.summary:has(#herbNeed) .metric:nth-child(1) small{color:#c62828!important}
-.summary:has(#herbNeed) .metric:nth-child(2){background:#f2e5d6!important;border-color:#d8b99a!important;border-top-color:#8b5e3c!important}
+.summary:has(#herbNeed) .metric:nth-child(1) small {
+    color: #c62828 !important;
+}
+
+.summary:has(#herbNeed) .metric:nth-child(2) {
+    background: #f2e5d6 !important;
+    border-color: #d8b99a !important;
+    border-top-color: #8b5e3c !important;
+}
+
 .summary:has(#herbNeed) .metric:nth-child(2) .name,
 .summary:has(#herbNeed) .metric:nth-child(2) strong,
-.summary:has(#herbNeed) .metric:nth-child(2) small{color:#79502f!important}
-.summary:has(#herbNeed) .metric:nth-child(3){background:#d9f3ef!important;border-color:#9dd8cf!important;border-top-color:#00a99a!important}
+.summary:has(#herbNeed) .metric:nth-child(2) small {
+    color: #79502f !important;
+}
+
+.summary:has(#herbNeed) .metric:nth-child(3) {
+    background: #d9f3ef !important;
+    border-color: #9dd8cf !important;
+    border-top-color: #00a99a !important;
+}
+
 .summary:has(#herbNeed) .metric:nth-child(3) .name,
 .summary:has(#herbNeed) .metric:nth-child(3) strong,
-.summary:has(#herbNeed) .metric:nth-child(3) small{color:#087f75!important}
-
-/* 库存输入区域：去除材料卡片背景色，保留边框与材料文字颜色 */
-.stock:has(#herbStock){border-color:#f3bcbc!important;background:transparent!important}
-.stock:has(#herbStock) label{color:#c62828!important}
-.stock:has(#woodStock){border-color:#d8b99a!important;background:transparent!important}
-.stock:has(#woodStock) label{color:#79502f!important}
-.stock:has(#pillStock){border-color:#9dd8cf!important;background:transparent!important}
-.stock:has(#pillStock) label{color:#087f75!important}
-
-/* 礼包中的三类材料统计沿用同一套颜色 */
-#summaryHerbPacks,#summaryRebateHerbPacks{color:#c62828!important}
-#summaryWoodPacks,#summaryRebateWoodPacks{color:#79502f!important}
-#summaryPillPacks,#summaryRebatePillPacks{color:#087f75!important}
-
-@media(max-width:520px){
-  .summary:has(#herbNeed){grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
-  .summary:has(#herbNeed) .metric{padding:11px 4px!important}
-  .summary:has(#herbNeed) .metric .name{font-size:11px!important}
-  .summary:has(#herbNeed) .metric strong{font-size:clamp(18px,5vw,24px)!important;overflow-wrap:anywhere}
-  .summary:has(#herbNeed) .metric small{font-size:10px!important}
+.summary:has(#herbNeed) .metric:nth-child(3) small {
+    color: #087f75 !important;
 }
 
+/*库存输入区域：去除材料卡片背景色，保留边框与材料文字颜色*/
 
-/* v1.1.88：库存标题与下方材料卡片增加少量间距 */
-.inventory-actions .stock-overview-title{margin-bottom:8px!important}
-
-
-/* v1.1.88：库存滑动条、透明库存背景、材料缺口文字加大 */
-.stock.stock-herb,.stock.stock-wood,.stock.stock-pill{
-  background:transparent!important;
-  border-color:transparent!important;
-  box-shadow:none!important;
+.stock:has(#herbStock) {
+    border-color: #f3bcbc !important;
+    background: transparent !important;
 }
+
+.stock:has(#herbStock) label {
+    color: #c62828 !important;
+}
+
+.stock:has(#woodStock) {
+    border-color: #d8b99a !important;
+    background: transparent !important;
+}
+
+.stock:has(#woodStock) label {
+    color: #79502f !important;
+}
+
+.stock:has(#pillStock) {
+    border-color: #9dd8cf !important;
+    background: transparent !important;
+}
+
+.stock:has(#pillStock) label {
+    color: #087f75 !important;
+}
+
+/*礼包中的三类材料统计沿用同一套颜色*/
+
+#summaryHerbPacks,#summaryRebateHerbPacks {
+    color: #c62828 !important;
+}
+
+#summaryWoodPacks,#summaryRebateWoodPacks {
+    color: #79502f !important;
+}
+
+#summaryPillPacks,#summaryRebatePillPacks {
+    color: #087f75 !important;
+}
+
+@media (max-width:520px) {
+    .summary:has(#herbNeed) {
+        grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+        gap: 6px !important;
+    }
+    .summary:has(#herbNeed) .metric {
+        padding: 11px 4px !important;
+    }
+    .summary:has(#herbNeed) .metric .name {
+        font-size: 11px !important;
+    }
+    .summary:has(#herbNeed) .metric strong {
+        font-size: clamp(18px,5vw,24px) !important;
+        overflow-wrap: anywhere;
+    }
+    .summary:has(#herbNeed) .metric small {
+        font-size: 10px !important;
+    }
+}
+
+/*v1.1.88：库存标题与下方材料卡片增加少量间距*/
+
+.inventory-actions .stock-overview-title {
+    margin-bottom: 8px !important;
+}
+
+/*v1.1.88：库存滑动条、透明库存背景、材料缺口文字加大*/
+
+.stock.stock-herb,.stock.stock-wood,.stock.stock-pill {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
 .stock.stock-herb label,.summary:has(#herbNeed) .metric:nth-child(1) .name,
-.summary:has(#herbNeed) .metric:nth-child(1) strong{color:#c62828!important}
+.summary:has(#herbNeed) .metric:nth-child(1) strong {
+    color: #c62828 !important;
+}
+
 .stock.stock-wood label,.summary:has(#herbNeed) .metric:nth-child(2) .name,
-.summary:has(#herbNeed) .metric:nth-child(2) strong{color:#79502f!important}
+.summary:has(#herbNeed) .metric:nth-child(2) strong {
+    color: #79502f !important;
+}
+
 .stock.stock-pill label,.summary:has(#herbNeed) .metric:nth-child(3) .name,
-.summary:has(#herbNeed) .metric:nth-child(3) strong{color:#087f75!important}
-.stock-slider{display:block;width:100%;height:22px;margin:7px 0 0;padding:0;background:transparent;cursor:pointer;touch-action:pan-y}
-.stock-herb .stock-slider{accent-color:#d93636}
-.stock-wood .stock-slider{accent-color:#8b5e3c}
-.stock-pill .stock-slider{accent-color:#00a99a}
-.summary:has(#herbNeed) .metric .name{font-size:14px!important;font-weight:600}
-.summary:has(#herbNeed) .metric strong{font-size:clamp(26px,3vw,34px)!important;font-weight:800!important}
-@media(max-width:520px){
- .summary:has(#herbNeed) .metric .name{font-size:12px!important}
- .summary:has(#herbNeed) .metric strong{font-size:clamp(20px,5.4vw,27px)!important}
+.summary:has(#herbNeed) .metric:nth-child(3) strong {
+    color: #087f75 !important;
 }
 
-
-/* v1.1.88：已有材料库存标题与下方卡片增加间距 */
-.inventory-actions .stock-overview-title{margin-bottom:12px!important}
-
-
-/* v1.1.88：明确修复库存标题间距、库存卡片透明背景和缺口字号 */
-.inventory-panel > .stock-overview-title{
-  display:block!important;
-  margin:0 0 12px!important;
-  padding:0!important;
+.stock-slider {
+    display: block;
+    width: 100%;
+    height: 22px;
+    margin: 7px 0 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
 }
-.inventory-panel > .stock-grid{
-  margin-top:12px!important;
+
+.stock-herb .stock-slider {
+    accent-color: #d93636;
 }
+
+.stock-wood .stock-slider {
+    accent-color: #8b5e3c;
+}
+
+.stock-pill .stock-slider {
+    accent-color: #00a99a;
+}
+
+.summary:has(#herbNeed) .metric .name {
+    font-size: 14px !important;
+    font-weight: 600;
+}
+
+.summary:has(#herbNeed) .metric strong {
+    font-size: clamp(26px,3vw,34px) !important;
+    font-weight: 800 !important;
+}
+
+@media (max-width:520px) {
+    .summary:has(#herbNeed) .metric .name {
+        font-size: 12px !important;
+    }
+    .summary:has(#herbNeed) .metric strong {
+        font-size: clamp(20px,5.4vw,27px) !important;
+    }
+}
+
+/*v1.1.88：已有材料库存标题与下方卡片增加间距*/
+
+.inventory-actions .stock-overview-title {
+    margin-bottom: 12px !important;
+}
+
+/*v1.1.88：明确修复库存标题间距、库存卡片透明背景和缺口字号*/
+
+.inventory-panel > .stock-overview-title {
+    display: block !important;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+}
+
+.inventory-panel > .stock-grid {
+    margin-top: 12px !important;
+}
+
 .inventory-panel .stock-grid > .stock,
 .inventory-panel .stock-grid > .stock.stock-herb,
 .inventory-panel .stock-grid > .stock.stock-wood,
-.inventory-panel .stock-grid > .stock.stock-pill,
-  background:transparent!important;
-  border:0!important;
-  box-shadow:none!important;
+.inventory-panel .stock-grid > .stock.stock-pill {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }
-.inventory-panel .stock-grid > .stock label{font-weight:600!important}
+
+.inventory-panel .stock-grid > .stock label {
+    font-weight: 600 !important;
+}
+
 .inventory-panel .stock-herb label,
-.inventory-panel #herbStock{color:#c62828!important}
+.inventory-panel #herbStock {
+    color: #c62828 !important;
+}
+
 .inventory-panel .stock-wood label,
-.inventory-panel #woodStock{color:#79502f!important}
+.inventory-panel #woodStock {
+    color: #79502f !important;
+}
+
 .inventory-panel .stock-pill label,
-.inventory-panel #pillStock{color:#087f75!important}
-.inventory-panel .stock-slider{
-  display:block!important;
-  width:100%!important;
-  margin:8px 0 0!important;
-  padding:0!important;
-  height:22px!important;
-  background:transparent!important;
-}
-.inventory-panel #herbStockSlider{accent-color:#d93636!important}
-.inventory-panel #woodStockSlider{accent-color:#8b5e3c!important}
-.inventory-panel #pillStockSlider{accent-color:#00a99a!important}
-.summary:has(#herbNeed) .metric .name{
-  font-size:16px!important;
-  font-weight:700!important;
-}
-.summary:has(#herbNeed) .metric strong{
-  font-size:clamp(28px,3.2vw,36px)!important;
-  font-weight:800!important;
-  line-height:1.2!important;
-}
-@media(max-width:520px){
-  .inventory-panel > .stock-overview-title{margin-bottom:14px!important}
-  .inventory-panel > .stock-grid{margin-top:14px!important}
-  .summary:has(#herbNeed) .metric .name{font-size:13px!important}
-  .summary:has(#herbNeed) .metric strong{font-size:clamp(21px,5.6vw,28px)!important}
+.inventory-panel #pillStock {
+    color: #087f75 !important;
 }
 
+.inventory-panel .stock-slider {
+    display: block !important;
+    width: 100% !important;
+    margin: 8px 0 0 !important;
+    padding: 0 !important;
+    height: 22px !important;
+    background: transparent !important;
+}
 
-/* v1.1.88：库存模块彻底透明，仅保留材料文字与数字的颜色 */
+.inventory-panel #herbStockSlider {
+    accent-color: #d93636 !important;
+}
+
+.inventory-panel #woodStockSlider {
+    accent-color: #8b5e3c !important;
+}
+
+.inventory-panel #pillStockSlider {
+    accent-color: #00a99a !important;
+}
+
+.summary:has(#herbNeed) .metric .name {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+.summary:has(#herbNeed) .metric strong {
+    font-size: clamp(28px,3.2vw,36px) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+}
+
+@media (max-width:520px) {
+    .inventory-panel > .stock-overview-title {
+        margin-bottom: 14px !important;
+    }
+    .inventory-panel > .stock-grid {
+        margin-top: 14px !important;
+    }
+    .summary:has(#herbNeed) .metric .name {
+        font-size: 13px !important;
+    }
+    .summary:has(#herbNeed) .metric strong {
+        font-size: clamp(21px,5.6vw,28px) !important;
+    }
+}
+
+/*v1.1.88：库存模块彻底透明，仅保留材料文字与数字的颜色*/
+
 .inventory-panel,
 .inventory-panel .stock-grid,
 .inventory-panel .stock-grid > .stock,
 .inventory-panel .stock-grid > .stock.stock-herb,
 .inventory-panel .stock-grid > .stock.stock-wood,
-.inventory-panel .stock-grid > .stock.stock-pill,
-  background:transparent!important;
-  background-color:transparent!important;
-  border-color:transparent!important;
-  box-shadow:none!important;
+.inventory-panel .stock-grid > .stock.stock-pill {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
 }
+
 .inventory-panel .stock-herb label,
-.inventory-panel #herbStock{color:#c62828!important}
+.inventory-panel #herbStock {
+    color: #c62828 !important;
+}
+
 .inventory-panel .stock-wood label,
-.inventory-panel #woodStock{color:#79502f!important}
+.inventory-panel #woodStock {
+    color: #79502f !important;
+}
+
 .inventory-panel .stock-pill label,
-.inventory-panel #pillStock{color:#087f75!important}
+.inventory-panel #pillStock {
+    color: #087f75 !important;
+}
 
+/*v1.1.88：强制清除库存三张材料卡片的彩色底色，仅保留文字颜色*/
 
-/* v1.1.88：强制清除库存三张材料卡片的彩色底色，仅保留文字颜色 */
 section.card .inventory-panel .stock-grid > .stock,
 section.card .inventory-panel .stock-grid > .stock.stock-herb,
 section.card .inventory-panel .stock-grid > .stock.stock-wood,
 section.card .inventory-panel .stock-grid > .stock.stock-pill,
 section.card .inventory-panel .stock-grid > .stock:has(#herbStock),
 section.card .inventory-panel .stock-grid > .stock:has(#woodStock),
-section.card .inventory-panel .stock-grid > .stock:has(#pillStock),
-  background: none !important;
-  background-color: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+section.card .inventory-panel .stock-grid > .stock:has(#pillStock) {
+    background: none !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }
+
 section.card .inventory-panel .stock-grid > .stock.stock-herb label,
-section.card .inventory-panel .stock-grid > .stock.stock-herb #herbStock { color:#c62828 !important; }
-section.card .inventory-panel .stock-grid > .stock.stock-wood label,
-section.card .inventory-panel .stock-grid > .stock.stock-wood #woodStock { color:#79502f !important; }
-section.card .inventory-panel .stock-grid > .stock.stock-pill label,
-section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock { color:#087f75 !important; }
-
-
-/* v1.1.88：材料需求总览去除卡片背景，仅保留三类材料的文字配色 */
-.summary:has(#herbNeed),
-.summary:has(#herbNeed) .metric,
-.summary:has(#herbNeed) .metric:nth-child(1),
-.summary:has(#herbNeed) .metric:nth-child(2),
-.summary:has(#herbNeed) .metric:nth-child(3){
-  background:transparent!important;
-  background-color:transparent!important;
-  border-color:transparent!important;
-  box-shadow:none!important;
+section.card .inventory-panel .stock-grid > .stock.stock-herb #herbStock {
+    color: #c62828 !important;
 }
+
+section.card .inventory-panel .stock-grid > .stock.stock-wood label,
+section.card .inventory-panel .stock-grid > .stock.stock-wood #woodStock {
+    color: #79502f !important;
+}
+
+section.card .inventory-panel .stock-grid > .stock.stock-pill label,
+section.card .inventory-panel .stock-grid > .stock.stock-pill #pillStock {
+    color: #087f75 !important;
+}
+
+/* 材料需求总览恢复独立卡片容器；三种材料保留各自文字颜色 */
+
 .summary:has(#herbNeed) .metric:nth-child(1) .name,
 .summary:has(#herbNeed) .metric:nth-child(1) strong,
-.summary:has(#herbNeed) .metric:nth-child(1) small{color:#c62828!important}
+.summary:has(#herbNeed) .metric:nth-child(1) small {
+    color: #c62828 !important;
+}
+
 .summary:has(#herbNeed) .metric:nth-child(2) .name,
 .summary:has(#herbNeed) .metric:nth-child(2) strong,
-.summary:has(#herbNeed) .metric:nth-child(2) small{color:#79502f!important}
+.summary:has(#herbNeed) .metric:nth-child(2) small {
+    color: #79502f !important;
+}
+
 .summary:has(#herbNeed) .metric:nth-child(3) .name,
 .summary:has(#herbNeed) .metric:nth-child(3) strong,
-.summary:has(#herbNeed) .metric:nth-child(3) small{color:#087f75!important}
-
-
-/* 以下预览样式直接取自军师页面，未重新设计 */
-.all-gifts-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:4px 2px}
-.all-gifts-heading{display:block;min-width:0;flex:1 1 auto}
-.all-gifts-heading strong{display:block;white-space:nowrap;font-size:18px;font-weight:800;color:var(--primary)}
-.all-gifts-heading small{display:block;color:var(--muted);font-size:13px;font-weight:400;margin-top:6px;line-height:1.5}
-.all-gifts-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);color:var(--primary);padding:8px 12px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;white-space:nowrap}
-.all-gifts-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-
-.all-gifts-content{margin-top:16px;max-height:200px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-.all-gifts-content.is-expanded{max-height:none;overflow:visible}
-.all-gifts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.all-gift-option{border:1px solid var(--border);border-top:3px solid var(--muted);border-radius:14px;padding:14px;background:var(--panel);min-width:0}
-.all-gift-option.selected{border-color:var(--accent);border-top-color:var(--accent);box-shadow:0 4px 14px #0000000d}
-.all-gift-option h3{font-size:15px;margin:0;line-height:1.4}
-.all-gift-option .all-gift-price{font-size:19px;font-weight:800;white-space:nowrap}
-.all-gift-option .all-gift-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.all-gift-option .all-gift-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-.all-gift-option .all-gift-stat{background:var(--soft);border-radius:8px;padding:9px;min-width:0}
-.all-gift-option .all-gift-stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
-.all-gift-option .all-gift-stat b{display:block;font-size:15px;overflow-wrap:anywhere}
-.all-gift-option .all-gift-foot{margin-top:12px;padding:10px;border-radius:9px;background:var(--soft);font-size:13px;line-height:1.7}
-.all-gift-option .all-gift-foot b{font-size:19px}
-@media(max-width:760px){.all-gifts-grid{grid-template-columns:1fr}.all-gift-option .all-gift-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-
-/* 全部方案预览：礼包信息、购买汇总、返利对比使用分层卡片与醒目配色 */
-.all-gifts-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.all-gift-option{padding:14px;border:1px solid var(--line);border-top:4px solid #64748b;border-radius:16px;background:var(--panel2)}
-.all-gift-option.selected{border-color:var(--accent);border-top-color:var(--accent)}
-.all-gift-info-card,.all-gift-purchase-card,.all-gift-compare-card{border-radius:12px;padding:13px;margin-top:11px;min-width:0}
-.all-gift-info-card{background:var(--panel);border:1px solid var(--line)}
-.all-gift-info-card .all-gift-top{border:0;padding:0 0 10px;margin:0}
-.all-gift-pack-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.all-gift-pack-info>div{border-radius:9px;padding:9px 7px;background:var(--panel2);text-align:center}
-.all-gift-pack-info span,.all-gift-stat span{display:block;color:var(--muted);font-size:12px;line-height:1.4}
-.all-gift-pack-info b{display:block;font-size:16px;margin-top:4px;color:var(--text);overflow-wrap:anywhere}
-.all-gift-pack-info span{font-size:14px}
-.all-gift-pack-info b{font-size:18px}
-.all-gift-purchase-card{background:color-mix(in srgb,#d49a26 10%,var(--panel));border:1px solid color-mix(in srgb,#d49a26 40%,var(--line))}
-.all-gift-purchase-card h4,.all-gift-compare-card h4{margin:0 0 9px;font-size:14px}
-.all-gift-purchase-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.all-gift-purchase-metrics>div{border-radius:9px;padding:10px;background:var(--panel)}
-.all-gift-purchase-metrics span{display:block;color:var(--muted);font-size:12px}
-.all-gift-purchase-metrics b{display:block;margin-top:3px;font-size:20px;color:var(--text);overflow-wrap:anywhere}
-.all-gift-purchase-metrics>div:first-child b{color:#b77912}
-.all-gift-compare-card{background:var(--panel);border:1px solid var(--line)}
-.all-gift-compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.all-gift-mode{border-radius:11px;padding:11px;min-width:0}
-.all-gift-mode.normal{background:rgba(220,69,69,.08);border:1px solid rgba(220,69,69,.38)}
-.all-gift-mode.rebate{background:rgba(22,167,101,.09);border:1px solid rgba(22,167,101,.42)}
-.all-gift-mode-title{font-size:13px;font-weight:800;margin-bottom:8px}
-.all-gift-mode.normal .all-gift-mode-title,.all-gift-mode.normal .mode-cost,.all-gift-mode.normal .all-gift-stat b{color:#dc4545}
-.all-gift-mode.rebate .all-gift-mode-title,.all-gift-mode.rebate .mode-cost,.all-gift-mode.rebate .all-gift-stat b{color:#16a765}
-.all-gift-mode .mode-cost{font-size:21px;font-weight:850;line-height:1.3;margin-bottom:8px;overflow-wrap:anywhere}
-.all-gift-mode .all-gift-stat{padding:7px 0;border-top:1px solid var(--line);background:transparent;border-radius:0}
-.all-gift-mode .all-gift-stat b{font-size:18px;line-height:1.35}
-.all-gift-mode .all-gift-stat span{font-size:13px;line-height:1.45}
-@media(max-width:1000px){.all-gifts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){.all-gifts-grid{grid-template-columns:1fr}}
-@media(max-width:560px){.all-gift-pack-info{gap:5px}.all-gift-pack-info>div{padding:8px 4px}.all-gift-pack-info b{font-size:16px}.all-gift-compare-grid{gap:7px}.all-gift-mode{padding:9px}.all-gift-mode .mode-cost{font-size:18px}}
-
-
-
-
-.level-data-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.level-data-heading h2{margin:0}
-.level-data-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
-.level-data-actions .all-gifts-toggle{padding:8px 12px;font-size:13px}
-.level-data-actions button[aria-pressed="true"]{background:var(--primary);color:#fff}
-.level-data-actions button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
-@media(max-width:420px){.level-data-heading{gap:8px}.level-data-actions{gap:6px}.level-data-actions .all-gifts-toggle{padding:8px 10px;font-size:12px}}
-
-
-/* 昼夜主题：默认白天 06:00–17:59，夜间 18:00–05:59 */
-body{transition:background-color .22s,color .22s;}
-body.dark-theme{--bg:#0d1422;--card:#151f30;--ink:#e8eef8;--muted:#a0aec3;--line:#334258;--primary-soft:#1c2b43;background:var(--bg);color:var(--ink);color-scheme:dark}
-body.dark-theme .card{background:var(--card);border-color:color-mix(in srgb,var(--primary) 28%,var(--line))}
-body.dark-theme .exp-panel,body.dark-theme .stock,body.dark-theme .metric,body.dark-theme .allocation-item{background:color-mix(in srgb,var(--primary-soft) 88%,var(--card));}
-body.dark-theme select,body.dark-theme input,body.dark-theme .beast,body.dark-theme .plan-option,body.dark-theme .pack-detail,body.dark-theme .pack-detail h3,body.dark-theme .exp-denom,body.dark-theme .plan-option span{background:#1b2739;color:var(--ink);border-color:var(--line)}
-body.dark-theme .secondary{background:#273449;color:var(--ink)}
-body.dark-theme .level-table tbody tr:nth-child(even){background:#182437}
-body.dark-theme .purchase-card{background:linear-gradient(145deg,#1c2b43,#172234)}
-body.dark-theme .home-return,body.dark-theme .theme-toggle{background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 35%,var(--line))}
-.theme-toggle{position:static;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 17px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--primary);font:600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;cursor:pointer;box-shadow:0 6px 22px #0002;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,box-shadow .2s ease,background-color .25s ease}
-.theme-toggle:hover{transform:translateY(-2px);box-shadow:0 9px 26px #0003}.theme-toggle:active{transform:scale(.97)}.theme-toggle:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
-.theme-toggle svg{width:18px;height:18px;flex:none}
-@media(max-width:480px){.theme-toggle{padding:11px 12px;font-size:13px;gap:6px}}
-@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
-
-/* v2.1.22：恢复礼包价格及费用金额的小数显示 */
-.plan-option{
-  grid-template-columns:minmax(0,1fr) auto!important;
-  grid-template-rows: minmax(24px,auto) 1fr!important;
-  align-items:center!important;
+.summary:has(#herbNeed) .metric:nth-child(3) small {
+    color: #087f75 !important;
 }
-.plan-option>strong{
-  grid-column:1!important;grid-row:1!important;
-  align-self:center!important;margin:0!important;
-  line-height:1.25!important;white-space:nowrap!important;
-  word-break:keep-all!important;overflow-wrap:normal!important;
+
+/*以下预览样式直接取自军师页面，未重新设计*/
+
+.all-gifts-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 4px 2px;
 }
-.plan-option>.plan-price{
-  grid-column:2!important;grid-row:1!important;
-  align-self:center!important;justify-self:end!important;
-  margin:0!important;line-height:1.25!important;
-  white-space:nowrap!important;font-variant-numeric:tabular-nums!important;
+
+.all-gifts-heading {
+    display: block;
+    min-width: 0;
+    flex: 1 1 auto;
 }
-.plan-option>.plan-pack-stats{grid-column:1/-1!important;grid-row:2!important}
+
+.all-gifts-heading strong {
+    display: block;
+    white-space: nowrap;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.all-gifts-heading small {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.all-gifts-toggle {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 8px 12px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.all-gifts-toggle:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.all-gifts-content {
+    margin-top: 16px;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.all-gifts-content.is-expanded {
+    max-height: none;
+    overflow: visible;
+}
+
+.all-gifts-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 12px;
+}
+
+.all-gift-option {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--muted);
+    border-radius: 14px;
+    padding: 14px;
+    background: var(--panel);
+    min-width: 0;
+}
+
+.all-gift-option.selected {
+    border-color: var(--accent);
+    border-top-color: var(--accent);
+    box-shadow: 0 4px 14px #0000000d;
+}
+
+.all-gift-option h3 {
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.all-gift-option .all-gift-price {
+    font-size: 19px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.all-gift-option .all-gift-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.all-gift-option .all-gift-stats {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.all-gift-option .all-gift-stat {
+    background: var(--soft);
+    border-radius: 8px;
+    padding: 9px;
+    min-width: 0;
+}
+
+.all-gift-option .all-gift-stat span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.all-gift-option .all-gift-stat b {
+    display: block;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.all-gift-option .all-gift-foot {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 9px;
+    background: var(--soft);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.all-gift-option .all-gift-foot b {
+    font-size: 19px;
+}
+
+@media (max-width:760px) {
+    .all-gifts-grid {
+        grid-template-columns: 1fr;
+    }
+    .all-gift-option .all-gift-stats {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+/*全部方案预览：礼包信息、购买汇总、返利对比使用分层卡片与醒目配色*/
+
+.all-gifts-grid {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 16px;
+}
+
+.all-gift-option {
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-top: 4px solid #64748b;
+    border-radius: 16px;
+    background: var(--panel2);
+}
+
+.all-gift-option.selected {
+    border-color: var(--accent);
+    border-top-color: var(--accent);
+}
+
+.all-gift-info-card,.all-gift-purchase-card,.all-gift-compare-card {
+    border-radius: 12px;
+    padding: 13px;
+    margin-top: 11px;
+    min-width: 0;
+}
+
+.all-gift-info-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+}
+
+.all-gift-info-card .all-gift-top {
+    border: 0;
+    padding: 0 0 10px;
+    margin: 0;
+}
+
+.all-gift-pack-info {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 8px;
+}
+
+.all-gift-pack-info>div {
+    border-radius: 9px;
+    padding: 9px 7px;
+    background: var(--panel2);
+    text-align: center;
+}
+
+.all-gift-pack-info span,.all-gift-stat span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.all-gift-pack-info b {
+    display: block;
+    font-size: 16px;
+    margin-top: 4px;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.all-gift-pack-info span {
+    font-size: 14px;
+}
+
+.all-gift-pack-info b {
+    font-size: 18px;
+}
+
+.all-gift-purchase-card {
+    background: color-mix(in srgb,#d49a26 10%,var(--panel));
+    border: 1px solid color-mix(in srgb,#d49a26 40%,var(--line));
+}
+
+.all-gift-purchase-card h4,.all-gift-compare-card h4 {
+    margin: 0 0 9px;
+    font-size: 14px;
+}
+
+.all-gift-purchase-metrics {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+}
+
+.all-gift-purchase-metrics>div {
+    border-radius: 9px;
+    padding: 10px;
+    background: var(--panel);
+}
+
+.all-gift-purchase-metrics span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.all-gift-purchase-metrics b {
+    display: block;
+    margin-top: 3px;
+    font-size: 20px;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.all-gift-purchase-metrics>div:first-child b {
+    color: #b77912;
+}
+
+.all-gift-compare-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+}
+
+.all-gift-compare-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+}
+
+.all-gift-mode {
+    border-radius: 11px;
+    padding: 11px;
+    min-width: 0;
+}
+
+.all-gift-mode.normal {
+    background: rgba(220,69,69,.08);
+    border: 1px solid rgba(220,69,69,.38);
+}
+
+.all-gift-mode.rebate {
+    background: rgba(22,167,101,.09);
+    border: 1px solid rgba(22,167,101,.42);
+}
+
+.all-gift-mode-title {
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.all-gift-mode.normal .all-gift-mode-title,.all-gift-mode.normal .mode-cost,.all-gift-mode.normal .all-gift-stat b {
+    color: #dc4545;
+}
+
+.all-gift-mode.rebate .all-gift-mode-title,.all-gift-mode.rebate .mode-cost,.all-gift-mode.rebate .all-gift-stat b {
+    color: #16a765;
+}
+
+.all-gift-mode .mode-cost {
+    font-size: 21px;
+    font-weight: 850;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    overflow-wrap: anywhere;
+}
+
+.all-gift-mode .all-gift-stat {
+    padding: 7px 0;
+    border-top: 1px solid var(--line);
+    background: transparent;
+    border-radius: 0;
+}
+
+.all-gift-mode .all-gift-stat b {
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.all-gift-mode .all-gift-stat span {
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+@media (max-width:1000px) {
+    .all-gifts-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+@media (max-width:760px) {
+    .all-gifts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width:560px) {
+    .all-gift-pack-info {
+        gap: 5px;
+    }
+    .all-gift-pack-info>div {
+        padding: 8px 4px;
+    }
+    .all-gift-pack-info b {
+        font-size: 16px;
+    }
+    .all-gift-compare-grid {
+        gap: 7px;
+    }
+    .all-gift-mode {
+        padding: 9px;
+    }
+    .all-gift-mode .mode-cost {
+        font-size: 18px;
+    }
+}
+
+.level-data-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.level-data-heading h2 {
+    margin: 0;
+}
+
+.level-data-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.level-data-actions .all-gifts-toggle {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.level-data-actions button[aria-pressed="true"] {
+    background: var(--primary);
+    color: #fff;
+}
+
+.level-data-actions button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (max-width:420px) {
+    .level-data-heading {
+        gap: 8px;
+    }
+    .level-data-actions {
+        gap: 6px;
+    }
+    .level-data-actions .all-gifts-toggle {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+}
+
+/*昼夜主题：默认白天 06:00–17:59，夜间 18:00–05:59*/
+
+body {
+    transition: background-color .22s,color .22s;
+}
+
+body.dark-theme {
+    --bg: #0d1422;
+    --card: #151f30;
+    --ink: #e8eef8;
+    --muted: #a0aec3;
+    --line: #334258;
+    --primary-soft: #1c2b43;
+    background: var(--bg);
+    color: var(--ink);
+    color-scheme: dark;
+}
+
+body.dark-theme .card {
+    background: var(--card);
+    border-color: color-mix(in srgb,var(--primary) 28%,var(--line));
+}
+
+body.dark-theme .exp-panel,body.dark-theme .stock,body.dark-theme .metric,body.dark-theme .allocation-item {
+    background: color-mix(in srgb,var(--primary-soft) 88%,var(--card));
+}
+
+body.dark-theme select,body.dark-theme input,body.dark-theme .beast,body.dark-theme .plan-option,body.dark-theme .pack-detail,body.dark-theme .pack-detail h3,body.dark-theme .exp-denom,body.dark-theme .plan-option span {
+    background: #1b2739;
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+body.dark-theme .secondary {
+    background: #273449;
+    color: var(--ink);
+}
+
+body.dark-theme .level-table tbody tr:nth-child(even) {
+    background: #182437;
+}
+
+body.dark-theme .purchase-card {
+    background: linear-gradient(145deg,#1c2b43,#172234);
+}
+
+body.dark-theme .home-return,body.dark-theme .theme-toggle {
+    background: color-mix(in srgb,var(--card) 92%,transparent);
+    color: var(--primary);
+    border-color: color-mix(in srgb,var(--primary) 35%,var(--line));
+}
+
+.theme-toggle {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 17px;
+    border: 1px solid color-mix(in srgb,var(--primary) 35%,var(--line));
+    border-radius: 999px;
+    background: color-mix(in srgb,var(--card) 92%,transparent);
+    color: var(--primary);
+    font: 600 14px/1.2 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    cursor: pointer;
+    box-shadow: 0 6px 22px #0002;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform .2s ease,box-shadow .2s ease,background-color .25s ease;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 26px #0003;
+}
+
+.theme-toggle:active {
+    transform: scale(.97);
+}
+
+.theme-toggle:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.theme-toggle svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+}
+
+@media (max-width:480px) {
+    .theme-toggle {
+        padding: 11px 12px;
+        font-size: 13px;
+        gap: 6px;
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    .theme-toggle {
+        transition: none;
+    }
+}
+
+/*v2.1.22：恢复礼包价格及费用金额的小数显示*/
+
+.plan-option {
+    grid-template-columns: minmax(0,1fr) auto !important;
+    grid-template-rows: minmax(24px,auto) 1fr !important;
+    align-items: center !important;
+}
+
+.plan-option>strong {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    align-self: center !important;
+    margin: 0 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+}
+
+.plan-option>.plan-price {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    margin: 0 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+.plan-option>.plan-pack-stats {
+    grid-column: 1/-1 !important;
+    grid-row: 2 !important;
+}
+
 .fee-metric strong,.package-summary .fee-metric strong,
-#bundleCost,#rebateBundleCost,#rebateSavings{
-  white-space:nowrap!important;font-variant-numeric:tabular-nums!important;
+#bundleCost,#rebateBundleCost,#rebateSavings {
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums !important;
 }
 
-/* v2.1.21：全部方案标题与展开按钮固定同一行 */
-#allGiftPreview .all-gifts-header{align-items:flex-start!important}
-#allGiftPreview .all-gifts-heading strong{white-space:nowrap!important}
-#allGiftPreview .all-gifts-toggle{align-self:flex-start!important}
+/*v2.1.21：全部方案标题与展开按钮固定同一行*/
 
-/* v2.3.14：全部方案预览卡片内部统一收紧行高；不改变字号、间距、布局或其他样式 */
+#allGiftPreview .all-gifts-header {
+    align-items: flex-start !important;
+}
+
+#allGiftPreview .all-gifts-heading strong {
+    white-space: nowrap !important;
+}
+
+#allGiftPreview .all-gifts-toggle {
+    align-self: flex-start !important;
+}
+
+/*v2.3.14：全部方案预览卡片内部统一收紧行高；不改变字号、间距、布局或其他样式*/
+
 #allGiftPreview .all-gift-option,
-#allGiftPreview .all-gift-option *{line-height:1.2!important}
+#allGiftPreview .all-gift-option * {
+    line-height: 1.2 !important;
+}
+
+/*v2.4.5：礼包区域主题变量与深色模式适配*/
+
+:root {
+    --text: var(--ink);
+    --panel: var(--card);
+    --panel2: #f5f7fb;
+    --border: var(--line);
+    --soft: var(--primary-soft);
+    --accent: var(--primary);
+}
+
+body.dark-theme {
+    --text: #e8eef8;
+    --panel: #151f30;
+    --panel2: #1b293d;
+    --border: #334258;
+    --soft: #1c2b43;
+    --accent: var(--primary);
+}
+
+/*礼包购买方案：深色主题下不再沿用写死的白色底色*/
+
+body.dark-theme .card.section:has(.plan-options) {
+    background: var(--card);
+    color: var(--ink);
+}
+
+body.dark-theme .plan-option,
+body.dark-theme .plan-option.active,
+body.dark-theme .plan-option span,
+body.dark-theme .plan-option .plan-pack-stats span {
+    background: var(--panel2) !important;
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+body.dark-theme .plan-option .plan-price {
+    color: #e4b85c !important;
+}
+
+body.dark-theme .plan-option .plan-pack-stats b {
+    color: var(--ink);
+}
+
+body.dark-theme .summary .metric,
+body.dark-theme .summary .metric:first-child {
+    background: var(--panel2) !important;
+    border-color: var(--line) !important;
+}
+
+body.dark-theme .summary .metric .name,
+body.dark-theme .summary .metric strong {
+    color: var(--ink) !important;
+}
+
+body.dark-theme .pack-detail,
+body.dark-theme .all-gift-info-card,
+body.dark-theme .all-gift-compare-card,
+body.dark-theme .all-gift-option,
+body.dark-theme .all-gift-purchase-metrics > div {
+    background: var(--panel) !important;
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+body.dark-theme .all-gift-pack-info > div,
+body.dark-theme .all-gift-stat {
+    background: var(--panel2);
+    color: var(--ink);
+}
+
+body.dark-theme .all-gift-pack-info b,
+body.dark-theme .all-gift-purchase-metrics b {
+    color: var(--ink);
+}
+
+body.dark-theme .all-gift-purchase-card {
+    background: var(--panel2);
+    border-color: var(--line);
+}
+
+body.dark-theme .all-gift-mode.normal {
+    background: rgba(220, 69, 69, .12);
+    border-color: rgba(220, 69, 69, .4);
+}
+
+body.dark-theme .all-gift-mode.rebate {
+    background: rgba(22, 167, 101, .12);
+    border-color: rgba(22, 167, 101, .42);
+}
+
+/*全部方案同屏预览：保留点击反馈动效，但不使用立体阴影或缩放*/
+
+@keyframes previewCardPulse {
+    0% { border-color: var(--line); }
+    45% { border-color: var(--accent); }
+    100% { border-color: var(--accent); }
+}
+
+.all-gift-option,
+.all-gift-option.selected {
+    box-shadow: none !important;
+    transform: none !important;
+    transition: border-color .15s ease !important;
+}
+
+.all-gift-option.selected {
+    border-color: var(--accent) !important;
+    border-top-color: var(--accent) !important;
+    animation: previewCardPulse .34s ease-out;
+}
+
+.all-gift-option:active,
+.all-gift-option:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .all-gift-option,
+    .all-gift-option.selected {
+        transition: none !important;
+        animation: none !important;
+    }
+}
 </style>
 <style>/* v1.2.12：礼包价格去除外框，并与左侧礼包名称同一行垂直对齐 */
 .plan-option .plan-price{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;align-self:center;justify-self:end}
@@ -866,7 +3247,233 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 @media(max-width:420px){
   .exp-panel .exp-halves{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
-</style>\n</head>
+</style>\n
+<style id="dark-package-fee-metric-fix">
+/* v2.4.6：修复深色主题下礼包预计费用卡片内部文字背景异常 */
+body.dark-theme .package-summary .fee-metric.status-red,
+body.dark-theme .package-summary .fee-metric.status-green {
+    background: var(--panel2) !important;
+    border-color: var(--border) !important;
+}
+
+body.dark-theme .package-summary .fee-metric.status-red .name,
+body.dark-theme .package-summary .fee-metric.status-red strong,
+body.dark-theme .package-summary .fee-metric.status-green .name,
+body.dark-theme .package-summary .fee-metric.status-green strong {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+body.dark-theme .package-summary .fee-metric.status-red .name,
+body.dark-theme .package-summary .fee-metric.status-red strong {
+    color: #ff6b6b !important;
+}
+
+body.dark-theme .package-summary .fee-metric.status-green .name,
+body.dark-theme .package-summary .fee-metric.status-green strong {
+    color: #42c98a !important;
+}
+</style>
+
+
+<style id="v2-4-7-theme-buttons-and-material-cards">
+/* v2.4.7：所有可点击按钮统一跟随当前神兽主题色 */
+button,
+a.home-return {
+    border-color: color-mix(in srgb, var(--primary) 34%, var(--line)) !important;
+    transition: color .18s ease, background-color .18s ease,
+        border-color .18s ease, transform .18s ease !important;
+}
+
+button.beast:not(.active) {
+    background: var(--card) !important;
+    color: var(--ink) !important;
+    border-color: color-mix(in srgb, var(--primary) 28%, var(--line)) !important;
+}
+
+button.beast.active {
+    background: var(--primary-soft) !important;
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+button.action,
+button.secondary,
+button.all-gifts-toggle,
+button.theme-toggle,
+a.home-return {
+    background: var(--primary-soft) !important;
+    color: var(--primary) !important;
+    border: 1px solid color-mix(in srgb, var(--primary) 38%, var(--line)) !important;
+}
+
+button:hover,
+a.home-return:hover {
+    border-color: var(--primary) !important;
+    background: color-mix(in srgb, var(--primary-soft) 72%, var(--primary) 28%) !important;
+    color: var(--primary) !important;
+}
+
+button:focus-visible,
+a.home-return:focus-visible {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 2px;
+}
+
+body.dark-theme button,
+body.dark-theme a.home-return {
+    border-color: color-mix(in srgb, var(--primary) 42%, var(--line)) !important;
+}
+
+body.dark-theme button.action,
+body.dark-theme button.secondary,
+body.dark-theme button.all-gifts-toggle,
+body.dark-theme button.theme-toggle,
+body.dark-theme a.home-return {
+    background: color-mix(in srgb, var(--primary-soft) 88%, var(--card)) !important;
+    color: var(--primary) !important;
+}
+
+body.dark-theme button:hover,
+body.dark-theme a.home-return:hover {
+    background: color-mix(in srgb, var(--primary) 22%, var(--card)) !important;
+    color: var(--primary) !important;
+}
+
+/* 材料需求总览：恢复三张独立卡片框 */
+.summary:has(#herbNeed) .metric,
+.summary:has(#herbNeed) .metric:nth-child(1),
+.summary:has(#herbNeed) .metric:nth-child(2),
+.summary:has(#herbNeed) .metric:nth-child(3) {
+    background: var(--primary-soft) !important;
+    background-color: var(--primary-soft) !important;
+    border: 1px solid color-mix(in srgb, var(--primary) 26%, var(--line)) !important;
+    border-top: 2px solid var(--primary) !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .summary:has(#herbNeed) .metric,
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(1),
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(2),
+body.dark-theme .summary:has(#herbNeed) .metric:nth-child(3) {
+    background: var(--panel2) !important;
+    background-color: var(--panel2) !important;
+    border-color: var(--line) !important;
+    border-top-color: var(--primary) !important;
+}
+
+
+/* v2.4.9：返利开关采用语义状态色，未开启红色、已开启绿色；昼夜主题分别降低/提高底色明度 */
+.rebate-toggle .rebate-chip-label,
+.rebate-toggle-chip {
+    border: 1.5px solid #e5484d !important;
+    background: #fff1f0 !important;
+    color: #c92a2a !important;
+    box-shadow: 0 1px 3px rgba(201, 42, 42, 0.10);
+}
+
+.rebate-toggle input:checked + .rebate-chip-label {
+    border-color: #229b62 !important;
+    background: #eaf8f0 !important;
+    color: #147a49 !important;
+    box-shadow: 0 1px 3px rgba(20, 122, 73, 0.12);
+}
+
+.rebate-toggle .rebate-chip-label:hover {
+    filter: brightness(0.97);
+}
+
+.rebate-toggle input:checked + .rebate-chip-label:hover {
+    filter: brightness(0.97);
+}
+
+.rebate-toggle input:focus-visible + .rebate-chip-label {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 3px;
+}
+
+.inventory-panel #pillStockSlider {
+    accent-color: var(--primary) !important;
+    color-scheme: light;
+}
+
+.inventory-panel #pillStockSlider::-webkit-slider-runnable-track {
+    height: 6px;
+    border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--line));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary-soft) 78%, var(--line));
+}
+
+.inventory-panel #pillStockSlider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    background: var(--card);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.inventory-panel #pillStockSlider::-moz-range-track {
+    height: 6px;
+    border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--line));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary-soft) 78%, var(--line));
+}
+
+.inventory-panel #pillStockSlider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    background: var(--card);
+}
+
+body.dark-theme .rebate-toggle .rebate-chip-label,
+body.dark-theme .rebate-toggle-chip {
+    border-color: #a83d45 !important;
+    background: #38232b !important;
+    color: #ff9298 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.20);
+}
+
+body.dark-theme .rebate-toggle input:checked + .rebate-chip-label {
+    border-color: #287e58 !important;
+    background: #19372d !important;
+    color: #79d6a5 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.20);
+}
+
+body.dark-theme .inventory-panel #pillStockSlider {
+    color-scheme: dark;
+    accent-color: color-mix(in srgb, var(--primary) 82%, #ffffff) !important;
+}
+
+body.dark-theme .inventory-panel #pillStockSlider::-webkit-slider-runnable-track {
+    border-color: color-mix(in srgb, var(--primary) 42%, var(--line));
+    background: #263449;
+}
+
+body.dark-theme .inventory-panel #pillStockSlider::-webkit-slider-thumb {
+    border-color: color-mix(in srgb, var(--primary) 82%, #ffffff);
+    background: #172235;
+}
+
+body.dark-theme .inventory-panel #pillStockSlider::-moz-range-track {
+    border-color: color-mix(in srgb, var(--primary) 42%, var(--line));
+    background: #263449;
+}
+
+body.dark-theme .inventory-panel #pillStockSlider::-moz-range-thumb {
+    border-color: color-mix(in srgb, var(--primary) 82%, #ffffff);
+    background: #172235;
+}
+
+</style>
+
+</head>
 <body>
 <div class="floating-actions">
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换昼夜主题" title="切换昼夜主题"><svg id="themeToggleIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="themeToggleText">切换夜间</span></button>
@@ -1054,556 +3661,669 @@ body.gift-data-fallback .gift-data-number { color:#d93025 !important; }
 
 
 <script>
-function setGiftDataSource(source){
-  if(!document.body.classList.contains('gift-data-source-initialized')){document.body.classList.add('gift-data-source-initialized','gift-data-fallback');}
-  document.body.classList.toggle('gift-data-fallback',source==='fallback');
-  document.body.classList.toggle('gift-data-json',source==='json');
+function setGiftDataSource(source) {
+    if (!document.body.classList.contains('gift-data-source-initialized')) {
+        document.body.classList.add('gift-data-source-initialized', 'gift-data-fallback');
+    }
+    document.body.classList.toggle('gift-data-fallback', source === 'fallback');
+    document.body.classList.toggle('gift-data-json', source === 'json');
 }
 /* 页面初始显示 HTML 内置礼包数据；JSON 加载成功后切换为正常颜色 */
-document.body.classList.add('gift-data-source-initialized','gift-data-fallback');
-
+document.body.classList.add('gift-data-source-initialized', 'gift-data-fallback');
 const raw = [
-[0,0,0,35,35,35,14,14],
-[8,0,0,45,45,45,18,18],
-[36,0,0,60,60,60,23,23],
-[96,0,0,75,75,75,30,30],
-[200,0,0,95,95,95,38,38],
-[360,0,0,120,120,120,48,48],
-[546,234,0,150,150,150,60,60],
-[816,408,0,185,185,185,74,74],
-[1170,650,0,225,225,225,90,90],
-[1640,820,0,270,270,270,108,108],
-[2200,1400,0,320,320,320,128,128],
-[2640,1760,0,375,375,375,150,150],
-[3380,2340,1040,435,435,435,174,174],
-[4256,3040,1520,500,500,500,200,200],
-[5250,3850,2100,570,570,570,228,228],
-[6400,4800,2800,645,645,645,258,258],
-[7106,5434,3344,725,725,725,290,290],
-[8460,6580,4230,810,810,810,324,324],
-[9994,7890,5260,900,900,900,360,360],
-[11720,9376,6446,1000,1000,1000,400,400],
-[13566,10982,7752,1110,1110,1110,444,444],
-[14520,11880,8580,1230,1230,1230,492,492],
-[16606,13718,10108,1360,1360,1360,544,544],
-[18912,15760,11820,1500,1500,1500,600,600],
-[21450,18018,13728,1650,1650,1650,660,660],
-[24128,20416,15776,1810,1810,1810,725,725],
-[25272,21528,16848,1980,1980,1980,795,795],
-[28224,24192,19152,2160,2160,2160,870,870],
-[31436,27100,21680,2350,2350,2350,950,950],
-[34800,30160,24360,2550,2550,2550,1035,1035],
-[38440,33480,27280,2765,2765,2765,1125,1125],
-[39680,34720,28520,2995,2995,2995,1220,1220],
-[43560,38280,31680,3240,3240,3240,1320,1320],
-[47668,42060,35050,3500,3500,3500,1430,1430],
-[52080,46128,38688,3775,3775,3775,1550,1550],
-[56664,50368,42498,4065,4065,4065,1680,1680],
-[58016,51744,43904,4370,4370,4370,1820,1820],
-[62852,56236,47966,4690,4690,4690,1970,1970],
-[68016,61040,52320,5025,5025,5025,2130,2130],
-[73360,66024,56854,5380,5380,5380,2310,2310],
-[79333,71778,62333,5680,5680,5680,2430,2430],
-[98353,89412,78235,5980,5980,5980,2550,2550],
-[107333,98000,86333,6280,6280,6280,2670,2670],
-[122667,112444,99667,6580,6580,6580,2790,2790],
-[131579,121053,107895,6880,6880,6880,2910,2910],
-[147789,136421,122211,7180,7180,7180,3030,3030],
-[164842,152632,137368,7480,7480,7480,3150,3150],
-[182737,169684,153368,7780,7780,7780,3270,3270],
-[191400,178200,161700,8080,8080,8080,3390,3390],
-[210000,196000,178500,8380,8380,8380,3540,3540],
-[229400,214600,196100,8680,8680,8680,3690,3690],
-[249600,234000,214500,8980,8980,8980,3840,3840],
-[257714,242095,222571,9280,9280,9280,3990,3990],
-[278476,262095,241619,9580,9580,9580,4140,4140],
-[300000,282857,261429,9880,9880,9880,4290,4290],
-[322286,304381,282000,10180,10180,10180,4440,4440],
-[329636,311818,289545,10480,10480,10480,4590,4590],
-[352364,333818,310636,10780,10780,10780,4740,4740],
-[375818,356545,332455,11080,11080,11080,4890,4890],
-[400000,380000,355000,11380,11380,11380,5040,5040],
-[424924,404196,378226,11580,11580,11580,5090,5090],
-[430920,410400,384750,11780,11780,11780,5140,5140],
-[456114,434288,408408,11980,11980,11980,5190,5190],
-[462000,441000,414750,12180,12180,12180,5240,5240],
-[487400,465776,438696,12380,12380,12380,5290,5290],
-[493120,471680,444880,12580,12580,12580,5340,5340],
-[518880,496800,469200,12780,12780,12780,5390,5390],
-[524352,502504,475194,12980,12980,12980,5440,5440],
-[550368,527904,499824,13180,13180,13180,5490,5490],
-[555600,533376,505596,13480,13480,13480,5590,5590],
-[581808,558992,530472,13780,13780,13780,5790,5790],
-[588068,564200,535990,14080,14080,14080,5990,5990],
-[613316,590172,561242,14380,14380,14380,6090,6090],
-[618192,595296,566676,14680,14680,14680,6290,6290],
-[644820,621372,592062,14980,14980,14980,6390,6390],
-[649600,626400,597400,15280,15280,15280,6590,6590],
-[676476,652740,623070,15580,15580,15580,6690,6690],
-[680920,657440,628090,15880,15880,15880,6890,6890],
-[708000,684000,654000,16180,16180,16180,6990,6990],
-[712560,688808,659118,16480,16480,16480,7190,7190]
+    [0, 0, 0, 35, 35, 35, 14, 14],
+    [8, 0, 0, 45, 45, 45, 18, 18],
+    [36, 0, 0, 60, 60, 60, 23, 23],
+    [96, 0, 0, 75, 75, 75, 30, 30],
+    [200, 0, 0, 95, 95, 95, 38, 38],
+    [360, 0, 0, 120, 120, 120, 48, 48],
+    [546, 234, 0, 150, 150, 150, 60, 60],
+    [816, 408, 0, 185, 185, 185, 74, 74],
+    [1170, 650, 0, 225, 225, 225, 90, 90],
+    [1640, 820, 0, 270, 270, 270, 108, 108],
+    [2200, 1400, 0, 320, 320, 320, 128, 128],
+    [2640, 1760, 0, 375, 375, 375, 150, 150],
+    [3380, 2340, 1040, 435, 435, 435, 174, 174],
+    [4256, 3040, 1520, 500, 500, 500, 200, 200],
+    [5250, 3850, 2100, 570, 570, 570, 228, 228],
+    [6400, 4800, 2800, 645, 645, 645, 258, 258],
+    [7106, 5434, 3344, 725, 725, 725, 290, 290],
+    [8460, 6580, 4230, 810, 810, 810, 324, 324],
+    [9994, 7890, 5260, 900, 900, 900, 360, 360],
+    [11720, 9376, 6446, 1000, 1000, 1000, 400, 400],
+    [13566, 10982, 7752, 1110, 1110, 1110, 444, 444],
+    [14520, 11880, 8580, 1230, 1230, 1230, 492, 492],
+    [16606, 13718, 10108, 1360, 1360, 1360, 544, 544],
+    [18912, 15760, 11820, 1500, 1500, 1500, 600, 600],
+    [21450, 18018, 13728, 1650, 1650, 1650, 660, 660],
+    [24128, 20416, 15776, 1810, 1810, 1810, 725, 725],
+    [25272, 21528, 16848, 1980, 1980, 1980, 795, 795],
+    [28224, 24192, 19152, 2160, 2160, 2160, 870, 870],
+    [31436, 27100, 21680, 2350, 2350, 2350, 950, 950],
+    [34800, 30160, 24360, 2550, 2550, 2550, 1035, 1035],
+    [38440, 33480, 27280, 2765, 2765, 2765, 1125, 1125],
+    [39680, 34720, 28520, 2995, 2995, 2995, 1220, 1220],
+    [43560, 38280, 31680, 3240, 3240, 3240, 1320, 1320],
+    [47668, 42060, 35050, 3500, 3500, 3500, 1430, 1430],
+    [52080, 46128, 38688, 3775, 3775, 3775, 1550, 1550],
+    [56664, 50368, 42498, 4065, 4065, 4065, 1680, 1680],
+    [58016, 51744, 43904, 4370, 4370, 4370, 1820, 1820],
+    [62852, 56236, 47966, 4690, 4690, 4690, 1970, 1970],
+    [68016, 61040, 52320, 5025, 5025, 5025, 2130, 2130],
+    [73360, 66024, 56854, 5380, 5380, 5380, 2310, 2310],
+    [79333, 71778, 62333, 5680, 5680, 5680, 2430, 2430],
+    [98353, 89412, 78235, 5980, 5980, 5980, 2550, 2550],
+    [107333, 98000, 86333, 6280, 6280, 6280, 2670, 2670],
+    [122667, 112444, 99667, 6580, 6580, 6580, 2790, 2790],
+    [131579, 121053, 107895, 6880, 6880, 6880, 2910, 2910],
+    [147789, 136421, 122211, 7180, 7180, 7180, 3030, 3030],
+    [164842, 152632, 137368, 7480, 7480, 7480, 3150, 3150],
+    [182737, 169684, 153368, 7780, 7780, 7780, 3270, 3270],
+    [191400, 178200, 161700, 8080, 8080, 8080, 3390, 3390],
+    [210000, 196000, 178500, 8380, 8380, 8380, 3540, 3540],
+    [229400, 214600, 196100, 8680, 8680, 8680, 3690, 3690],
+    [249600, 234000, 214500, 8980, 8980, 8980, 3840, 3840],
+    [257714, 242095, 222571, 9280, 9280, 9280, 3990, 3990],
+    [278476, 262095, 241619, 9580, 9580, 9580, 4140, 4140],
+    [300000, 282857, 261429, 9880, 9880, 9880, 4290, 4290],
+    [322286, 304381, 282000, 10180, 10180, 10180, 4440, 4440],
+    [329636, 311818, 289545, 10480, 10480, 10480, 4590, 4590],
+    [352364, 333818, 310636, 10780, 10780, 10780, 4740, 4740],
+    [375818, 356545, 332455, 11080, 11080, 11080, 4890, 4890],
+    [400000, 380000, 355000, 11380, 11380, 11380, 5040, 5040],
+    [424924, 404196, 378226, 11580, 11580, 11580, 5090, 5090],
+    [430920, 410400, 384750, 11780, 11780, 11780, 5140, 5140],
+    [456114, 434288, 408408, 11980, 11980, 11980, 5190, 5190],
+    [462000, 441000, 414750, 12180, 12180, 12180, 5240, 5240],
+    [487400, 465776, 438696, 12380, 12380, 12380, 5290, 5290],
+    [493120, 471680, 444880, 12580, 12580, 12580, 5340, 5340],
+    [518880, 496800, 469200, 12780, 12780, 12780, 5390, 5390],
+    [524352, 502504, 475194, 12980, 12980, 12980, 5440, 5440],
+    [550368, 527904, 499824, 13180, 13180, 13180, 5490, 5490],
+    [555600, 533376, 505596, 13480, 13480, 13480, 5590, 5590],
+    [581808, 558992, 530472, 13780, 13780, 13780, 5790, 5790],
+    [588068, 564200, 535990, 14080, 14080, 14080, 5990, 5990],
+    [613316, 590172, 561242, 14380, 14380, 14380, 6090, 6090],
+    [618192, 595296, 566676, 14680, 14680, 14680, 6290, 6290],
+    [644820, 621372, 592062, 14980, 14980, 14980, 6390, 6390],
+    [649600, 626400, 597400, 15280, 15280, 15280, 6590, 6590],
+    [676476, 652740, 623070, 15580, 15580, 15580, 6690, 6690],
+    [680920, 657440, 628090, 15880, 15880, 15880, 6890, 6890],
+    [708000, 684000, 654000, 16180, 16180, 16180, 6990, 6990],
+    [712560, 688808, 659118, 16480, 16480, 16480, 7190, 7190]
 ];
 const expData = {
- growth: [0,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,13,13,13,13,13,14,14,14,14,14,15,15,15,15,15,16,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,24,24,25,25,26,26,27,27,28,28,29,29,30,30,31,31,32],
- bar: [0,20,60,120,200,300,420,560,720,900,1100,1320,1560,1820,2100,2400,2720,3060,3420,3800,4200,4620,5060,5520,6000,6500,7020,7560,8120,8700,9300,9920,10560,11220,11900,12600,13320,14060,14820,15000,17000,19000,21000,23000,25000,27000,29000,31000,33000,35000,37000,39000,41000,43000,45000,47000,49000,51000,53000,55000,57000,59000,61000,63000,65000,67000,69000,71000,73000,75000,77000,79000,81000,83000,85000,87000,89000,91000,93000,95000],
- herb: [0,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220,224,228,232,236,240],
- wood: [0,0,0,0,0,0,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,76,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220,224,228,232],
- pill: [0,0,0,0,0,0,0,0,0,0,0,0,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,66,70,74,78,82,86,90,94,98,102,106,110,114,118,122,126,130,134,138,142,146,150,154,158,162,166,170,174,178,182,186,190,194,198,202,206,210,214,218,222]
+    growth: [0, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 22, 22, 22, 22, 23, 23, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 30, 30, 31, 31, 32],
+    bar: [0, 20, 60, 120, 200, 300, 420, 560, 720, 900, 1100, 1320, 1560, 1820, 2100, 2400, 2720, 3060, 3420, 3800, 4200, 4620, 5060, 5520, 6000, 6500, 7020, 7560, 8120, 8700, 9300, 9920, 10560, 11220, 11900, 12600, 13320, 14060, 14820, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 29000, 31000, 33000, 35000, 37000, 39000, 41000, 43000, 45000, 47000, 49000, 51000, 53000, 55000, 57000, 59000, 61000, 63000, 65000, 67000, 69000, 71000, 73000, 75000, 77000, 79000, 81000, 83000, 85000, 87000, 89000, 91000, 93000, 95000],
+    herb: [0, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240],
+    wood: [0, 0, 0, 0, 0, 0, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232],
+    pill: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 66, 70, 74, 78, 82, 86, 90, 94, 98, 102, 106, 110, 114, 118, 122, 126, 130, 134, 138, 142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194, 198, 202, 206, 210, 214, 218, 222]
 };
-const fmt=n=>Number(n).toLocaleString('en-US');
-const $=id=>document.getElementById(id);
+const fmt = n => Number(n).toLocaleString('en-US');
+const $ = id => document.getElementById(id);
 // 统一读取数值输入；旧版缺少此函数，render() 首次运行便抛出 ReferenceError，导致材料结果始终不更新。
-const nval=id=>{const el=$(id);const n=Number(el && el.value);return Number.isFinite(n)?n:0;};
+const nval = id => { const el = $(id); const n = Number(el && el.value); return Number.isFinite(n) ? n : 0; };
 // 神兽礼包数据完全以同目录 gift-config.json 为准；内置数据仅用于 JSON 读取失败时维持旧页面可用。
-const giftPlans={
- monthly:{id:'monthly',name:'月初礼包',big:213,middle:80,small:17040,price:99,herb:91,wood:39,pill:21},
- vip10:{id:'vip10',name:'VIP10礼包',big:208,middle:80,small:16640,price:139.8,herb:91,wood:39,pill:21},
- event:{id:'event',name:'限时礼包',big:1,middle:1,small:1200,price:13.8,herb:91,wood:39,pill:21}
+const giftPlans = {
+    monthly: { id: 'monthly', name: '月初礼包', big: 213, middle: 80, small: 17040, price: 99, herb: 91, wood: 39, pill: 21 },
+    vip10: { id: 'vip10', name: 'VIP10礼包', big: 208, middle: 80, small: 16640, price: 139.8, herb: 91, wood: 39, pill: 21 },
+    event: { id: 'event', name: '限时礼包', big: 1, middle: 1, small: 1200, price: 13.8, herb: 91, wood: 39, pill: 21 }
 };
-let shenshouGiftMaterials=[
- {key:'herb',name:'灵草',packageField:'herb'},
- {key:'wood',name:'灵木',packageField:'wood'},
- {key:'pill',name:'灵丹',packageField:'pill'}
+let shenshouGiftMaterials = [
+    { key: 'herb', name: '灵草', packageField: 'herb' },
+    { key: 'wood', name: '灵木', packageField: 'wood' },
+    { key: 'pill', name: '灵丹', packageField: 'pill' }
 ];
-let shenshouFieldVisibility={price:true,big:true,middle:true,small:true,herb:false,wood:false,pill:false};
-const giftConfigUrl='./gift-config.json';
-const giftFieldLabels={price:'价格',big:'大包',middle:'中包',small:'小包'};
-const giftEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function giftFieldVisible(key){return shenshouFieldVisibility[key]!==false;}
-function renderShenshouGiftButtons(){
- const html=Object.values(giftPlans).map((plan,index)=>{
-  const fields=[['big','大包',plan.big],['middle','中包',plan.middle],['small','小包',plan.small],
-   ...shenshouGiftMaterials.map(m=>[m.packageField,m.name,plan[m.packageField]])];
-  const stats=fields.filter(([key])=>giftFieldVisible(key)&&plan[key]!==undefined).map(([key,label,value])=>`<span>${giftEscape(label)}<b>${Number(value).toLocaleString('en-US')}</b></span>`).join('');
-  const price=giftFieldVisible('price')?`<span class="plan-price">¥${(Number(plan.price)||0).toLocaleString('en-US',{maximumFractionDigits:2})}</span>`:'';
-  return `<button type="button" class="plan-option ${plan.id===selectedPlan?'active':''}" data-plan="${giftEscape(plan.id)}"><strong>${giftEscape(plan.name)}</strong>${price}<span class="plan-pack-stats">${stats}</span></button>`;
- }).join('');
- document.querySelectorAll('.plan-options').forEach(host=>host.innerHTML=html);
+let shenshouFieldVisibility = { price: true, big: true, middle: true, small: true, herb: false, wood: false, pill: false };
+const giftConfigUrl = './gift-config.json';
+const giftFieldLabels = { price: '价格', big: '大包', middle: '中包', small: '小包' };
+const giftEscape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function giftFieldVisible(key) { return shenshouFieldVisibility[key] !== false; }
+function renderShenshouGiftButtons() {
+    const html = Object.values(giftPlans).map((plan, index) => {
+        const fields = [['big', '大包', plan.big], ['middle', '中包', plan.middle], ['small', '小包', plan.small],
+            ...shenshouGiftMaterials.map(m => [m.packageField, m.name, plan[m.packageField]])];
+        const stats = fields.filter(([key]) => giftFieldVisible(key) && plan[key] !== undefined).map(([key, label, value]) => `<span>${giftEscape(label)}<b>${Number(value).toLocaleString('en-US')}</b></span>`).join('');
+        const price = giftFieldVisible('price') ? `<span class="plan-price">¥${(Number(plan.price) || 0).toLocaleString('en-US', { maximumFractionDigits: 2 })}</span>` : '';
+        return `<button type="button" class="plan-option ${plan.id === selectedPlan ? 'active' : ''}" data-plan="${giftEscape(plan.id)}"><strong>${giftEscape(plan.name)}</strong>${price}<span class="plan-pack-stats">${stats}</span></button>`;
+    }).join('');
+    document.querySelectorAll('.plan-options').forEach(host => host.innerHTML = html);
 }
-function updateShenshouGiftMaterialLabels(){
- const ids=['summaryHerbPacks','summaryWoodPacks','summaryPillPacks','summaryRebateHerbPacks','summaryRebateWoodPacks','summaryRebatePillPacks'];
- const pairs=[[0,0],[1,1],[2,2],[3,0],[4,1],[5,2]];
- ids.forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;const material=shenshouGiftMaterials[pairs[i][1]];const label=el.parentElement?.querySelector('.name');if(label&&material)label.textContent=material.name+'包';});
+function updateShenshouGiftMaterialLabels() {
+    const ids = ['summaryHerbPacks', 'summaryWoodPacks', 'summaryPillPacks', 'summaryRebateHerbPacks', 'summaryRebateWoodPacks', 'summaryRebatePillPacks'];
+    const pairs = [[0, 0], [1, 1], [2, 2], [3, 0], [4, 1], [5, 2]];
+    ids.forEach((id, i) => { const el = document.getElementById(id); if (!el)
+        return; const material = shenshouGiftMaterials[pairs[i][1]]; const label = el.parentElement?.querySelector('.name'); if (label && material)
+        label.textContent = material.name + '包'; });
 }
-function updateShenshouGiftNotes(){
- const plan=giftPlans[selectedPlan]||Object.values(giftPlans)[0];if(!plan)return;
- const visibleMaterials=shenshouGiftMaterials.filter(m=>giftFieldVisible(m.packageField));
- const materialText=visibleMaterials.map(m=>`${m.name} ×${Number(plan[m.packageField]??0).toLocaleString('en-US')}`).join('、');
- const packText=[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>`${Number(plan[key]).toLocaleString('en-US')} 个${label}`);
- const text=[materialText?`小包打开后，${materialText} 三选一`: '',packText.length?`每份礼包产出：${packText.join('、')}`:''].filter(Boolean).join('；');
- document.querySelectorAll('.gift-package-note').forEach(el=>el.textContent=text);
+function updateShenshouGiftNotes() {
+    const plan = giftPlans[selectedPlan] || Object.values(giftPlans)[0];
+    if (!plan)
+        return;
+    const visibleMaterials = shenshouGiftMaterials.filter(m => giftFieldVisible(m.packageField));
+    const materialText = visibleMaterials.map(m => `${m.name} ×${Number(plan[m.packageField] ?? 0).toLocaleString('en-US')}`).join('、');
+    const packText = [['big', '大包'], ['middle', '中包'], ['small', '小包']].filter(([key]) => giftFieldVisible(key)).map(([key, label]) => `${Number(plan[key]).toLocaleString('en-US')} 个${label}`);
+    const text = [materialText ? `小包打开后，${materialText} 三选一` : '', packText.length ? `每份礼包产出：${packText.join('、')}` : ''].filter(Boolean).join('；');
+    document.querySelectorAll('.gift-package-note').forEach(el => el.textContent = text);
 }
-function applyShenshouGiftConfig(config){
- const system=Array.isArray(config?.systems)?config.systems.find(item=>item?.id==='shenshou'):null;
- if(!system||!Array.isArray(system.packages)||!system.packages.length)throw new Error('JSON 中未找到神兽礼包配置');
- const materials=Array.isArray(system.materials)?system.materials:[];
- const next={};
- for(const item of system.packages){
-  if(!item||!item.id)continue;
-  const required=['price','big','middle','small'];
-  if(required.some(key=>!Number.isFinite(Number(item[key]))||Number(item[key])<0))continue;
-  const plan={id:String(item.id),name:String(item.name??''),price:Number(item.price),big:Number(item.big),middle:Number(item.middle),small:Number(item.small)};
-  for(const material of materials){
-   const field=material.packageField;
-   if(field&&Object.prototype.hasOwnProperty.call(item,field))plan[field]=Number(item[field]);
-  }
-  next[plan.id]=plan;
- }
- if(!Object.keys(next).length)throw new Error('神兽礼包参数无效');
- Object.keys(giftPlans).forEach(key=>delete giftPlans[key]);
- Object.assign(giftPlans,next);
- shenshouGiftMaterials=materials.filter(m=>m&&m.packageField).map(m=>({key:m.key,name:String(m.name??m.key),packageField:m.packageField}));
- // 返利开关不跟随礼包 JSON 配置；页面初始状态固定为关闭，避免移动端加载配置后自动开启。
- shenshouFieldVisibility={};
- for(const key of ['price','big','middle','small',...shenshouGiftMaterials.map(m=>m.packageField)]){
-  const defaultHidden=['herb','wood','pill'].includes(key);
-  shenshouFieldVisibility[key]=system.fieldVisibility && Object.prototype.hasOwnProperty.call(system.fieldVisibility,key)
-    ? system.fieldVisibility[key]!==false : !defaultHidden;
- }
- if(!giftPlans[selectedPlan])selectedPlan=Object.keys(giftPlans)[0];
- if(typeof previewSelectedPlan!=='undefined'&&!giftPlans[previewSelectedPlan])previewSelectedPlan=selectedPlan;
- renderShenshouGiftButtons();
- updateShenshouGiftMaterialLabels();
- updateShenshouGiftNotes();
- render();
- if(typeof renderAllGiftPreview==='function')renderAllGiftPreview();
+function applyShenshouGiftConfig(config) {
+    const system = Array.isArray(config?.systems) ? config.systems.find(item => item?.id === 'shenshou') : null;
+    if (!system || !Array.isArray(system.packages) || !system.packages.length)
+        throw new Error('JSON 中未找到神兽礼包配置');
+    const materials = Array.isArray(system.materials) ? system.materials : [];
+    const next = {};
+    for (const item of system.packages) {
+        if (!item || !item.id)
+            continue;
+        const required = ['price', 'big', 'middle', 'small'];
+        if (required.some(key => !Number.isFinite(Number(item[key])) || Number(item[key]) < 0))
+            continue;
+        const plan = { id: String(item.id), name: String(item.name ?? ''), price: Number(item.price), big: Number(item.big), middle: Number(item.middle), small: Number(item.small) };
+        for (const material of materials) {
+            const field = material.packageField;
+            if (field && Object.prototype.hasOwnProperty.call(item, field))
+                plan[field] = Number(item[field]);
+        }
+        next[plan.id] = plan;
+    }
+    if (!Object.keys(next).length)
+        throw new Error('神兽礼包参数无效');
+    Object.keys(giftPlans).forEach(key => delete giftPlans[key]);
+    Object.assign(giftPlans, next);
+    shenshouGiftMaterials = materials.filter(m => m && m.packageField).map(m => ({ key: m.key, name: String(m.name ?? m.key), packageField: m.packageField }));
+    // 返利开关不跟随礼包 JSON 配置；页面初始状态固定为关闭，避免移动端加载配置后自动开启。
+    shenshouFieldVisibility = {};
+    for (const key of ['price', 'big', 'middle', 'small', ...shenshouGiftMaterials.map(m => m.packageField)]) {
+        const defaultHidden = ['herb', 'wood', 'pill'].includes(key);
+        shenshouFieldVisibility[key] = system.fieldVisibility && Object.prototype.hasOwnProperty.call(system.fieldVisibility, key)
+            ? system.fieldVisibility[key] !== false : !defaultHidden;
+    }
+    if (!giftPlans[selectedPlan])
+        selectedPlan = Object.keys(giftPlans)[0];
+    if (typeof previewSelectedPlan !== 'undefined' && !giftPlans[previewSelectedPlan])
+        previewSelectedPlan = selectedPlan;
+    renderShenshouGiftButtons();
+    updateShenshouGiftMaterialLabels();
+    updateShenshouGiftNotes();
+    render();
+    if (typeof renderAllGiftPreview === 'function')
+        renderAllGiftPreview();
 }
-async function refreshShenshouGiftConfig(){
- try{const response=await fetch(giftConfigUrl+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);applyShenshouGiftConfig(await response.json());setGiftDataSource('json');}
- catch(error){setGiftDataSource('fallback');console.warn('神兽礼包 JSON 读取失败，继续使用内置礼包参数：',error);}
+async function refreshShenshouGiftConfig() {
+    try {
+        const response = await fetch(giftConfigUrl + '?t=' + Date.now(), { cache: 'no-store' });
+        if (!response.ok)
+            throw new Error('HTTP ' + response.status);
+        applyShenshouGiftConfig(await response.json());
+        setGiftDataSource('json');
+    }
+    catch (error) {
+        setGiftDataSource('fallback');
+        console.warn('神兽礼包 JSON 读取失败，继续使用内置礼包参数：', error);
+    }
 }
 refreshShenshouGiftConfig();
-window.addEventListener('focus',refreshShenshouGiftConfig);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshShenshouGiftConfig();});
-setInterval(refreshShenshouGiftConfig,300000);
-let selectedPlan='monthly';
-function chooseGiftPlan(planId){
- if(!Object.prototype.hasOwnProperty.call(giftPlans,planId))return;
- selectedPlan=planId;
- updateShenshouGiftNotes();
- document.querySelectorAll('.plan-option').forEach(btn=>btn.classList.toggle('active',btn.dataset.plan===planId));
- render(true);
+window.addEventListener('focus', refreshShenshouGiftConfig);
+document.addEventListener('visibilitychange', () => { if (!document.hidden)
+    refreshShenshouGiftConfig(); });
+setInterval(refreshShenshouGiftConfig, 300000);
+let selectedPlan = 'monthly';
+function chooseGiftPlan(planId) {
+    if (!Object.prototype.hasOwnProperty.call(giftPlans, planId))
+        return;
+    selectedPlan = planId;
+    updateShenshouGiftNotes();
+    document.querySelectorAll('.plan-option').forEach(btn => btn.classList.toggle('active', btn.dataset.plan === planId));
+    render(true);
 }
-let selectedBeast='幽冥虎';
+let selectedBeast = '幽冥虎';
 // 默认主题按本地时间：06:00–17:59 白天，18:00–05:59 黑夜；手动切换后本次页面会话优先。
-let manualThemeChoice=false;
-function setPageTheme(isLight){
-  document.body.classList.toggle('dark-theme',!isLight);
-  const btn=document.getElementById('themeToggle');
-  const label=document.getElementById('themeToggleText');
-  const icon=document.getElementById('themeToggleIcon');
-  if(label) label.textContent=isLight?'切换夜间':'切换白天';
-  if(btn){btn.setAttribute('aria-label',isLight?'切换到夜间模式':'切换到白天模式');btn.title=isLight?'切换到夜间模式':'切换到白天模式';}
-  if(icon) icon.innerHTML=isLight
-    ? '<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
-    : '<path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+let manualThemeChoice = false;
+function setPageTheme(isLight) {
+    document.body.classList.toggle('dark-theme', !isLight);
+    const btn = document.getElementById('themeToggle');
+    const label = document.getElementById('themeToggleText');
+    const icon = document.getElementById('themeToggleIcon');
+    if (label)
+        label.textContent = isLight ? '切换夜间' : '切换白天';
+    if (btn) {
+        btn.setAttribute('aria-label', isLight ? '切换到夜间模式' : '切换到白天模式');
+        btn.title = isLight ? '切换到夜间模式' : '切换到白天模式';
+    }
+    if (icon)
+        icon.innerHTML = isLight
+            ? '<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+            : '<path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
 }
-function applyTimeTheme(){if(manualThemeChoice)return;const h=new Date().getHours();setPageTheme(h>=6&&h<18);}
-const themeToggleButton=document.getElementById('themeToggle');
-if(themeToggleButton)themeToggleButton.addEventListener('click',()=>{manualThemeChoice=true;setPageTheme(document.body.classList.contains('dark-theme'));});
+function applyTimeTheme() { if (manualThemeChoice)
+    return; const h = new Date().getHours(); setPageTheme(h >= 6 && h < 18); }
+const themeToggleButton = document.getElementById('themeToggle');
+if (themeToggleButton)
+    themeToggleButton.addEventListener('click', () => { manualThemeChoice = true; setPageTheme(document.body.classList.contains('dark-theme')); });
 applyTimeTheme();
-setInterval(applyTimeTheme,60000);
-
-const beastThemes={'火暴龙':'theme-fire','飞羽凤':'theme-fly','玄武龟':'theme-turtle','幽冥虎':'theme-tiger'};
-function applyBeastTheme(){document.body.classList.remove('theme-fire','theme-fly','theme-turtle','theme-tiger');document.body.classList.add(beastThemes[selectedBeast]||'theme-fire')}
-const beastAttrs={
- '火暴龙':[{idx:3,name:'生命'},{idx:4,name:'武攻'},{idx:4,name:'法攻'}],
- '飞羽凤':[{idx:3,name:'生命'},{idx:7,name:'速度'}],
- '玄武龟':[{idx:3,name:'生命'},{idx:5,name:'武防'},{idx:5,name:'法防'}],
- '幽冥虎':[{idx:3,name:'生命'},{idx:6,name:'穿透'},{idx:6,name:'护甲'},{idx:7,name:'速度'}]
+setInterval(applyTimeTheme, 60000);
+const beastThemes = { '火暴龙': 'theme-fire', '飞羽凤': 'theme-fly', '玄武龟': 'theme-turtle', '幽冥虎': 'theme-tiger' };
+function applyBeastTheme() { document.body.classList.remove('theme-fire', 'theme-fly', 'theme-turtle', 'theme-tiger'); document.body.classList.add(beastThemes[selectedBeast] || 'theme-fire'); }
+const beastAttrs = {
+    '火暴龙': [{ idx: 3, name: '生命' }, { idx: 4, name: '武攻' }, { idx: 4, name: '法攻' }],
+    '飞羽凤': [{ idx: 3, name: '生命' }, { idx: 7, name: '速度' }],
+    '玄武龟': [{ idx: 3, name: '生命' }, { idx: 5, name: '武防' }, { idx: 5, name: '法防' }],
+    '幽冥虎': [{ idx: 3, name: '生命' }, { idx: 6, name: '穿透' }, { idx: 6, name: '护甲' }, { idx: 7, name: '速度' }]
 };
-function initSelects(){
- $('fromLevel').value='40';$('toLevel').value='60';
- $('fromLevel').dataset.lastValue='40';$('toLevel').dataset.lastValue='60';
- updateLevelLabels();
+function initSelects() {
+    $('fromLevel').value = '40';
+    $('toLevel').value = '60';
+    $('fromLevel').dataset.lastValue = '40';
+    $('toLevel').dataset.lastValue = '60';
+    updateLevelLabels();
 }
-function updateLevelLabels(){
- for(const id of ['fromLevel','toLevel']){
-  const el=$(id),out=$(id+'Value'),numberInput=$(id+'Number');
-  if(out) out.textContent=`${el.value} 级`;
-  if(numberInput) numberInput.value=String(el.value);
-  el.dataset.lastValue=String(el.value);
- }
+function updateLevelLabels() {
+    for (const id of ['fromLevel', 'toLevel']) {
+        const el = $(id), out = $(id + 'Value'), numberInput = $(id + 'Number');
+        if (out)
+            out.textContent = `${el.value} 级`;
+        if (numberInput)
+            numberInput.value = String(el.value);
+        el.dataset.lastValue = String(el.value);
+    }
 }
-function getLevel(id, fallback){
- const value=Number($(id).value);
- return Math.max(1,Math.min(80,Math.floor(Number.isFinite(value)?value:fallback)));
+function getLevel(id, fallback) {
+    const value = Number($(id).value);
+    return Math.max(1, Math.min(80, Math.floor(Number.isFinite(value) ? value : fallback)));
 }
-function renderExp(){
- const level=getLevel('fromLevel',1);
- const rawNum=Math.max(0,Math.floor(Number($('currentExp').value)||0));
- const idx=Math.min(level,79);
- const den=Number(expData.bar[idx])||0;
- const num=Math.min(rawNum,den);
- const gain=Number(expData.growth[idx])||0;
- const percent=den?Math.min(100,num/den*100):0;
- $('currentExpSlider').max=String(den);
- $('currentExpSlider').value=String(Math.min(rawNum,den));
- $('currentExpMaxLabel').textContent=fmt(den)+' 经验';
- $('expDenominator').textContent=fmt(den)+' 经验';
- $('expFraction').textContent=fmt(num)+' / '+fmt(den);
- $('expPercent').textContent=percent.toFixed(1)+'%';
- $('expBarFill').style.width=percent+'%';
- return {level,rawNum,num,den,gain};
+function renderExp() {
+    const level = getLevel('fromLevel', 1);
+    const rawNum = Math.max(0, Math.floor(Number($('currentExp').value) || 0));
+    const idx = Math.min(level, 79);
+    const den = Number(expData.bar[idx]) || 0;
+    const num = Math.min(rawNum, den);
+    const gain = Number(expData.growth[idx]) || 0;
+    const percent = den ? Math.min(100, num / den * 100) : 0;
+    $('currentExpSlider').max = String(den);
+    $('currentExpSlider').value = String(Math.min(rawNum, den));
+    $('currentExpMaxLabel').textContent = fmt(den) + ' 经验';
+    $('expDenominator').textContent = fmt(den) + ' 经验';
+    $('expFraction').textContent = fmt(num) + ' / ' + fmt(den);
+    $('expPercent').textContent = percent.toFixed(1) + '%';
+    $('expBarFill').style.width = percent + '%';
+    return { level, rawNum, num, den, gain };
 }
-function render(skipAllGiftPreview=false){
- let a=getLevel('fromLevel',1),b=getLevel('toLevel',20);
- if(b<a){b=a;$('toLevel').value=String(b);const manualLevel=$('toLevelManual');if(manualLevel)manualLevel.value=String(b);}
- $('fromLevel').value=String(a);$('toLevel').value=String(b);
- updateLevelLabels();
- const start=raw[a-1]||raw[0],end=raw[b-1]||raw[0];
- // 每行前三列代表“上一级升到本行等级”的材料；第二行是1升2。
- // 因此从 a 级升到 b 级，累加 raw[a] 到 raw[b-1]（数组下标从0开始），即第 a+1 行到第 b 行。
- const costs=[0,1,2].map(i=>{let sum=0;for(let level=a;level<b;level++){sum+=Number(raw[level]?.[i])||0;}return sum;});
- const expState=renderExp();
- // 当前经验对应已完成的点击数；只抵扣当前等级内已消耗的材料，并限制抵扣量不超过区间总消耗。
- const consumedClicks=expState.gain>0?Math.floor(Math.min(expState.rawNum,expState.den)/expState.gain):0;
- const materialIndex=Math.min(a,79);
- const expMaterials=[Number(expData.herb[materialIndex])||0,Number(expData.wood[materialIndex])||0,Number(expData.pill[materialIndex])||0];
- const adjustedCosts=costs.map((v,i)=>Math.max(0,v-Math.min(v,consumedClicks*expMaterials[i])));
- const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
- const gaps=adjustedCosts.map((v,i)=>Math.max(0,v-stocks[i]));
- const ids=['herb','wood','pill'];
- ids.forEach((id,i)=>{const need=$(id+'Need');if(need)need.textContent=fmt(gaps[i]);const cost=$(id+'Cost');if(cost)cost.textContent=fmt(adjustedCosts[i]);const have=$(id+'Have');if(have)have.textContent=fmt(stocks[i]);const gap=$(id+'Gap');if(gap)gap.textContent=fmt(gaps[i]);});
- const plan=giftPlans[selectedPlan];
- const yields=shenshouGiftMaterials.map(m=>Number(plan[m.packageField])||0);
- if(yields.length!==3||yields.some(v=>v<=0))return;
- const herbPackCount=Math.ceil(gaps[0]/yields[0]);
- const woodPackCount=Math.ceil(gaps[1]/yields[1]);
- const pillPackCount=Math.ceil(gaps[2]/yields[2]);
- const packs=[herbPackCount,woodPackCount,pillPackCount];
- // 自选包总需求 = 灵草包数 + 灵木包数 + 灵丹包数（每类分别向上取整后再相加）。
- const total=herbPackCount+woodPackCount+pillPackCount;
- // 每份礼包的实际小包总产出以 JSON 的 small 字段为准（例如月初礼包 17,040）。
- // big / middle 是礼包信息卡展示字段，不再拿它们重复推算礼包购买份数。
- const big=Math.ceil(total/plan.small),middle=big*plan.middle,boughtMiddle=big*plan.middle,boughtSmall=big*plan.small;
- $('herbPacks').textContent=fmt(packs[0])+' 个';$('woodPacks').textContent=fmt(packs[1])+' 个';$('pillPacks').textContent=fmt(packs[2])+' 个';$('summaryHerbPacks').textContent=fmt(packs[0])+' 个';$('summaryWoodPacks').textContent=fmt(packs[1])+' 个';$('summaryPillPacks').textContent=fmt(packs[2])+' 个';
- // 返利顺序：先扣除已有经验条抵扣（adjustedCosts），再按总需求的 2/3 折算，最后扣除已有材料库存。
- // 保留 2/3 折算产生的小数，直到按每类材料产出计算包数时再分别向上取整。
- const rebateGaps=adjustedCosts.map((v,i)=>Math.max(0,v*2/3-stocks[i]));
- const rebatePacks=rebateGaps.map((v,i)=>Math.ceil(v/yields[i]));
- const rebateTotal=rebatePacks.reduce((sum,v)=>sum+v,0);
- // 返利购买份数同样直接按 JSON small（每份礼包实际小包总产出）向上取整。
- const rebateBig=Math.ceil(rebateTotal/plan.small);
- const rebateMiddle=rebateBig*plan.middle;
- const rebateBoughtMiddle=rebateBig*plan.middle;
- const rebateBoughtSmall=rebateBig*plan.small;
- $('rebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('rebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('rebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';$('summaryRebateHerbPacks').textContent=fmt(rebatePacks[0])+' 个';$('summaryRebateWoodPacks').textContent=fmt(rebatePacks[1])+' 个';$('summaryRebatePillPacks').textContent=fmt(rebatePacks[2])+' 个';
- $('rebateTotalPacks').textContent=fmt(rebateTotal);$('rebateMiddlePacks').textContent=fmt(rebateMiddle);$('rebateMiddleMetric').style.display='';$('rebatePurchasedMiddleCard').style.display='';$('rebateBigPacks').textContent=fmt(rebateBig)+'个';$('rebateBundleCount').textContent=fmt(rebateBig)+'个';$('rebateBundleCost').textContent='¥'+(rebateBig*plan.price).toLocaleString('en-US',{maximumFractionDigits:2});const noRebateCost=big*plan.price;const rebateCost=rebateBig*plan.price;$('rebateSavings').textContent='¥'+Math.max(0,noRebateCost-rebateCost).toLocaleString('en-US',{maximumFractionDigits:2});$('rebatePurchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('rebatePurchasedMiddle').textContent=fmt(rebateBoughtMiddle)+' 个';$('rebatePurchasedSmall').textContent=fmt(rebateBoughtSmall)+' 个';$('rebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';$('summaryRebateLeftover').textContent=fmt(Math.max(0,rebateBoughtSmall-rebateTotal))+' 个';
- $('totalPacks').textContent=fmt(total);$('middlePacks').textContent=fmt(middle);$('middleMetric').style.display='';$('purchasedMiddleCard').style.display='';$('bigPacks').textContent=fmt(big)+'个';$('bundleCount').textContent=fmt(big)+'个';$('bundleCost').textContent='¥'+(big*plan.price).toLocaleString('en-US',{maximumFractionDigits:2});$('purchaseDescription').textContent='每份礼包产出：'+[['big','大包'],['middle','中包'],['small','小包']].filter(([key])=>giftFieldVisible(key)).map(([key,label])=>fmt(plan[key])+' 个'+label).join('、');$('purchasedMiddle').textContent=fmt(boughtMiddle)+' 个';$('purchasedSmall').textContent=fmt(boughtSmall)+' 个';$('leftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';$('summaryLeftover').textContent=fmt(Math.max(0,boughtSmall-total))+' 个';
- $('attributes').innerHTML=beastAttrs[selectedBeast].map(attr=>`<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx]-start[attr.idx])}</td></tr>`).join('');  if(!skipAllGiftPreview&&document.getElementById('allGiftToggle')?.getAttribute('aria-expanded')==='true')renderAllGiftPreview();
+function render(skipAllGiftPreview = false) {
+    let a = getLevel('fromLevel', 1), b = getLevel('toLevel', 20);
+    if (b < a) {
+        b = a;
+        $('toLevel').value = String(b);
+        const manualLevel = $('toLevelManual');
+        if (manualLevel)
+            manualLevel.value = String(b);
+    }
+    $('fromLevel').value = String(a);
+    $('toLevel').value = String(b);
+    updateLevelLabels();
+    const start = raw[a - 1] || raw[0], end = raw[b - 1] || raw[0];
+    // 每行前三列代表“上一级升到本行等级”的材料；第二行是1升2。
+    // 因此从 a 级升到 b 级，累加 raw[a] 到 raw[b-1]（数组下标从0开始），即第 a+1 行到第 b 行。
+    const costs = [0, 1, 2].map(i => { let sum = 0; for (let level = a; level < b; level++) {
+        sum += Number(raw[level]?.[i]) || 0;
+    } return sum; });
+    const expState = renderExp();
+    // 当前经验对应已完成的点击数；只抵扣当前等级内已消耗的材料，并限制抵扣量不超过区间总消耗。
+    const consumedClicks = expState.gain > 0 ? Math.floor(Math.min(expState.rawNum, expState.den) / expState.gain) : 0;
+    const materialIndex = Math.min(a, 79);
+    const expMaterials = [Number(expData.herb[materialIndex]) || 0, Number(expData.wood[materialIndex]) || 0, Number(expData.pill[materialIndex]) || 0];
+    const adjustedCosts = costs.map((v, i) => Math.max(0, v - Math.min(v, consumedClicks * expMaterials[i])));
+    const stocks = [nval('herbStock'), nval('woodStock'), nval('pillStock')].map(v => Math.max(0, v));
+    const gaps = adjustedCosts.map((v, i) => Math.max(0, v - stocks[i]));
+    const ids = ['herb', 'wood', 'pill'];
+    ids.forEach((id, i) => { const need = $(id + 'Need'); if (need)
+        need.textContent = fmt(gaps[i]); const cost = $(id + 'Cost'); if (cost)
+        cost.textContent = fmt(adjustedCosts[i]); const have = $(id + 'Have'); if (have)
+        have.textContent = fmt(stocks[i]); const gap = $(id + 'Gap'); if (gap)
+        gap.textContent = fmt(gaps[i]); });
+    const plan = giftPlans[selectedPlan];
+    const yields = shenshouGiftMaterials.map(m => Number(plan[m.packageField]) || 0);
+    if (yields.length !== 3 || yields.some(v => v <= 0))
+        return;
+    const herbPackCount = Math.ceil(gaps[0] / yields[0]);
+    const woodPackCount = Math.ceil(gaps[1] / yields[1]);
+    const pillPackCount = Math.ceil(gaps[2] / yields[2]);
+    const packs = [herbPackCount, woodPackCount, pillPackCount];
+    // 自选包总需求 = 灵草包数 + 灵木包数 + 灵丹包数（每类分别向上取整后再相加）。
+    const total = herbPackCount + woodPackCount + pillPackCount;
+    // 每份礼包的实际小包总产出以 JSON 的 small 字段为准（例如月初礼包 17,040）。
+    // big / middle 是礼包信息卡展示字段，不再拿它们重复推算礼包购买份数。
+    const big = Math.ceil(total / plan.small), middle = big * plan.middle, boughtMiddle = big * plan.middle, boughtSmall = big * plan.small;
+    $('herbPacks').textContent = fmt(packs[0]) + ' 个';
+    $('woodPacks').textContent = fmt(packs[1]) + ' 个';
+    $('pillPacks').textContent = fmt(packs[2]) + ' 个';
+    $('summaryHerbPacks').textContent = fmt(packs[0]) + ' 个';
+    $('summaryWoodPacks').textContent = fmt(packs[1]) + ' 个';
+    $('summaryPillPacks').textContent = fmt(packs[2]) + ' 个';
+    // 返利顺序：先扣除已有经验条抵扣（adjustedCosts），再按总需求的 2/3 折算，最后扣除已有材料库存。
+    // 保留 2/3 折算产生的小数，直到按每类材料产出计算包数时再分别向上取整。
+    const rebateGaps = adjustedCosts.map((v, i) => Math.max(0, v * 2 / 3 - stocks[i]));
+    const rebatePacks = rebateGaps.map((v, i) => Math.ceil(v / yields[i]));
+    const rebateTotal = rebatePacks.reduce((sum, v) => sum + v, 0);
+    // 返利购买份数同样直接按 JSON small（每份礼包实际小包总产出）向上取整。
+    const rebateBig = Math.ceil(rebateTotal / plan.small);
+    const rebateMiddle = rebateBig * plan.middle;
+    const rebateBoughtMiddle = rebateBig * plan.middle;
+    const rebateBoughtSmall = rebateBig * plan.small;
+    $('rebateHerbPacks').textContent = fmt(rebatePacks[0]) + ' 个';
+    $('rebateWoodPacks').textContent = fmt(rebatePacks[1]) + ' 个';
+    $('rebatePillPacks').textContent = fmt(rebatePacks[2]) + ' 个';
+    $('summaryRebateHerbPacks').textContent = fmt(rebatePacks[0]) + ' 个';
+    $('summaryRebateWoodPacks').textContent = fmt(rebatePacks[1]) + ' 个';
+    $('summaryRebatePillPacks').textContent = fmt(rebatePacks[2]) + ' 个';
+    $('rebateTotalPacks').textContent = fmt(rebateTotal);
+    $('rebateMiddlePacks').textContent = fmt(rebateMiddle);
+    $('rebateMiddleMetric').style.display = '';
+    $('rebatePurchasedMiddleCard').style.display = '';
+    $('rebateBigPacks').textContent = fmt(rebateBig) + '个';
+    $('rebateBundleCount').textContent = fmt(rebateBig) + '个';
+    $('rebateBundleCost').textContent = '¥' + (rebateBig * plan.price).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    const noRebateCost = big * plan.price;
+    const rebateCost = rebateBig * plan.price;
+    $('rebateSavings').textContent = '¥' + Math.max(0, noRebateCost - rebateCost).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    $('rebatePurchaseDescription').textContent = '每份礼包产出：' + [['big', '大包'], ['middle', '中包'], ['small', '小包']].filter(([key]) => giftFieldVisible(key)).map(([key, label]) => fmt(plan[key]) + ' 个' + label).join('、');
+    $('rebatePurchasedMiddle').textContent = fmt(rebateBoughtMiddle) + ' 个';
+    $('rebatePurchasedSmall').textContent = fmt(rebateBoughtSmall) + ' 个';
+    $('rebateLeftover').textContent = fmt(Math.max(0, rebateBoughtSmall - rebateTotal)) + ' 个';
+    $('summaryRebateLeftover').textContent = fmt(Math.max(0, rebateBoughtSmall - rebateTotal)) + ' 个';
+    $('totalPacks').textContent = fmt(total);
+    $('middlePacks').textContent = fmt(middle);
+    $('middleMetric').style.display = '';
+    $('purchasedMiddleCard').style.display = '';
+    $('bigPacks').textContent = fmt(big) + '个';
+    $('bundleCount').textContent = fmt(big) + '个';
+    $('bundleCost').textContent = '¥' + (big * plan.price).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    $('purchaseDescription').textContent = '每份礼包产出：' + [['big', '大包'], ['middle', '中包'], ['small', '小包']].filter(([key]) => giftFieldVisible(key)).map(([key, label]) => fmt(plan[key]) + ' 个' + label).join('、');
+    $('purchasedMiddle').textContent = fmt(boughtMiddle) + ' 个';
+    $('purchasedSmall').textContent = fmt(boughtSmall) + ' 个';
+    $('leftover').textContent = fmt(Math.max(0, boughtSmall - total)) + ' 个';
+    $('summaryLeftover').textContent = fmt(Math.max(0, boughtSmall - total)) + ' 个';
+    $('attributes').innerHTML = beastAttrs[selectedBeast].map(attr => `<tr><td>${attr.name}</td><td>${fmt(start[attr.idx])}</td><td>${fmt(end[attr.idx])}</td><td>+${fmt(end[attr.idx] - start[attr.idx])}</td></tr>`).join('');
+    if (!skipAllGiftPreview && document.getElementById('allGiftToggle')?.getAttribute('aria-expanded') === 'true')
+        renderAllGiftPreview();
 }
-
-function getShenshouMaterialNeeds(){
-  // 直接复用主计算器的等级、经验抵扣和库存扣减规则，避免从尚未刷新完成的 DOM 文本读取到 0。
-  const a=getLevel('fromLevel',1), b=Math.max(a,getLevel('toLevel',20));
-  const costs=[0,1,2].map(i=>{let sum=0;for(let level=a;level<b;level++)sum+=Number(raw[level]?.[i])||0;return sum;});
-  const expState=renderExp();
-  const consumedClicks=expState.gain>0?Math.floor(Math.min(expState.rawNum,expState.den)/expState.gain):0;
-  const materialIndex=Math.min(a,79);
-  const expMaterials=[Number(expData.herb[materialIndex])||0,Number(expData.wood[materialIndex])||0,Number(expData.pill[materialIndex])||0];
-  const adjusted=costs.map((v,i)=>Math.max(0,v-Math.min(v,consumedClicks*expMaterials[i])));
-  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(v=>Math.max(0,v));
-  // 返回已扣经验条后的总材料需求（尚未扣库存），供普通/返利两种模式各自按正确顺序扣库存。
-  return adjusted;
+function getShenshouMaterialNeeds() {
+    // 直接复用主计算器的等级、经验抵扣和库存扣减规则，避免从尚未刷新完成的 DOM 文本读取到 0。
+    const a = getLevel('fromLevel', 1), b = Math.max(a, getLevel('toLevel', 20));
+    const costs = [0, 1, 2].map(i => { let sum = 0; for (let level = a; level < b; level++)
+        sum += Number(raw[level]?.[i]) || 0; return sum; });
+    const expState = renderExp();
+    const consumedClicks = expState.gain > 0 ? Math.floor(Math.min(expState.rawNum, expState.den) / expState.gain) : 0;
+    const materialIndex = Math.min(a, 79);
+    const expMaterials = [Number(expData.herb[materialIndex]) || 0, Number(expData.wood[materialIndex]) || 0, Number(expData.pill[materialIndex]) || 0];
+    const adjusted = costs.map((v, i) => Math.max(0, v - Math.min(v, consumedClicks * expMaterials[i])));
+    const stocks = [nval('herbStock'), nval('woodStock'), nval('pillStock')].map(v => Math.max(0, v));
+    // 返回已扣经验条后的总材料需求（尚未扣库存），供普通/返利两种模式各自按正确顺序扣库存。
+    return adjusted;
 }
-
-let previewSelectedPlan='monthly';
-const allGiftToggle=document.getElementById('allGiftToggle');
-const allGiftContent=document.getElementById('allGiftContent');
-const allGiftState=document.getElementById('allGiftState');
-if(allGiftToggle&&allGiftContent){
-  const syncAllGiftState=(expanded)=>{
-    allGiftToggle.setAttribute('aria-expanded',String(expanded));
-    allGiftContent.hidden=false;
-    allGiftContent.classList.toggle('is-expanded',expanded);
-    allGiftToggle.classList.toggle('is-expanded',expanded);
-    if(allGiftState)allGiftState.textContent=expanded?'收起全部':'展开全部';
-  };
-  syncAllGiftState(false);
-  renderAllGiftPreview();
-  allGiftToggle.addEventListener('click',()=>{
-    const expanded=allGiftToggle.getAttribute('aria-expanded')==='true';
-    syncAllGiftState(!expanded);
-    if(!expanded)renderAllGiftPreview();
-  });
+let previewSelectedPlan = 'monthly';
+const allGiftToggle = document.getElementById('allGiftToggle');
+const allGiftContent = document.getElementById('allGiftContent');
+const allGiftState = document.getElementById('allGiftState');
+if (allGiftToggle && allGiftContent) {
+    function syncAllGiftState(expanded) {
+        allGiftToggle.setAttribute('aria-expanded', String(expanded));
+        allGiftContent.hidden = false;
+        allGiftContent.classList.toggle('is-expanded', expanded);
+        allGiftToggle.classList.toggle('is-expanded', expanded);
+        if (allGiftState) {
+            allGiftState.textContent = expanded ? '收起全部' : '展开全部';
+        }
+    }
+    syncAllGiftState(false);
+    renderAllGiftPreview();
+    allGiftToggle.addEventListener('click', () => {
+        const isExpanded = allGiftToggle.getAttribute('aria-expanded') === 'true';
+        // 卡片在初始化时生成；展开/收起只改变容器状态，不重新创建卡片。
+        syncAllGiftState(!isExpanded);
+    });
 }
-function renderAllGiftPreview(){
-  const host=document.getElementById('allGiftGrid');
-  if(!host)return;
-  const need=getShenshouMaterialNeeds();
-  const plans=Object.values(giftPlans).map(p=>({
-    id:p.id,label:p.name,price:p.price,big:p.big,mid:p.middle,small:p.small,
-    yield:shenshouGiftMaterials.map(m=>Number(p[m.packageField])||0)
-  }));
-  const formatCount=value=>Number(value).toLocaleString('en-US');
-  const formatMoney=value=>'¥'+(Number(value)||0).toLocaleString('en-US',{maximumFractionDigits:2});
-  const stocks=[nval('herbStock'),nval('woodStock'),nval('pillStock')].map(value=>Math.max(0,value));
-  const calculateMode=(plan,withRebate)=>{
-    const required=need.map((value,index)=>Math.max(0,(withRebate?value*2/3:value)-stocks[index]));
-    const opened=required.map((value,index)=>Math.ceil(value/Math.max(1,plan.yield[index]||0)));
-    const openedTotal=opened.reduce((sum,value)=>sum+Math.max(0,value),0);
-    const quantity=plan.small>0?Math.ceil(openedTotal/plan.small):0;
-    const purchasedSmall=quantity*plan.small;
-    return {
-      quantity,
-      cost:quantity*plan.price,
-      opened,
-      remaining:Math.max(0,purchasedSmall-openedTotal),
-      packs:purchasedSmall
+function renderAllGiftPreview() {
+    const host = document.getElementById('allGiftGrid');
+    if (!host)
+        return;
+    const need = getShenshouMaterialNeeds();
+    const plans = Object.values(giftPlans).map(p => ({
+        id: p.id, label: p.name, price: p.price, big: p.big, mid: p.middle, small: p.small,
+        yield: shenshouGiftMaterials.map(m => Number(p[m.packageField]) || 0)
+    }));
+    const formatCount = value => Number(value).toLocaleString('en-US');
+    const formatMoney = value => '¥' + (Number(value) || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    const stocks = [nval('herbStock'), nval('woodStock'), nval('pillStock')].map(value => Math.max(0, value));
+    const calculateMode = (plan, withRebate) => {
+        const required = need.map((value, index) => Math.max(0, (withRebate ? value * 2 / 3 : value) - stocks[index]));
+        const opened = required.map((value, index) => Math.ceil(value / Math.max(1, plan.yield[index] || 0)));
+        const openedTotal = opened.reduce((sum, value) => sum + Math.max(0, value), 0);
+        const quantity = plan.small > 0 ? Math.ceil(openedTotal / plan.small) : 0;
+        const purchasedSmall = quantity * plan.small;
+        return {
+            quantity,
+            cost: quantity * plan.price,
+            opened,
+            remaining: Math.max(0, purchasedSmall - openedTotal),
+            packs: purchasedSmall
+        };
     };
-  };
-  const renderStat=(label,value)=>`<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
-  const renderMode=(stats,isRebate)=>{
-    const modeClass=isRebate?'rebate':'normal';
-    return `<div class="all-gift-mode ${modeClass}">
+    const renderStat = (label, value) => `<div class="all-gift-stat"><span>${label}</span><b>${value}</b></div>`;
+    const renderMode = (stats, isRebate) => {
+        const modeClass = isRebate ? 'rebate' : 'normal';
+        return `<div class="all-gift-mode ${modeClass}">
       <div class="mode-cost">
         <span class="all-gift-cost-label">预计费用</span>
         <b class="all-gift-cost-amount">${formatMoney(stats.cost)}</b>
       </div>
-      ${renderStat('购买礼包数量',formatCount(stats.quantity)+'个')}
-      ${renderStat('可开出小包',formatCount(stats.packs)+' 个')}
-      ${shenshouGiftMaterials.map((material,index)=>renderStat(giftEscape(material.name)+'包数',formatCount(stats.opened[index])+' 个')).join('')}
-      ${renderStat('剩余小包数量',formatCount(stats.remaining)+' 个')}
+      ${renderStat('购买礼包数量', formatCount(stats.quantity) + '个')}
+      ${renderStat('可开出小包', formatCount(stats.packs) + ' 个')}
+      ${shenshouGiftMaterials.map((material, index) => renderStat(giftEscape(material.name) + '包数', formatCount(stats.opened[index]) + ' 个')).join('')}
+      ${renderStat('剩余小包数量', formatCount(stats.remaining) + ' 个')}
     </div>`;
-  };
-  host.innerHTML=plans.map(plan=>{
-    const normal=calculateMode(plan,false);
-    const rebate=calculateMode(plan,true);
-    const selected=previewSelectedPlan===plan.id;
-    const packageFields=[['big','大包',plan.big],['middle','中包',plan.mid],['small','小包',plan.small]]
-      .filter(([key])=>giftFieldVisible(key));
-    return `<article class="all-gift-option ${selected?'selected':''}" data-plan="${plan.id}" role="button" tabindex="0" aria-pressed="${selected}" aria-label="选择${giftEscape(plan.label)}">
+    };
+    host.innerHTML = plans.map(plan => {
+        const normal = calculateMode(plan, false);
+        const rebate = calculateMode(plan, true);
+        const selected = previewSelectedPlan === plan.id;
+        const packageFields = [['big', '大包', plan.big], ['middle', '中包', plan.mid], ['small', '小包', plan.small]]
+            .filter(([key]) => giftFieldVisible(key));
+        return `<article class="all-gift-option ${selected ? 'selected' : ''}" data-plan="${plan.id}" role="button" tabindex="0" aria-pressed="${selected}" aria-label="选择${giftEscape(plan.label)}">
       <section class="all-gift-info-card">
-        <div class="all-gift-top"><h3>${giftEscape(plan.label)}</h3>${giftFieldVisible('price')?`<span class="all-gift-price">${formatMoney(plan.price)}</span>`:''}</div>
-        <div class="all-gift-pack-info">${packageFields.map(([,label,value])=>`<div><span>${label}</span><b>${formatCount(value)}</b></div>`).join('')}</div>
+        <div class="all-gift-top"><h3>${giftEscape(plan.label)}</h3>${giftFieldVisible('price') ? `<span class="all-gift-price">${formatMoney(plan.price)}</span>` : ''}</div>
+        <div class="all-gift-pack-info">${packageFields.map(([, label, value]) => `<div><span>${label}</span><b>${formatCount(value)}</b></div>`).join('')}</div>
       </section>
       <section class="all-gift-compare-card">
         <div class="all-gift-compare-heading"><span>不返利</span><i>/</i><span>返利</span></div>
-        <div class="all-gift-compare-grid">${renderMode(normal,false)}${renderMode(rebate,true)}</div>
+        <div class="all-gift-compare-grid">${renderMode(normal, false)}${renderMode(rebate, true)}</div>
       </section>
     </article>`;
-  }).join('');
+    }).join('');
 }
+// 同屏预览卡片只更新自身的选中边框，不触发缩放、阴影或动画。
+const allGiftGrid = document.getElementById('allGiftGrid');
+function selectPreviewCard(card) {
+    if (!card || !allGiftGrid) {
+        return;
+    }
+    previewSelectedPlan = card.dataset.plan;
+    allGiftGrid
+        .querySelectorAll('.all-gift-option[data-plan]')
+        .forEach((item) => {
+            const isSelected = item === card;
+            item.classList.toggle('selected', isSelected);
+            item.setAttribute('aria-pressed', String(isSelected));
+        });
 
-// 同屏预览中的卡片只维护自身的选中动效，不联动上方礼包购买方案或计算结果。
-const allGiftGrid=document.getElementById('allGiftGrid');
-function selectPreviewCard(card){
- if(!card)return;
- previewSelectedPlan=card.dataset.plan;
- allGiftGrid.querySelectorAll('.all-gift-option[data-plan]').forEach(item=>{
-   const active=item===card;
-   item.classList.toggle('selected',active);
-   item.setAttribute('aria-pressed',String(active));
- });
+    // 重新触发边框脉冲动画；不改变卡片尺寸，也不添加阴影。
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
 }
-if(allGiftGrid){
- allGiftGrid.addEventListener('click',event=>{
-   const card=event.target.closest('.all-gift-option[data-plan]');
-   if(card)selectPreviewCard(card);
- });
- allGiftGrid.addEventListener('keydown',event=>{
-   const card=event.target.closest('.all-gift-option[data-plan]');
-   if(card&&(event.key==='Enter'||event.key===' ')){
-     event.preventDefault();
-     selectPreviewCard(card);
-   }
- });
+if (allGiftGrid) {
+    allGiftGrid.addEventListener('click', (event) => {
+        const card = event.target.closest('.all-gift-option[data-plan]');
+        if (card) {
+            selectPreviewCard(card);
+        }
+    });
+    allGiftGrid.addEventListener('keydown', (event) => {
+        const card = event.target.closest('.all-gift-option[data-plan]');
+        if (card && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            selectPreviewCard(card);
+        }
+    });
 }
-function renderTable(){
- const rows=raw.map((r,i)=>[
-  i+1, r[0], r[1], r[2],
-  expData.growth[i]||0, expData.bar[i]||0,
-  expData.herb[i]||0, expData.wood[i]||0, expData.pill[i]||0,
-  r[3], r[4], r[5], r[6], r[7]
- ]);
- $('levelRows').innerHTML=rows.map(row=>`<tr>${row.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('');
- // 默认定位到40级；完整保留1–80级，可在表格内上下滚动。
- const wrap=$('levelDataTableWrap');
- if(wrap){
-  const target=wrap.querySelector('#levelRows tr:nth-child(40)');
-  if(target)wrap.scrollTop=Math.max(0,target.getBoundingClientRect().top-wrap.getBoundingClientRect().top+wrap.scrollTop);
- }
+function renderTable() {
+    const rows = raw.map((r, i) => [
+        i + 1, r[0], r[1], r[2],
+        expData.growth[i] || 0, expData.bar[i] || 0,
+        expData.herb[i] || 0, expData.wood[i] || 0, expData.pill[i] || 0,
+        r[3], r[4], r[5], r[6], r[7]
+    ]);
+    $('levelRows').innerHTML = rows.map(row => `<tr>${row.map(v => `<td>${fmt(v)}</td>`).join('')}</tr>`).join('');
+    // 默认定位到40级；完整保留1–80级，可在表格内上下滚动。
+    const wrap = $('levelDataTableWrap');
+    if (wrap) {
+        const target = wrap.querySelector('#levelRows tr:nth-child(40)');
+        if (target)
+            wrap.scrollTop = Math.max(0, target.getBoundingClientRect().top - wrap.getBoundingClientRect().top + wrap.scrollTop);
+    }
 }
-document.addEventListener('click',event=>{const btn=event.target.closest('.plan-option[data-plan]');if(btn)chooseGiftPlan(btn.dataset.plan);});
-document.querySelectorAll('.beast').forEach(btn=>btn.addEventListener('click',()=>{selectedBeast=btn.dataset.beast;applyBeastTheme();document.querySelectorAll('.beast').forEach(b=>b.classList.toggle('active',b===btn));render()}));
-['fromLevel','toLevel'].forEach(id=>{
- const numberInput=$(id+'Number');
- if(numberInput)numberInput.addEventListener('change',()=>{
-  let level=Math.max(1,Math.min(80,Math.floor(Number(numberInput.value)||1)));
-  if(id==='toLevel' && level<getLevel('fromLevel',1)) level=getLevel('fromLevel',1);
-  if(id==='fromLevel' && level>getLevel('toLevel',80)) level=getLevel('toLevel',80);
-  $(id).value=String(level);
-  updateLevelLabels();
-  render();
- });
+document.addEventListener('click', event => { const btn = event.target.closest('.plan-option[data-plan]'); if (btn)
+    chooseGiftPlan(btn.dataset.plan); });
+document.querySelectorAll('.beast').forEach(btn => btn.addEventListener('click', () => { selectedBeast = btn.dataset.beast; applyBeastTheme(); document.querySelectorAll('.beast').forEach(b => b.classList.toggle('active', b === btn)); render(); }));
+['fromLevel', 'toLevel'].forEach(id => {
+    const numberInput = $(id + 'Number');
+    if (numberInput)
+        numberInput.addEventListener('change', () => {
+            let level = Math.max(1, Math.min(80, Math.floor(Number(numberInput.value) || 1)));
+            if (id === 'toLevel' && level < getLevel('fromLevel', 1))
+                level = getLevel('fromLevel', 1);
+            if (id === 'fromLevel' && level > getLevel('toLevel', 80))
+                level = getLevel('toLevel', 80);
+            $(id).value = String(level);
+            updateLevelLabels();
+            render();
+        });
 });
-['fromLevel','toLevel'].forEach(id=>$(id).addEventListener('input',()=>{
- let level=Math.max(1,Math.min(80,Math.floor(Number($(id).value)||1)));
- if(id==='toLevel' && level<getLevel('fromLevel',1)) level=getLevel('fromLevel',1);
- if(id==='fromLevel' && level>getLevel('toLevel',80)) level=getLevel('toLevel',80);
- $(id).value=String(level);
- updateLevelLabels();
- render();
+['fromLevel', 'toLevel'].forEach(id => $(id).addEventListener('input', () => {
+    let level = Math.max(1, Math.min(80, Math.floor(Number($(id).value) || 1)));
+    if (id === 'toLevel' && level < getLevel('fromLevel', 1))
+        level = getLevel('fromLevel', 1);
+    if (id === 'fromLevel' && level > getLevel('toLevel', 80))
+        level = getLevel('toLevel', 80);
+    $(id).value = String(level);
+    updateLevelLabels();
+    render();
 }));
-$('currentExp').addEventListener('input',()=>{render()});
-$('currentExpSlider').addEventListener('input',()=>{$('currentExp').value=$('currentExpSlider').value;render()});
-['herbStock','woodStock','pillStock'].forEach(id=>{
- const slider=$(id+'Slider'),input=$(id);
- input.addEventListener('input',()=>{const n=Math.max(0,Number(input.value)||0);slider.value=String(Math.min(Number(slider.max),n));render()});
- slider.addEventListener('input',()=>{input.value=slider.value;render()});
+$('currentExp').addEventListener('input', () => { render(); });
+$('currentExpSlider').addEventListener('input', () => { $('currentExp').value = $('currentExpSlider').value; render(); });
+['herbStock', 'woodStock', 'pillStock'].forEach(id => {
+    const slider = $(id + 'Slider'), input = $(id);
+    input.addEventListener('input', () => { const n = Math.max(0, Number(input.value) || 0); slider.value = String(Math.min(Number(slider.max), n)); render(); });
+    slider.addEventListener('input', () => { input.value = slider.value; render(); });
 });
-$('clearStock').addEventListener('click',()=>{['herbStock','woodStock','pillStock'].forEach(id=>{$(id).value=0;$(id+'Slider').value=0});render()});
-$('reset').addEventListener('click',()=>{$('fromLevel').value='40';$('toLevel').value='60';updateLevelLabels();render()});
-$('resetExp').addEventListener('click',()=>{$('currentExp').value='0';$('currentExpSlider').value='0';render()});
-
-const rebateToggles=[...document.querySelectorAll('.rebate-toggle-control input')];
-const rebateOffPanel=$('rebateOffPanel');
-const rebateOnPanel=$('rebateOnPanel');
-function updateRebateView(enabled=rebateToggles.some(toggle=>toggle.checked)){
- rebateToggles.forEach(toggle=>{toggle.checked=enabled;});
- rebateOffPanel.hidden=enabled;
- rebateOnPanel.hidden=!enabled;
- rebateToggles.forEach(toggle=>{
-  const label=toggle.nextElementSibling;
-  label.textContent=enabled?label.dataset.onText:label.dataset.offText;
-  label.title=enabled?'点击关闭返利':'点击开启返利';
- });
+$('clearStock').addEventListener('click', () => { ['herbStock', 'woodStock', 'pillStock'].forEach(id => { $(id).value = 0; $(id + 'Slider').value = 0; }); render(); });
+$('reset').addEventListener('click', () => { $('fromLevel').value = '40'; $('toLevel').value = '60'; updateLevelLabels(); render(); });
+$('resetExp').addEventListener('click', () => { $('currentExp').value = '0'; $('currentExpSlider').value = '0'; render(); });
+const rebateToggles = [...document.querySelectorAll('.rebate-toggle-control input')];
+const rebateOffPanel = $('rebateOffPanel');
+const rebateOnPanel = $('rebateOnPanel');
+function updateRebateView(enabled = rebateToggles.some(toggle => toggle.checked)) {
+    rebateToggles.forEach(toggle => { toggle.checked = enabled; });
+    rebateOffPanel.hidden = enabled;
+    rebateOnPanel.hidden = !enabled;
+    rebateToggles.forEach(toggle => {
+        const label = toggle.nextElementSibling;
+        label.textContent = enabled ? label.dataset.onText : label.dataset.offText;
+        label.title = enabled ? '点击关闭返利' : '点击开启返利';
+    });
 }
 // 切换返利只更新上方返利视图；跳过同屏预览重绘，避免礼包卡片选中动效被重新触发。
-rebateToggles.forEach(toggle=>toggle.addEventListener('change',()=>{updateRebateView(toggle.checked);render(true);}));
-document.querySelectorAll('#rebateOffPanel .plan-option,#rebateOnPanel .plan-option').forEach(btn=>btn.addEventListener('click',()=>chooseGiftPlan(btn.dataset.plan)));
+rebateToggles.forEach(toggle => toggle.addEventListener('change', () => { updateRebateView(toggle.checked); render(true); }));
+document.querySelectorAll('#rebateOffPanel .plan-option,#rebateOnPanel .plan-option').forEach(btn => btn.addEventListener('click', () => chooseGiftPlan(btn.dataset.plan)));
 updateRebateView(false);
-
-initSelects();renderTable();applyBeastTheme();render();
+initSelects();
+renderTable();
+applyBeastTheme();
+render();
 </script>
 <script>
-
-const levelDataToggle=document.getElementById('levelDataToggle');
-const levelDataContent=document.getElementById('levelDataContent');
-const levelDataTableWrap=document.getElementById('levelDataTableWrap');
-const levelAttributeToggle=document.getElementById('levelAttributeToggle');
-const levelDataTable=document.querySelector('#levelDataTableWrap .level-table');
-if(levelDataToggle&&levelDataContent&&levelDataTableWrap){
-  levelDataToggle.addEventListener('click',()=>{
-    const expanded=levelDataToggle.getAttribute('aria-expanded')==='true';
-    levelDataToggle.setAttribute('aria-expanded',String(!expanded));
-    levelDataTableWrap.style.maxHeight=expanded?'200px':'500px';
-    levelDataToggle.textContent=expanded?'展开全部':'收起全部';
-  });
+const levelDataToggle = document.getElementById('levelDataToggle');
+const levelDataContent = document.getElementById('levelDataContent');
+const levelDataTableWrap = document.getElementById('levelDataTableWrap');
+const levelAttributeToggle = document.getElementById('levelAttributeToggle');
+const levelDataTable = document.querySelector('#levelDataTableWrap .level-table');
+if (levelDataToggle && levelDataContent && levelDataTableWrap) {
+    levelDataToggle.addEventListener('click', () => {
+        const expanded = levelDataToggle.getAttribute('aria-expanded') === 'true';
+        levelDataToggle.setAttribute('aria-expanded', String(!expanded));
+        levelDataTableWrap.style.maxHeight = expanded ? '200px' : '500px';
+        levelDataToggle.textContent = expanded ? '展开全部' : '收起全部';
+    });
 }
-if(levelAttributeToggle&&levelDataTable){
-  levelAttributeToggle.addEventListener('click',()=>{
-    const attributesOnly=levelAttributeToggle.getAttribute('aria-pressed')!=='true';
-    levelAttributeToggle.setAttribute('aria-pressed',String(attributesOnly));
-    levelDataTable.classList.toggle('attributes-only',attributesOnly);
-  });
+if (levelAttributeToggle && levelDataTable) {
+    levelAttributeToggle.addEventListener('click', () => {
+        const attributesOnly = levelAttributeToggle.getAttribute('aria-pressed') !== 'true';
+        levelAttributeToggle.setAttribute('aria-pressed', String(attributesOnly));
+        levelDataTable.classList.toggle('attributes-only', attributesOnly);
+    });
 }
 </script>
 
 <!-- v2.1.11：购买份数及剩余小包统一按 JSON small 字段的每份礼包总产出计算 -->
 
 <script id="gift-data-numeric-only">
-(function(){
-  const giftCardSelector = '.plan-option,.gift-card,.package-option,.rebate-plan-option,.all-gift-option,.gift-plan,.gift-package,.gift-card-item';
-  const numericOnly = /^[¥￥$]?\s*-?[\d,]+(?:\.\d+)?\s*(?:个|枚|块|元)?$/;
-  function markNumericText(root){
-    if(!root || root.nodeType!==1) return;
-    const cards=[];
-    if(root.matches && root.matches(giftCardSelector)) cards.push(root);
-    if(root.querySelectorAll) cards.push(...root.querySelectorAll(giftCardSelector));
-    cards.forEach(card=>{
-      const walker=document.createTreeWalker(card,NodeFilter.SHOW_TEXT);
-      const nodes=[];
-      while(walker.nextNode()){
-        const node=walker.currentNode;
-        if(node.parentElement && (node.parentElement.closest('.gift-data-number') || node.parentElement.closest('.all-gift-cost-amount'))) continue;
-        const value=node.nodeValue.trim();
-        if(value && numericOnly.test(value)) nodes.push(node);
-      }
-      nodes.forEach(node=>{
-        const span=document.createElement('span');
-        span.className='gift-data-number';
-        node.parentNode.insertBefore(span,node);
-        span.appendChild(node);
-      });
-    });
-  }
-  function start(){
-    markNumericText(document.body);
-    const observer=new MutationObserver(records=>{
-      records.forEach(record=>{
-        record.addedNodes.forEach(node=>{
-          if(node.nodeType===1) markNumericText(node);
-          else if(node.nodeType===3 && node.parentElement) markNumericText(node.parentElement);
+(function () {
+    const giftCardSelector = '.plan-option,.gift-card,.package-option,.rebate-plan-option,.all-gift-option,.gift-plan,.gift-package,.gift-card-item';
+    const numericOnly = /^[¥￥$]?\s*-?[\d,]+(?:\.\d+)?\s*(?:个|枚|块|元)?$/;
+    function markNumericText(root) {
+        if (!root || root.nodeType !== 1)
+            return;
+        const cards = [];
+        if (root.matches && root.matches(giftCardSelector))
+            cards.push(root);
+        if (root.querySelectorAll)
+            cards.push(...root.querySelectorAll(giftCardSelector));
+        cards.forEach(card => {
+            const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT);
+            const nodes = [];
+            while (walker.nextNode()) {
+                const node = walker.currentNode;
+                if (node.parentElement && (node.parentElement.closest('.gift-data-number') || node.parentElement.closest('.all-gift-cost-amount')))
+                    continue;
+                const value = node.nodeValue.trim();
+                if (value && numericOnly.test(value))
+                    nodes.push(node);
+            }
+            nodes.forEach(node => {
+                const span = document.createElement('span');
+                span.className = 'gift-data-number';
+                node.parentNode.insertBefore(span, node);
+                span.appendChild(node);
+            });
         });
-      });
-    });
-    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
+    }
+    function start() {
+        markNumericText(document.body);
+        const observer = new MutationObserver(records => {
+            records.forEach(record => {
+                record.addedNodes.forEach(node => {
+                    if (node.nodeType === 1)
+                        markNumericText(node);
+                    else if (node.nodeType === 3 && node.parentElement)
+                        markNumericText(node.parentElement);
+                });
+            });
+        });
+        observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    }
+    if (document.readyState === 'loading')
+        document.addEventListener('DOMContentLoaded', start, { once: true });
+    else
+        start();
 })();
 </script>
 
